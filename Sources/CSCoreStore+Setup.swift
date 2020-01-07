@@ -38,7 +38,7 @@ extension CSCoreStore {
     @objc
     public static var modelVersion: String {
         
-        return CoreStore.modelVersion
+        return self.defaultStack.modelVersion
     }
     
     /**
@@ -47,7 +47,7 @@ extension CSCoreStore {
     @objc
     public static func entityTypesByNameForType(_ type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return CoreStore.entityTypesByName(for: type)
+        return self.defaultStack.bridgeToSwift.entityTypesByName(for: type)
     }
     
     /**
@@ -56,7 +56,7 @@ extension CSCoreStore {
     @objc
     public static func entityDescriptionForClass(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return CoreStore.entityDescription(for: type)
+        return self.defaultStack.bridgeToSwift.entityDescription(for: type)
     }
     
     /**

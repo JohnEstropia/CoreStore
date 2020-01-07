@@ -50,7 +50,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public func create<D>(_ into: Into<D>) -> D {
+    public func create<O>(_ into: Into<O>) -> O {
         
         let entityClass = into.entityClass
         Internals.assert(
@@ -121,7 +121,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<D: DynamicObject>(_ object: D?) -> D? {
+    public func edit<O: DynamicObject>(_ object: O?) -> O? {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -141,7 +141,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
+    public func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -154,49 +154,56 @@ public /*abstract*/ class BaseDataTransaction {
         )
         return self.fetchExisting(objectID)
     }
-    
+
     /**
-     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
-     
-     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be deleted
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
      */
-    public func delete<D: DynamicObject>(_ object: D?) {
-        
+    public func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete an entity outside its designated queue."
         )
         let context = self.context
-        object
-            .flatMap(context.fetchExisting)
-            .flatMap({ context.delete($0.cs_toRaw()) })
+        objectIDs.forEach {
+
+            context.fetchExisting($0).map(context.delete(_:))
+        }
     }
     
     /**
-     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.
      
-     - parameter object1: the `NSManagedObject` or `CoreStoreObject` to be deleted
-     - parameter object2: another `NSManagedObject` or `CoreStoreObject` to be deleted
-     - parameter objects: other `NSManagedObject`s or `CoreStoreObject`s to be deleted
+     - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
+    public func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
         
-        self.delete(([object1, object2] + objects).compactMap { $0 })
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete an entity outside its designated queue."
+        )
+        self.delete(([object] + objects).compactMap { $0 })
     }
     
     /**
-     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by an `ObjectRepresenation`.
      
-     - parameter objects: the `NSManagedObject`s or `CoreStoreObject`s to be deleted
+     - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
+    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete entities outside their designated queue."
         )
         let context = self.context
-        objects.forEach { context.fetchExisting($0).flatMap({ context.delete($0.cs_toRaw()) }) }
+        objects.forEach {
+
+            $0.asEditable(in: self).map({ context.delete($0.cs_toRaw()) })
+        }
     }
     
     /**
@@ -217,10 +224,10 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Returns `true` if the object has any property values changed. This method should not be called after the `commit()` method was called.
 
-     - parameter entity: the `DynamicObject` instance
+     - parameter object: the `DynamicObject` instance
      - returns: `true` if the object has any property values changed.
      */
-    public func objectHasPersistentChangedValues<D: DynamicObject>(_ entity: D) -> Bool {
+    public func objectHasPersistentChangedValues<O: DynamicObject>(_ object: O) -> Bool {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -230,7 +237,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects from an already committed \(Internals.typeName(self))."
         )
-        return entity.cs_toRaw().hasPersistentChangedValues
+        return object.cs_toRaw().hasPersistentChangedValues
     }
     
     /**
@@ -239,7 +246,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func insertedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -276,7 +283,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func insertedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -295,7 +302,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func updatedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -332,7 +339,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func updatedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -351,7 +358,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func deletedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -389,7 +396,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func deletedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),

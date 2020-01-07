@@ -104,7 +104,7 @@ public final class CSGroupBy: NSObject, CSQueryClause {
     
     public let bridgeToSwift: GroupBy<NSManagedObject>
     
-    public init<D: NSManagedObject>(_ swiftValue: GroupBy<D>) {
+    public init<O: NSManagedObject>(_ swiftValue: GroupBy<O>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()
@@ -114,7 +114,7 @@ public final class CSGroupBy: NSObject, CSQueryClause {
 
 // MARK: - GroupBy
 
-extension GroupBy where D: NSManagedObject {
+extension GroupBy where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

@@ -177,7 +177,7 @@ public final class CSSelectTerm: NSObject {
     
     public let bridgeToSwift: SelectTerm<NSManagedObject>
     
-    public init<D: NSManagedObject>(_ swiftValue: SelectTerm<D>) {
+    public init<O: NSManagedObject>(_ swiftValue: SelectTerm<O>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()
@@ -187,7 +187,7 @@ public final class CSSelectTerm: NSObject {
 
 // MARK: - SelectTerm
 
-extension SelectTerm where D: NSManagedObject {
+extension SelectTerm where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
@@ -383,7 +383,7 @@ public final class CSSelect: NSObject {
     
     // MARK: CoreStoreObjectiveCType
     
-    public init<D: NSManagedObject, T: QueryableAttributeType>(_ swiftValue: Select<D, T>) {
+    public init<O: NSManagedObject, T: QueryableAttributeType>(_ swiftValue: Select<O, T>) {
         
         self.attributeType = T.cs_rawAttributeType
         self.selectTerms = swiftValue.selectTerms.map({ $0.downcast() })
@@ -391,7 +391,7 @@ public final class CSSelect: NSObject {
         super.init()
     }
     
-    public init<D: NSManagedObject, T>(_ swiftValue: Select<D, T>) {
+    public init<O: NSManagedObject, T>(_ swiftValue: Select<O, T>) {
         
         self.attributeType = .undefinedAttributeType
         self.selectTerms = swiftValue.selectTerms.map({ $0.downcast() })
@@ -502,7 +502,7 @@ public final class CSSelect: NSObject {
 
 // MARK: - Select
 
-extension Select where D: NSManagedObject {
+extension Select where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

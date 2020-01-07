@@ -14,29 +14,22 @@ import CoreStore
 
 class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
-    var palette: Palette? {
+    func setPalette<O: ObjectRepresentation>(_ newValue: O?) where O.ObjectType == Palette {
         
-        get {
+        guard self.monitor?.object?.objectID() != newValue?.objectID() else {
             
-            return self.monitor?.object
+            return
         }
-        set {
+        if let newValue = newValue {
             
-            guard self.monitor?.object != newValue else {
-                
-                return
-            }
+            self.monitor = newValue.asReadOnly(in: ColorsDemo.stack).map(ColorsDemo.stack.monitorObject(_:))
+        }
+        else {
             
-            if let palette = newValue {
-                
-                self.monitor = ColorsDemo.stack.monitorObject(palette)
-            }
-            else {
-                
-                self.monitor = nil
-            }
+            self.monitor = nil
         }
     }
+    
     
     // MARK: NSObject
     

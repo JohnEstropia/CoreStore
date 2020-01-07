@@ -295,6 +295,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         // MARK: AttributeKeyPathStringConvertible
 
         public typealias ReturnValueType = DestinationValueType
+
+
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
         
         
         // MARK: AttributeProtocol
@@ -303,8 +308,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             return V.cs_rawAttributeType
         }
-        
-        internal let keyPath: KeyPathString
+
         internal let isOptional = false
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage = false
@@ -356,7 +360,8 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
+
             return self.value
         }
         
@@ -512,6 +517,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         // MARK: AttributeKeyPathStringConvertible
 
         public typealias ReturnValueType = DestinationValueType?
+
+
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
         
         
         // MARK: AttributeProtocol
@@ -521,7 +531,6 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        internal let keyPath: KeyPathString
         internal let isOptional = true
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage = false
@@ -573,8 +582,9 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
-            return self.value as Any
+        internal var valueForSnapshot: Any? {
+
+            return self.value
         }
         
         

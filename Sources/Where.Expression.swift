@@ -32,7 +32,7 @@ import CoreData
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
 ```
-let owner = CoreStore.fetchOne(
+let owner = dataStack.fetchOne(
     From<Pet>().where(
         (\.master ~ \.name) == "John"
     )
@@ -60,7 +60,7 @@ extension Where {
      Type-safe keyPath chain usable in query/fetch expressions.
      ```
      let expression: Where<Pet>.Expression = (\.master ~ \.name)
-     let owner = CoreStore.fetchOne(
+     let owner = dataStack.fetchOne(
         From<Pet>().where(expression == "John")
      )
      ```
@@ -80,7 +80,7 @@ extension Where {
 
         // MARK: KeyPathStringConvertible
 
-        public typealias ObjectType = D
+        public typealias ObjectType = O
         public typealias DestinationValueType = V
 
 
@@ -103,6 +103,12 @@ extension Where {
 
             self.cs_keyPathString = component1 + "." + component2
         }
+        
+        
+        // MARK: Deprecated
+
+        @available(*, deprecated, renamed: "O")
+        public typealias D = O
     }
 
 
@@ -130,10 +136,10 @@ extension Where {
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
+ let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~<D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.SingleTarget, V> {
+public func ~<O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -141,10 +147,10 @@ public func ~<D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPat
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
+ let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.SingleTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -152,10 +158,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPa
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
+ let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -163,10 +169,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToMan
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
+ let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -174,10 +180,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToMan
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let johnsSonInLaw = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
+ let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -185,10 +191,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let johnsSonInLaw = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
+ let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -196,10 +202,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let spouseHasSiblings = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
+ let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -207,10 +213,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCTo
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let spouseHasSiblings = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
+ let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -218,10 +224,10 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCTo
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let spousesWithBadNamingSense = CoreStore.fetchAll(From<Person>().where((\.spouse ~ \.pets ~ \.name).any() == "Spot"))
+ let spousesWithBadNamingSense = dataStack.fetchAll(From<Person>().where((\.spouse ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, C>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, C>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -232,98 +238,98 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCTo
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
+ let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.SingleTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
-        D.meta[keyPath: lhs].cs_keyPathString, 
-        O.meta[keyPath: rhs].cs_keyPathString
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
+ let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<T, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
+ let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<T, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
+ let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
-        D.meta[keyPath: lhs].cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
+ let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
-
-    return .init(
-        lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
-    )
-}
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
- ```
- let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
- ```
- */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let spousesWithBadNamingSense = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets ~ \.name).any() == "Spot"))
+ let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: ToManyRelationshipKeyPathStringConvertible, KV: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, KC>, _ rhs: KeyPath<O, KV>) -> Where<D>.Expression<Where<D>.CollectionTarget, KV.DestinationValueType> where KC.ObjectType == D, KV.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
+    )
+}
+
+/**
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
+ ```
+ let spousesWithBadNamingSense = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets ~ \.name).any() == "Spot"))
+ ```
+ */
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, KC: ToManyRelationshipKeyPathStringConvertible, KV: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, KC>, _ rhs: KeyPath<D, KV>) -> Where<O>.Expression<Where<O>.CollectionTarget, KV.DestinationValueType> where KC.ObjectType == O, KV.ObjectType == D {
+
+    return .init(
+        lhs.cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -333,34 +339,34 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: ToManyRelationship
 /**
  Creates a `Where` clause by comparing if an expression is equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is not equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by checking if a sequence contains a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
+ let dog = dataStack.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
  ```
  */
-public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<D>.Expression<T, V>) -> Where<D> where S.Iterator.Element == V {
+public func ~= <O, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<O>.Expression<T, V>) -> Where<O> where S.Iterator.Element == V {
 
-    return Where<D>(expression.cs_keyPathString, isMemberOf: sequence)
+    return Where<O>(expression.cs_keyPathString, isMemberOf: sequence)
 }
 
 
@@ -369,45 +375,45 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
 /**
  Creates a `Where` clause by comparing if an expression is less than a value
  ```
- let lonelyDog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.pets).count() < 2))
+ let lonelyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() < 2))
  ```
  */
-public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func < <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: "<", operand: rhs)
+    return  Where<O>(expression: lhs, function: "<", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is less than or equal to a value
  ```
- let lonelyDog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.pets).count() <= 1)
+ let lonelyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() <= 1)
  ```
  */
-public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func <= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: "<=", operand: rhs)
+    return  Where<O>(expression: lhs, function: "<=", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is greater than a value
  ```
- let happyDog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.pets).count() > 1)
+ let happyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() > 1)
  ```
  */
-public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func > <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: ">", operand: rhs)
+    return  Where<O>(expression: lhs, function: ">", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is greater than or equal to a value
  ```
- let happyDog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.pets).count() >= 2)
+ let happyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() >= 2)
  ```
  */
-public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func >= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: ">=", operand: rhs)
+    return  Where<O>(expression: lhs, function: ">=", operand: rhs)
 }
 
 
@@ -416,56 +422,56 @@ public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Ex
 /**
  Creates a `Where` clause by comparing if an expression is equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is equal to a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
+ let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
  Creates a `Where` clause by checking if a sequence contains a value
  ```
- let dog = CoreStore.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
+ let dog = dataStack.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
  ```
  */
-public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<D>.Expression<T, V?>) -> Where<D> where S.Iterator.Element == V {
+public func ~= <O, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<O>.Expression<T, V?>) -> Where<O> where S.Iterator.Element == V {
 
-    return Where<D>(expression.cs_keyPathString, isMemberOf: sequence)
+    return Where<O>(expression.cs_keyPathString, isMemberOf: sequence)
 }
 
 
@@ -474,45 +480,45 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
 /**
  Creates a `Where` clause by comparing if an expression is less than a value
  ```
- let childsPet = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.age) < 10))
+ let childsPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) < 10))
  ```
  */
-public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func < <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: "<", operand: rhs)
+    return Where<O>(expression: lhs, function: "<", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is less than or equal to a value
  ```
- let childsPet = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.age) <= 10))
+ let childsPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) <= 10))
  ```
  */
-public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func <= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: "<=", operand: rhs)
+    return Where<O>(expression: lhs, function: "<=", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is greater than a value
  ```
- let teensPet = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.age) > 10))
+ let teensPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) > 10))
  ```
  */
-public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func > <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: ">", operand: rhs)
+    return Where<O>(expression: lhs, function: ">", operand: rhs)
 }
 
 /**
  Creates a `Where` clause by comparing if an expression is greater than or equal to a value
  ```
- let teensPet = CoreStore.fetchOne(From<Dog>().where((\.master ~ \.age) >= 10))
+ let teensPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) >= 10))
  ```
  */
-public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func >= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: ">=", operand: rhs)
+    return Where<O>(expression: lhs, function: ">=", operand: rhs)
 }
 
 
@@ -523,7 +529,7 @@ extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCToManyRel
     /**
      Creates a `Where.Expression` clause for COUNT
      ```
-     let dogsWithPlaymates = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
+     let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
     public func count() -> Where<Root>.Expression<Where<Root>.CollectionTarget, Int> {
@@ -532,34 +538,34 @@ extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCToManyRel
     }
 }
 
-// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue
+// MARK: - Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue
 
-extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue {
+extension Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for COUNT
      ```
-     let dogsWithPlaymates = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
+     let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
-    public func count() -> Where<D>.Expression<T, Int> {
+    public func count() -> Where<O>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
 }
 
 
-// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCKeyPathValue
+// MARK: - Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCKeyPathValue
 
-extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCKeyPathValue {
+extension Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for ANY
      ```
-     let dogsWithBadNamingSense = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
+     let dogsWithBadNamingSense = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func any() -> Where<D>.Expression<T, V> {
+    public func any() -> Where<O>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
@@ -567,10 +573,10 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
     /**
      Creates a `Where.Expression` clause for ALL
      ```
-     let allPlaymatePuppies = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
+     let allPlaymatePuppies = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
      ```
      */
-    public func all() -> Where<D>.Expression<T, V> {
+    public func all() -> Where<O>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
@@ -578,10 +584,10 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
     /**
      Creates a `Where.Expression` clause for NONE
      ```
-     let dogs = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
+     let dogs = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func none() -> Where<D>.Expression<T, V> {
+    public func none() -> Where<O>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
     }
@@ -595,7 +601,7 @@ extension KeyPath where Root: CoreStoreObject, Value: ToManyRelationshipKeyPathS
     /**
      Creates a `Where.Expression` clause for COUNT
      ```
-     let dogsWithPlaymates = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
+     let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
     public func count() -> Where<Root>.Expression<Where<Root>.CollectionTarget, Int> {
@@ -605,17 +611,17 @@ extension KeyPath where Root: CoreStoreObject, Value: ToManyRelationshipKeyPathS
 }
 
 
-// MARK: - Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTarget
+// MARK: - Where.Expression where O: CoreStoreObject, T == Where<O>.CollectionTarget
 
-extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTarget {
+extension Where.Expression where O: CoreStoreObject, T == Where<O>.CollectionTarget {
 
     /**
      Creates a `Where.Expression` clause for COUNT
      ```
-     let dogsWithPlaymates = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
+     let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
-    public func count() -> Where<D>.Expression<T, Int> {
+    public func count() -> Where<O>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
@@ -623,10 +629,10 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
     /**
      Creates a `Where.Expression` clause for ANY
      ```
-     let dogsWithBadNamingSense = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
+     let dogsWithBadNamingSense = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func any() -> Where<D>.Expression<T, V> {
+    public func any() -> Where<O>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
@@ -634,10 +640,10 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
     /**
      Creates a `Where.Expression` clause for ALL
      ```
-     let allPlaymatePuppies = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
+     let allPlaymatePuppies = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
      ```
      */
-    public func all() -> Where<D>.Expression<T, V> {
+    public func all() -> Where<O>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
@@ -645,10 +651,10 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
     /**
      Creates a `Where.Expression` clause for NONE
      ```
-     let dogs = CoreStore.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
+     let dogs = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func none() -> Where<D>.Expression<T, V> {
+    public func none() -> Where<O>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
     }
@@ -661,17 +667,17 @@ extension Where {
 
     // MARK: FilePrivate
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V>, function: String, operand: V) {
 
         self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V?>, function: String, operand: V) {
 
         self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V?) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V>, function: String, operand: V?) {
 
         if let operand = operand {
 
@@ -683,7 +689,7 @@ extension Where {
         }
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V?) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V?>, function: String, operand: V?) {
 
         if let operand = operand {
 

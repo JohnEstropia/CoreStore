@@ -43,7 +43,7 @@ import Foundation
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  
- CoreStore.defaultStack = DataStack(
+ CoreStoreDefaults.dataStack = DataStack(
      CoreStoreSchema(
          modelVersion: "V1",
          entities: [
@@ -76,7 +76,7 @@ public final class CoreStoreSchema: DynamicSchema {
          let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
      }
      
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          CoreStoreSchema(
              modelVersion: "V1",
              entities: [
@@ -120,7 +120,7 @@ public final class CoreStoreSchema: DynamicSchema {
          let name = Value.Required<String>("name", initial: "")
      }
      
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          CoreStoreSchema(
              modelVersion: "V1",
              entityConfigurations: [
@@ -283,9 +283,9 @@ public final class CoreStoreSchema: DynamicSchema {
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
-            for child in Mirror(reflecting: type.meta).children {
+            for property in type.metaProperties(includeSuperclasses: false) {
                 
-                switch child.value {
+                switch property {
                     
                 case let attribute as AttributeProtocol:
                     Internals.assert(
@@ -378,9 +378,10 @@ public final class CoreStoreSchema: DynamicSchema {
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             let relationshipsByName = relationshipsByNameByEntity[entity]!
-            for child in Mirror(reflecting: (entity.type as! CoreStoreObject.Type).meta).children {
+            let entityType = entity.type as! CoreStoreObject.Type
+            for property in entityType.metaProperties(includeSuperclasses: false) {
                 
-                switch child.value {
+                switch property {
                     
                 case let relationship as RelationshipProtocol:
                     let (destinationType, destinationKeyPath) = relationship.inverse
@@ -451,7 +452,7 @@ public final class CoreStoreSchema: DynamicSchema {
         }
         for (entity, entityDescription) in entityDescriptionsByEntity {
 
-            if #available(macOS 10.11, *) {
+            if #available(macOS 10.11, iOS 9.0, *) {
                 
                 let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
                 if !uniqueConstraints.isEmpty {

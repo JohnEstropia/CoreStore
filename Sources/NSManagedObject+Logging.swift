@@ -38,15 +38,7 @@ extension NSManagedObject {
             
             return nil
         }
-        if context.isTransactionContext {
-            
-            return context.parentTransaction?.isRunningInAllowedQueue()
-        }
-        if context.isDataStackContext {
-            
-            return Thread.isMainThread
-        }
-        return nil
+        return context.isRunningInAllowedQueue()
     }
     
     @nonobjc
@@ -56,14 +48,6 @@ extension NSManagedObject {
             
             return nil
         }
-        if context.isTransactionContext {
-            
-            return true
-        }
-        if context.isDataStackContext {
-            
-            return false
-        }
-        return nil
+        return context.isEditableInContext()
     }
 }

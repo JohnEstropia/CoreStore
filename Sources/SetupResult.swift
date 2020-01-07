@@ -34,7 +34,7 @@ import CoreData
  `SetupResult.success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
  `SetupResult.failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
  ```
- try! CoreStore.addStorage(
+ try! dataStack.addStorage(
      SQLiteStore(),
      completion: { (result: SetupResult) -> Void in
          switch result {

@@ -24,58 +24,149 @@
 //
 
 import CoreData
-import Foundation
+
+#if canImport(UIKit)
+import UIKit
+
+#elseif canImport(AppKit)
+import AppKit
+
+#endif
 
 
 // MARK: - ObjectSnapshot
 
 /**
- An `ObjectSnapshot` contains "snapshot" values from a `DynamicObject` instance copied at a specific point in time.
+ The `ObjectSnapshot` is a full copy of a `DynamicObject`'s properties at a given point in time. This is useful especially when keeping thread-safe state values, in ViewModels for example. Since this is a value type, any changes in this `struct` does not affect the actual object.
  */
 @dynamicMemberLookup
-public struct ObjectSnapshot<O: DynamicObject> {
+public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
+
+    // MARK: Public
+
+    public func dictionaryForValues() -> [String: Any] {
+
+        return self.values
+    }
+
     
-    // MARK: FilePrivate
+    // MARK: ObjectRepresentation
+
+    public typealias ObjectType = O
     
-    fileprivate var attributes: [KeyPathString: Any]
-    
-    // MARK: Private
-    
-    private init() {
+    public func objectID() -> O.ObjectID {
         
-        self.attributes = [:]
+        return self.id
+    }
+    
+    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
+        
+        let context = dataStack.unsafeContext()
+        return context.objectPublisher(objectID: self.id)
+    }
+
+    public func asReadOnly(in dataStack: DataStack) -> O? {
+
+        return dataStack.unsafeContext().fetchExisting(self.id)
+    }
+    
+    public func asEditable(in transaction: BaseDataTransaction) -> O? {
+        
+        return transaction.unsafeContext().fetchExisting(self.id)
+    }
+    
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
+        
+        let context = dataStack.unsafeContext()
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
+    }
+    
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
+        
+        let context = transaction.unsafeContext()
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
+    }
+
+
+    // MARK: Equatable
+
+    public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
+
+        return lhs.id == rhs.id
+            && lhs.valuesRef == rhs.valuesRef
+    }
+
+
+    // MARK: Hashable
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.id)
+        hasher.combine(self.valuesRef)
+    }
+
+
+    // MARK: Internal
+
+    internal init?(objectID: O.ObjectID, context: NSManagedObjectContext) {
+
+        guard let values = O.cs_snapshotDictionary(id: objectID, context: context) else {
+
+            return nil
+        }
+        self.id = objectID
+        self.context = context
+        self.values = values
+    }
+
+
+    // MARK: FilePrivate
+
+    fileprivate var values: [String: Any]
+
+
+    // MARK: Private
+
+    private let id: O.ObjectID
+    private let context: NSManagedObjectContext
+
+    private var valuesRef: NSDictionary {
+
+        return self.values as NSDictionary
     }
 }
+
 
 // MARK: - ObjectSnapshot where O: NSManagedObject
 
 extension ObjectSnapshot where O: NSManagedObject {
-    
-    /**
-     Initializes an `ObjectSnapshot` instance by copying all attribute values from the given `NSManagedObject`.
-     */
-    public init(from object: O) {
-        
-        self.attributes = object.dictionaryWithValues(
-            forKeys: Array(object.entity.attributesByName.keys)
-        )
-    }
-    
+
     /**
      Returns the value for the property identified by a given key.
      */
+    @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
     public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
-        
-        get {
-            
-            let key = String(keyPath: member)
-            return self.attributes[key]! as! V
-        }
-        set {
-            
-            let key = String(keyPath: member)
-            self.attributes[key] = newValue
-        }
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
+
+        let key = String(keyPath: keyPath)
+        return self.values[key] as! V?
+    }
+
+    /**
+     Mutates the value for the property identified by a given key.
+     */
+    public mutating func setValue<V: AllowedObjectiveCKeyPathValue>(_ value: V!, forKeyPath keyPath: KeyPath<O, V>) {
+
+        let key = String(keyPath: keyPath)
+        self.values[key] = value
     }
 }
 
@@ -83,61 +174,131 @@ extension ObjectSnapshot where O: NSManagedObject {
 // MARK: - ObjectSnapshot where O: CoreStoreObject
 
 extension ObjectSnapshot where O: CoreStoreObject {
-    
-    /**
-     Initializes an `ObjectSnapshot` instance by copying all attribute values from the given `CoreStoreObject`.
-     */
-    public init(from object: O) {
-    
-        var attributes: [KeyPathString: Any] = [:]
-        Self.initializeAttributes(
-            mirror: Mirror(reflecting: object),
-            object: object,
-            into: &attributes
-        )
-        self.attributes = attributes
-    }
-    
+
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<K: AttributeKeyPathStringConvertible>(dynamicMember member: KeyPath<O, K>) -> K.ReturnValueType {
-        
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V {
+
         get {
-            
+
             let key = String(keyPath: member)
-            return self.attributes[key]! as! K.ReturnValueType
+            return self.values[key] as! V
         }
         set {
-            
+
             let key = String(keyPath: member)
-            self.attributes[key] = newValue
+            self.values[key] = newValue
         }
     }
-    
-    
-    // MARK: Private
-    
-    private static func initializeAttributes(mirror: Mirror, object: CoreStoreObject, into attributes: inout [KeyPathString: Any]) {
-        
-        if let superClassMirror = mirror.superclassMirror {
-            
-            self.initializeAttributes(
-                mirror: superClassMirror,
-                object: object,
-                into: &attributes
-            )
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>) -> V? {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as? V
         }
-        for child in mirror.children {
-            
-            switch child.value {
-                
-            case let property as AttributeProtocol:
-                attributes[property.keyPath] = property.valueForSnapshot
-                
-            default:
-                continue
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>) -> V {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>) -> V? {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as? V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> ObjectPublisher<D>? {
+
+        get {
+
+            let key = String(keyPath: member)
+            guard let id = self.values[key] as? D.ObjectID else {
+
+                return nil
             }
+            return self.context.objectPublisher(objectID: id)
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue?.objectID()
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [ObjectPublisher<D>] {
+
+        get {
+
+            let key = String(keyPath: member)
+            let context = self.context
+            let ids = self.values[key] as! [D.ObjectID]
+            return ids.map(context.objectPublisher(objectID:))
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue.map({ $0.objectID() })
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<ObjectPublisher<D>> {
+
+        get {
+
+            let key = String(keyPath: member)
+            let context = self.context
+            let ids = self.values[key] as! Set<D.ObjectID>
+            return Set(ids.map(context.objectPublisher(objectID:)))
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = Set(newValue.map({ $0.objectID() }))
         }
     }
 }

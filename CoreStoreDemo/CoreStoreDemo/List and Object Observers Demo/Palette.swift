@@ -73,9 +73,12 @@ extension Palette {
         
         return "H: \(self.hue.value)˚, S: \(round(self.saturation.value * 100.0))%, B: \(round(self.brightness.value * 100.0))%"
     }
-    
+}
+
+extension Palette {
+
     func setInitialValues(in transaction: BaseDataTransaction) {
-        
+
         self.hue .= Palette.randomHue()
         self.saturation .= Float(1.0)
         self.brightness .= Float(arc4random_uniform(70) + 30) / 100.0

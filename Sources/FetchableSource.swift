@@ -40,7 +40,7 @@ public protocol FetchableSource: AnyObject {
      - parameter object: a reference to the object created/fetched outside the `FetchableSource`'s context
      - returns: the `DynamicObject` instance if the object exists in the `FetchableSource`'s context, or `nil` if not found.
      */
-    func fetchExisting<D: DynamicObject>(_ object: D) -> D?
+    func fetchExisting<O: DynamicObject>(_ object: O) -> O?
     
     /**
      Fetches the `DynamicObject` instance in the `FetchableSource`'s context from an `NSManagedObjectID`.
@@ -48,7 +48,7 @@ public protocol FetchableSource: AnyObject {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `DynamicObject` instance if the object exists in the `FetchableSource`, or `nil` if not found.
      */
-    func fetchExisting<D: DynamicObject>(_ objectID: NSManagedObjectID) -> D?
+    func fetchExisting<O: DynamicObject>(_ objectID: NSManagedObjectID) -> O?
     
     /**
      Fetches the `DynamicObject` instances in the `FetchableSource`'s context from references created from another managed object context.
@@ -56,7 +56,7 @@ public protocol FetchableSource: AnyObject {
      - parameter objects: an array of `DynamicObject`s created/fetched outside the `FetchableSource`'s context
      - returns: the `DynamicObject` array for objects that exists in the `FetchableSource`
      */
-    func fetchExisting<D: DynamicObject, S: Sequence>(_ objects: S) -> [D] where S.Iterator.Element == D
+    func fetchExisting<O: DynamicObject, S: Sequence>(_ objects: S) -> [O] where S.Iterator.Element == O
 
     /**
      Fetches the `DynamicObject` instances in the `FetchableSource`'s context from a list of `NSManagedObjectID`.
@@ -64,7 +64,7 @@ public protocol FetchableSource: AnyObject {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `DynamicObject` array for objects that exists in the `FetchableSource`'s context
      */
-    func fetchExisting<D: DynamicObject, S: Sequence>(_ objectIDs: S) -> [D] where S.Iterator.Element == NSManagedObjectID
+    func fetchExisting<O: DynamicObject, S: Sequence>(_ objectIDs: S) -> [O] where S.Iterator.Element == NSManagedObjectID
 
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -74,7 +74,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D?
+    func fetchOne<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> O?
 
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -84,7 +84,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D?
+    func fetchOne<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> O?
     
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -109,7 +109,7 @@ public protocol FetchableSource: AnyObject {
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D]
+    func fetchAll<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> [O]
 
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -119,7 +119,7 @@ public protocol FetchableSource: AnyObject {
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D]
+    func fetchAll<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> [O]
     
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -144,7 +144,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int
+    func fetchCount<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> Int
 
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -154,7 +154,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int
+    func fetchCount<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> Int
     
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -179,7 +179,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID?
+    func fetchObjectID<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID?
 
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -189,7 +189,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID?
+    func fetchObjectID<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID?
     
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -214,7 +214,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID]
+    func fetchObjectIDs<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID]
 
     /**
      Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -224,7 +224,7 @@ public protocol FetchableSource: AnyObject {
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID]
+    func fetchObjectIDs<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID]
     
     /**
      Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.

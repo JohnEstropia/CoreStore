@@ -42,7 +42,7 @@ extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.mainContext,
@@ -62,7 +62,7 @@ extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.mainContext,
@@ -81,7 +81,7 @@ extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.mainContext,
@@ -100,7 +100,7 @@ extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(forDataStack dataStack: DataStack, _ from: From<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(forDataStack dataStack: DataStack, _ from: From<O>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.mainContext,
@@ -127,7 +127,7 @@ extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.context,
@@ -147,7 +147,7 @@ extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.context,
@@ -166,7 +166,7 @@ extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.context,
@@ -185,7 +185,7 @@ extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<O: NSManagedObject>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
         
         return Internals.createFRC(
             fromContext: self.context,
@@ -205,7 +205,7 @@ extension Internals {
     // MARK: FilePrivate
 
     @available(macOS 10.12, *)
-    fileprivate static func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy<D>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    fileprivate static func createFRC<O: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<O>, sectionBy: SectionBy<O>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
 
         let controller = Internals.CoreStoreFetchedResultsController(
             context: context,
@@ -218,7 +218,7 @@ extension Internals {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(NSFetchedResultsController<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(NSFetchedResultsController<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )

@@ -1,5 +1,5 @@
 //
-//  Shared.swift
+//  PropertyProtocol.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -24,47 +24,12 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - Shared
+// MARK: - PropertyProtocol
 
-/**
-Global utilities
-*/
-public enum Shared {
+internal protocol PropertyProtocol: AnyObject {
 
-    /**
-    The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
-    */
-    public static var logger: CoreStoreLogger = DefaultLogger()
-
-    @available(*, deprecated, message: "Call methods directly from the DataStack instead")
-    public static var defaultStack: DataStack {
-
-        get {
-
-            self.defaultStackBarrierQueue.sync(flags: .barrier) {
-
-                if self.defaultStackInstance == nil {
-
-                    self.defaultStackInstance = DataStack()
-                }
-            }
-            return self.defaultStackInstance!
-        }
-        set {
-
-            self.defaultStackBarrierQueue.async(flags: .barrier) {
-
-                self.defaultStackInstance = newValue
-            }
-        }
-    }
-
-
-    // MARK: Private
-
-    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue")
-
-    private static var defaultStackInstance: DataStack?
+    var keyPath: KeyPathString { get }
 }

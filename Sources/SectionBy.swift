@@ -32,7 +32,7 @@ import CoreData
 /**
  The `SectionBy` clause indicates the key path to use to group the `ListMonitor` objects into sections. An optional closure can also be provided to transform the value into an appropriate section name:
  ```
- let monitor = CoreStore.monitorSectionedList(
+ let monitor = dataStack.monitorSectionedList(
      From<Person>(),
      SectionBy("age") { "Age \($0)" },
      OrderBy(.ascending("lastName"))
@@ -40,7 +40,7 @@ import CoreData
  ```
  */
 @available(macOS 10.12, *)
-public struct SectionBy<D: DynamicObject> {
+public struct SectionBy<O: DynamicObject> {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
@@ -70,17 +70,23 @@ public struct SectionBy<D: DynamicObject> {
     
     internal let sectionKeyPath: KeyPathString
     internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
+    
+    
+    // MARK: Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
 @available(macOS 10.12, *)
-extension SectionBy where D: NSManagedObject {
+extension SectionBy where O: NSManagedObject {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, T>) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, T>) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -92,21 +98,21 @@ extension SectionBy where D: NSManagedObject {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
         self.init(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
     }
 }
 
 @available(macOS 10.12, *)
-extension SectionBy where D: CoreStoreObject {
+extension SectionBy where O: CoreStoreObject {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -116,7 +122,7 @@ extension SectionBy where D: CoreStoreObject {
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -126,7 +132,7 @@ extension SectionBy where D: CoreStoreObject {
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -136,7 +142,7 @@ extension SectionBy where D: CoreStoreObject {
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -148,9 +154,9 @@ extension SectionBy where D: CoreStoreObject {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
-        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        self.init(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
     }
     
     /**
@@ -160,9 +166,9 @@ extension SectionBy where D: CoreStoreObject {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
-        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        self.init(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
     }
     
     /**
@@ -172,9 +178,9 @@ extension SectionBy where D: CoreStoreObject {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
-        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        self.init(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
     }
     
     /**
@@ -184,8 +190,8 @@ extension SectionBy where D: CoreStoreObject {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
-        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        self.init(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
     }
 }

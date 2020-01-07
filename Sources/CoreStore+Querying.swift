@@ -33,79 +33,79 @@ import CoreData
 extension CoreStore {
     
     /**
-     Using the `defaultStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
      
      - parameter object: a reference to the object created/fetched outside the `DataStack`
      - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    public static func fetchExisting<D: DynamicObject>(_ object: D) -> D? {
+    public static func fetchExisting<O: DynamicObject>(_ object: O) -> O? {
         
-        return Shared.defaultStack.fetchExisting(object)
+        return CoreStoreDefaults.dataStack.fetchExisting(object)
     }
     
     /**
-     Using the `defaultStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
      
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    public static func fetchExisting<D: DynamicObject>(_ objectID: NSManagedObjectID) -> D? {
+    public static func fetchExisting<O: DynamicObject>(_ objectID: NSManagedObjectID) -> O? {
         
-        return Shared.defaultStack.fetchExisting(objectID)
+        return CoreStoreDefaults.dataStack.fetchExisting(objectID)
     }
     
     /**
-     Using the `defaultStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from references created from a transaction or from a different managed object context.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from references created from a transaction or from a different managed object context.
      
      - parameter objects: an array of `DynamicObject`s created/fetched outside the `DataStack`
      - returns: the `DynamicObject` array for objects that exists in the `DataStack`
      */
-    public static func fetchExisting<D: DynamicObject, S: Sequence>(_ objects: S) -> [D] where S.Iterator.Element == D {
+    public static func fetchExisting<O: DynamicObject, S: Sequence>(_ objects: S) -> [O] where S.Iterator.Element == O {
         
-        return Shared.defaultStack.fetchExisting(objects)
+        return CoreStoreDefaults.dataStack.fetchExisting(objects)
     }
     
     /**
-     Using the `defaultStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from a list of `NSManagedObjectID`.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from a list of `NSManagedObjectID`.
      
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `DynamicObject` array for objects that exists in the `DataStack`
      */
-    public static func fetchExisting<D: DynamicObject, S: Sequence>(_ objectIDs: S) -> [D] where S.Iterator.Element == NSManagedObjectID {
+    public static func fetchExisting<O: DynamicObject, S: Sequence>(_ objectIDs: S) -> [O] where S.Iterator.Element == NSManagedObjectID {
         
-        return Shared.defaultStack.fetchExisting(objectIDs)
+        return CoreStoreDefaults.dataStack.fetchExisting(objectIDs)
     }
     
     /**
-     Using the `defaultStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
+    public static func fetchOne<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> O? {
         
-        return try Shared.defaultStack.fetchOne(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchOne(from, fetchClauses)
     }
     
     /**
-     Using the `defaultStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
+    public static func fetchOne<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> O? {
         
-        return try Shared.defaultStack.fetchOne(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchOne(from, fetchClauses)
     }
     
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
      ```
-     let youngestTeen = CoreStore.fetchOne(
+     let youngestTeen = dataStack.fetchOne(
          From<MyPersonEntity>()
              .where(\.age > 18)
              .orderBy(.ascending(\.age))
@@ -117,39 +117,39 @@ extension CoreStore {
      */
     public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
-        return try Shared.defaultStack.fetchOne(clauseChain)
+        return try CoreStoreDefaults.dataStack.fetchOne(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
+    public static func fetchAll<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> [O] {
         
-        return try Shared.defaultStack.fetchAll(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchAll(from, fetchClauses)
     }
     
     /**
-     Using the `defaultStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
+    public static func fetchAll<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> [O] {
         
-        return try Shared.defaultStack.fetchAll(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchAll(from, fetchClauses)
     }
     
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
      ```
-     let people = CoreStore.fetchAll(
+     let people = dataStack.fetchAll(
          From<MyPersonEntity>()
              .where(\.age > 18)
              .orderBy(.ascending(\.age))
@@ -161,39 +161,39 @@ extension CoreStore {
      */
     public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType] {
         
-        return try Shared.defaultStack.fetchAll(clauseChain)
+        return try CoreStoreDefaults.dataStack.fetchAll(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
+    public static func fetchCount<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> Int {
         
-        return try Shared.defaultStack.fetchCount(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchCount(from, fetchClauses)
     }
     
     /**
-     Using the `defaultStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
+    public static func fetchCount<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> Int {
         
-        return try Shared.defaultStack.fetchCount(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchCount(from, fetchClauses)
     }
     
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
      ```
-     let numberOfAdults = CoreStore.fetchCount(
+     let numberOfAdults = dataStack.fetchCount(
          From<MyPersonEntity>()
              .where(\.age > 18)
              .orderBy(.ascending(\.age))
@@ -205,39 +205,39 @@ extension CoreStore {
      */
     public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        return try Shared.defaultStack.fetchCount(clauseChain)
+        return try CoreStoreDefaults.dataStack.fetchCount(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
+    public static func fetchObjectID<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
         
-        return try Shared.defaultStack.fetchObjectID(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
+    public static func fetchObjectID<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
-        return try Shared.defaultStack.fetchObjectID(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
      ```
-     let youngestTeenID = CoreStore.fetchObjectID(
+     let youngestTeenID = dataStack.fetchObjectID(
          From<MyPersonEntity>()
              .where(\.age > 18)
              .orderBy(.ascending(\.age))
@@ -249,33 +249,33 @@ extension CoreStore {
      */
     public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID? {
         
-        return try Shared.defaultStack.fetchObjectID(clauseChain)
+        return try CoreStoreDefaults.dataStack.fetchObjectID(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
+    public static func fetchObjectIDs<O>(_ from: From<O>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
         
-        return try Shared.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
+    public static func fetchObjectIDs<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
         
-        return try Shared.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try CoreStoreDefaults.dataStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -293,11 +293,11 @@ extension CoreStore {
      */
     public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID] {
         
-        return try Shared.defaultStack.fetchObjectIDs(clauseChain)
+        return try CoreStoreDefaults.dataStack.fetchObjectIDs(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      
@@ -307,13 +307,13 @@ extension CoreStore {
      - returns: the result of the the query, or `nil` if no match was found. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) throws -> U? {
+    public static func queryValue<O, U: QueryableAttributeType>(_ from: From<O>, _ selectClause: Select<O, U>, _ queryClauses: QueryClause...) throws -> U? {
         
-        return try Shared.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try CoreStoreDefaults.dataStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
-     Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      
@@ -323,9 +323,9 @@ extension CoreStore {
      - returns: the result of the the query, or `nil` if no match was found. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
+    public static func queryValue<O, U: QueryableAttributeType>(_ from: From<O>, _ selectClause: Select<O, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
-        return try Shared.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try CoreStoreDefaults.dataStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -333,7 +333,7 @@ extension CoreStore {
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      ```
-     let averageAdultAge = CoreStore.queryValue(
+     let averageAdultAge = dataStack.queryValue(
          From<MyPersonEntity>()
              .select(Int.self, .average(\.age))
              .where(\.age > 18)
@@ -345,11 +345,11 @@ extension CoreStore {
      */
     public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
-        return try Shared.defaultStack.queryValue(clauseChain)
+        return try CoreStoreDefaults.dataStack.queryValue(clauseChain)
     }
     
     /**
-     Using the `defaultStack`, queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      
@@ -359,13 +359,13 @@ extension CoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
+    public static func queryAttributes<O>(_ from: From<O>, _ selectClause: Select<O, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
         
-        return try Shared.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try CoreStoreDefaults.dataStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
-     Using the `defaultStack`, queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+     Using the `CoreStoreDefaults.dataStack`, queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      
@@ -375,9 +375,9 @@ extension CoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
+    public static func queryAttributes<O>(_ from: From<O>, _ selectClause: Select<O, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
-        return try Shared.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try CoreStoreDefaults.dataStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -385,7 +385,7 @@ extension CoreStore {
      
      A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      ```
-     let results = CoreStore.queryAttributes(
+     let results = dataStack.queryAttributes(
          From<MyPersonEntity>()
              .select(
                  NSDictionary.self,
@@ -406,6 +406,6 @@ extension CoreStore {
      */
     public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary {
         
-        return try Shared.defaultStack.queryAttributes(clauseChain)
+        return try CoreStoreDefaults.dataStack.queryAttributes(clauseChain)
     }
 }

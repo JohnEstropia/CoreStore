@@ -63,7 +63,7 @@ public final class DataStack: Equatable {
     /**
      Convenience initializer for `DataStack` that creates a `SchemaHistory` from a list of `DynamicSchema` versions.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          XcodeDataModelSchema(modelName: "MyModelV1"),
          CoreStoreSchema(
              modelVersion: "MyModelV2",
@@ -92,7 +92,7 @@ public final class DataStack: Equatable {
     /**
      Initializes a `DataStack` from a `SchemaHistory` instance.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          schemaHistory: SchemaHistory(
              XcodeDataModelSchema(modelName: "MyModelV1"),
              CoreStoreSchema(
@@ -370,99 +370,6 @@ public final class DataStack: Equatable {
         }
     }
     
-    /**
-     Adds a `CloudStorage` to the stack and blocks until completion.
-     ```
-     guard let storage = ICloudStore(
-         ubiquitousContentName: "MyAppCloudData",
-         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-         configuration: "Config1",
-         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
-     ) else {
-         // iCloud is not available on the device
-         return
-     }
-     try dataStack.addStorageAndWait(storage)
-     ```
-     - parameter storage: the local storage
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
-     */
-    @discardableResult
-    public func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
-        
-        return try self.coordinator.performSynchronously {
-            
-            if let _ = self.persistentStoreForStorage(storage) {
-                
-                return storage
-            }
-            
-            let cacheFileURL = storage.cacheFileURL
-            if let persistentStore = self.coordinator.persistentStore(for: cacheFileURL as URL) {
-                
-                if let existingStorage = persistentStore.storageInterface as? T,
-                    storage.matchesPersistentStore(persistentStore) {
-                    
-                    return existingStorage
-                }
-                
-                let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
-                Internals.log(
-                    error,
-                    "Failed to add \(Internals.typeName(storage)) at \"\(cacheFileURL)\" because a different \(Internals.typeName(NSPersistentStore.self)) at that URL already exists."
-                )
-                throw error
-            }
-            
-            do {
-                
-                var cloudStorageOptions = storage.cloudStorageOptions
-                cloudStorageOptions.remove(.recreateLocalStoreOnModelMismatch)
-                
-                let storeOptions = storage.dictionary(forOptions: cloudStorageOptions)
-                do {
-                    
-                    _ = try self.createPersistentStoreFromStorage(
-                        storage,
-                        finalURL: cacheFileURL,
-                        finalStoreOptions: storeOptions
-                    )
-                    return storage
-                }
-                catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
-                    
-                    let finalStoreOptions = storage.dictionary(forOptions: storage.cloudStorageOptions)
-                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                        ofType: type(of: storage).storeType,
-                        at: cacheFileURL,
-                        options: storeOptions
-                    )
-                    _ = try self.schemaHistory
-                        .schema(for: metadata)
-                        .flatMap({ try storage.cs_eraseStorageAndWait(soureModel: $0.rawModel()) })
-                    _ = try self.createPersistentStoreFromStorage(
-                        storage,
-                        finalURL: cacheFileURL,
-                        finalStoreOptions: finalStoreOptions
-                    )
-                    return storage
-                }
-            }
-            catch {
-                
-                let storeError = CoreStoreError(error)
-                Internals.log(
-                    storeError,
-                    "Failed to add \(Internals.typeName(storage)) to the stack."
-                )
-                throw storeError
-            }
-        }
-    }
-    
     
     // MARK: 3rd Party Utilities
     
@@ -472,7 +379,7 @@ public final class DataStack: Equatable {
      enum Static {
         static var myDataKey: Void?
      }
-     CoreStore.defaultStack.userInfo[&Static.myDataKey] = myObject
+     CoreStoreDefaults.dataStack.userInfo[&Static.myDataKey] = myObject
      ```
      - Important: Do not use this method to store thread-sensitive data.
      */

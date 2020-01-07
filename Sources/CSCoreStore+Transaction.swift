@@ -65,7 +65,7 @@ extension CSCoreStore {
         
         return bridge {
             
-            CoreStore.beginUnsafe()
+            self.defaultStack.bridgeToSwift.beginUnsafe()
         }
     }
     
@@ -80,7 +80,7 @@ extension CSCoreStore {
         
         return bridge {
             
-            CoreStore.beginUnsafe(supportsUndo: supportsUndo)
+            self.defaultStack.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
         }
     }
     
@@ -90,6 +90,6 @@ extension CSCoreStore {
     @objc
     public static func refreshAndMergeAllObjects() {
         
-        CoreStore.refreshAndMergeAllObjects()
+        self.defaultStack.refreshAndMergeAllObjects()
     }
 }

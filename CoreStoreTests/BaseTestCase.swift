@@ -67,11 +67,11 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () throws -> T) rethrows -> T {
         
-        Shared.logger = TestLogger(self.prepareLoggerExpectations(expectations))
+        CoreStoreDefaults.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
             
             self.checkExpectationsImmediately()
-            Shared.logger = TestLogger([:])
+            CoreStoreDefaults.logger = TestLogger([:])
         }
         return try closure()
     }
@@ -79,17 +79,17 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func expectLogger(_ expectations: [TestLogger.Expectation: XCTestExpectation]) {
         
-        Shared.logger = TestLogger(expectations)
+        CoreStoreDefaults.logger = TestLogger(expectations)
     }
 
     @nonobjc
     func expectError<T>(code: CoreStoreErrorCode, closure: () throws -> T) {
 
-        Shared.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
+        CoreStoreDefaults.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
         defer {
 
             self.checkExpectationsImmediately()
-            Shared.logger = TestLogger([:])
+            CoreStoreDefaults.logger = TestLogger([:])
         }
         do {
 
@@ -138,12 +138,12 @@ class BaseTestCase: XCTestCase {
         
         super.setUp()
         self.deleteStores()
-        Shared.logger = TestLogger([:])
+        CoreStoreDefaults.logger = TestLogger([:])
     }
     
     override func tearDown() {
         
-        Shared.logger = DefaultLogger()
+        CoreStoreDefaults.logger = DefaultLogger()
         self.deleteStores()
         super.tearDown()
     }

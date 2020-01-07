@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "6.3.2"
-    s.swift_version = "5.0"
+    s.version = "7.0.2"
+    s.swift_version = "5.1"
     s.license = "MIT"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
     s.documentation_url = "https://JohnEstropia.github.io/CoreStore"
@@ -18,5 +18,5 @@ Pod::Spec.new do |s|
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS[config=Debug]' => '-D DEBUG' }
+    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS[config=Debug]' => '-D DEBUG', 'OTHER_LDFLAGS' => '-weak_framework Combine -weak_framework SwiftUI' }
 end

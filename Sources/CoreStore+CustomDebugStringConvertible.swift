@@ -54,50 +54,6 @@ extension AsynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDe
 }
 
 
-// MARK: - CloudStorageOptions
-
-extension CloudStorageOptions: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        var flags = [String]()
-        if self.contains(.recreateLocalStoreOnModelMismatch) {
-            
-            flags.append(".recreateLocalStoreOnModelMismatch")
-        }
-        if self.contains(.allowSynchronousLightweightMigration) {
-            
-            flags.append(".allowSynchronousLightweightMigration")
-        }
-        switch flags.count {
-            
-        case 0:
-            return "[.none]"
-            
-        case 1:
-            return "[.\(flags[0])]"
-            
-        default:
-            var string = "[\n"
-            string.append(flags.joined(separator: ",\n"))
-            string.indent(1)
-            string.append("\n]")
-            return string
-        }
-    }
-}
-
-
 // MARK: - CoreStoreError
 
 extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -417,15 +373,34 @@ fileprivate struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConve
     var coreStoreDumpString: String {
         
         return createFormattedString(
-            "\"\(self.sectionInfo.name)\" (", ")",
-            ("numberOfObjects", self.sectionInfo.numberOfObjects),
-            ("indexTitle", self.sectionInfo.indexTitle as Any)
+            "\"\(self.sectionName)\" (", ")",
+            ("numberOfObjects", self.numberOfObjects),
+            ("indexTitle", self.sectionIndexTitle as Any)
         )
     }
     
     // MARK: FilePrivate
     
-    let sectionInfo: NSFetchedResultsSectionInfo
+    fileprivate init(_ sectionInfo: NSFetchedResultsSectionInfo) {
+
+        self.sectionName = sectionInfo.name
+        self.numberOfObjects = sectionInfo.numberOfObjects
+        self.sectionIndexTitle = sectionInfo.indexTitle
+    }
+
+    fileprivate init(_ section: Internals.DiffableDataSourceSnapshot.Section) {
+
+        self.sectionName = section.differenceIdentifier
+        self.numberOfObjects = section.elements.count
+        self.sectionIndexTitle = nil
+    }
+
+
+    // MARK: Private
+
+    private let sectionName: String
+    private let sectionIndexTitle: String?
+    private let numberOfObjects: Int
 }
 
 @available(macOS 10.12, *)
@@ -448,6 +423,56 @@ extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvert
             ("isPendingRefetch", self.isPendingRefetch),
             ("numberOfObjects", self.numberOfObjects()),
             ("sections", self.sections().map(CoreStoreFetchedSectionInfoWrapper.init))
+        )
+    }
+}
+
+
+// MARK: - ListPublisher
+
+@available(macOS 10.12, *)
+extension ListPublisher: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+
+        return formattedDebugDescription(self)
+    }
+
+
+    // MARK: CoreStoreDebugStringConvertible
+
+    public var coreStoreDumpString: String {
+
+        return createFormattedString(
+            "(", ")",
+            ("snapshot", self.snapshot)
+        )
+    }
+}
+
+
+// MARK: - ListSnapshot
+
+extension ListSnapshot: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+
+        return formattedDebugDescription(self)
+    }
+
+
+    // MARK: CoreStoreDebugStringConvertible
+
+    public var coreStoreDumpString: String {
+
+        return createFormattedString(
+            "(", ")",
+            ("numberOfObjects", self.numberOfItems),
+            ("sections", self.diffableSnapshot.sections.map(CoreStoreFetchedSectionInfoWrapper.init))
         )
     }
 }
@@ -607,6 +632,56 @@ extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConve
             "(", ")",
             ("isObjectDeleted", self.isObjectDeleted),
             ("object", self.object as Any)
+        )
+    }
+}
+
+
+// MARK: - ObjectPublisher
+
+extension ObjectPublisher: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+
+        return formattedDebugDescription(self)
+    }
+
+
+    // MARK: CoreStoreDebugStringConvertible
+
+    public var coreStoreDumpString: String {
+
+        return createFormattedString(
+            "(", ")",
+            ("objectID", self.objectID()),
+            ("object", self.object as Any)
+        )
+    }
+}
+
+
+// MARK: - ObjectSnapshot
+
+extension ObjectSnapshot: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+
+        return formattedDebugDescription(self)
+    }
+
+
+    // MARK: CoreStoreDebugStringConvertible
+
+    public var coreStoreDumpString: String {
+
+        return createFormattedString(
+            "(", ")",
+            ("objectID", self.objectID()),
+            ("dictionaryForValues", self.dictionaryForValues())
         )
     }
 }
@@ -1204,7 +1279,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             
             info.append(("compoundIndexes", self.compoundIndexes))
         }
-        if #available(macOS 10.11, *) {
+        if #available(macOS 10.11, iOS 9.0, *) {
             
             info.append(("uniquenessConstraints", self.uniquenessConstraints))
         }

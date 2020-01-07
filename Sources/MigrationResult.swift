@@ -33,7 +33,7 @@ import Foundation
  `MigrationResult.success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
  `MigrationResult.failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
  ```
- CoreStore.upgradeStorageIfNeeded(SQLiteStorage(fileName: "data.sqlite")) { (result) in
+ dataStack.upgradeStorageIfNeeded(SQLiteStorage(fileName: "data.sqlite")) { (result) in
      switch result {
      case .success(let migrationSteps):
          // ...

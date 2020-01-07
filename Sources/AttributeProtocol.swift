@@ -29,11 +29,10 @@ import CoreData
 
 // MARK: - AttributeProtocol
 
-internal protocol AttributeProtocol: AnyObject {
+internal protocol AttributeProtocol: PropertyProtocol {
     
     static var attributeType: NSAttributeType { get }
     
-    var keyPath: KeyPathString { get }
     var isOptional: Bool { get }
     var isTransient: Bool { get }
     var allowsExternalBinaryDataStorage: Bool { get }
@@ -44,5 +43,5 @@ internal protocol AttributeProtocol: AnyObject {
     var rawObject: CoreStoreManagedObject? { get set }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any { get }
+    var valueForSnapshot: Any? { get }
 }

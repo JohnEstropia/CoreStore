@@ -33,9 +33,9 @@ import CoreData
 extension CoreStore {
 
     /**
-     Asynchronously adds a `StorageInterface` to the `defaultStack`. Migrations are also initiated by default.
+     Asynchronously adds a `StorageInterface` to the `CoreStoreDefaults.dataStack`. Migrations are also initiated by default.
      ```
-     CoreStore.addStorage(
+     dataStack.addStorage(
          InMemoryStore(configuration: "Config1"),
          completion: { result in
              switch result {
@@ -50,13 +50,13 @@ extension CoreStore {
      */
     public static func addStorage<T>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
-        Shared.defaultStack.addStorage(storage, completion: completion)
+        CoreStoreDefaults.dataStack.addStorage(storage, completion: completion)
     }
 
     /**
-     Asynchronously adds a `LocalStorage` to the `defaultStack`. Migrations are also initiated by default.
+     Asynchronously adds a `LocalStorage` to the `CoreStoreDefaults.dataStack`. Migrations are also initiated by default.
      ```
-     let migrationProgress = CoreStore.addStorage(
+     let migrationProgress = dataStack.addStorage(
          SQLiteStore(fileName: "core_data.sqlite", configuration: "Config1"),
          completion: { result in
              switch result {
@@ -72,43 +72,11 @@ extension CoreStore {
      */
     public static func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
-        return Shared.defaultStack.addStorage(storage, completion: completion)
-    }
-    
-    /**
-     Asynchronously adds a `CloudStorage` to the `defaultStack`. Migrations are also initiated by default.
-     ```
-     guard let storage = ICloudStore(
-         ubiquitousContentName: "MyAppCloudData",
-         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-         configuration: "Config1",
-         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
-     ) else {
-         // iCloud is not available on the device
-         return
-     }
-     let migrationProgress = dataStack.addStorage(
-         storage,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storage: the cloud storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
-     */
-    public static func addStorage<T: CloudStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
-        
-        Shared.defaultStack.addStorage(storage, completion: completion)
+        return CoreStoreDefaults.dataStack.addStorage(storage, completion: completion)
     }
 
     /**
-     Migrates a local storage to match the `defaultStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
+     Migrates a local storage to match the `CoreStoreDefaults.dataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
 
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.failure` result if an error occurs asynchronously.
@@ -117,11 +85,11 @@ extension CoreStore {
      */
     public static func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
         
-        return try Shared.defaultStack.upgradeStorageIfNeeded(storage, completion: completion)
+        return try CoreStoreDefaults.dataStack.upgradeStorageIfNeeded(storage, completion: completion)
     }
     
     /**
-     Checks the migration steps required for the storage to match the `defaultStack`'s managed object model version.
+     Checks the migration steps required for the storage to match the `CoreStoreDefaults.dataStack`'s managed object model version.
      
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
@@ -129,6 +97,6 @@ extension CoreStore {
      */
     public static func requiredMigrationsForStorage<T: LocalStorage>(_ storage: T) throws -> [MigrationType] {
         
-        return try Shared.defaultStack.requiredMigrationsForStorage(storage)
+        return try CoreStoreDefaults.dataStack.requiredMigrationsForStorage(storage)
     }
 }

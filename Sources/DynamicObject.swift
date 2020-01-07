@@ -33,11 +33,20 @@ import CoreData
  All CoreStore's utilities are designed around `DynamicObject` instances. `NSManagedObject` and `CoreStoreObject` instances all conform to `DynamicObject`.
  */
 public protocol DynamicObject: AnyObject {
+    /**
+     The object ID for this instance
+     */
+    typealias ObjectID = NSManagedObjectID
     
     /**
      Used internally by CoreStore. Do not call directly.
      */
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]?
     
     /**
      Used internally by CoreStore. Do not call directly.
@@ -52,22 +61,17 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    func cs_id() -> NSManagedObjectID
+    func cs_toRaw() -> NSManagedObject
     
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    func cs_toRaw() -> NSManagedObject
+    func cs_id() -> ObjectID
 }
 
 extension DynamicObject {
-
-    // MARK: Internal
     
-    internal static func keyPathBuilder() -> DynamicObjectMeta<Never, Self> {
-
-        return .init(keyPathString: "SELF")
-    }
+    // MARK: Internal
     
     internal func runtimeType() -> Self.Type {
         
@@ -92,6 +96,21 @@ extension NSManagedObject: DynamicObject {
         }
         return object
     }
+
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
+
+        guard let object = context.fetchExisting(id) as NSManagedObject? else {
+
+            return nil
+        }
+        let rawObject = object.cs_toRaw()
+        var dictionary = rawObject.dictionaryWithValues(forKeys: Array(rawObject.entity.attributesByName.keys))
+        for case (let key, let target as NSManagedObject) in rawObject.dictionaryWithValues(forKeys: Array(rawObject.entity.relationshipsByName.keys)) {
+
+            dictionary[key] = target.objectID
+        }
+        return dictionary
+    }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
@@ -103,24 +122,14 @@ extension NSManagedObject: DynamicObject {
         return object.isKind(of: self)
     }
     
-    public func cs_id() -> NSManagedObjectID {
-        
-        return self.objectID
-    }
-    
     public func cs_toRaw() -> NSManagedObject {
         
         return self
     }
-}
-
-extension DynamicObject where Self: NSManagedObject {
     
-    // MARK: Public
-    
-    public func createSnapshot() -> ObjectSnapshot<Self> {
+    public func cs_id() -> ObjectID {
         
-        return ObjectSnapshot(from: self)
+        return self.objectID
     }
 }
 
@@ -140,6 +149,46 @@ extension CoreStoreObject {
             context.assign(object, to: store)
         }
         return self.cs_fromRaw(object: object)
+    }
+
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
+
+        func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
+
+            if let superClassMirror = mirror.superclassMirror {
+
+                initializeAttributes(
+                    mirror: superClassMirror,
+                    object: object,
+                    into: &attributes
+                )
+            }
+            for child in mirror.children {
+
+                switch child.value {
+
+                case let property as AttributeProtocol:
+                    attributes[property.keyPath] = property.valueForSnapshot
+
+                case let property as RelationshipProtocol:
+                    attributes[property.keyPath] = property.valueForSnapshot
+
+                default:
+                    continue
+                }
+            }
+        }
+        guard let object = context.fetchExisting(id) as CoreStoreObject? else {
+
+            return nil
+        }
+        var values: [KeyPathString: Any] = [:]
+        initializeAttributes(
+            mirror: Mirror(reflecting: object),
+            object: object as! Self,
+            into: &values
+        )
+        return values
     }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
@@ -166,23 +215,13 @@ extension CoreStoreObject {
         return (self as AnyClass).isSubclass(of: type as AnyClass)
     }
     
-    public func cs_id() -> NSManagedObjectID {
-        
-        return self.rawObject!.objectID
-    }
-    
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
     }
-}
-
-extension DynamicObject where Self: CoreStoreObject {
     
-    // MARK: Public
-    
-    public func createSnapshot() -> ObjectSnapshot<Self> {
+    public func cs_id() -> ObjectID {
         
-        return ObjectSnapshot(from: self)
+        return self.rawObject!.objectID
     }
 }

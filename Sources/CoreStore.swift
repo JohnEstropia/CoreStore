@@ -34,17 +34,17 @@ import CoreData
 @available(*, deprecated, message: "Call methods directly from the DataStack instead")
 public enum CoreStore {
 
-    @available(*, unavailable, renamed: "Shared.logger")
+    @available(*, unavailable, renamed: "CoreStoreDefaults.logger")
     public static var logger: CoreStoreLogger {
 
-        get { return Shared.logger }
-        set { Shared.logger = newValue }
+        get { return CoreStoreDefaults.logger }
+        set { CoreStoreDefaults.logger = newValue }
     }
 
-    @available(*, unavailable, renamed: "Shared.defaultStack")
+    @available(*, unavailable, renamed: "CoreStoreDefaults.dataStack")
     public static var defaultStack: DataStack {
         
-        get { return Shared.defaultStack }
-        set { Shared.defaultStack = newValue }
+        get { return CoreStoreDefaults.dataStack }
+        set { CoreStoreDefaults.dataStack = newValue }
     }
 }

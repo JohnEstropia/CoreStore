@@ -76,7 +76,7 @@ public final class CSSectionBy: NSObject {
     
     public let bridgeToSwift: SectionBy<NSManagedObject>
     
-    public init<D>(_ swiftValue: SectionBy<D>) {
+    public init<O>(_ swiftValue: SectionBy<O>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()

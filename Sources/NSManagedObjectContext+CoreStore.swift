@@ -85,15 +85,75 @@ extension NSManagedObjectContext {
             }
         )
     }
+
+    @nonobjc
+    internal func objectPublisher<O: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<O> {
+
+        let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<O>> = self.userInfo(for: .objectPublishersCache(O.self)) {
+
+            return .strongToWeakObjects()
+        }
+        return Internals.with {
+
+            if let objectPublisher = cache.object(forKey: objectID) {
+
+                return objectPublisher
+            }
+            let objectPublisher = ObjectPublisher<O>.createUncached(objectID: objectID, context: self)
+            cache.setObject(objectPublisher, forKey: objectID)
+            return objectPublisher
+        }
+    }
+
+    @nonobjc
+    internal func objectsDidChangeObserver<U: AnyObject>(for observer: U) -> Internals.SharedNotificationObserver<(updated: Set<NSManagedObjectID>, deleted: Set<NSManagedObjectID>)> {
+
+        return self.userInfo(for: .objectsChangeObserver(U.self)) { [unowned self] in
+
+            return .init(
+                notificationName: .NSManagedObjectContextObjectsDidChange,
+                object: self,
+                queue: .main,
+                sharedValue: { (notification) -> (updated: Set<NSManagedObjectID>, deleted: Set<NSManagedObjectID>) in
+
+                    guard let userInfo = notification.userInfo else {
+
+                        return (updated: [], deleted: [])
+                    }
+                    if userInfo[NSInvalidatedAllObjectsKey] != nil {
+
+                        let context = notification.object as! NSManagedObjectContext
+                        return (updated: Set(context.registeredObjects.map({ $0.objectID })), deleted: [])
+                    }
+
+                    var updatedObjectIDs: Set<NSManagedObjectID> = []
+                    if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
+
+                        updatedObjectIDs.formUnion(updatedObjects.map({ $0.objectID }))
+                    }
+                    if let mergedObjects = userInfo[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
+
+                        updatedObjectIDs.formUnion(mergedObjects.map({ $0.objectID }))
+                    }
+                    if let mergedObjects = userInfo[NSInvalidatedObjectsKey] as? Set<NSManagedObject> {
+
+                        updatedObjectIDs.formUnion(mergedObjects.map({ $0.objectID }))
+                    }
+                    let deletedObjectIDs: Set<NSManagedObject> = (userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>) ?? []
+                    return (updated: updatedObjectIDs, deleted: Set(deletedObjectIDs.map({ $0.objectID })))
+                }
+            )
+        }
+    }
+
+    @nonobjc
+    internal func objectsDidChangeObserver<U: AnyObject>(remove: U) {
+
+        _ = self.userInfo(for: .objectsChangeObserver(U.self), initialize: { nil as Any? })
+    }
     
     
     // MARK: Private
-    
-    private struct PropertyKeys {
-        
-        static var observerForWillSaveNotification: Void?
-        static var shouldCascadeSavesToParent: Void?
-    }
     
     @nonobjc
     private var observerForWillSaveNotification: Internals.NotificationObserver? {
@@ -112,6 +172,48 @@ extension NSManagedObjectContext {
                 forKey: &PropertyKeys.observerForWillSaveNotification,
                 inObject: self
             )
+        }
+    }
+
+    private func userInfo<T>(for key: UserInfoKeys, initialize: @escaping () -> T) -> T {
+
+        let keyString = key.keyString
+        if let value = self.userInfo[keyString] as? T {
+
+            return value
+        }
+        let value = initialize()
+        self.userInfo[keyString] = value
+        return value
+    }
+
+
+    // MARK: - PropertyKeys
+
+    private struct PropertyKeys {
+
+        static var observerForWillSaveNotification: Void?
+        static var shouldCascadeSavesToParent: Void?
+    }
+
+
+    // MARK: - UserInfoKeys
+
+    private enum UserInfoKeys {
+
+        case objectPublishersCache(DynamicObject.Type)
+        case objectsChangeObserver(AnyObject.Type)
+
+        var keyString: String {
+
+            switch self {
+
+            case .objectPublishersCache(let objectType):
+                return "CoreStore.objectPublishersCache(\(Internals.typeName(objectType)))"
+
+            case .objectsChangeObserver:
+                return "CoreStore.objectsChangeObserver"
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ import CoreData
      // ...
  }
  
- CoreStore.perform(
+ dataStack.perform(
      asynchronous: { (transaction) -> Void in
          let json: NSDictionary = // ...
          let person = try transaction.importUniqueObject(

@@ -27,6 +27,7 @@ import Foundation
 
 // MARK: - Internals
 
+@usableFromInline
 internal enum Internals {
 
     // MARK: Associated Objects

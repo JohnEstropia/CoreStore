@@ -45,7 +45,7 @@ import Foundation
  ```
  `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
  ```
- CoreStore.defaultStack = DataStack(
+ CoreStoreDefaults.dataStack = DataStack(
      CoreStoreSchema(
          modelVersion: "V1",
          entities: [
@@ -63,7 +63,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     /**
      Do not call this directly. This is exposed as public only as a required initializer.
-     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     - Important: subclasses that need a custom initializer should override both `init(rawObject:)` and `init(asMeta:)`, and to call their corresponding super implementations.
      */
     public required init(rawObject: NSManagedObject) {
         
@@ -77,7 +77,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     /**
      Do not call this directly. This is exposed as public only as a required initializer.
-     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     - Important: subclasses that need a custom initializer should override both `init(rawObject:)` and `init(asMeta:)`, and to call their corresponding super implementations.
      */
     public required init(asMeta: Void) {
         
@@ -116,6 +116,27 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     internal let rawObject: CoreStoreManagedObject?
     internal let isMeta: Bool
+
+    internal class func metaProperties(includeSuperclasses: Bool) -> [PropertyProtocol] {
+
+        func keyPaths(_ allKeyPaths: inout [PropertyProtocol], for dynamicType: CoreStoreObject.Type) {
+
+            allKeyPaths.append(contentsOf: dynamicType.meta.propertyProtocolsByName())
+            guard
+                includeSuperclasses,
+                case let superType as CoreStoreObject.Type = (dynamicType as AnyClass).superclass(),
+                superType != CoreStoreObject.self
+                else {
+
+                    return
+            }
+            keyPaths(&allKeyPaths, for: superType)
+        }
+
+        var allKeyPaths: [PropertyProtocol] = []
+        keyPaths(&allKeyPaths, for: self)
+        return allKeyPaths
+    }
     
     
     // MARK: Private
@@ -143,6 +164,22 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
                 continue
             }
         }
+    }
+
+    private func propertyProtocolsByName() -> [PropertyProtocol] {
+
+        Internals.assert(self.isMeta, "'propertyProtocolsByName()' accessed from non-meta instance of \(Internals.typeName(self))")
+
+        let cacheKey = ObjectIdentifier(Self.self)
+        if let properties = Static.propertiesCache[cacheKey] {
+
+            return properties
+        }
+        let values: [PropertyProtocol] = Mirror(reflecting: self)
+            .children
+            .compactMap({ $0.value as? PropertyProtocol })
+        Static.propertiesCache[cacheKey] = values
+        return values
     }
 }
 
@@ -187,4 +224,5 @@ fileprivate enum Static {
     // MARK: FilePrivate
     
     fileprivate static var metaCache: [ObjectIdentifier: Any] = [:]
+    fileprivate static var propertiesCache: [ObjectIdentifier: [PropertyProtocol]] = [:]
 }

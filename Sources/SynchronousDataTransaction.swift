@@ -30,7 +30,7 @@ import CoreData
 // MARK: - SynchronousDataTransaction
 
 /**
- The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`, or from `CoreStore.beginSynchronous(_:)`.
+ The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`.
  */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
@@ -55,7 +55,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public override func create<D>(_ into: Into<D>) -> D {
+    public override func create<O>(_ into: Into<O>) -> O {
         
         Internals.assert(
             !self.isCommitted,
@@ -71,7 +71,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<D: DynamicObject>(_ object: D?) -> D? {
+    public override func edit<O: DynamicObject>(_ object: O?) -> O? {
         
         Internals.assert(
             !self.isCommitted,
@@ -88,7 +88,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
+    public override func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
         
         Internals.assert(
             !self.isCommitted,
@@ -97,51 +97,50 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         
         return super.edit(into, objectID)
     }
-    
+
     /**
-     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
-     
-     - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be deleted
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
      */
-    public override func delete<D: DynamicObject>(_ object: D?) {
-        
-        Internals.assert(
-            !self.isCommitted,
-            "Attempted to delete an entity of type \(Internals.typeName(object)) from an already committed \(Internals.typeName(self))."
-        )
-        
-        super.delete(object)
-    }
-    
-    /**
-     Deletes the specified `DynamicObject`s.
-     
-     - parameter object1: the `DynamicObject` to be deleted
-     - parameter object2: another `DynamicObject` to be deleted
-     - parameter objects: other `DynamicObject`s to be deleted
-     */
-    public override func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
-        
+    public override func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
-        
-        super.delete(([object1, object2] + objects).compactMap { $0 })
+
+        super.delete(objectIDs: objectIDs)
     }
-    
+
     /**
-     Deletes the specified `DynamicObject`s.
-     
-     - parameter objects: the `DynamicObject`s to be deleted
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.
+
+     - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
-        
+    public override func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
-        
+
+        super.delete(([object] + objects).compactMap { $0 })
+    }
+
+    /**
+    Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by an `ObjectRepresenation`.
+
+    - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
+     */
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
+        )
+
         super.delete(objects)
     }
     

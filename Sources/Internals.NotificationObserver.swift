@@ -34,7 +34,7 @@ extension Internals {
 
     internal final class NotificationObserver {
 
-        // MARK: Public
+        // MARK: Internal
 
         let observer: NSObjectProtocol
 

@@ -42,7 +42,7 @@ extension Internals {
         internal let typedFetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>
         
         @nonobjc
-        internal convenience init<D>(dataStack: DataStack, fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>, from: From<D>, sectionBy: SectionBy<D>? = nil, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+        internal convenience init<O>(dataStack: DataStack, fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>, from: From<O>, sectionBy: SectionBy<O>? = nil, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
             
             self.init(
                 context: dataStack.mainContext,
@@ -54,7 +54,7 @@ extension Internals {
         }
         
         @nonobjc
-        internal init<D>(context: NSManagedObjectContext, fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>, from: From<D>, sectionBy: SectionBy<D>? = nil, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+        internal init<O>(context: NSManagedObjectContext, fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>, from: From<O>, sectionBy: SectionBy<O>? = nil, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
             
             _ = try? from.applyToFetchRequest(
                 fetchRequest,
@@ -82,6 +82,11 @@ extension Internals {
             
             try self.reapplyAffectedStores(self.typedFetchRequest, self.managedObjectContext)
             try self.performFetch()
+
+            if case let delegate as FetchedDiffableDataSourceSnapshotDelegate = self.delegate {
+
+                delegate.initialFetch()
+            }
         }
         
         @nonobjc
