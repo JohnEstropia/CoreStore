@@ -1883,6 +1883,13 @@ git submodule add https://github.com/JohnEstropia/CoreStore.git <destination dir
 ```
 Drag and drop **CoreStore.xcodeproj** to your project.
 
+### Install through Xcode's Swift Package Manager
+From the **File** - **Swift Packages** - **Add Package Dependency…** menu, search for 
+```
+CoreStore
+```
+where `JohnEstropia` is the *Owner*. Then add to your project.
+
 
 ### Objective-C support
 
