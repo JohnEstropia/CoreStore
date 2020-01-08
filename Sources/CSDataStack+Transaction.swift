@@ -28,6 +28,7 @@ import Foundation
 
 // MARK: - CSDataStack
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension CSDataStack {
     
     /**

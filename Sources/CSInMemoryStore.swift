@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `InMemoryStore`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjectiveCType {
     
@@ -121,6 +122,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
 
 // MARK: - InMemoryStore
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension InMemoryStore: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

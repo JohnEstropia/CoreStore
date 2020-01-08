@@ -31,6 +31,7 @@ import Foundation
 /**
  `CoreStoreObjectiveCType`s are Objective-C accessible classes that represent CoreStore's Swift types.
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 public protocol CoreStoreObjectiveCType: AnyObject {
     
     /**
@@ -55,6 +56,7 @@ public protocol CoreStoreObjectiveCType: AnyObject {
 /**
  `CoreStoreSwiftType`s are CoreStore's Swift types that are bridgeable to Objective-C.
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 public protocol CoreStoreSwiftType {
     
     /**
@@ -71,21 +73,25 @@ public protocol CoreStoreSwiftType {
 
 // MARK: - Internal
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T) -> T.ObjectiveCType {
     
     return closure().bridgeToObjectiveC
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> [T]) -> [T.ObjectiveCType] {
     
     return closure().map { $0.bridgeToObjectiveC }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T?) -> T.ObjectiveCType? {
     
     return closure()?.bridgeToObjectiveC
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ closure: () throws -> T) throws -> T.ObjectiveCType {
     
     do {
@@ -98,6 +104,7 @@ internal func bridge<T: CoreStoreSwiftType>(_ closure: () throws -> T) throws ->
     }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge(_ closure: () throws -> Void) throws {
     
     do {
@@ -110,6 +117,7 @@ internal func bridge(_ closure: () throws -> Void) throws {
     }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, _ closure: () throws -> T) -> T.ObjectiveCType? {
     
     do {
@@ -125,6 +133,7 @@ internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, _ closure: 
     }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge(_ error: NSErrorPointer, _ closure: () throws -> Void) -> Bool {
     
     do {
@@ -140,6 +149,7 @@ internal func bridge(_ error: NSErrorPointer, _ closure: () throws -> Void) -> B
     }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T>(_ error: NSErrorPointer, _ closure: () throws -> T?) -> T? {
     
     do {
@@ -155,6 +165,7 @@ internal func bridge<T>(_ error: NSErrorPointer, _ closure: () throws -> T?) -> 
     }
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, _ closure: () throws -> [T]) -> [T.ObjectiveCType]? {
     
     do {

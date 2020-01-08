@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `UnsafeDataTransaction`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
     /**
@@ -208,6 +209,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObje
 
 // MARK: - UnsafeDataTransaction
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension UnsafeDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

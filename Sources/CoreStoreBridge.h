@@ -37,7 +37,7 @@
 #error CoreStore Objective-C utilities can only be used on platforms that support C function overloading
 #endif
 
-#define CORESTORE_EXTERN                    extern
+#define CORESTORE_EXTERN                    extern __deprecated_msg("CoreStore Objective-C API will be removed soon.")
 #define CORESTORE_OVERLOADABLE              __attribute__((__overloadable__))
 #define CORESTORE_REQUIRES_NIL_TERMINATION  __attribute__((sentinel(0, 1)))
 #define CORESTORE_RETURNS_RETAINED          __attribute__((ns_returns_retained))

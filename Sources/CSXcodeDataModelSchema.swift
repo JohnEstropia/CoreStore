@@ -35,6 +35,7 @@ import Foundation
  - SeeAlso: `XcodeDataModelSchema`
  */
 @objc
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
     /**
@@ -104,6 +105,7 @@ public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreO
 
 // MARK: - XcodeDataModelSchema
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension XcodeDataModelSchema: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

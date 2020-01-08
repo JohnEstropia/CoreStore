@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `Tweak`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
@@ -90,6 +91,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
 
 // MARK: - Tweak
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension Tweak: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

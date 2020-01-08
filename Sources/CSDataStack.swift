@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `DataStack`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
@@ -209,6 +210,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - DataStack
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension DataStack: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

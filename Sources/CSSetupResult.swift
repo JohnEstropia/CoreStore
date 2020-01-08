@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `SetupResult`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSSetupResult: NSObject {
     
@@ -177,6 +178,7 @@ public final class CSSetupResult: NSObject {
 
 // MARK: - SetupResult
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension SetupResult where Success: StorageInterface, Success: CoreStoreSwiftType, Success.ObjectiveCType: CSStorageInterface, Failure == CoreStoreError {
     
     // MARK: CoreStoreSwiftType

@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `SynchronousDataTransaction`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSSynchronousDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
     
@@ -148,6 +149,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction, CoreStor
 
 // MARK: - SynchronousDataTransaction
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension SynchronousDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

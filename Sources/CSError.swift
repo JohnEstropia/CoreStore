@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `CoreStoreError`
  */
 @objc
-public final class CSError: NSError, CoreStoreObjectiveCType {
+public final class CSError: NSError {
     
     /**
      The `NSError` error domain for `CSError`.
@@ -67,20 +67,6 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
-    
-    // MARK: CoreStoreObjectiveCType
-    
-    public var bridgeToSwift: CoreStoreError {
-        
-        if let swift = self.swiftError {
-            
-            return swift
-        }
-        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
-        self.swiftError = swift
-        return swift
-    }
-    
     /**
      Do not call directly!
      */
@@ -101,6 +87,23 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
     private var swiftError: CoreStoreError?
 }
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+extension CSError: CoreStoreObjectiveCType {
+
+    // MARK: CoreStoreObjectiveCType
+
+    public var bridgeToSwift: CoreStoreError {
+
+        if let swift = self.swiftError {
+
+            return swift
+        }
+        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
+        self.swiftError = swift
+        return swift
+    }
+}
+
 
 // MARK: - CSErrorCode
 
@@ -110,6 +113,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
  - SeeAlso: `CSError`
  - SeeAlso: `CoreStoreError`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public enum CSErrorCode: Int {
     
@@ -152,6 +156,7 @@ public enum CSErrorCode: Int {
 
 // MARK: - CoreStoreError
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
     
     // MARK: CoreStoreSwiftType
@@ -281,7 +286,8 @@ extension Error {
             return .unknown
         }
     }
-    
+
+    @available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
     internal var bridgeToObjectiveC: NSError {
         
         switch self {

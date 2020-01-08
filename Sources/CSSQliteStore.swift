@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `SQLiteStore`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCType {
     
@@ -196,6 +197,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
 
 // MARK: - SQLiteStore
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension SQLiteStore: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

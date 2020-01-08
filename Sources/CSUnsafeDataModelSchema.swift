@@ -34,6 +34,7 @@ import Foundation
  
  - SeeAlso: `UnsafeDataModelSchema`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
@@ -104,6 +105,7 @@ public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStore
 
 // MARK: - UnsafeDataModelSchema
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension UnsafeDataModelSchema: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

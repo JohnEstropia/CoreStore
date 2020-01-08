@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `MigrationResult`
  */
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 @objc
 public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     
@@ -173,6 +174,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - MigrationResult
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 extension MigrationResult {
     
     // MARK: CoreStoreSwiftType

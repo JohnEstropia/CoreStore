@@ -31,6 +31,7 @@ import CoreStore
 
 // MARK: - ErrorTests
 
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 final class ErrorTests: XCTestCase {
 
     @objc
