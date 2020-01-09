@@ -31,15 +31,20 @@ import CoreData
 
 internal protocol RelationshipProtocol: PropertyProtocol {
 
-    var isToMany: Bool { get }
-    var isOrdered: Bool { get }
-    var deleteRule: NSDeleteRule { get }
-    var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?) { get }
-    var affectedByKeyPaths: () -> Set<String> { get }
+    typealias EntityDescriptionValues = (
+        isToMany: Bool,
+        isOrdered: Bool,
+        deleteRule: NSDeleteRule,
+        inverse: (type: CoreStoreObject.Type, KeyPathString?),
+        versionHashModifier: String?,
+        renamingIdentifier: String?,
+        affectedByKeyPaths: Set<String>,
+        minCount: Int,
+        maxCount: Int
+    )
+
+    var entityDescriptionValues: () -> EntityDescriptionValues { get }
+
     var rawObject: CoreStoreManagedObject? { get set }
-    var versionHashModifier: () -> String? { get }
-    var renamingIdentifier: () -> String? { get }
-    var minCount: Int { get }
-    var maxCount: Int { get }
     var valueForSnapshot: Any? { get }
 }

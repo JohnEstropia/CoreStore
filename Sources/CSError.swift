@@ -44,6 +44,17 @@ public final class CSError: NSError {
      */
     @objc
     public static let errorDomain = CoreStoreErrorDomain
+
+    public var bridgeToSwift: CoreStoreError {
+
+        if let swift = self.swiftError {
+
+            return swift
+        }
+        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
+        self.swiftError = swift
+        return swift
+    }
     
     
     // MARK: NSObject
@@ -88,21 +99,7 @@ public final class CSError: NSError {
 }
 
 @available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-extension CSError: CoreStoreObjectiveCType {
-
-    // MARK: CoreStoreObjectiveCType
-
-    public var bridgeToSwift: CoreStoreError {
-
-        if let swift = self.swiftError {
-
-            return swift
-        }
-        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
-        self.swiftError = swift
-        return swift
-    }
-}
+extension CSError: CoreStoreObjectiveCType {}
 
 
 // MARK: - CSErrorCode
@@ -156,16 +153,7 @@ public enum CSErrorCode: Int {
 
 // MARK: - CoreStoreError
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
-    
-    // MARK: CoreStoreSwiftType
-    
-    public var bridgeToObjectiveC: CSError {
-        
-        return CSError(self)
-    }
-    
+extension CoreStoreError: _ObjectiveCBridgeableError {
     
     // MARK: _ObjectiveCBridgeableError
     
@@ -265,9 +253,11 @@ extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
 }
 
 
-// MARK: Internal
+// MARK: - Error
 
 extension Error {
+
+    // MARK: Internal
     
     internal var bridgeToSwift: CoreStoreError {
         
@@ -301,5 +291,19 @@ extension Error {
         default:
             return self as NSError
         }
+    }
+}
+
+
+// MARK: - CoreStoreError
+
+@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+extension CoreStoreError: CoreStoreSwiftType {
+
+    // MARK: CoreStoreSwiftType
+
+    public var bridgeToObjectiveC: CSError {
+
+        return CSError(self)
     }
 }

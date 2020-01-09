@@ -127,14 +127,20 @@ public enum TransformableContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
 
             self.keyPath = keyPath
-            self.defaultValue = initial
-            self.isTransient = isTransient
-            self.allowsExternalBinaryDataStorage = allowsExternalBinaryDataStorage
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
+            self.entityDescriptionValues = {
+                (
+                    attributeType: .transformableAttributeType,
+                    isOptional: false,
+                    isTransient: isTransient,
+                    allowsExternalBinaryDataStorage: allowsExternalBinaryDataStorage,
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    defaultValue: initial()
+                )
+            }
             self.customGetter = customGetter
             self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
         }
 
         /**
@@ -215,19 +221,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
 
         // MARK: AttributeProtocol
-        
-        internal static var attributeType: NSAttributeType {
 
-            return .transformableAttributeType
-        }
-
-        internal let isOptional = false
-        internal let isTransient: Bool
-        internal let allowsExternalBinaryDataStorage: Bool
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let defaultValue: () -> Any?
-        internal let affectedByKeyPaths: () -> Set<String>
+        internal let entityDescriptionValues: () -> AttributeProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
 
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in
@@ -349,14 +344,20 @@ public enum TransformableContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
 
             self.keyPath = keyPath
-            self.defaultValue = initial
-            self.isTransient = isTransient
-            self.allowsExternalBinaryDataStorage = allowsExternalBinaryDataStorage
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
+            self.entityDescriptionValues = {
+                (
+                    attributeType: .transformableAttributeType,
+                    isOptional: true,
+                    isTransient: isTransient,
+                    allowsExternalBinaryDataStorage: allowsExternalBinaryDataStorage,
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    defaultValue: initial()
+                )
+            }
             self.customGetter = customGetter
             self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
         }
 
         /**
@@ -438,18 +439,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
         // MARK: AttributeProtocol
 
-        internal static var attributeType: NSAttributeType {
-
-            return .transformableAttributeType
-        }
-
-        internal let isOptional = true
-        internal let isTransient: Bool
-        internal let allowsExternalBinaryDataStorage: Bool
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let defaultValue: () -> Any?
-        internal let affectedByKeyPaths: () -> Set<String>
+        internal let entityDescriptionValues: () -> AttributeProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
 
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in

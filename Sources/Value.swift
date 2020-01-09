@@ -121,13 +121,20 @@ public enum ValueContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
-            self.isTransient = isTransient
-            self.defaultValue = { initial().cs_toQueryableNativeType() }
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
+            self.entityDescriptionValues = {
+                (
+                    attributeType: V.cs_rawAttributeType,
+                    isOptional: false,
+                    isTransient: isTransient,
+                    allowsExternalBinaryDataStorage: false,
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    defaultValue: initial().cs_toQueryableNativeType()
+                )
+            }
             self.customGetter = customGetter
             self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
         }
 
         /**
@@ -210,19 +217,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         
         // MARK: AttributeProtocol
-        
-        internal static var attributeType: NSAttributeType {
-            
-            return V.cs_rawAttributeType
-        }
 
-        internal let isOptional = false
-        internal let isTransient: Bool
-        internal let allowsExternalBinaryDataStorage = false
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let defaultValue: () -> Any?
-        internal let affectedByKeyPaths: () -> Set<String>
+        internal let entityDescriptionValues: () -> AttributeProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in
@@ -344,13 +340,20 @@ public enum ValueContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
-            self.isTransient = isTransient
-            self.defaultValue = { initial()?.cs_toQueryableNativeType() }
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
+            self.entityDescriptionValues = {
+                (
+                    attributeType: V.cs_rawAttributeType,
+                    isOptional: true,
+                    isTransient: isTransient,
+                    allowsExternalBinaryDataStorage: false,
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    defaultValue: initial()?.cs_toQueryableNativeType()
+                )
+            }
             self.customGetter = customGetter
             self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
         }
 
         /**
@@ -432,19 +435,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         
         // MARK: AttributeProtocol
-        
-        internal static var attributeType: NSAttributeType {
-            
-            return V.cs_rawAttributeType
-        }
-        
-        internal let isOptional = true
-        internal let isTransient: Bool
-        internal let allowsExternalBinaryDataStorage = false
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let defaultValue: () -> Any?
-        internal let affectedByKeyPaths: () -> Set<String>
+
+        internal let entityDescriptionValues: () -> AttributeProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in

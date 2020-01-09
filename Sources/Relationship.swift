@@ -258,15 +258,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
 
-        internal let isToMany = false
-        internal let isOrdered = false
-        internal let deleteRule: NSDeleteRule
-        internal let minCount: Int = 0
-        internal let maxCount: Int = 1
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let affectedByKeyPaths: () -> Set<String>
+        internal let entityDescriptionValues: () -> RelationshipProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSManagedObject? {
@@ -324,11 +316,19 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         private init(keyPath: KeyPathString, inverseKeyPath: @escaping () -> KeyPathString?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
-            self.inverse = (D.self, inverseKeyPath)
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
-            self.affectedByKeyPaths = affectedByKeyPaths
+            self.entityDescriptionValues = {
+                (
+                    isToMany: false,
+                    isOrdered: false,
+                    deleteRule: deleteRule.nativeValue,
+                    inverse: (type: D.self, keyPath: inverseKeyPath()),
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    minCount: 0,
+                    maxCount: 1
+                )
+            }
         }
     }
     
@@ -553,16 +553,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
 
-        internal let isToMany = true
-        internal let isOptional = true
-        internal let isOrdered = true
-        internal let deleteRule: NSDeleteRule
-        internal let minCount: Int
-        internal let maxCount: Int
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let affectedByKeyPaths: () -> Set<String>
+        internal let entityDescriptionValues: () -> RelationshipProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSOrderedSet {
@@ -620,15 +611,20 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
-            self.inverse = (D.self, inverseKeyPath)
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
-            
-            let range = (Swift.max(0, minCount) ... maxCount)
-            self.minCount = range.lowerBound
-            self.maxCount = range.upperBound
-            self.affectedByKeyPaths = affectedByKeyPaths
+            self.entityDescriptionValues = {
+                let range = (Swift.max(0, minCount) ... maxCount)
+                return (
+                    isToMany: true,
+                    isOrdered: true,
+                    deleteRule: deleteRule.nativeValue,
+                    inverse: (type: D.self, keyPath: inverseKeyPath()),
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    minCount: range.lowerBound,
+                    maxCount: range.upperBound
+                )
+            }
         }
     }
     
@@ -853,17 +849,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         
         // MARK: RelationshipProtocol
-        
-        internal let isToMany = true
-        internal let isOptional = true
-        internal let isOrdered = false
-        internal let deleteRule: NSDeleteRule
-        internal let minCount: Int
-        internal let maxCount: Int
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
-        internal let versionHashModifier: () -> String?
-        internal let renamingIdentifier: () -> String?
-        internal let affectedByKeyPaths: () -> Set<String>
+
+        internal let entityDescriptionValues: () -> RelationshipProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSSet {
@@ -921,15 +908,20 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         private init(keyPath: KeyPathString, inverseKeyPath: @escaping () -> KeyPathString?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
-            self.inverse = (D.self, inverseKeyPath)
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
-            
-            let range = (Swift.max(0, minCount) ... maxCount)
-            self.minCount = range.lowerBound
-            self.maxCount = range.upperBound
-            self.affectedByKeyPaths = affectedByKeyPaths
+            self.entityDescriptionValues = {
+                let range = (Swift.max(0, minCount) ... maxCount)
+                return (
+                    isToMany: true,
+                    isOrdered: false,
+                    deleteRule: deleteRule.nativeValue,
+                    inverse: (type: D.self, keyPath: inverseKeyPath()),
+                    versionHashModifier: versionHashModifier(),
+                    renamingIdentifier: renamingIdentifier(),
+                    affectedByKeyPaths: affectedByKeyPaths(),
+                    minCount: range.lowerBound,
+                    maxCount: range.upperBound
+                )
+            }
         }
     }
     

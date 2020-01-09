@@ -292,17 +292,18 @@ public final class CoreStoreSchema: DynamicSchema {
                         !NSManagedObject.instancesRespond(to: Selector(attribute.keyPath)),
                         "Attribute Property name \"\(String(reflecting: entity.type)).\(attribute.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(attribute.keyPath)\""
                     )
+                    let entityDescriptionValues = attribute.entityDescriptionValues()
                     let description = NSAttributeDescription()
                     description.name = attribute.keyPath
-                    description.attributeType = Swift.type(of: attribute).attributeType
-                    description.isOptional = attribute.isOptional
-                    description.defaultValue = attribute.defaultValue()
-                    description.isTransient = attribute.isTransient
-                    description.allowsExternalBinaryDataStorage = attribute.allowsExternalBinaryDataStorage
-                    description.versionHashModifier = attribute.versionHashModifier()
-                    description.renamingIdentifier = attribute.renamingIdentifier()
+                    description.attributeType = entityDescriptionValues.attributeType
+                    description.isOptional = entityDescriptionValues.isOptional
+                    description.defaultValue = entityDescriptionValues.defaultValue
+                    description.isTransient = entityDescriptionValues.isTransient
+                    description.allowsExternalBinaryDataStorage = entityDescriptionValues.allowsExternalBinaryDataStorage
+                    description.versionHashModifier = entityDescriptionValues.versionHashModifier
+                    description.renamingIdentifier = entityDescriptionValues.renamingIdentifier
                     propertyDescriptions.append(description)
-                    keyPathsByAffectedKeyPaths[attribute.keyPath] = attribute.affectedByKeyPaths()
+                    keyPathsByAffectedKeyPaths[attribute.keyPath] = entityDescriptionValues.affectedByKeyPaths
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
                     
                 case let relationship as RelationshipProtocol:
@@ -310,16 +311,17 @@ public final class CoreStoreSchema: DynamicSchema {
                         !NSManagedObject.instancesRespond(to: Selector(relationship.keyPath)),
                         "Relationship Property name \"\(String(reflecting: entity.type)).\(relationship.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(relationship.keyPath)\""
                     )
+                    let entityDescriptionValues = relationship.entityDescriptionValues()
                     let description = NSRelationshipDescription()
                     description.name = relationship.keyPath
-                    description.minCount = relationship.minCount
-                    description.maxCount = relationship.maxCount
-                    description.isOrdered = relationship.isOrdered
-                    description.deleteRule = relationship.deleteRule
-                    description.versionHashModifier = relationship.versionHashModifier()
-                    description.renamingIdentifier = relationship.renamingIdentifier()
+                    description.minCount = entityDescriptionValues.minCount
+                    description.maxCount = entityDescriptionValues.maxCount
+                    description.isOrdered = entityDescriptionValues.isOrdered
+                    description.deleteRule = entityDescriptionValues.deleteRule
+                    description.versionHashModifier = entityDescriptionValues.versionHashModifier
+                    description.renamingIdentifier = entityDescriptionValues.renamingIdentifier
                     propertyDescriptions.append(description)
-                    keyPathsByAffectedKeyPaths[relationship.keyPath] = relationship.affectedByKeyPaths()
+                    keyPathsByAffectedKeyPaths[relationship.keyPath] = entityDescriptionValues.affectedByKeyPaths
                     
                 default:
                     continue
@@ -384,12 +386,12 @@ public final class CoreStoreSchema: DynamicSchema {
                 switch property {
                     
                 case let relationship as RelationshipProtocol:
-                    let (destinationType, destinationKeyPath) = relationship.inverse
+                    let (destinationType, destinationKeyPath) = relationship.entityDescriptionValues().inverse
                     let destinationEntity = findEntity(for: destinationType)
                     let description = relationshipsByName[relationship.keyPath]!
                     description.destinationEntity = entityDescriptionsByEntity[destinationEntity]!
                     
-                    if let destinationKeyPath = destinationKeyPath() {
+                    if let destinationKeyPath = destinationKeyPath {
                         
                         let inverseRelationshipDescription = findInverseRelationshipMatching(
                             destinationEntity: destinationEntity,

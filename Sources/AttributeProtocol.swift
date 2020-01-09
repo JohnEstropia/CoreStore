@@ -30,16 +30,19 @@ import CoreData
 // MARK: - AttributeProtocol
 
 internal protocol AttributeProtocol: PropertyProtocol {
-    
-    static var attributeType: NSAttributeType { get }
-    
-    var isOptional: Bool { get }
-    var isTransient: Bool { get }
-    var allowsExternalBinaryDataStorage: Bool { get }
-    var versionHashModifier: () -> String? { get }
-    var renamingIdentifier: () -> String? { get }
-    var defaultValue: () -> Any? { get }
-    var affectedByKeyPaths: () -> Set<String> { get }
+
+    typealias EntityDescriptionValues = (
+        attributeType: NSAttributeType,
+        isOptional: Bool,
+        isTransient: Bool,
+        allowsExternalBinaryDataStorage: Bool,
+        versionHashModifier: String?,
+        renamingIdentifier: String?,
+        affectedByKeyPaths: Set<String>,
+        defaultValue: Any?
+    )
+
+    var entityDescriptionValues: () -> EntityDescriptionValues { get }
     var rawObject: CoreStoreManagedObject? { get set }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }
