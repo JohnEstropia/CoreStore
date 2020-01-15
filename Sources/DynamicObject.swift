@@ -153,41 +153,68 @@ extension CoreStoreObject {
 
     public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
 
-        func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
+        var values: [KeyPathString: Any] = [:]
+        if self.meta.needsReflection {
 
-            if let superClassMirror = mirror.superclassMirror {
+            func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
 
-                initializeAttributes(
-                    mirror: superClassMirror,
-                    object: object,
-                    into: &attributes
-                )
+                if let superClassMirror = mirror.superclassMirror {
+
+                    initializeAttributes(
+                        mirror: superClassMirror,
+                        object: object,
+                        into: &attributes
+                    )
+                }
+                for child in mirror.children {
+
+                    switch child.value {
+
+                    case let property as FieldAttributeProtocol:
+                        attributes[property.keyPath] = type(of: property).read(field: property, for: object.rawObject!)
+
+                    case let property as AttributeProtocol:
+                        attributes[property.keyPath] = property.valueForSnapshot
+
+                    case let property as RelationshipProtocol:
+                        attributes[property.keyPath] = property.valueForSnapshot
+
+                    default:
+                        continue
+                    }
+                }
             }
-            for child in mirror.children {
+            guard let object = context.fetchExisting(id) as CoreStoreObject? else {
 
-                switch child.value {
+                return nil
+            }
+            initializeAttributes(
+                mirror: Mirror(reflecting: object),
+                object: object as! Self,
+                into: &values
+            )
+        }
+        else {
 
-                case let property as AttributeProtocol:
-                    attributes[property.keyPath] = property.valueForSnapshot
+            guard
+                let object = context.fetchExisting(id) as CoreStoreObject?,
+                let rawObject = object.rawObject
+                else {
 
-                case let property as RelationshipProtocol:
-                    attributes[property.keyPath] = property.valueForSnapshot
+                    return nil
+            }
+            for property in self.metaProperties(includeSuperclasses: true) {
+
+                switch property {
+
+                case let property as FieldAttributeProtocol:
+                    values[property.keyPath] = type(of: property).read(field: property, for: rawObject)
 
                 default:
                     continue
                 }
             }
         }
-        guard let object = context.fetchExisting(id) as CoreStoreObject? else {
-
-            return nil
-        }
-        var values: [KeyPathString: Any] = [:]
-        initializeAttributes(
-            mirror: Mirror(reflecting: object),
-            object: object as! Self,
-            into: &values
-        )
         return values
     }
     

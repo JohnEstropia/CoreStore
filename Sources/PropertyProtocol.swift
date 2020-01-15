@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - PropertyProtocol
 
-internal protocol PropertyProtocol: AnyObject {
+internal protocol PropertyProtocol {
 
     var keyPath: KeyPathString { get }
 }

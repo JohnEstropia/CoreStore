@@ -322,7 +322,6 @@
 		B52FD3AB1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */; };
 		B52FD3AC1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */; };
 		B52FD3AD1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */; };
-		B53304AA230BA4F7007C2BD8 /* DynamicObjectMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53304A9230BA4F7007C2BD8 /* DynamicObjectMeta.swift */; };
 		B533C4DB1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
 		B533C4DC1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
 		B533C4DD1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
@@ -548,6 +547,34 @@
 		B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */; };
 		B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */; };
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
+		B56E4ECA23CD9B4800E1708C /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EC923CD9B4800E1708C /* Field.swift */; };
+		B56E4ECB23CD9B4800E1708C /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EC923CD9B4800E1708C /* Field.swift */; };
+		B56E4ECC23CD9B4800E1708C /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EC923CD9B4800E1708C /* Field.swift */; };
+		B56E4ECD23CD9B4800E1708C /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EC923CD9B4800E1708C /* Field.swift */; };
+		B56E4ECF23CD9E4200E1708C /* Field.Stored.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */; };
+		B56E4ED023CD9E4200E1708C /* Field.Stored.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */; };
+		B56E4ED123CD9E4200E1708C /* Field.Stored.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */; };
+		B56E4ED223CD9E4200E1708C /* Field.Stored.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */; };
+		B56E4ED423CDB54A00E1708C /* FieldProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */; };
+		B56E4ED523CDB54A00E1708C /* FieldProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */; };
+		B56E4ED623CDB54A00E1708C /* FieldProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */; };
+		B56E4ED723CDB54A00E1708C /* FieldProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */; };
+		B56E4ED923CEB8E700E1708C /* FieldStorableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */; };
+		B56E4EDA23CEB8E700E1708C /* FieldStorableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */; };
+		B56E4EDB23CEB8E700E1708C /* FieldStorableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */; };
+		B56E4EDC23CEB8E700E1708C /* FieldStorableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */; };
+		B56E4EDF23CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
+		B56E4EE023CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
+		B56E4EE123CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
+		B56E4EE223CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
+		B56E4EE423CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
+		B56E4EE523CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
+		B56E4EE623CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
+		B56E4EE723CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
+		B56E4EE923CF0C4500E1708C /* Field.PlistCoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */; };
+		B56E4EEA23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */; };
+		B56E4EEB23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */; };
+		B56E4EEC23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */; };
 		B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27BF1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27C01D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
@@ -979,7 +1006,6 @@
 		B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeDataModelSchema.swift; sourceTree = "<group>"; };
 		B52F74491E9B8740005F3DAC /* CoreStoreSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreSchema.swift; sourceTree = "<group>"; };
 		B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Logging.swift"; sourceTree = "<group>"; };
-		B53304A9230BA4F7007C2BD8 /* DynamicObjectMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicObjectMeta.swift; sourceTree = "<group>"; };
 		B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+CoreStore.swift"; sourceTree = "<group>"; };
 		B538BA701D15B3E30003A766 /* CoreStoreBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreStoreBridge.m; sourceTree = "<group>"; };
 		B53B275E1EE3B92E00E9B352 /* CoreStoreManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreManagedObject.swift; sourceTree = "<group>"; };
@@ -1038,6 +1064,13 @@
 		B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSUnsafeDataModelSchema.swift; sourceTree = "<group>"; };
 		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "DataStack+Migration.swift"; sourceTree = "<group>"; };
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
+		B56E4EC923CD9B4800E1708C /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Stored.swift; sourceTree = "<group>"; };
+		B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldProtocol.swift; sourceTree = "<group>"; };
+		B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStorableType.swift; sourceTree = "<group>"; };
+		B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOptionalType.swift; sourceTree = "<group>"; };
+		B56E4EE323CEDF0900E1708C /* Field.Computed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Computed.swift; sourceTree = "<group>"; };
+		B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.PlistCoded.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
 		B58085741CDF7F00004C2EEB /* SetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupTests.swift; sourceTree = "<group>"; };
@@ -1386,6 +1419,7 @@
 			children = (
 				B5831B6F1F34AC3400A9F647 /* AttributeProtocol.swift */,
 				B5831B741F34AC7A00A9F647 /* RelationshipProtocol.swift */,
+				B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */,
 				B50564D22350CC3100482308 /* PropertyProtocol.swift */,
 				B53D9E5823513712000F48FB /* DiffableDataSourceSnapshotProtocol.swift */,
 				B50E175623517DE4004F033C /* Differentiable.swift */,
@@ -1513,13 +1547,34 @@
 			name = Migrating;
 			sourceTree = "<group>";
 		};
+		B56E4EC823CD9B2E00E1708C /* Field Properties */ = {
+			isa = PBXGroup;
+			children = (
+				B56E4EC923CD9B4800E1708C /* Field.swift */,
+				B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */,
+				B56E4EE323CEDF0900E1708C /* Field.Computed.swift */,
+				B56E4EE823CF0C4500E1708C /* Field.PlistCoded.swift */,
+				B56E4EDD23CEBB0400E1708C /* Supported Values */,
+			);
+			name = "Field Properties";
+			sourceTree = "<group>";
+		};
+		B56E4EDD23CEBB0400E1708C /* Supported Values */ = {
+			isa = PBXGroup;
+			children = (
+				B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */,
+				B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */,
+			);
+			name = "Supported Values";
+			sourceTree = "<group>";
+		};
 		B57358D71E5A7F9B0094B50A /* Dynamic Models */ = {
 			isa = PBXGroup;
 			children = (
 				B5D339D71E9489AB00C880DE /* CoreStoreObject.swift */,
-				B53304A9230BA4F7007C2BD8 /* DynamicObjectMeta.swift */,
 				B53CA9A11EF1EF1600E0F440 /* PartialObject.swift */,
-				B5831B6E1F3355C300A9F647 /* Properties */,
+				B56E4EC823CD9B2E00E1708C /* Field Properties */,
+				B5831B6E1F3355C300A9F647 /* Legacy Properties */,
 				B52F74391E9B8724005F3DAC /* Dynamic Schema */,
 				B5D339DC1E9489C700C880DE /* DynamicObject.swift */,
 				B52F742E1E9B50D0005F3DAC /* SchemaHistory.swift */,
@@ -1529,7 +1584,7 @@
 			name = "Dynamic Models";
 			sourceTree = "<group>";
 		};
-		B5831B6E1F3355C300A9F647 /* Properties */ = {
+		B5831B6E1F3355C300A9F647 /* Legacy Properties */ = {
 			isa = PBXGroup;
 			children = (
 				B5D33A001E96012400C880DE /* Relationship.swift */,
@@ -1543,7 +1598,7 @@
 				B509D7D223C84E1900F42824 /* Transformable.Required.swift */,
 				B509D7D723C84E2600F42824 /* Transformable.Optional.swift */,
 			);
-			name = Properties;
+			name = "Legacy Properties";
 			sourceTree = "<group>";
 		};
 		B5A1DAC61F111BBE003CF369 /* KeyPath Utilities */ = {
@@ -2145,6 +2200,7 @@
 			files = (
 				B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableViewAdapter-UIKit.swift in Sources */,
 				B5DE5230230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
+				B56E4ED423CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B509D7C423C848DA00F42824 /* Relationship.ToOne.swift in Sources */,
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
@@ -2194,6 +2250,7 @@
 				B5E1B5A81CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B50132302346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift in Sources */,
 				B5D339F11E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
+				B56E4EE923CF0C4500E1708C /* Field.PlistCoded.swift in Sources */,
 				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
 				B5E1B59D1CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
 				B5ECDC231CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
@@ -2213,10 +2270,12 @@
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
 				B546F9731C9C553300D5AC55 /* SetupResult.swift in Sources */,
+				B56E4EDF23CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B53CA9A21EF1EF1600E0F440 /* PartialObject.swift in Sources */,
 				B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */,
 				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
 				B51260931E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
+				B56E4ECA23CD9B4800E1708C /* Field.swift in Sources */,
 				B5DAFB482203D9F8003FCCD0 /* Where.Expression.swift in Sources */,
 				B509D7D823C84E2600F42824 /* Transformable.Optional.swift in Sources */,
 				B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */,
@@ -2254,7 +2313,6 @@
 				B5E1B5A21CAA4365007FD580 /* CSCoreStore+Observing.swift in Sources */,
 				B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */,
 				B50E175723517DE4004F033C /* Differentiable.swift in Sources */,
-				B53304AA230BA4F7007C2BD8 /* DynamicObjectMeta.swift in Sources */,
 				B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5E84F231AFF84860064E85B /* ListMonitor.swift in Sources */,
 				B5BF7FC6234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
@@ -2271,9 +2329,11 @@
 				B5FAD6A91B50A4B400714891 /* Progress+Convenience.swift in Sources */,
 				B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */,
 				B5215CA91FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
+				B56E4EE423CEDF0900E1708C /* Field.Computed.swift in Sources */,
 				B50E174D23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
 				B5E222231CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */,
+				B56E4ECF23CD9E4200E1708C /* Field.Stored.swift in Sources */,
 				B52F744A1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E2222A1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
@@ -2314,6 +2374,7 @@
 				B52F743D1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				B5E8A72021C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B53D9E5923513712000F48FB /* DiffableDataSourceSnapshotProtocol.swift in Sources */,
+				B56E4ED923CEB8E700E1708C /* FieldStorableType.swift in Sources */,
 				B5474D152227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B56923FF1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CAE1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
@@ -2429,6 +2490,7 @@
 				B5ECDC251CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
 				B549F6741E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F51E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
+				B56E4EEA23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				B50EE14323473C96009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B55BB4DA23503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
@@ -2448,6 +2510,7 @@
 				B5831F432212700400D8604C /* Where.Expression.swift in Sources */,
 				B51260941E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
+				B56E4EE023CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5F8496D234898240029D57B /* ListSnapshot.swift in Sources */,
 				B53FBA001CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D31C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
@@ -2475,6 +2538,7 @@
 				B5D8CA772346EAEE0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				82BA18D01C4BBD7100A0916E /* Internals.MigrationManager.swift in Sources */,
 				B5DE5231230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
+				B56E4ED523CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B52F74461E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
 				82BA18C61C4BBD5900A0916E /* DataStack+Migration.swift in Sources */,
 				B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
@@ -2505,6 +2569,7 @@
 				B514EF0F23A8DB180093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B52F744B1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
+				B56E4EE523CEDF0900E1708C /* Field.Computed.swift in Sources */,
 				B5E2222C1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				82BA18A71C4BBD2900A0916E /* CoreStore+Logging.swift in Sources */,
 				B50E174E23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
@@ -2549,6 +2614,7 @@
 				B5474D162227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322B2346A9AE00FC238B /* ListPublisher.swift in Sources */,
 				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B56E4EDA23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
 				B5215CAF1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923ED1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
@@ -2564,8 +2630,10 @@
 				B5BF7FC7234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				82BA18CC1C4BBD6400A0916E /* Progress+Convenience.swift in Sources */,
 				B5BF7FB8234C97CE0070E741 /* DiffableDataSource.TableViewAdapter-UIKit.swift in Sources */,
+				B56E4ED023CD9E4200E1708C /* Field.Stored.swift in Sources */,
 				82BA18C01C4BBD5300A0916E /* DataStack+Observing.swift in Sources */,
 				82BA18A61C4BBD2900A0916E /* DefaultLogger.swift in Sources */,
+				B56E4ECB23CD9B4800E1708C /* Field.swift in Sources */,
 				B509D7BE23C8480A00F42824 /* Value.Optional.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2662,6 +2730,7 @@
 				B559CD471CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B50E17642351FA66004F033C /* Internals.Closure.swift in Sources */,
 				B5ECDBF01CA6BF2000C7F112 /* CSFrom.swift in Sources */,
+				B56E4EEC23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */,
 				B549F6761E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F71E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5220E1F1D130810009BC71E /* CSListObserver.swift in Sources */,
@@ -2681,6 +2750,7 @@
 				B52DD1BD1BE1F94300949AFE /* NSManagedObject+Convenience.swift in Sources */,
 				B5831F4222126FED00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A51EF1EF1600E0F440 /* PartialObject.swift in Sources */,
+				B56E4EE223CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
 				B53FBA1C1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5F8496F234898240029D57B /* ListSnapshot.swift in Sources */,
@@ -2708,6 +2778,7 @@
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B5ECDC091CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5D8CA792346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
+				B56E4ED723CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B56923C71EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
 				B5DE5233230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B52DD1A51BE1F92F00949AFE /* ImportableUniqueObject.swift in Sources */,
@@ -2738,6 +2809,7 @@
 				B514EF1123A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B50E175A23517DE4004F033C /* Differentiable.swift in Sources */,
 				B52F744D1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
+				B56E4EE723CEDF0900E1708C /* Field.Computed.swift in Sources */,
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
 				B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */,
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -2782,6 +2854,7 @@
 				B50E175F2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */,
+				B56E4EDC23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
 				B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CB11FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B5220E171D1306DF009BC71E /* UnsafeDataTransaction+Observing.swift in Sources */,
@@ -2797,8 +2870,10 @@
 				B5D339EA1E9493A500C880DE /* Entity.swift in Sources */,
 				B5BF7FC9234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B52DD1AA1BE1F93500949AFE /* TypeErasedClauses.swift in Sources */,
+				B56E4ED223CD9E4200E1708C /* Field.Stored.swift in Sources */,
 				B53FBA021CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B51FE5AF1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
+				B56E4ECD23CD9B4800E1708C /* Field.swift in Sources */,
 				B509D7C223C8480B00F42824 /* Value.Optional.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2895,6 +2970,7 @@
 				B563217F1BD65216006C9394 /* CoreStore.swift in Sources */,
 				B549F6751E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F61E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
+				B56E4EEB23CF0C4500E1708C /* Field.PlistCoded.swift in Sources */,
 				B5E1B5961CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B50EE14423473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B55BB4D923503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
@@ -2914,6 +2990,7 @@
 				B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B5831F442212700500D8604C /* Where.Expression.swift in Sources */,
+				B56E4EE123CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */,
 				B51260951E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B53FBA011CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
@@ -2941,6 +3018,7 @@
 				B5D8CA782346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				B56923C61EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
 				B56321A71BD65216006C9394 /* MigrationResult.swift in Sources */,
+				B56E4ED623CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B5DE5232230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B52F74471E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
@@ -2971,6 +3049,7 @@
 				B514EF1023A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B563218A1BD65216006C9394 /* SynchronousDataTransaction.swift in Sources */,
 				B52F744C1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
+				B56E4EE623CEDF0900E1708C /* Field.Computed.swift in Sources */,
 				B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E2222D1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B50E174F23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
@@ -3015,6 +3094,7 @@
 				B5474D172227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322D2346A9B000FC238B /* ListPublisher.swift in Sources */,
 				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B56E4EDB23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
 				B5215CB01FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923EE1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
@@ -3030,8 +3110,10 @@
 				B5BF7FC8234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B56321A41BD65216006C9394 /* CoreStore+Migration.swift in Sources */,
 				B5BF7FB9234C97CE0070E741 /* DiffableDataSource.TableViewAdapter-UIKit.swift in Sources */,
+				B56E4ED123CD9E4200E1708C /* Field.Stored.swift in Sources */,
 				B56321A01BD65216006C9394 /* ObjectObserver.swift in Sources */,
 				B56321951BD65216006C9394 /* TypeErasedClauses.swift in Sources */,
+				B56E4ECC23CD9B4800E1708C /* Field.swift in Sources */,
 				B509D7C023C8480B00F42824 /* Value.Optional.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

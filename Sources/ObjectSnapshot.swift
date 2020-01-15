@@ -178,6 +178,40 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>) -> V {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Computed<V>>) -> V {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V {
 
         get {

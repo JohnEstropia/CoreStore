@@ -1,5 +1,5 @@
 //
-//  CoreStoreObject+DataSources.swift
+//  Field.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -23,24 +23,49 @@
 //  SOFTWARE.
 //
 
-#if canImport(UIKit) || canImport(AppKit)
+import CoreData
+import Foundation
 
-#if canImport(Combine)
-import Combine
 
-// MARK: - ListPublisher: ObservableObject
+// MARK: - DynamicObject
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-extension CoreStoreObject: ObservableObject {
+extension DynamicObject where Self: CoreStoreObject {
 
-    // MARK: ObservableObject
+    /**
+     The containing type for value propertiess. `Field` properties support any type that conforms to `ImportableAttributeType`.
+     ```
+     class Animal: CoreStoreObject {
+         @Field.Stored("species")
+         var species = ""
 
-    public var objectWillChange: ObservableObjectPublisher {
+         @Field.Stored("nickname")
+         var nickname: String?
 
-        return self.cs_toRaw().objectWillChange
-    }
+         @Field.PlistCoded("color")
+         var color: UIColor?
+     }
+     ```
+     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.*(...) var` syntax will be ignored.
+     */
+    public typealias Field = FieldContainer<Self>
 }
 
-#endif
 
-#endif
+// MARK: - FieldContainer
+
+/**
+ The containing type for value properties. Use the `DynamicObject.Field` typealias instead for shorter syntax.
+ ```
+ class Animal: CoreStoreObject {
+     @Field.Stored("species")
+     var species = ""
+
+     @Field.Stored("nickname")
+     var nickname: String?
+
+     @Field.PlistCoded("color")
+     var color: UIColor?
+ }
+ ```
+ */
+public enum FieldContainer<O: CoreStoreObject> {}

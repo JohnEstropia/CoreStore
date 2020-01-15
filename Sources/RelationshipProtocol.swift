@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - RelationshipProtocol
 
-internal protocol RelationshipProtocol: PropertyProtocol {
+internal protocol RelationshipProtocol: AnyObject, PropertyProtocol {
 
     typealias EntityDescriptionValues = (
         isToMany: Bool,

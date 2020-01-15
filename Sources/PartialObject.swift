@@ -41,6 +41,89 @@ public struct PartialObject<O: CoreStoreObject> {
         
         return O.cs_fromRaw(object: self.rawObject)
     }
+
+
+    // MARK: Field.Stored accessors/mutators
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public func value<V>(for property: (O) -> FieldContainer<O>.Stored<V>) -> V {
+
+        return V.cs_fromFieldStoredNativeType(
+            self.rawObject.value(forKey: property(O.meta).keyPath) as! V.FieldStoredNativeType
+        )
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public func value<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V {
+
+        switch self.rawObject.value(forKey: property(O.meta).keyPath) {
+
+        case let value as V:
+            return value
+
+        default:
+            return nil as Any? as! V // filter NSNull
+        }
+    }
+
+    /**
+     Returns the value for the specified property from the managed object’s private internal storage.
+
+     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
+     */
+    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Stored<V>) -> V {
+
+        return V.cs_fromFieldStoredNativeType(
+            self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V.FieldStoredNativeType
+        )
+    }
+
+    /**
+     Returns the value for the specified property from the managed object’s private internal storage.
+
+     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
+     */
+    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V {
+
+        switch self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) {
+
+        case let value as V:
+            return value
+
+        default:
+            return nil as Any? as! V // filter NSNull
+        }
+    }
+
+    /**
+     Sets in the object's private internal storage the value of a given property.
+
+     Sets in the receiver’s private internal storage the value of the property specified by key to value.
+     */
+    public func setPrimitiveValue<V>(_ value: V, for property: (O) -> FieldContainer<O>.Stored<V>) {
+
+        self.rawObject.setPrimitiveValue(
+            value.cs_toFieldStoredNativeType(),
+            forKey: property(O.meta).keyPath
+        )
+    }
+
+    /**
+     Sets in the object's private internal storage the value of a given property.
+
+     Sets in the receiver’s private internal storage the value of the property specified by key to value.
+     */
+    public func setPrimitiveValue<V>(_ value: V, for property: (O) -> FieldContainer<O>.Computed<V>) {
+
+        self.rawObject.setPrimitiveValue(
+            value,
+            forKey: property(O.meta).keyPath
+        )
+    }
     
     
     // MARK: Value.Required accessors/mutators

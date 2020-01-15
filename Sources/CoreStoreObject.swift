@@ -69,6 +69,11 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         
         self.isMeta = false
         self.rawObject = (rawObject as! CoreStoreManagedObject)
+
+        guard Self.meta.needsReflection else {
+
+            return
+        }
         self.registerReceiver(
             mirror: Mirror(reflecting: self),
             object: self
@@ -117,6 +122,11 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     internal let rawObject: CoreStoreManagedObject?
     internal let isMeta: Bool
 
+    internal lazy var needsReflection: Bool = self.containsLegacyAttributes(
+        mirror: Mirror(reflecting: self),
+        object: self
+    )
+
     internal class func metaProperties(includeSuperclasses: Bool) -> [PropertyProtocol] {
 
         func keyPaths(_ allKeyPaths: inout [PropertyProtocol], for dynamicType: CoreStoreObject.Type) {
@@ -137,9 +147,33 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         keyPaths(&allKeyPaths, for: self)
         return allKeyPaths
     }
-    
+
     
     // MARK: Private
+
+    private func containsLegacyAttributes(mirror: Mirror, object: CoreStoreObject) -> Bool {
+
+        if let superclassMirror = mirror.superclassMirror,
+            self.containsLegacyAttributes(mirror: superclassMirror, object: object) {
+
+            return true
+        }
+        for child in mirror.children {
+
+            switch child.value {
+
+            case is AttributeProtocol:
+                return true
+
+            case is RelationshipProtocol:
+                return true
+
+            default:
+                continue
+            }
+        }
+        return false
+    }
     
     private func registerReceiver(mirror: Mirror, object: CoreStoreObject) {
         

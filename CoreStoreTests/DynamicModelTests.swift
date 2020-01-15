@@ -37,40 +37,38 @@ import CoreStore
 #endif
 
 class Animal: CoreStoreObject {
-    
-    let species = Value.Required<String>("species", initial: "Swift")
+
+    @Field.Stored("species")
+    var species: String = "Swift"
+
     let master = Relationship.ToOne<Person>("master")
     let color = Transformable.Optional<Color>("color")
 }
 
 class Dog: Animal {
-    
-    let nickname = Value.Optional<String>("nickname")
+
+    @Field.Stored("nickname")
+    var nickname: String?
+
     let age = Value.Required<Int>("age", initial: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
     let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
 
 class Person: CoreStoreObject {
-    
-    let title = Value.Required<String>(
-        "title",
-        initial: "Mr.",
-        customSetter: Person.setTitle
-    )
-    
-    let name = Value.Required<String>(
-        "name",
-        initial: "",
-        customSetter: Person.setName
-    )
-    
-    let displayName = Value.Optional<String>(
+
+    @Field.Stored("title", customSetter: Person.setTitle(_:_:))
+    var title: String = "Mr."
+
+    @Field.Stored("name", customSetter: Person.setName(_:_:))
+    var name: String = ""
+
+    @Field.Computed(
         "displayName",
-        isTransient: true,
         customGetter: Person.getDisplayName(_:),
         affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
     )
+    var displayName: String?
 
     let spouse = Relationship.ToOne<Person>("spouse")
     
@@ -81,34 +79,34 @@ class Person: CoreStoreObject {
     
     private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
-        partialObject.setPrimitiveValue(newValue, for: { $0.title })
-        partialObject.setPrimitiveValue(nil, for: { $0.displayName })
+        partialObject.setPrimitiveValue(newValue, for: \.$title)
+        partialObject.setPrimitiveValue(nil, for: { $0.$displayName })
     }
     
     private static func setName(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
-        partialObject.setPrimitiveValue(newValue, for: { $0.name })
-        partialObject.setPrimitiveValue(nil, for: { $0.displayName })
+        partialObject.setPrimitiveValue(newValue, for: \.$name)
+        partialObject.setPrimitiveValue(nil, for: \.$displayName)
     }
     
     static func getDisplayName(_ partialObject: PartialObject<Person>) -> String? {
         
-        if let displayName = partialObject.primitiveValue(for: { $0.displayName }) {
+        if let displayName = partialObject.primitiveValue(for: \.$displayName) {
             
             return displayName
         }
-        let title = partialObject.value(for: { $0.title })
-        let name = partialObject.value(for: { $0.name })
+        let title = partialObject.value(for: \.$title)
+        let name = partialObject.value(for: \.$name)
         let displayName = "\(title) \(name)"
-        partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+        partialObject.setPrimitiveValue(displayName, for: \.$displayName)
         return displayName
     }
     
     static func keyPathsAffectingDisplayName() -> Set<String> {
         
         return [
-            String(keyPath: \Person.title),
-            String(keyPath: \Person.name)
+            String(keyPath: \Person.$title),
+            String(keyPath: \Person.$name)
         ]
     }
 }
@@ -138,13 +136,13 @@ class DynamicModelTests: BaseTestDataTestCase {
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
             
-            let k1 = String(keyPath: \Animal.species)
+            let k1 = String(keyPath: \Animal.$species)
             XCTAssertEqual(k1, "species")
 
-            let k2 = String(keyPath: \Dog.species)
+            let k2 = String(keyPath: \Dog.$species)
             XCTAssertEqual(k2, "species")
             
-            let k3 = String(keyPath: \Dog.nickname)
+            let k3 = String(keyPath: \Dog.$nickname)
             XCTAssertEqual(k3, "nickname")
             
             let updateDone = self.expectation(description: "update-done")
@@ -156,11 +154,11 @@ class DynamicModelTests: BaseTestDataTestCase {
                 asynchronous: { (transaction) in
                     
                     let animal = transaction.create(Into<Animal>())
-                    XCTAssertEqual(animal.species.value, "Swift")
-                    XCTAssertTrue(type(of: animal.species.value) == String.self)
+                    XCTAssertEqual(animal.species, "Swift")
+                    XCTAssertTrue(type(of: animal.species) == String.self)
                     
-                    animal.species .= "Sparrow"
-                    XCTAssertEqual(animal.species.value, "Sparrow")
+                    animal.species = "Sparrow"
+                    XCTAssertEqual(animal.species, "Sparrow")
                     
                     animal.color .= .yellow
                     XCTAssertEqual(animal.color.value, Color.yellow)
@@ -169,8 +167,8 @@ class DynamicModelTests: BaseTestDataTestCase {
 
                         switch property.keyPath {
 
-                        case String(keyPath: \Animal.species):
-                            XCTAssertTrue(property is ValueContainer<Animal>.Required<String>)
+                        case String(keyPath: \Animal.$species):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Stored<String>)
 
                         case String(keyPath: \Animal.master):
                             XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
@@ -184,16 +182,16 @@ class DynamicModelTests: BaseTestDataTestCase {
                     }
                     
                     let dog = transaction.create(Into<Dog>())
-                    XCTAssertEqual(dog.species.value, "Swift")
-                    XCTAssertEqual(dog.nickname.value, nil)
+                    XCTAssertEqual(dog.species, "Swift")
+                    XCTAssertEqual(dog.nickname, nil)
                     XCTAssertEqual(dog.age.value, 1)
 
                     for property in Dog.metaProperties(includeSuperclasses: true) {
 
                         switch property.keyPath {
 
-                        case String(keyPath: \Dog.species):
-                            XCTAssertTrue(property is ValueContainer<Animal>.Required<String>)
+                        case String(keyPath: \Dog.$species):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Stored<String>)
 
                         case String(keyPath: \Dog.master):
                             XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
@@ -201,8 +199,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Dog.color):
                             XCTAssertTrue(property is TransformableContainer<Animal>.Optional<Color>)
 
-                        case String(keyPath: \Dog.nickname):
-                            XCTAssertTrue(property is ValueContainer<Dog>.Optional<String>)
+                        case String(keyPath: \Dog.$nickname):
+                            XCTAssertTrue(property is FieldContainer<Dog>.Stored<String?>)
 
                         case String(keyPath: \Dog.age):
                             XCTAssertTrue(property is ValueContainer<Dog>.Required<Int>)
@@ -231,17 +229,17 @@ class DynamicModelTests: BaseTestDataTestCase {
 //
 //                    #endif
 
-                    let didSetObserver = dog.species.observe(options: [.new, .old]) { (object, change) in
+                    let didSetObserver = dog.observe(\.$species, options: [.new, .old]) { (object, change) in
 
                         XCTAssertEqual(object, dog)
                         XCTAssertEqual(change.kind, .setting)
                         XCTAssertEqual(change.newValue, "Dog")
                         XCTAssertEqual(change.oldValue, "Swift")
                         XCTAssertFalse(change.isPrior)
-                        XCTAssertEqual(object.species.value, "Dog")
+                        XCTAssertEqual(object.species, "Dog")
                         didSetObserverDone.fulfill()
                     }
-                    let willSetObserver = dog.species.observe(options: [.new, .old, .prior]) { (object, change) in
+                    let willSetObserver = dog.observe(\.$species, options: [.new, .old, .prior]) { (object, change) in
 
                         XCTAssertEqual(object, dog)
                         XCTAssertEqual(change.kind, .setting)
@@ -250,25 +248,25 @@ class DynamicModelTests: BaseTestDataTestCase {
                         if change.isPrior {
 
                             XCTAssertNil(change.newValue)
-                            XCTAssertEqual(object.species.value, "Swift")
+                            XCTAssertEqual(object.species, "Swift")
                             willSetPriorObserverDone.fulfill()
                         }
                         else {
 
                             XCTAssertEqual(change.newValue, "Dog")
-                            XCTAssertEqual(object.species.value, "Dog")
+                            XCTAssertEqual(object.species, "Dog")
                             willSetNotPriorObserverDone.fulfill()
                         }
                     }
                     
-                    dog.species .= "Dog"
-                    XCTAssertEqual(dog.species.value, "Dog")
+                    dog.species = "Dog"
+                    XCTAssertEqual(dog.species, "Dog")
 
                     didSetObserver.invalidate()
                     willSetObserver.invalidate()
                     
-                    dog.nickname .= "Spot"
-                    XCTAssertEqual(dog.nickname.value, "Spot")
+                    dog.nickname = "Spot"
+                    XCTAssertEqual(dog.nickname, "Spot")
                     
                     let person = transaction.create(Into<Person>())
                     XCTAssertTrue(person.pets.value.isEmpty)
@@ -280,7 +278,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                         ["title", "name"]
                     )
                     
-                    person.name .= "Joe"
+                    person.name = "Joe"
                     
                     XCTAssertEqual(person.rawObject!.value(forKey: "name") as! String?, "Joe")
                     XCTAssertEqual(person.rawObject!.value(forKey: "displayName") as! String?, "Mr. Joe")
@@ -288,35 +286,35 @@ class DynamicModelTests: BaseTestDataTestCase {
                     person.rawObject!.setValue("AAAA", forKey: "displayName")
                     XCTAssertEqual(person.rawObject!.value(forKey: "displayName") as! String?, "AAAA")
                     
-                    person.name .= "John"
-                    XCTAssertEqual(person.name.value, "John")
-                    XCTAssertEqual(person.displayName.value, "Mr. John") // Custom getter
+                    person.name = "John"
+                    XCTAssertEqual(person.name, "John")
+                    XCTAssertEqual(person.displayName, "Mr. John") // Custom getter
                     
                     let personSnapshot1 = person.asSnapshot(in: transaction)!
-                    XCTAssertEqual(person.name.value, personSnapshot1.name)
-                    XCTAssertEqual(person.title.value, personSnapshot1.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot1.displayName)
+                    XCTAssertEqual(person.name, personSnapshot1.$name)
+                    XCTAssertEqual(person.title, personSnapshot1.$title)
+                    XCTAssertEqual(person.displayName, personSnapshot1.$displayName)
                     
-                    person.title .= "Sir"
-                    XCTAssertEqual(person.displayName.value, "Sir John")
+                    person.title = "Sir"
+                    XCTAssertEqual(person.displayName, "Sir John")
                     
-                    XCTAssertEqual(personSnapshot1.name, "John")
-                    XCTAssertEqual(personSnapshot1.title, "Mr.")
-                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
+                    XCTAssertEqual(personSnapshot1.$name, "John")
+                    XCTAssertEqual(personSnapshot1.$title, "Mr.")
+                    XCTAssertEqual(personSnapshot1.$displayName, "Mr. John")
                     
                     let personSnapshot2 = person.asSnapshot(in: transaction)!
-                    XCTAssertEqual(person.name.value, personSnapshot2.name)
-                    XCTAssertEqual(person.title.value, personSnapshot2.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot2.displayName)
+                    XCTAssertEqual(person.name, personSnapshot2.$name)
+                    XCTAssertEqual(person.title, personSnapshot2.$title)
+                    XCTAssertEqual(person.displayName, personSnapshot2.$displayName)
 
                     var personSnapshot3 = personSnapshot2
-                    personSnapshot3.name = "James"
-                    XCTAssertEqual(personSnapshot1.name, "John")
-                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
-                    XCTAssertEqual(personSnapshot2.name, "John")
-                    XCTAssertEqual(personSnapshot2.displayName, "Sir John")
-                    XCTAssertEqual(personSnapshot3.name, "James")
-                    XCTAssertEqual(personSnapshot3.displayName, "Sir John")
+                    personSnapshot3.$name = "James"
+                    XCTAssertEqual(personSnapshot1.$name, "John")
+                    XCTAssertEqual(personSnapshot1.$displayName, "Mr. John")
+                    XCTAssertEqual(personSnapshot2.$name, "John")
+                    XCTAssertEqual(personSnapshot2.$displayName, "Sir John")
+                    XCTAssertEqual(personSnapshot3.$name, "James")
+                    XCTAssertEqual(personSnapshot3.$displayName, "Sir John")
 
                     
                     person.pets.value.insert(dog)
@@ -338,20 +336,20 @@ class DynamicModelTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let p1 = Where<Animal>({ $0.species == "Sparrow" })
+                    let p1 = Where<Animal>({ $0.$species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, NSPredicate(format: "%K == %@", "species", "Sparrow"))
                     
                     let bird = try transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
-                    XCTAssertEqual(bird!.species.value, "Sparrow")
+                    XCTAssertEqual(bird!.species, "Sparrow")
                     
-                    let p2 = Where<Dog>({ $0.nickname == "Spot" })
+                    let p2 = Where<Dog>({ $0.$nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
-                    let dog = try transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
+                    let dog = try transaction.fetchOne(From<Dog>().where(\.$nickname == "Spot"))
                     XCTAssertNotNil(dog)
-                    XCTAssertEqual(dog!.nickname.value, "Spot")
-                    XCTAssertEqual(dog!.species.value, "Dog")
+                    XCTAssertEqual(dog!.nickname, "Spot")
+                    XCTAssertEqual(dog!.species, "Dog")
                     
                     let person = try transaction.fetchOne(From<Person>())
                     XCTAssertNotNil(person)
@@ -365,12 +363,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Animal.species == "Dog" && \Dog.age == 10)
+                            .where(\Animal.$species == "Dog" && \Dog.age == 10)
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Dog.age == 10 && \Animal.species == "Dog")
-                            .orderBy(.ascending({ $0.species }))
+                            .where(\Dog.age == 10 && \Animal.$species == "Dog")
+                            .orderBy(.ascending({ $0.$species }))
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
@@ -378,11 +376,11 @@ class DynamicModelTests: BaseTestDataTestCase {
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.species == "Dog" && $0.age == 10 })
+                        Where<Dog>({ $0.$species == "Dog" && $0.age == 10 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age == 10 && $0.species == "Dog" })
+                        Where<Dog>({ $0.age == 10 && $0.$species == "Dog" })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
@@ -409,8 +407,8 @@ class DynamicModelTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
         
-        XCTAssertEqual(String(keyPath: \Animal.species), "species")
-        XCTAssertEqual(String(keyPath: \Dog.species), "species")
+        XCTAssertEqual(String(keyPath: \Animal.$species), "species")
+        XCTAssertEqual(String(keyPath: \Dog.$species), "species")
     }
     
     @nonobjc

@@ -57,7 +57,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             var events = 0
             
-            let willUpdateExpectation = self.expectation(
+            _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:willUpdateObject:"),
                 object: observer,
                 handler: { (note) -> Bool in
@@ -74,7 +74,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     return events == 0
                 }
             )
-            let didUpdateExpectation = self.expectation(
+            _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:didUpdateObject:changedPersistentKeys:"),
                 object: observer,
                 handler: { (note) -> Bool in
@@ -154,7 +154,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             var events = 0
             
-            let didDeleteExpectation = self.expectation(
+            _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:didDeleteObject:"),
                 object: observer,
                 handler: { (note) -> Bool in

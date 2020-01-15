@@ -359,6 +359,20 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
 }
 
 
+// MARK: - KeyPath where Root: CoreStoreObject, Value: FieldContainer<Root>.Stored<QueryableAttributeType & Equatable>
+
+/**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
+ ```
+ */
+public func == <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>(keyPath, isEqualTo: value)
+}
+
+
 // MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Equatable>
 
 /**

@@ -286,6 +286,25 @@ public final class CoreStoreSchema: DynamicSchema {
             for property in type.metaProperties(includeSuperclasses: false) {
                 
                 switch property {
+
+                case let attribute as FieldAttributeProtocol:
+                    Internals.assert(
+                        !NSManagedObject.instancesRespond(to: Selector(attribute.keyPath)),
+                        "Attribute Property name \"\(String(reflecting: entity.type)).\(attribute.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(attribute.keyPath)\""
+                    )
+                    let entityDescriptionValues = attribute.entityDescriptionValues()
+                    let description = NSAttributeDescription()
+                    description.name = attribute.keyPath
+                    description.attributeType = entityDescriptionValues.attributeType
+                    description.isOptional = entityDescriptionValues.isOptional
+                    description.defaultValue = entityDescriptionValues.defaultValue
+                    description.isTransient = entityDescriptionValues.isTransient
+                    description.allowsExternalBinaryDataStorage = entityDescriptionValues.allowsExternalBinaryDataStorage
+                    description.versionHashModifier = entityDescriptionValues.versionHashModifier
+                    description.renamingIdentifier = entityDescriptionValues.renamingIdentifier
+                    propertyDescriptions.append(description)
+                    keyPathsByAffectedKeyPaths[attribute.keyPath] = entityDescriptionValues.affectedByKeyPaths
+                    customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
                     
                 case let attribute as AttributeProtocol:
                     Internals.assert(
