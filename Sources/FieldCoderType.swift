@@ -1,5 +1,5 @@
 //
-//  FieldProtocol.swift
+//  FieldCoderType.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -27,10 +27,12 @@ import Foundation
 import CoreData
 
 
-// MARK: - FieldProtocol
+// MARK: - FieldCoderType
 
-internal protocol FieldProtocol: PropertyProtocol {
-    
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
-    static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
+public protocol FieldCoderType {
+
+    associatedtype FieldStoredValue
+
+    static func encodeToStoredData(_ fieldValue: FieldStoredValue?) -> Data?
+    static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue?
 }

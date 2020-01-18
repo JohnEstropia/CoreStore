@@ -1,5 +1,5 @@
 //
-//  FieldProtocol.swift
+//  FieldAttributeProtocol.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -27,10 +27,23 @@ import Foundation
 import CoreData
 
 
-// MARK: - FieldProtocol
+// MARK: - FieldAttributeProtocol
 
-internal protocol FieldProtocol: PropertyProtocol {
-    
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
-    static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
+internal protocol FieldAttributeProtocol: FieldProtocol {
+
+    typealias EntityDescriptionValues = (
+        attributeType: NSAttributeType,
+        isOptional: Bool,
+        isTransient: Bool,
+        allowsExternalBinaryDataStorage: Bool,
+        versionHashModifier: String?,
+        renamingIdentifier: String?,
+        valueTransformer: Internals.AnyFieldCoder?,
+        affectedByKeyPaths: Set<KeyPathString>,
+        defaultValue: Any?
+    )
+
+    var entityDescriptionValues: () -> EntityDescriptionValues { get }
+    var getter: CoreStoreManagedObject.CustomGetter? { get }
+    var setter: CoreStoreManagedObject.CustomSetter? { get }
 }

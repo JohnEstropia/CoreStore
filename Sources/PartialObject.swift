@@ -65,8 +65,10 @@ public struct PartialObject<O: CoreStoreObject> {
         case let value as V:
             return value
 
-        default:
-            return nil as Any? as! V // filter NSNull
+        case nil,
+             is NSNull,
+             _? /* any other unrelated type */ :
+            return nil as Any? as! V // There should be no uninitialized state at this point
         }
     }
 
@@ -87,15 +89,41 @@ public struct PartialObject<O: CoreStoreObject> {
 
      This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
      */
-    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V {
+    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V? {
 
         switch self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) {
 
         case let value as V:
             return value
 
-        default:
-            return nil as Any? as! V // filter NSNull
+        case nil,
+             is NSNull,
+             _? /* any other unrelated type */ :
+            return nil
+        }
+    }
+
+    /**
+     Returns the value for the specified property from the managed object’s private internal storage.
+
+     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
+     */
+    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Coded<V>) -> V? {
+
+        let keyPath = property(O.meta).keyPath
+        switch self.rawObject.primitiveValue(forKey: keyPath) {
+
+        case let valueBox as Internals.AnyFieldCoder.TransformableDefaultValueCodingBox:
+            rawObject.setPrimitiveValue(valueBox.value, forKey: keyPath)
+            return valueBox.value as? V
+
+        case let value as V:
+            return value
+
+        case nil,
+             is NSNull,
+              _? /* any other unrelated type */ :
+             return nil
         }
     }
 

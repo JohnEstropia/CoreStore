@@ -1,5 +1,5 @@
 //
-//  FieldProtocol.swift
+//  FieldCoders.Json.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -24,13 +24,36 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - FieldProtocol
+// MARK: - FieldCoders
 
-internal protocol FieldProtocol: PropertyProtocol {
-    
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
-    static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
+extension FieldCoders {
+
+    // MARK: - Json
+
+    public struct Json<V: Codable>: FieldCoderType {
+
+        // MARK: FieldCoderType
+
+        public typealias FieldStoredValue = V
+
+        public static func encodeToStoredData(_ fieldValue: FieldStoredValue?) -> Data? {
+
+            guard let fieldValue = fieldValue else {
+
+                return nil
+            }
+            return try? JSONEncoder().encode(fieldValue)
+        }
+
+        public static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue? {
+
+            guard let data = data else {
+
+                return nil
+            }
+            return try? JSONDecoder().decode(FieldStoredValue.self, from: data)
+        }
+    }
 }

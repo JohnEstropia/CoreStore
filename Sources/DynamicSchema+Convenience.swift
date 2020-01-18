@@ -177,6 +177,9 @@ extension DynamicSchema {
                             
                             defaultString = ", initial: /* required */"
                         }
+                    case .undefinedAttributeType:
+                        #warning("TODO: Field.Computed")
+                        continue
                     default:
                         fatalError("Unsupported attribute type: \(attribute.attributeType.rawValue)")
                     }

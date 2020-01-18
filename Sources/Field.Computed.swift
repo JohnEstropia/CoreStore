@@ -79,14 +79,12 @@ extension FieldContainer {
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
          - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
             _ keyPath: KeyPathString,
-            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
@@ -94,7 +92,6 @@ extension FieldContainer {
             self.init(
                 keyPath: keyPath,
                 isOptional: false,
-                renamingIdentifier: renamingIdentifier,
                 customGetter: customGetter,
                 customSetter: customSetter,
                 affectedByKeyPaths: affectedByKeyPaths
@@ -102,14 +99,13 @@ extension FieldContainer {
         }
 
         /**
-         Overload for compiler message only
+         Overload for compiler error message only
          */
-        @available(*, unavailable, message: "Field.Computed properties are not allowed to have default values.")
+        @available(*, unavailable, message: "Field.Computed properties are not allowed to have initial values, including `nil`.")
         public init(
             wrappedValue initial: @autoclosure @escaping () -> V,
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
-            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
@@ -274,7 +270,6 @@ extension FieldContainer {
         fileprivate init(
             keyPath: KeyPathString,
             isOptional: Bool,
-            renamingIdentifier: @escaping () -> String?,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)?,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? ,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
@@ -287,7 +282,8 @@ extension FieldContainer {
                     isTransient: true,
                     allowsExternalBinaryDataStorage: false,
                     versionHashModifier: nil,
-                    renamingIdentifier: renamingIdentifier(),
+                    renamingIdentifier: nil,
+                    valueTransformer: nil,
                     affectedByKeyPaths: affectedByKeyPaths(),
                     defaultValue: nil
                 )

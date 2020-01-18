@@ -41,8 +41,10 @@ class Animal: CoreStoreObject {
     @Field.Stored("species")
     var species: String = "Swift"
 
+    @Field.Coded("color", coder: FieldCoders.NSCoding.self)
+    var color: Color? = .blue
+
     let master = Relationship.ToOne<Person>("master")
-    let color = Transformable.Optional<Color>("color")
 }
 
 class Dog: Animal {
@@ -53,6 +55,10 @@ class Dog: Animal {
     let age = Value.Required<Int>("age", initial: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
     let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
+}
+
+struct CustomType {
+    var string = "customString"
 }
 
 class Person: CoreStoreObject {
@@ -70,12 +76,50 @@ class Person: CoreStoreObject {
     )
     var displayName: String?
 
+    @Field.Computed(
+        "customType",
+        customGetter: Person.getCustomField(_:)
+    )
+    var customField: CustomType
+
+    @Field.Coded(
+        "job", coder: (
+            encode: { $0.data },
+            decode: { $0.flatMap(Job.init(data:)) ?? .unemployed }
+        )
+    )
+    var job: Job = .unemployed
+
     let spouse = Relationship.ToOne<Person>("spouse")
     
     let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
 
     private let _spouse = Relationship.ToOne<Person>("_spouseInverse", inverse: { $0.spouse })
 
+    enum Job: String {
+
+        case unemployed
+        case engineer
+        case doctor
+        case lawyer
+
+        init?(data: Data) {
+
+            guard
+                let rawValue = String(data: data, encoding: .utf8),
+                let value = Self.init(rawValue: rawValue)
+                else {
+
+                return nil
+            }
+            self = value
+        }
+
+        var data: Data {
+
+            return Data(self.rawValue.utf8)
+        }
+    }
     
     private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
@@ -87,6 +131,17 @@ class Person: CoreStoreObject {
         
         partialObject.setPrimitiveValue(newValue, for: \.$name)
         partialObject.setPrimitiveValue(nil, for: \.$displayName)
+    }
+
+    static func getCustomField(_ partialObject: PartialObject<Person>) -> CustomType {
+
+        if let customField = partialObject.primitiveValue(for: \.$customField) {
+
+            return customField
+        }
+        let customField = CustomType()
+        partialObject.setPrimitiveValue(customField, for: \.$customField)
+        return customField
     }
     
     static func getDisplayName(_ partialObject: PartialObject<Person>) -> String? {
@@ -130,7 +185,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 versionLock: [
                     "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
                     "Dog": [0xe3f0afeb109b283a, 0x29998d292938eb61, 0x6aab788333cfc2a3, 0x492ff1d295910ea7],
-                    "Person": [0x2831cf046084d96d, 0xbe19b13ace54641, 0x635a082728b0f6f0, 0x3d4ef2dd4b74a87c]
+                    "Person": [0xf3e6ba6016bbedc6, 0x50dedf64f0eba490, 0xa32088a0ee83468d, 0xb72d1d0b37bd0992]
                 ]
             )
         )
@@ -156,12 +211,13 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let animal = transaction.create(Into<Animal>())
                     XCTAssertEqual(animal.species, "Swift")
                     XCTAssertTrue(type(of: animal.species) == String.self)
+                    XCTAssertEqual(animal.color, Color.blue)
                     
                     animal.species = "Sparrow"
                     XCTAssertEqual(animal.species, "Sparrow")
                     
-                    animal.color .= .yellow
-                    XCTAssertEqual(animal.color.value, Color.yellow)
+                    animal.color = .yellow
+                    XCTAssertEqual(animal.color, Color.yellow)
 
                     for property in Animal.metaProperties(includeSuperclasses: true) {
 
@@ -173,8 +229,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Animal.master):
                             XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
 
-                        case String(keyPath: \Animal.color):
-                            XCTAssertTrue(property is TransformableContainer<Animal>.Optional<Color>)
+                        case String(keyPath: \Animal.$color):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Coded<Color?>)
 
                         default:
                             XCTFail("Unknown KeyPath: \"\(property.keyPath)\"")
@@ -196,8 +252,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Dog.master):
                             XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
 
-                        case String(keyPath: \Dog.color):
-                            XCTAssertTrue(property is TransformableContainer<Animal>.Optional<Color>)
+                        case String(keyPath: \Dog.$color):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Coded<Color?>)
 
                         case String(keyPath: \Dog.$nickname):
                             XCTAssertTrue(property is FieldContainer<Dog>.Stored<String?>)
@@ -270,6 +326,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let person = transaction.create(Into<Person>())
                     XCTAssertTrue(person.pets.value.isEmpty)
+                    XCTAssertEqual(person.customField.string, "customString")
+                    XCTAssertEqual(person.job, .unemployed)
                     
                     XCTAssertEqual(
                         person.rawObject!
@@ -301,6 +359,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(personSnapshot1.$name, "John")
                     XCTAssertEqual(personSnapshot1.$title, "Mr.")
                     XCTAssertEqual(personSnapshot1.$displayName, "Mr. John")
+
+                    person.customField.string = "newCustomString"
+                    XCTAssertEqual(person.customField.string, "newCustomString")
+
+                    person.job = .engineer
+                    XCTAssertEqual(person.job, .engineer)
                     
                     let personSnapshot2 = person.asSnapshot(in: transaction)!
                     XCTAssertEqual(person.name, personSnapshot2.$name)
@@ -315,6 +379,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(personSnapshot2.$displayName, "Sir John")
                     XCTAssertEqual(personSnapshot3.$name, "James")
                     XCTAssertEqual(personSnapshot3.$displayName, "Sir John")
+                    
 
                     
                     person.pets.value.insert(dog)
@@ -342,6 +407,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let bird = try transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species, "Sparrow")
+                    XCTAssertEqual(bird!.color, Color.yellow)
                     
                     let p2 = Where<Dog>({ $0.$nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
@@ -353,6 +419,11 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let person = try transaction.fetchOne(From<Person>())
                     XCTAssertNotNil(person)
+                    XCTAssertEqual(person!.name, "John")
+                    XCTAssertEqual(person!.title, "Sir")
+                    XCTAssertEqual(person!.displayName, "Sir John")
+                    XCTAssertEqual(person!.customField.string, "customString")
+                    XCTAssertEqual(person!.job, .engineer)
                     XCTAssertEqual(person!.pets.value.first, dog)
                     
                     let p3 = Where<Dog>({ $0.age == 10 })

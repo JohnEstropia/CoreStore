@@ -1,5 +1,5 @@
 //
-//  Field.Stored.swift
+//  Field.Coded.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -31,7 +31,7 @@ import Foundation
 
 extension FieldContainer {
 
-    // MARK: - Stored
+    // MARK: - Coded
 
     /**
      The containing type for stored property values. Any type that conforms to `FieldStorableType` are supported.
@@ -47,10 +47,10 @@ extension FieldContainer {
          var color: UIColor?
      }
      ```
-     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Stored(...) var` syntax will be ignored.     
+     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Stored(...) var` syntax will be ignored.
      */
     @propertyWrapper
-    public struct Stored<V: FieldStorableType>: AttributeKeyPathStringConvertible, FieldAttributeProtocol {
+    public struct Coded<V>: AttributeKeyPathStringConvertible, FieldAttributeProtocol {
 
         /**
          Initializes the metadata for the property.
@@ -86,22 +86,48 @@ extension FieldContainer {
          - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
+        public init<Coder: FieldCoderType>(
+            wrappedValue initial: @autoclosure @escaping () -> V,
+            _ keyPath: KeyPathString,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+            coder fieldCoderType: Coder.Type,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+        ) where Coder.FieldStoredValue == V {
+
+            self.init(
+                defaultValue: initial,
+                keyPath: keyPath,
+                isOptional: false,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: previousVersionKeyPath,
+                valueTransformer: { Internals.AnyFieldCoder(fieldCoderType) },
+                customGetter: customGetter,
+                customSetter: customSetter,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
+        }
+
         public init(
             wrappedValue initial: @autoclosure @escaping () -> V,
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+            coder: (encode: (V) -> Data?, decode: (Data?) -> V),
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
         ) {
 
             self.init(
-                wrappedValue: initial,
+                defaultValue: initial,
                 keyPath: keyPath,
                 isOptional: false,
                 versionHashModifier: versionHashModifier,
                 renamingIdentifier: previousVersionKeyPath,
+                valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
                 customGetter: customGetter,
                 customSetter: customSetter,
                 affectedByKeyPaths: affectedByKeyPaths
@@ -188,8 +214,8 @@ extension FieldContainer {
             let keyPath = field.keyPath
             switch rawObject.value(forKey: keyPath) {
 
-            case let rawValue as V.FieldStoredNativeType:
-                return V.cs_fromFieldStoredNativeType(rawValue)
+            case let rawValue as V:
+                return rawValue
 
             default:
                 return nil
@@ -213,10 +239,7 @@ extension FieldContainer {
 
                 return customSetter(PartialObject<O>(rawObject), newValue)
             }
-            return rawObject.setValue(
-                newValue.cs_toFieldStoredNativeType(),
-                forKey: keyPath
-            )
+            return rawObject.setValue(newValue, forKey: keyPath)
         }
 
 
@@ -226,11 +249,28 @@ extension FieldContainer {
 
         internal var getter: CoreStoreManagedObject.CustomGetter? {
 
+            let keyPath = self.keyPath
             guard let customGetter = self.customGetter else {
 
-                return nil
+                return { (_ id: Any) -> Any? in
+
+                    let rawObject = id as! CoreStoreManagedObject
+                    rawObject.willAccessValue(forKey: keyPath)
+                    defer {
+
+                        rawObject.didAccessValue(forKey: keyPath)
+                    }
+                    switch rawObject.primitiveValue(forKey: keyPath) {
+
+                    case let valueBox as Internals.AnyFieldCoder.TransformableDefaultValueCodingBox:
+                        rawObject.setPrimitiveValue(valueBox.value, forKey: keyPath)
+                        return valueBox.value
+
+                    case let value:
+                        return value
+                    }
+                }
             }
-            let keyPath = self.keyPath
             return { (_ id: Any) -> Any? in
 
                 let rawObject = id as! CoreStoreManagedObject
@@ -240,7 +280,7 @@ extension FieldContainer {
                     rawObject.didAccessValue(forKey: keyPath)
                 }
                 let value = customGetter(PartialObject<O>(rawObject))
-                return value.cs_toFieldStoredNativeType()
+                return value
             }
         }
 
@@ -261,7 +301,7 @@ extension FieldContainer {
                 }
                 customSetter(
                     PartialObject<O>(rawObject),
-                    V.cs_fromFieldStoredNativeType(newValue as! V.FieldStoredNativeType)
+                    newValue as! V
                 )
             }
         }
@@ -270,27 +310,33 @@ extension FieldContainer {
         // MARK: FilePrivate
 
         fileprivate init(
-            wrappedValue initial: @escaping () -> V,
+            defaultValue: @escaping () -> Any?,
             keyPath: KeyPathString,
             isOptional: Bool,
             versionHashModifier: @escaping () -> String?,
             renamingIdentifier: @escaping () -> String?,
+            valueTransformer: @escaping () -> Internals.AnyFieldCoder?,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)?,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? ,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
 
             self.keyPath = keyPath
             self.entityDescriptionValues = {
-                (
-                    attributeType: V.cs_rawAttributeType,
+
+                let fieldCoder = valueTransformer()
+                return (
+                    attributeType: .transformableAttributeType,
                     isOptional: isOptional,
                     isTransient: false,
                     allowsExternalBinaryDataStorage: false,
                     versionHashModifier: versionHashModifier(),
                     renamingIdentifier: renamingIdentifier(),
-                    valueTransformer: nil,
+                    valueTransformer: fieldCoder,
                     affectedByKeyPaths: affectedByKeyPaths(),
-                    defaultValue: initial().cs_toFieldStoredNativeType()
+                    defaultValue: Internals.AnyFieldCoder.TransformableDefaultValueCodingBox(
+                        defaultValue: defaultValue(),
+                        fieldCoder: fieldCoder
+                    )
                 )
             }
             self.customGetter = customGetter
@@ -306,9 +352,97 @@ extension FieldContainer {
 }
 
 
-// MARK: - FieldContainer.Stored where V: FieldOptionalType
+// MARK: - FieldContainer.Coded where V: FieldOptionalType
 
-extension FieldContainer.Stored where V: FieldOptionalType {
+extension FieldContainer.Coded where V: FieldOptionalType {
+
+    /**
+     Initializes the metadata for the property.
+     ```
+     class Person: CoreStoreObject {
+         @Field.Stored("title")
+         var title: String = "Mr."
+
+         @Field.Stored("name")
+         var name: String = ""
+
+         @Field.Computed("displayName", customGetter: Person.getName(_:))
+         var displayName: String = ""
+
+         private static func getName(_ partialObject: PartialObject<Person>) -> String {
+             let cachedDisplayName = partialObject.primitiveValue(for: \.$displayName)
+             if !cachedDisplayName.isEmpty {
+                 return cachedDisplayName
+             }
+             let title = partialObject.value(for: \.$title)
+             let name = partialObject.value(for: \.$name)
+             let displayName = "\(title) \(name)"
+             partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+             return displayName
+         }
+     }
+     ```
+     - parameter initial: the initial value for the property when the object is first create
+     - parameter keyPath: the permanent attribute name for this property.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+     - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
+    public init<Coder: FieldCoderType>(
+        wrappedValue initial: @autoclosure @escaping () -> V = nil,
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        coder: Coder.Type,
+        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+    ) where Coder.FieldStoredValue == V.Wrapped {
+
+        self.init(
+            defaultValue: { initial().cs_wrappedValue },
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(coder) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+
+    public init(
+        wrappedValue initial: @autoclosure @escaping () -> V = nil,
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        coder: (encode: (V) -> Data?, decode: (Data?) -> V),
+        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+    ) {
+
+        self.init(
+            defaultValue: { initial().cs_wrappedValue },
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+}
+
+
+// MARK: - FieldContainer.Coded where V: DefaultNSSecureCodable
+
+extension FieldContainer.Coded where V: DefaultNSSecureCodable {
 
     /**
      Initializes the metadata for the property.
@@ -345,20 +479,51 @@ extension FieldContainer.Stored where V: FieldOptionalType {
      - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */
     public init(
+        wrappedValue initial: @autoclosure @escaping () -> V,
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+    ) {
+
+        self.init(
+            defaultValue: initial,
+            keyPath: keyPath,
+            isOptional: false,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V>.self) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+}
+
+
+// MARK: - FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSSecureCodable
+
+extension FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSSecureCodable {
+
+    public init(
         wrappedValue initial: @autoclosure @escaping () -> V = nil,
         _ keyPath: KeyPathString,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
         customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
-        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+    ) {
 
         self.init(
-            wrappedValue: initial,
+            defaultValue: { initial().cs_wrappedValue },
             keyPath: keyPath,
             isOptional: true,
             versionHashModifier: versionHashModifier,
             renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V.Wrapped>.self) },
             customGetter: customGetter,
             customSetter: customSetter,
             affectedByKeyPaths: affectedByKeyPaths

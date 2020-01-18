@@ -67,7 +67,7 @@ final class WhereTests: XCTestCase {
     dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
         
         XCTAssertAllEqual(String(keyPath: \TestEntity1.testEntityID), "testEntityID")
-        XCTAssertAllEqual(String(keyPath: \Animal.color), "color")
+        XCTAssertAllEqual(String(keyPath: \Animal.$color), "color")
     }
 
     @objc

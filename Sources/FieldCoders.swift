@@ -1,5 +1,5 @@
 //
-//  FieldProtocol.swift
+//  FieldCoders.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -23,14 +23,8 @@
 //  SOFTWARE.
 //
 
-import Foundation
-import CoreData
 
-
-// MARK: - FieldProtocol
-
-internal protocol FieldProtocol: PropertyProtocol {
-    
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
-    static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
-}
+/**
+ Namespace for Built-in Field Coders
+ */
+public enum FieldCoders {}
