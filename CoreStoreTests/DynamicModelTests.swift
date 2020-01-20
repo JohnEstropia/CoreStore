@@ -44,7 +44,8 @@ class Animal: CoreStoreObject {
     @Field.Coded("color", coder: FieldCoders.NSCoding.self)
     var color: Color? = .blue
 
-    let master = Relationship.ToOne<Person>("master")
+    @Field.Relationship("master")
+    var master: Person?
 }
 
 class Dog: Animal {
@@ -52,13 +53,43 @@ class Dog: Animal {
     @Field.Stored("nickname")
     var nickname: String?
 
-    let age = Value.Required<Int>("age", initial: 1)
-    let friends = Relationship.ToManyOrdered<Dog>("friends")
-    let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
+    @Field.Stored("age")
+    var age: Int = 1
+
+    @Field.Relationship("friends")
+    var friends: [Dog]
+
+    @Field.Relationship("friendedBy", inverse: \.$friends)
+    var friendedBy: Set<Dog>
 }
 
 struct CustomType {
     var string = "customString"
+}
+
+enum Job: String {
+
+    case unemployed
+    case engineer
+    case doctor
+    case lawyer
+
+    init?(data: Data) {
+
+        guard
+            let rawValue = String(data: data, encoding: .utf8),
+            let value = Self.init(rawValue: rawValue)
+            else {
+
+            return nil
+        }
+        self = value
+    }
+
+    func toData() -> Data {
+
+        return Data(self.rawValue.utf8)
+    }
 }
 
 class Person: CoreStoreObject {
@@ -84,47 +115,25 @@ class Person: CoreStoreObject {
 
     @Field.Coded(
         "job", coder: (
-            encode: { $0.data },
+            encode: { $0.toData() },
             decode: { $0.flatMap(Job.init(data:)) ?? .unemployed }
         )
     )
     var job: Job = .unemployed
 
-    let spouse = Relationship.ToOne<Person>("spouse")
-    
-    let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
+    @Field.Relationship("spouse")
+    var spouse: Person?
 
-    private let _spouse = Relationship.ToOne<Person>("_spouseInverse", inverse: { $0.spouse })
+    @Field.Relationship("pets", inverse: \.$master)
+    var pets: Set<Animal>
 
-    enum Job: String {
-
-        case unemployed
-        case engineer
-        case doctor
-        case lawyer
-
-        init?(data: Data) {
-
-            guard
-                let rawValue = String(data: data, encoding: .utf8),
-                let value = Self.init(rawValue: rawValue)
-                else {
-
-                return nil
-            }
-            self = value
-        }
-
-        var data: Data {
-
-            return Data(self.rawValue.utf8)
-        }
-    }
+    @Field.Relationship("_spouseInverse", inverse: \.$spouse)
+    private var spouseInverse: Person?
     
     private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
         partialObject.setPrimitiveValue(newValue, for: \.$title)
-        partialObject.setPrimitiveValue(nil, for: { $0.$displayName })
+        partialObject.setPrimitiveValue(nil, for: \.$displayName)
     }
     
     private static func setName(_ partialObject: PartialObject<Person>, _ newValue: String) {
@@ -226,8 +235,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Animal.$species):
                             XCTAssertTrue(property is FieldContainer<Animal>.Stored<String>)
 
-                        case String(keyPath: \Animal.master):
-                            XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
+                        case String(keyPath: \Animal.$master):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Relationship<Person?>)
 
                         case String(keyPath: \Animal.$color):
                             XCTAssertTrue(property is FieldContainer<Animal>.Coded<Color?>)
@@ -240,7 +249,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species, "Swift")
                     XCTAssertEqual(dog.nickname, nil)
-                    XCTAssertEqual(dog.age.value, 1)
+                    XCTAssertEqual(dog.age, 1)
 
                     for property in Dog.metaProperties(includeSuperclasses: true) {
 
@@ -249,8 +258,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Dog.$species):
                             XCTAssertTrue(property is FieldContainer<Animal>.Stored<String>)
 
-                        case String(keyPath: \Dog.master):
-                            XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
+                        case String(keyPath: \Dog.$master):
+                            XCTAssertTrue(property is FieldContainer<Animal>.Relationship<Person?>)
 
                         case String(keyPath: \Dog.$color):
                             XCTAssertTrue(property is FieldContainer<Animal>.Coded<Color?>)
@@ -258,14 +267,14 @@ class DynamicModelTests: BaseTestDataTestCase {
                         case String(keyPath: \Dog.$nickname):
                             XCTAssertTrue(property is FieldContainer<Dog>.Stored<String?>)
 
-                        case String(keyPath: \Dog.age):
-                            XCTAssertTrue(property is ValueContainer<Dog>.Required<Int>)
+                        case String(keyPath: \Dog.$age):
+                            XCTAssertTrue(property is FieldContainer<Dog>.Stored<Int>)
 
-                        case String(keyPath: \Dog.friends):
-                            XCTAssertTrue(property is RelationshipContainer<Dog>.ToManyOrdered<Dog>)
+                        case String(keyPath: \Dog.$friends):
+                            XCTAssertTrue(property is FieldContainer<Dog>.Relationship<[Dog]>)
 
-                        case String(keyPath: \Dog.friendedBy):
-                            XCTAssertTrue(property is RelationshipContainer<Dog>.ToManyUnordered<Dog>)
+                        case String(keyPath: \Dog.$friendedBy):
+                            XCTAssertTrue(property is FieldContainer<Dog>.Relationship<Set<Dog>>)
 
                         default:
                             XCTFail("Unknown KeyPath: \"\(property.keyPath)\"")
@@ -325,7 +334,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.nickname, "Spot")
                     
                     let person = transaction.create(Into<Person>())
-                    XCTAssertTrue(person.pets.value.isEmpty)
+                    XCTAssertTrue(person.pets.isEmpty)
                     XCTAssertEqual(person.customField.string, "customString")
                     XCTAssertEqual(person.job, .unemployed)
                     
@@ -382,12 +391,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
 
                     
-                    person.pets.value.insert(dog)
+                    person.pets.insert(dog)
                     XCTAssertEqual(person.pets.count, 1)
-                    XCTAssertEqual(person.pets.value.first, dog)
-                    XCTAssertEqual(person.pets.value.first?.master.value, person)
-                    XCTAssertEqual(dog.master.value, person)
-                    XCTAssertEqual(dog.master.value?.pets.value.first, dog)
+                    XCTAssertEqual(person.pets.first, dog)
+                    XCTAssertEqual(person.pets.first?.master, person)
+                    XCTAssertEqual(dog.master, person)
+                    XCTAssertEqual(dog.master?.pets.first, dog)
                 },
                 success: { _ in
                     
@@ -424,42 +433,44 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person!.displayName, "Sir John")
                     XCTAssertEqual(person!.customField.string, "customString")
                     XCTAssertEqual(person!.job, .engineer)
-                    XCTAssertEqual(person!.pets.value.first, dog)
+                    XCTAssertEqual(person!.pets.first, dog)
                     
-                    let p3 = Where<Dog>({ $0.age == 10 })
+                    let p3 = Where<Dog>({ $0.$age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
 
-                    let totalAge = try transaction.queryValue(From<Dog>().select(Int.self, .sum(\Dog.age)))
+                    let totalAge = try transaction.queryValue(
+                        From<Dog>().select(Int.self, .sum(\.$age))
+                    )
                     XCTAssertEqual(totalAge, 1)
                     
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Animal.$species == "Dog" && \Dog.age == 10)
+                            .where(\Animal.$species == "Dog" && \Dog.$age == 10)
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Dog.age == 10 && \Animal.$species == "Dog")
+                            .where(\Dog.$age == 10 && \Animal.$species == "Dog")
                             .orderBy(.ascending({ $0.$species }))
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.$age > 10 && $0.$age <= 15 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.$species == "Dog" && $0.age == 10 })
+                        Where<Dog>({ $0.$species == "Dog" && $0.$age == 10 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age == 10 && $0.$species == "Dog" })
+                        Where<Dog>({ $0.$age == 10 && $0.$species == "Dog" })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.$age > 10 && $0.$age <= 15 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        (\Dog.age > 10 && \Dog.age <= 15)
+                        (\Dog.$age > 10 && \Dog.$age <= 15)
                     )
                 },
                 success: { _ in

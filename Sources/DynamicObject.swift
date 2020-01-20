@@ -173,6 +173,9 @@ extension CoreStoreObject {
                     case let property as FieldAttributeProtocol:
                         attributes[property.keyPath] = type(of: property).read(field: property, for: object.rawObject!)
 
+                    case let property as FieldRelationshipProtocol:
+                        attributes[property.keyPath] = type(of: property).valueForSnapshot(field: property, for: object.rawObject!)
+
                     case let property as AttributeProtocol:
                         attributes[property.keyPath] = property.valueForSnapshot
 

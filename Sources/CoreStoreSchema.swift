@@ -339,6 +339,23 @@ public final class CoreStoreSchema: DynamicSchema {
                     keyPathsByAffectedKeyPaths[attribute.keyPath] = entityDescriptionValues.affectedByKeyPaths
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
                     fieldCoders[attribute.keyPath] = valueTransformer
+
+                case let relationship as FieldRelationshipProtocol:
+                    Internals.assert(
+                        !NSManagedObject.instancesRespond(to: Selector(relationship.keyPath)),
+                        "Relationship Property name \"\(String(reflecting: entity.type)).\(relationship.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(relationship.keyPath)\""
+                    )
+                    let entityDescriptionValues = relationship.entityDescriptionValues()
+                    let description = NSRelationshipDescription()
+                    description.name = relationship.keyPath
+                    description.minCount = entityDescriptionValues.minCount
+                    description.maxCount = entityDescriptionValues.maxCount
+                    description.isOrdered = entityDescriptionValues.isOrdered
+                    description.deleteRule = entityDescriptionValues.deleteRule
+                    description.versionHashModifier = entityDescriptionValues.versionHashModifier
+                    description.renamingIdentifier = entityDescriptionValues.renamingIdentifier
+                    propertyDescriptions.append(description)
+                    keyPathsByAffectedKeyPaths[relationship.keyPath] = entityDescriptionValues.affectedByKeyPaths
                     
                 case let attribute as AttributeProtocol:
                     Internals.assert(
@@ -437,6 +454,26 @@ public final class CoreStoreSchema: DynamicSchema {
             for property in entityType.metaProperties(includeSuperclasses: false) {
                 
                 switch property {
+
+                case let relationship as FieldRelationshipProtocol:
+                    let (destinationType, destinationKeyPath) = relationship.entityDescriptionValues().inverse
+                    let destinationEntity = findEntity(for: destinationType)
+                    let description = relationshipsByName[relationship.keyPath]!
+                    description.destinationEntity = entityDescriptionsByEntity[destinationEntity]!
+
+                    if let destinationKeyPath = destinationKeyPath {
+
+                        let inverseRelationshipDescription = findInverseRelationshipMatching(
+                            destinationEntity: destinationEntity,
+                            destinationKeyPath: destinationKeyPath
+                        )
+                        description.inverseRelationship = inverseRelationshipDescription
+
+                        inverseRelationshipDescription.inverseRelationship = description
+                        inverseRelationshipDescription.destinationEntity = entityDescription
+
+                        description.destinationEntity!.properties = description.destinationEntity!.properties
+                    }
                     
                 case let relationship as RelationshipProtocol:
                     let (destinationType, destinationKeyPath) = relationship.entityDescriptionValues().inverse

@@ -451,6 +451,17 @@ extension Where where O: CoreStoreObject {
 
         self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
     }
+
+    /**
+     Initializes a `Where` clause that compares equality
+
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<V: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isEqualTo value: V.DestinationObjectType?) {
+
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
     
     /**
      Initializes a `Where` clause that compares equality to `nil`

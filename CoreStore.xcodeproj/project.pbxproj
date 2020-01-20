@@ -613,6 +613,18 @@
 		B57D27C21D0BC20100539C58 /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27C11D0BC20100539C58 /* QueryTests.swift */; };
 		B57D27C31D0BC20100539C58 /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27C11D0BC20100539C58 /* QueryTests.swift */; };
 		B57D27C41D0BC20100539C58 /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27C11D0BC20100539C58 /* QueryTests.swift */; };
+		B57E6FA223D302FA000FD031 /* Field.Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA123D302FA000FD031 /* Field.Relationship.swift */; };
+		B57E6FA323D302FA000FD031 /* Field.Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA123D302FA000FD031 /* Field.Relationship.swift */; };
+		B57E6FA423D302FA000FD031 /* Field.Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA123D302FA000FD031 /* Field.Relationship.swift */; };
+		B57E6FA523D302FA000FD031 /* Field.Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA123D302FA000FD031 /* Field.Relationship.swift */; };
+		B57E6FA723D305D6000FD031 /* FIeldRelationshipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */; };
+		B57E6FA823D305D6000FD031 /* FIeldRelationshipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */; };
+		B57E6FA923D305D6000FD031 /* FIeldRelationshipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */; };
+		B57E6FAA23D305D6000FD031 /* FIeldRelationshipType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */; };
+		B57E6FAC23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */; };
+		B57E6FAD23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */; };
+		B57E6FAE23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */; };
+		B57E6FAF23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */; };
 		B580857A1CDF808C004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
 		B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
 		B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
@@ -1113,6 +1125,9 @@
 		B56E4EE323CEDF0900E1708C /* Field.Computed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Computed.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
+		B57E6FA123D302FA000FD031 /* Field.Relationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Relationship.swift; sourceTree = "<group>"; };
+		B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FIeldRelationshipType.swift; sourceTree = "<group>"; };
+		B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldRelationshipProtocol.swift; sourceTree = "<group>"; };
 		B58085741CDF7F00004C2EEB /* SetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupTests.swift; sourceTree = "<group>"; };
 		B581B9312362BB8C002BDB2B /* ObjectPublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPublisherTests.swift; sourceTree = "<group>"; };
 		B5831B6F1F34AC3400A9F647 /* AttributeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeProtocol.swift; sourceTree = "<group>"; };
@@ -1461,6 +1476,7 @@
 				B5831B741F34AC7A00A9F647 /* RelationshipProtocol.swift */,
 				B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */,
 				B50C3ED923D0545700B29880 /* FieldAttributeProtocol.swift */,
+				B57E6FAB23D30A5B000FD031 /* FieldRelationshipProtocol.swift */,
 				B50564D22350CC3100482308 /* PropertyProtocol.swift */,
 				B53D9E5823513712000F48FB /* DiffableDataSourceSnapshotProtocol.swift */,
 				B50E175623517DE4004F033C /* Differentiable.swift */,
@@ -1608,6 +1624,7 @@
 				B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */,
 				B56E4EE323CEDF0900E1708C /* Field.Computed.swift */,
 				B50C3EE423D153EA00B29880 /* Field.Coded.swift */,
+				B57E6FA123D302FA000FD031 /* Field.Relationship.swift */,
 				B50C3EDE23D05BB200B29880 /* Coders */,
 				B56E4EDD23CEBB0400E1708C /* Supported Values */,
 			);
@@ -1619,6 +1636,7 @@
 			children = (
 				B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */,
 				B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */,
+				B57E6FA623D305D6000FD031 /* FIeldRelationshipType.swift */,
 			);
 			name = "Supported Values";
 			sourceTree = "<group>";
@@ -2301,6 +2319,7 @@
 				B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B53FBA121CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
 				B5831B751F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
+				B57E6FA723D305D6000FD031 /* FIeldRelationshipType.swift in Sources */,
 				B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */,
 				B50564D32350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B5D8CA762346E7590055D7D1 /* DataStack+DataSources.swift in Sources */,
@@ -2435,6 +2454,7 @@
 				B5A991EC1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B52F743D1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
+				B57E6FA223D302FA000FD031 /* Field.Relationship.swift in Sources */,
 				B5E8A72021C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B53D9E5923513712000F48FB /* DiffableDataSourceSnapshotProtocol.swift in Sources */,
 				B56E4ED923CEB8E700E1708C /* FieldStorableType.swift in Sources */,
@@ -2446,6 +2466,7 @@
 				B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */,
 				B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */,
 				B53FBA041CAB300C00F0D40A /* CSMigrationType.swift in Sources */,
+				B57E6FAC23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */,
 				B509D7C923C8491C00F42824 /* Relationship.ToManyOrdered.swift in Sources */,
 				B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */,
 				B50C3EEF23D1605C00B29880 /* FieldCoders.DefaultNSSecureCoding.swift in Sources */,
@@ -2549,6 +2570,7 @@
 				B53FBA141CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
 				B5831B761F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
 				B5BF7FB3234C97910070E741 /* DiffableDataSource.swift in Sources */,
+				B57E6FA823D305D6000FD031 /* FIeldRelationshipType.swift in Sources */,
 				B5E1B5AA1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B5D339F21E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
 				B5E1B59F1CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
@@ -2683,6 +2705,7 @@
 				B5AA37F2235C28EE00FFD4B9 /* DiffableDataSource.CollectionViewAdapter-AppKit.swift in Sources */,
 				B50E175D2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D162227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
+				B57E6FA323D302FA000FD031 /* Field.Relationship.swift in Sources */,
 				B501322B2346A9AE00FC238B /* ListPublisher.swift in Sources */,
 				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B56E4EDA23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
@@ -2694,6 +2717,7 @@
 				82BA18BE1C4BBD4A00A0916E /* Tweak.swift in Sources */,
 				B509D7C523C848DA00F42824 /* Relationship.ToOne.swift in Sources */,
 				B5DBE2CE1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B57E6FAD23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */,
 				B5831B711F34AC3400A9F647 /* AttributeProtocol.swift in Sources */,
 				B546F95E1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B50C3EF023D1605C00B29880 /* FieldCoders.DefaultNSSecureCoding.swift in Sources */,
@@ -2797,6 +2821,7 @@
 				B5BF7FCE234D80910070E741 /* Internals.LazyNonmutating.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
 				B50564D62350CC3100482308 /* PropertyProtocol.swift in Sources */,
+				B57E6FAA23D305D6000FD031 /* FIeldRelationshipType.swift in Sources */,
 				B5831B781F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
 				B52DD1981BE1F92500949AFE /* CoreStore+Setup.swift in Sources */,
 				B5D339F41E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
@@ -2931,6 +2956,7 @@
 				18166886232B9ED20097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72321C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B50E175F2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
+				B57E6FA523D302FA000FD031 /* Field.Relationship.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */,
 				B56E4EDC23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
@@ -2942,6 +2968,7 @@
 				B52DD1B91BE1F94000949AFE /* CoreStore+Migration.swift in Sources */,
 				B509D7C723C848DA00F42824 /* Relationship.ToOne.swift in Sources */,
 				B5519A5C1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
+				B57E6FAF23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */,
 				B5DBE2D51C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				B5831B731F34AC3400A9F647 /* AttributeProtocol.swift in Sources */,
 				B50C3EF223D1605C00B29880 /* FieldCoders.DefaultNSSecureCoding.swift in Sources */,
@@ -3045,6 +3072,7 @@
 				B5E1B5AB1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B5831B771F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
 				B5BF7FB4234C97910070E741 /* DiffableDataSource.swift in Sources */,
+				B57E6FA923D305D6000FD031 /* FIeldRelationshipType.swift in Sources */,
 				B5D339F31E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
 				B5E1B5A01CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
 				B5ECDC261CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
@@ -3179,6 +3207,7 @@
 				B5AA37F3235C28EE00FFD4B9 /* DiffableDataSource.CollectionViewAdapter-AppKit.swift in Sources */,
 				B50E175E2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D172227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
+				B57E6FA423D302FA000FD031 /* Field.Relationship.swift in Sources */,
 				B501322D2346A9B000FC238B /* ListPublisher.swift in Sources */,
 				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B56E4EDB23CEB8E700E1708C /* FieldStorableType.swift in Sources */,
@@ -3190,6 +3219,7 @@
 				B56321841BD65216006C9394 /* DefaultLogger.swift in Sources */,
 				B509D7C623C848DA00F42824 /* Relationship.ToOne.swift in Sources */,
 				B5DBE2CF1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B57E6FAE23D30A5B000FD031 /* FieldRelationshipProtocol.swift in Sources */,
 				B5831B721F34AC3400A9F647 /* AttributeProtocol.swift in Sources */,
 				B546F95F1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B50C3EF123D1605C00B29880 /* FieldCoders.DefaultNSSecureCoding.swift in Sources */,
