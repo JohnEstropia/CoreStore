@@ -63,7 +63,10 @@ extension DynamicObject where Self: CoreStoreObject {
 public enum RelationshipContainer<O: CoreStoreObject> {
     
     // MARK: - DeleteRule
-    
+
+    /**
+     These constants define what happens to relationships when an object is deleted.
+     */
     public enum DeleteRule {
 
         // MARK: Public

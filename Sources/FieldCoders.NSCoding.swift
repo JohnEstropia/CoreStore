@@ -32,7 +32,7 @@ extension FieldCoders {
 
     // MARK: - NSCoding
 
-    public struct NSCoding<V: NSObject & Foundation.NSCoding>: FieldCoderType {
+    public struct NSCoding<V: Foundation.NSObject & Foundation.NSCoding>: FieldCoderType {
 
         // MARK: FieldCoderType
 

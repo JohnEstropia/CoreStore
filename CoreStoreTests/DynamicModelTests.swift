@@ -114,7 +114,8 @@ class Person: CoreStoreObject {
     var customField: CustomType
 
     @Field.Coded(
-        "job", coder: (
+        "job",
+        coder: (
             encode: { $0.toData() },
             decode: { $0.flatMap(Job.init(data:)) ?? .unemployed }
         )

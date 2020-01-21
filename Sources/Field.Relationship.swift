@@ -37,7 +37,40 @@ extension FieldContainer {
 //    @dynamicMemberLookup
     public struct Relationship<V: FieldRelationshipType>: RelationshipKeyPathStringConvertible, FieldRelationshipProtocol {
 
-        public typealias DeleteRule = RelationshipContainer<O>.DeleteRule
+        /**
+         Overload for compiler error message only
+         */
+        @available(*, unavailable, message: "Field.Relationship properties are not allowed to have initial values, including `nil`.")
+        public init(
+            wrappedValue initial: @autoclosure @escaping () -> V,
+            _ keyPath: KeyPathString,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil
+        ) {
+
+            fatalError()
+        }
+
+        /**
+         Overload for compiler error message only
+         */
+        @available(*, unavailable, message: "Field.Relationship properties are not allowed to have initial values, including `nil`.")
+        public init<D>(
+            wrappedValue initial: @autoclosure @escaping () -> V,
+            _ keyPath: KeyPathString,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            inverse: KeyPath<V.DestinationObjectType, FieldContainer<V.DestinationObjectType>.Relationship<D>>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil
+        ) {
+
+            fatalError()
+        }
 
 
         // MARK: @propertyWrapper
@@ -188,6 +221,45 @@ extension FieldContainer {
                 )
             }
         }
+
+
+        // MARK: - DeleteRule
+
+        /**
+         These constants define what happens to relationships when an object is deleted.
+         */
+        public enum DeleteRule {
+
+            // MARK: Public
+
+            /**
+             If the object is deleted, back pointers from the objects to which it is related are nullified.
+             */
+            case nullify
+
+            /**
+             If the object is deleted, the destination object or objects of this relationship are also deleted.
+             */
+            case cascade
+
+            /**
+             If the destination of this relationship is not nil, the delete creates a validation error.
+             */
+            case deny
+
+
+            // MARK: Internal
+
+            internal var nativeValue: NSDeleteRule {
+
+                switch self {
+
+                case .nullify:  return .nullifyDeleteRule
+                case .cascade:  return .cascadeDeleteRule
+                case .deny:     return .denyDeleteRule
+                }
+            }
+        }
     }
 }
 
@@ -271,7 +343,7 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyOrderedTyp
         _ keyPath: KeyPathString,
         minCount: Int = 0,
         maxCount: Int = 0,
-        inverse: @escaping (V.DestinationObjectType) -> FieldContainer<V.DestinationObjectType>.Relationship<D>,
+        inverse: KeyPath<V.DestinationObjectType, FieldContainer<V.DestinationObjectType>.Relationship<D>>,
         deleteRule: DeleteRule = .nullify,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
@@ -283,7 +355,7 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyOrderedTyp
             isToMany: true,
             isOrdered: true,
             deleteRule: deleteRule,
-            inverseKeyPath: { inverse(V.DestinationObjectType.meta).keyPath },
+            inverseKeyPath: { V.DestinationObjectType.meta[keyPath: inverse].keyPath },
             versionHashModifier: versionHashModifier,
             renamingIdentifier: previousVersionKeyPath,
             affectedByKeyPaths: affectedByKeyPaths,
@@ -323,7 +395,7 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyUnorderedT
         _ keyPath: KeyPathString,
         minCount: Int = 0,
         maxCount: Int = 0,
-        inverse: @escaping (V.DestinationObjectType) -> FieldContainer<V.DestinationObjectType>.Relationship<D>,
+        inverse: KeyPath<V.DestinationObjectType, FieldContainer<V.DestinationObjectType>.Relationship<D>>,
         deleteRule: DeleteRule = .nullify,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
@@ -335,7 +407,7 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyUnorderedT
             isToMany: true,
             isOrdered: false,
             deleteRule: deleteRule,
-            inverseKeyPath: { inverse(V.DestinationObjectType.meta).keyPath },
+            inverseKeyPath: { V.DestinationObjectType.meta[keyPath: inverse].keyPath },
             versionHashModifier: versionHashModifier,
             renamingIdentifier: previousVersionKeyPath,
             affectedByKeyPaths: affectedByKeyPaths,

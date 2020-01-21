@@ -44,7 +44,7 @@ extension FieldCoders {
 
                 return nil
             }
-            return try? PropertyListEncoder().encode(fieldValue)
+            return try! PropertyListEncoder().encode([fieldValue])
         }
 
         public static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue? {
@@ -53,7 +53,7 @@ extension FieldCoders {
 
                 return nil
             }
-            return try? PropertyListDecoder().decode(FieldStoredValue.self, from: data)
+            return try! PropertyListDecoder().decode([FieldStoredValue].self, from: data).first
         }
     }
 }

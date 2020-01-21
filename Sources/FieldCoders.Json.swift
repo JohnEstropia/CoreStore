@@ -44,7 +44,7 @@ extension FieldCoders {
 
                 return nil
             }
-            return try? JSONEncoder().encode(fieldValue)
+            return try! JSONEncoder().encode([fieldValue])
         }
 
         public static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue? {
@@ -53,7 +53,7 @@ extension FieldCoders {
 
                 return nil
             }
-            return try? JSONDecoder().decode(FieldStoredValue.self, from: data)
+            return try! JSONDecoder().decode([FieldStoredValue].self, from: data).first
         }
     }
 }
