@@ -385,7 +385,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Computed<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> V? {
 
         guard
             let object = self.object,
@@ -394,7 +394,7 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
-        return FieldContainer<OBase>.Computed<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+        return FieldContainer<OBase>.Virtual<V>.read(field: object[keyPath: member], for: rawObject) as! V?
     }
 
     /**

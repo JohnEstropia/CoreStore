@@ -70,7 +70,7 @@ extension DynamicSchema {
                     let containerType: String
                     if attribute.isTransient || attribute.attributeType == .undefinedAttributeType {
 
-                        containerType = "Field.Computed"
+                        containerType = "Field.Virtual"
                     }
                     else if attribute.attributeType == .transformableAttributeType {
 

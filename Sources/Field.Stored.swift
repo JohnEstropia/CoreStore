@@ -40,7 +40,7 @@ extension FieldContainer {
          @Field.Stored("species")
          var species = ""
 
-         @Field.Computed("pluralName", customGetter: Animal.pluralName(_:))
+         @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
          var pluralName: String = ""
 
          @Field.PlistCoded("color")
@@ -62,7 +62,7 @@ extension FieldContainer {
              @Field.Stored("name")
              var name: String = ""
 
-             @Field.Computed("displayName", customGetter: Person.getName(_:))
+             @Field.Virtual("displayName", customGetter: Person.getName(_:))
              var displayName: String = ""
 
              private static func getName(_ partialObject: PartialObject<Person>) -> String {
@@ -320,7 +320,7 @@ extension FieldContainer.Stored where V: FieldOptionalType {
          @Field.Stored("name")
          var name: String = ""
 
-         @Field.Computed("displayName", customGetter: Person.getName(_:))
+         @Field.Virtual("displayName", customGetter: Person.getName(_:))
          var displayName: String = ""
 
          private static func getName(_ partialObject: PartialObject<Person>) -> String {

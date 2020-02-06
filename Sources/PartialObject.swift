@@ -58,7 +58,7 @@ public struct PartialObject<O: CoreStoreObject> {
     /**
      Returns the value for the property identified by a given key.
      */
-    public func value<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V {
+    public func value<V>(for property: (O) -> FieldContainer<O>.Virtual<V>) -> V {
 
         switch self.rawObject.value(forKey: property(O.meta).keyPath) {
 
@@ -89,7 +89,7 @@ public struct PartialObject<O: CoreStoreObject> {
 
      This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
      */
-    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Computed<V>) -> V? {
+    public func primitiveValue<V>(for property: (O) -> FieldContainer<O>.Virtual<V>) -> V? {
 
         switch self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) {
 
@@ -145,7 +145,7 @@ public struct PartialObject<O: CoreStoreObject> {
 
      Sets in the receiver’s private internal storage the value of the property specified by key to value.
      */
-    public func setPrimitiveValue<V>(_ value: V, for property: (O) -> FieldContainer<O>.Computed<V>) {
+    public func setPrimitiveValue<V>(_ value: V, for property: (O) -> FieldContainer<O>.Virtual<V>) {
 
         self.rawObject.setPrimitiveValue(
             value,

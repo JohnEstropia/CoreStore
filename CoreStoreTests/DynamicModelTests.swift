@@ -100,14 +100,14 @@ class Person: CoreStoreObject {
     @Field.Stored("name", customSetter: Person.setName(_:_:))
     var name: String = ""
 
-    @Field.Computed(
+    @Field.Virtual(
         "displayName",
         customGetter: Person.getDisplayName(_:),
         affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
     )
     var displayName: String?
 
-    @Field.Computed(
+    @Field.Virtual(
         "customType",
         customGetter: Person.getCustomField(_:)
     )

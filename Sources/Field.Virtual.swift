@@ -1,5 +1,5 @@
 //
-//  Field.Computed.swift
+//  Field.Virtual.swift
 //  CoreStore
 //
 //  Copyright © 2020 John Rommel Estropia
@@ -31,7 +31,7 @@ import Foundation
 
 extension FieldContainer {
 
-    // MARK: - Computed
+    // MARK: - Virtual
 
     /**
      The containing type for computed property values. Any type that conforms to `FieldStorableType` are supported.
@@ -40,17 +40,17 @@ extension FieldContainer {
          @Field.Stored("species")
          var species = ""
 
-         @Field.Computed("pluralName", customGetter: Animal.pluralName(_:))
+         @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
          var pluralName: String = ""
 
          @Field.PlistCoded("color")
          var color: UIColor?
      }
      ```
-     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Computed(...) var` syntax will be ignored.
+     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Virtual(...) var` syntax will be ignored.
      */
     @propertyWrapper
-    public struct Computed<V>: AttributeKeyPathStringConvertible, FieldAttributeProtocol {
+    public struct Virtual<V>: AttributeKeyPathStringConvertible, FieldAttributeProtocol {
 
         /**
          Initializes the metadata for the property.
@@ -62,7 +62,7 @@ extension FieldContainer {
              @Field.Stored("name")
              var name: String = ""
 
-             @Field.Computed("displayName", customGetter: Person.getName(_:))
+             @Field.Virtual("displayName", customGetter: Person.getName(_:))
              var displayName: String = ""
 
              private static func getName(_ partialObject: PartialObject<Person>) -> String {
@@ -85,7 +85,7 @@ extension FieldContainer {
          */
         public init(
             _ keyPath: KeyPathString,
-            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+            customGetter: @escaping (_ partialObject: PartialObject<O>) -> V,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
@@ -297,5 +297,24 @@ extension FieldContainer {
 
         private let customGetter: ((_ partialObject: PartialObject<O>) -> V)?
         private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)?
+    }
+}
+
+
+extension FieldContainer.Virtual where V: FieldOptionalType {
+
+    public init(
+        _ keyPath: KeyPathString,
+        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
+
+        self.init(
+            keyPath: keyPath,
+            isOptional: false,
+            customGetter: customGetter,
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
     }
 }

@@ -195,7 +195,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Computed<V>>) -> V {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> V {
 
         get {
 

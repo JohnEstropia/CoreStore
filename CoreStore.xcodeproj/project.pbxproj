@@ -603,10 +603,10 @@
 		B56E4EE023CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
 		B56E4EE123CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
 		B56E4EE223CEBCF000E1708C /* FieldOptionalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */; };
-		B56E4EE423CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
-		B56E4EE523CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
-		B56E4EE623CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
-		B56E4EE723CEDF0900E1708C /* Field.Computed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Computed.swift */; };
+		B56E4EE423CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
+		B56E4EE523CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
+		B56E4EE623CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
+		B56E4EE723CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
 		B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27BF1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27C01D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
@@ -1122,7 +1122,7 @@
 		B56E4ED323CDB54A00E1708C /* FieldProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldProtocol.swift; sourceTree = "<group>"; };
 		B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStorableType.swift; sourceTree = "<group>"; };
 		B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOptionalType.swift; sourceTree = "<group>"; };
-		B56E4EE323CEDF0900E1708C /* Field.Computed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Computed.swift; sourceTree = "<group>"; };
+		B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Virtual.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
 		B57E6FA123D302FA000FD031 /* Field.Relationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Relationship.swift; sourceTree = "<group>"; };
@@ -1622,7 +1622,7 @@
 			children = (
 				B56E4EC923CD9B4800E1708C /* Field.swift */,
 				B56E4ECE23CD9E4200E1708C /* Field.Stored.swift */,
-				B56E4EE323CEDF0900E1708C /* Field.Computed.swift */,
+				B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */,
 				B50C3EE423D153EA00B29880 /* Field.Coded.swift */,
 				B57E6FA123D302FA000FD031 /* Field.Relationship.swift */,
 				B50C3EDE23D05BB200B29880 /* Coders */,
@@ -2408,7 +2408,7 @@
 				B5FAD6A91B50A4B400714891 /* Progress+Convenience.swift in Sources */,
 				B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */,
 				B5215CA91FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
-				B56E4EE423CEDF0900E1708C /* Field.Computed.swift in Sources */,
+				B56E4EE423CEDF0900E1708C /* Field.Virtual.swift in Sources */,
 				B50E174D23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
 				B5E222231CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */,
@@ -2659,7 +2659,7 @@
 				B514EF0F23A8DB180093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B52F744B1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
-				B56E4EE523CEDF0900E1708C /* Field.Computed.swift in Sources */,
+				B56E4EE523CEDF0900E1708C /* Field.Virtual.swift in Sources */,
 				B5E2222C1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				82BA18A71C4BBD2900A0916E /* CoreStore+Logging.swift in Sources */,
 				B50E174E23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
@@ -2910,7 +2910,7 @@
 				B514EF1123A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B50E175A23517DE4004F033C /* Differentiable.swift in Sources */,
 				B52F744D1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
-				B56E4EE723CEDF0900E1708C /* Field.Computed.swift in Sources */,
+				B56E4EE723CEDF0900E1708C /* Field.Virtual.swift in Sources */,
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
 				B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */,
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -3161,7 +3161,7 @@
 				B514EF1023A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B563218A1BD65216006C9394 /* SynchronousDataTransaction.swift in Sources */,
 				B52F744C1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
-				B56E4EE623CEDF0900E1708C /* Field.Computed.swift in Sources */,
+				B56E4EE623CEDF0900E1708C /* Field.Virtual.swift in Sources */,
 				B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E2222D1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B50E174F23517C03004F033C /* Internals.DiffableDataUIDispatcher.StagedChangeset.swift in Sources */,
