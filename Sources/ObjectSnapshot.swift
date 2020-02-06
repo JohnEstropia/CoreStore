@@ -212,6 +212,25 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>) -> V.PublishedType {
+
+        get {
+
+            let key = String(keyPath: member)
+            let context = self.context
+            let snapshotValue = self.values[key] as! V.SnapshotValueType
+            return V.cs_toPublishedType(from: snapshotValue, in: context)
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = V.cs_toSnapshotType(from: newValue)
+        }
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V {
 
         get {

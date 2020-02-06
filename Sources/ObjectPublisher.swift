@@ -400,6 +400,24 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>) -> V.PublishedType? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject,
+            let value = FieldContainer<OBase>.Relationship<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+            else {
+
+                return nil
+        }
+        let nativeValue = V.cs_toNativeType(from: value)
+        let snapshotValue = V.cs_valueForSnapshot(from: nativeValue)
+        return V.cs_toPublishedType(from: snapshotValue, in: self.context)
+     }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
