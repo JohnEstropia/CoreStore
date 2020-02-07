@@ -23,6 +23,8 @@
 //  SOFTWARE.
 //
 
+#if canImport(UIKit) || canImport(AppKit)
+
 import Foundation
 import CoreData
 
@@ -214,3 +216,5 @@ extension DiffableDataSource {
         internal let dispatcher: Internals.DiffableDataUIDispatcher<O>
     }
 }
+
+#endif

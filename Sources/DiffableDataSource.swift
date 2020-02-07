@@ -23,7 +23,7 @@
 //  SOFTWARE.
 //
 
-#if os(iOS) || os(tvOS) || os(macOS)
+#if canImport(UIKit) || canImport(AppKit)
 
 // MARK: - DiffableDataSource
 

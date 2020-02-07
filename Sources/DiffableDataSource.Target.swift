@@ -23,6 +23,8 @@
 //  SOFTWARE.
 //
 
+#if canImport(UIKit) || canImport(AppKit)
+
 import Foundation
 
 
@@ -209,3 +211,5 @@ extension DiffableDataSource.Target {
         }
     }
 }
+
+#endif
