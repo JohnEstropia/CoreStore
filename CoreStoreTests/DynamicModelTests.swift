@@ -362,6 +362,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person.name, personSnapshot1.$name)
                     XCTAssertEqual(person.title, personSnapshot1.$title)
                     XCTAssertEqual(person.displayName, personSnapshot1.$displayName)
+                    XCTAssertEqual(person.job, personSnapshot1.$job)
                     
                     person.title = "Sir"
                     XCTAssertEqual(person.displayName, "Sir John")
@@ -380,15 +381,19 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person.name, personSnapshot2.$name)
                     XCTAssertEqual(person.title, personSnapshot2.$title)
                     XCTAssertEqual(person.displayName, personSnapshot2.$displayName)
+                    XCTAssertEqual(person.job, personSnapshot2.$job)
 
                     var personSnapshot3 = personSnapshot2
                     personSnapshot3.$name = "James"
                     XCTAssertEqual(personSnapshot1.$name, "John")
                     XCTAssertEqual(personSnapshot1.$displayName, "Mr. John")
+                    XCTAssertEqual(personSnapshot1.$job, .unemployed)
                     XCTAssertEqual(personSnapshot2.$name, "John")
                     XCTAssertEqual(personSnapshot2.$displayName, "Sir John")
+                    XCTAssertEqual(personSnapshot2.$job, .engineer)
                     XCTAssertEqual(personSnapshot3.$name, "James")
                     XCTAssertEqual(personSnapshot3.$displayName, "Sir John")
+                    XCTAssertEqual(personSnapshot3.$job, .engineer)
                     
 
                     
@@ -400,7 +405,15 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.master?.pets.first, dog)
                 },
                 success: { _ in
-                    
+
+                    let person = try! stack.fetchOne(From<Person>())
+                    XCTAssertNotNil(person)
+
+                    let personPublisher = person!.asPublisher(in: stack)
+                    XCTAssertEqual(personPublisher.$name, "John")
+                    XCTAssertEqual(personPublisher.$displayName, "Sir John")
+                    XCTAssertEqual(personPublisher.$job, .engineer)
+
                     updateDone.fulfill()
                 },
                 failure: { _ in

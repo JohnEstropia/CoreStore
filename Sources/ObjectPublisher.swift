@@ -400,6 +400,21 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>) -> V? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject
+            else {
+
+                return nil
+        }
+        return FieldContainer<OBase>.Coded<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>) -> V.PublishedType? {
 
         guard
