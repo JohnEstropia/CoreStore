@@ -94,22 +94,43 @@ enum Job: String {
 
 class Person: CoreStoreObject {
 
-    @Field.Stored("title", customSetter: Person.setTitle(_:_:))
+    @Field.Stored(
+        "title",
+        customSetter: { (object, field, newValue) in
+            field.primitiveValue = newValue
+            object.$displayName.primitiveValue = nil
+        }
+    )
     var title: String = "Mr."
 
-    @Field.Stored("name", customSetter: Person.setName(_:_:))
+    @Field.Stored(
+        "name",
+        customSetter: { (object, field, newValue) in
+            field.primitiveValue = newValue
+            object.$displayName.primitiveValue = nil
+        }
+    )
     var name: String = ""
 
     @Field.Virtual(
         "displayName",
-        customGetter: Person.getDisplayName(_:),
+        customGetter: Person.getDisplayName(_:_:),
         affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
     )
     var displayName: String?
 
     @Field.Virtual(
         "customType",
-        customGetter: Person.getCustomField(_:)
+        customGetter: { (object, field) in
+
+            if let value = field.primitiveValue {
+
+                return value
+            }
+            let value = CustomType()
+            field.primitiveValue = value
+            return value
+        }
     )
     var customField: CustomType
 
@@ -131,40 +152,17 @@ class Person: CoreStoreObject {
     @Field.Relationship("_spouseInverse", inverse: \.$spouse)
     private var spouseInverse: Person?
     
-    private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
-        
-        partialObject.setPrimitiveValue(newValue, for: \.$title)
-        partialObject.setPrimitiveValue(nil, for: \.$displayName)
-    }
-    
-    private static func setName(_ partialObject: PartialObject<Person>, _ newValue: String) {
-        
-        partialObject.setPrimitiveValue(newValue, for: \.$name)
-        partialObject.setPrimitiveValue(nil, for: \.$displayName)
-    }
+    static func getDisplayName(_ object: ObjectProxy<Person>, _ field: ObjectProxy<Person>.FieldProxy<String?>) -> String? {
 
-    static func getCustomField(_ partialObject: PartialObject<Person>) -> CustomType {
+        if let value = field.primitiveValue {
 
-        if let customField = partialObject.primitiveValue(for: \.$customField) {
-
-            return customField
+            return value
         }
-        let customField = CustomType()
-        partialObject.setPrimitiveValue(customField, for: \.$customField)
-        return customField
-    }
-    
-    static func getDisplayName(_ partialObject: PartialObject<Person>) -> String? {
-        
-        if let displayName = partialObject.primitiveValue(for: \.$displayName) {
-            
-            return displayName
-        }
-        let title = partialObject.value(for: \.$title)
-        let name = partialObject.value(for: \.$name)
-        let displayName = "\(title) \(name)"
-        partialObject.setPrimitiveValue(displayName, for: \.$displayName)
-        return displayName
+        let title = object.$title.value
+        let name = object.$name.value
+        let value = "\(title) \(name)"
+        field.primitiveValue = value
+        return value
     }
     
     static func keyPathsAffectingDisplayName() -> Set<String> {

@@ -65,28 +65,28 @@ extension FieldContainer {
              @Field.Virtual("displayName", customGetter: Person.getName(_:))
              var displayName: String = ""
 
-             private static func getName(_ partialObject: PartialObject<Person>) -> String {
-                 let cachedDisplayName = partialObject.primitiveValue(for: \.$displayName)
+             private static func getName(_ object: ObjectProxy<Person>) -> String {
+                 let cachedDisplayName = object.primitiveValue(for: \.$displayName)
                  if !cachedDisplayName.isEmpty {
                      return cachedDisplayName
                  }
-                 let title = partialObject.value(for: \.$title)
-                 let name = partialObject.value(for: \.$name)
+                 let title = object.value(for: \.$title)
+                 let name = object.value(for: \.$name)
                  let displayName = "\(title) \(name)"
-                 partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+                 object.setPrimitiveValue(displayName, for: { $0.displayName })
                  return displayName
              }
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
-         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
-         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.primitiveValue(for:)` instead of `ObjectProxy<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
             _ keyPath: KeyPathString,
-            customGetter: @escaping (_ partialObject: PartialObject<O>) -> V,
-            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+            customGetter: @escaping (_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
             self.init(
@@ -106,8 +106,8 @@ extension FieldContainer {
             wrappedValue initial: @autoclosure @escaping () -> V,
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
-            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
-            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
             fatalError()
@@ -188,7 +188,10 @@ extension FieldContainer {
             let field = field as! Self
             if let customGetter = field.customGetter {
 
-                return customGetter(PartialObject<O>(rawObject))
+                return customGetter(
+                    ObjectProxy<O>(rawObject),
+                    ObjectProxy<O>.FieldProxy<V>(rawObject: rawObject, field: field)
+                )
             }
             let keyPath = field.keyPath
             switch rawObject.value(forKey: keyPath) {
@@ -216,7 +219,11 @@ extension FieldContainer {
             let keyPath = field.keyPath
             if let customSetter = field.customSetter {
 
-                return customSetter(PartialObject<O>(rawObject), newValue)
+                return customSetter(
+                    ObjectProxy<O>(rawObject),
+                    ObjectProxy<O>.FieldProxy<V>(rawObject: rawObject, field: field),
+                    newValue
+                )
             }
             return rawObject.setValue(newValue, forKey: keyPath)
         }
@@ -241,7 +248,10 @@ extension FieldContainer {
 
                     rawObject.didAccessValue(forKey: keyPath)
                 }
-                return customGetter(PartialObject<O>(rawObject))
+                return customGetter(
+                    ObjectProxy<O>(rawObject),
+                    ObjectProxy<O>.FieldProxy<V>(rawObject: rawObject, field: self)
+                )
             }
         }
 
@@ -260,7 +270,11 @@ extension FieldContainer {
 
                     rawObject.didChangeValue(forKey: keyPath)
                 }
-                return customSetter(PartialObject<O>(rawObject), newValue as! V)
+                return customSetter(
+                    ObjectProxy<O>(rawObject),
+                    ObjectProxy<O>.FieldProxy<V>(rawObject: rawObject, field: self),
+                    newValue as! V
+                )
             }
         }
 
@@ -270,8 +284,8 @@ extension FieldContainer {
         fileprivate init(
             keyPath: KeyPathString,
             isOptional: Bool,
-            customGetter: ((_ partialObject: PartialObject<O>) -> V)?,
-            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? ,
+            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
 
             self.keyPath = keyPath
@@ -295,8 +309,8 @@ extension FieldContainer {
 
         // MARK: Private
 
-        private let customGetter: ((_ partialObject: PartialObject<O>) -> V)?
-        private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)?
+        private let customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?
+        private let customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)?
     }
 }
 
@@ -305,8 +319,8 @@ extension FieldContainer.Virtual where V: FieldOptionalType {
 
     public init(
         _ keyPath: KeyPathString,
-        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
-        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
         self.init(
