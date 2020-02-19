@@ -43,7 +43,7 @@ extension FieldContainer {
          @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
          var pluralName: String = ""
 
-         @Field.PlistCoded("color")
+         @Field.Coded("color", coder: FieldCoders.Plist.self)
          var color: UIColor?
      }
      ```
@@ -65,12 +65,7 @@ extension FieldContainer {
              @Field.Virtual(
                  "displayName",
                  customGetter: { (object, field) in
-                     if let cached = field.primitiveValue, !cached.isEmpty {
-                         return cached
-                     }
-                     let value = "\(object.$title.value) \(object.$name.value)"
-                     field.primitiveValue = value
-                     return value
+                     return "\(object.$title.value) \(object.$name.value)"
                  }
              )
              var displayName: String = ""

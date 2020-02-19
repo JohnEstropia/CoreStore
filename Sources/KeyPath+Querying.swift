@@ -364,12 +364,34 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
 /**
  Creates a `Where` clause by comparing if a property is equal to a value
  ```
- let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
+ let person = dataStack.fetchOne(From<Person>().where(\.$nickname == "John"))
  ```
  */
 public func == <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
 
     return Where<O>(keyPath, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$nickname != "John"))
+ ```
+ */
+public func != <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return !Where<O>(keyPath, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by checking if a sequence contains the value of a property
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
+ ```
+ */
+public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>) -> Where<O> where S.Iterator.Element == V {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
 }
 
 

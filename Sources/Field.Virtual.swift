@@ -43,7 +43,7 @@ extension FieldContainer {
          @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
          var pluralName: String = ""
 
-         @Field.PlistCoded("color")
+         @Field.Coded("color", coder: FieldCoders.Plist.self)
          var color: UIColor?
      }
      ```

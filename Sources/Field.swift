@@ -41,7 +41,7 @@ extension DynamicObject where Self: CoreStoreObject {
          @Field.Stored("nickname")
          var nickname: String?
 
-         @Field.PlistCoded("color")
+         @Field.Coded("color", coder: FieldCoders.Plist.self)
          var color: UIColor?
      }
      ```
@@ -63,7 +63,7 @@ extension DynamicObject where Self: CoreStoreObject {
      @Field.Stored("nickname")
      var nickname: String?
 
-     @Field.PlistCoded("color")
+     @Field.Coded("color", coder: FieldCoders.Plist.self)
      var color: UIColor?
  }
  ```
