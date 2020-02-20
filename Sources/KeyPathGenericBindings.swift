@@ -106,47 +106,47 @@ extension Int64: AllowedObjectiveCKeyPathValue {
 
 extension NSData: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSData
 }
 
 extension NSDate: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSDate
 }
 
 extension NSManagedObject: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSManagedObject
 }
 
 extension NSNumber: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSNumber
 }
 
 extension NSString: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSString
 }
 
 extension NSSet: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSSet
 }
 
 extension NSOrderedSet: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSOrderedSet
 }
 
 extension NSURL: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSURL
 }
 
 extension NSUUID: AllowedOptionalObjectiveCKeyPathValue {
 
-    public typealias DestinationValueType = Self
+	public typealias DestinationValueType = NSUUID
 }
 
 extension String: AllowedOptionalObjectiveCKeyPathValue {
@@ -240,32 +240,32 @@ extension Int64: AllowedObjectiveCAttributeKeyPathValue {
 
 extension NSData: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSData
 }
 
 extension NSDate: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSDate
 }
 
 extension NSNumber: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSNumber
 }
 
 extension NSString: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSString
 }
 
 extension NSURL: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSURL
 }
 
 extension NSUUID: AllowedObjectiveCAttributeKeyPathValue {
 
-    public typealias ReturnValueType = Self
+	public typealias ReturnValueType = NSUUID
 }
 
 extension String: AllowedObjectiveCAttributeKeyPathValue {
