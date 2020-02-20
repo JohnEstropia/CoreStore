@@ -106,47 +106,47 @@ extension Int64: AllowedObjectiveCKeyPathValue {
 
 extension NSData: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSData
+    public typealias DestinationValueType = NSData
 }
 
 extension NSDate: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSDate
+    public typealias DestinationValueType = NSDate
 }
 
 extension NSManagedObject: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSManagedObject
+    public typealias DestinationValueType = NSManagedObject
 }
 
 extension NSNumber: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSNumber
+    public typealias DestinationValueType = NSNumber
 }
 
 extension NSString: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSString
+    public typealias DestinationValueType = NSString
 }
 
 extension NSSet: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSSet
+    public typealias DestinationValueType = NSSet
 }
 
 extension NSOrderedSet: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSOrderedSet
+    public typealias DestinationValueType = NSOrderedSet
 }
 
 extension NSURL: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSURL
+    public typealias DestinationValueType = NSURL
 }
 
 extension NSUUID: AllowedOptionalObjectiveCKeyPathValue {
 
-	public typealias DestinationValueType = NSUUID
+    public typealias DestinationValueType = NSUUID
 }
 
 extension String: AllowedOptionalObjectiveCKeyPathValue {
@@ -240,32 +240,32 @@ extension Int64: AllowedObjectiveCAttributeKeyPathValue {
 
 extension NSData: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSData
+    public typealias ReturnValueType = NSData
 }
 
 extension NSDate: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSDate
+    public typealias ReturnValueType = NSDate
 }
 
 extension NSNumber: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSNumber
+    public typealias ReturnValueType = NSNumber
 }
 
 extension NSString: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSString
+    public typealias ReturnValueType = NSString
 }
 
 extension NSURL: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSURL
+    public typealias ReturnValueType = NSURL
 }
 
 extension NSUUID: AllowedObjectiveCAttributeKeyPathValue {
 
-	public typealias ReturnValueType = NSUUID
+    public typealias ReturnValueType = NSUUID
 }
 
 extension String: AllowedObjectiveCAttributeKeyPathValue {
