@@ -379,7 +379,8 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
-        return FieldContainer<OBase>.Stored<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -394,7 +395,8 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
-        return FieldContainer<OBase>.Virtual<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -409,7 +411,8 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
-        return FieldContainer<OBase>.Coded<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -419,11 +422,15 @@ extension ObjectPublisher where O: CoreStoreObject {
 
         guard
             let object = self.object,
-            let rawObject = object.rawObject,
-            let value = FieldContainer<OBase>.Relationship<V>.read(field: object[keyPath: member], for: rawObject) as! V?
+            let rawObject = object.rawObject
             else {
 
                 return nil
+        }
+        let field = object[keyPath: member]
+        guard let value = type(of: field).read(field: field, for: rawObject) as! V? else {
+
+            return nil
         }
         let nativeValue = V.cs_toNativeType(from: value)
         let snapshotValue = V.cs_valueForSnapshot(from: nativeValue)
