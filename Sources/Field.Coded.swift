@@ -161,13 +161,21 @@ extension FieldContainer {
                     instance.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!, bypassThreadCheck: false) as! V
+                Internals.assert(
+                    instance.rawObject?.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+                )
+                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!) as! V
             }
             set {
 
                 Internals.assert(
                     instance.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                Internals.assert(
+                    instance.rawObject?.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                 )
                 return self.modify(field: instance[keyPath: storageKeyPath], for: instance.rawObject!, newValue: newValue)
             }
@@ -200,12 +208,13 @@ extension FieldContainer {
 
         // MARK: FieldProtocol
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject, bypassThreadCheck: Bool) -> Any? {
+        internal static var dynamicObjectType: CoreStoreObject.Type {
 
-            Internals.assert(
-                bypassThreadCheck || rawObject.isRunningInAllowedQueue() == true,
-                "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
-            )
+            return ObjectType.self
+        }
+
+        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+
             let field = field as! Self
             if let customGetter = field.customGetter {
 
@@ -227,10 +236,6 @@ extension FieldContainer {
 
         internal static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?) {
 
-            Internals.assert(
-                rawObject.isRunningInAllowedQueue() == true,
-                "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
-            )
             Internals.assert(
                 rawObject.isEditableInContext() == true,
                 "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."

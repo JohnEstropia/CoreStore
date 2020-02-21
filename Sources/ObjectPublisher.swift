@@ -379,8 +379,12 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -395,8 +399,12 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -411,8 +419,12 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
+        return type(of: field).read(field: field, for: rawObject) as! V?
     }
 
     /**
@@ -427,13 +439,12 @@ extension ObjectPublisher where O: CoreStoreObject {
 
                 return nil
         }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
         let field = object[keyPath: member]
-        guard let value = type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V? else {
-
-            return nil
-        }
-        let nativeValue = V.cs_toNativeType(from: value)
-        let snapshotValue = V.cs_valueForSnapshot(from: nativeValue)
+        let snapshotValue = V.cs_valueForSnapshot(from: rawObject.objectIDs(forRelationshipNamed: field.keyPath))
         return V.cs_toPublishedType(from: snapshotValue, in: self.context)
      }
 

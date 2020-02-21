@@ -133,11 +133,7 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return type(of: field).read(
-                    field: field,
-                    for: rawObject,
-                    bypassThreadCheck: true // May be called from NSError logs
-                ) as! V
+                return type(of: field).read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 
@@ -163,11 +159,7 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return type(of: field).read(
-                    field: field,
-                    for: rawObject,
-                    bypassThreadCheck: true // May be called from NSError logs
-                ) as! V
+                return type(of: field).read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 
@@ -200,11 +192,7 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return type(of: field).read(
-                    field: field,
-                    for: rawObject,
-                    bypassThreadCheck: true // May be called from NSError logs
-                ) as! V
+                return type(of: field).read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 

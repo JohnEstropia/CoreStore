@@ -30,7 +30,9 @@ import CoreData
 // MARK: - FieldProtocol
 
 internal protocol FieldProtocol: PropertyProtocol {
+
+    static var dynamicObjectType: CoreStoreObject.Type { get }
     
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject, bypassThreadCheck: Bool) -> Any?
+    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
     static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
 }

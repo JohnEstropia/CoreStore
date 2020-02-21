@@ -43,6 +43,8 @@ internal protocol FieldAttributeProtocol: FieldProtocol {
         defaultValue: Any?
     )
 
+    static var dynamicObjectType: CoreStoreObject.Type { get }
+
     var entityDescriptionValues: () -> EntityDescriptionValues { get }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }

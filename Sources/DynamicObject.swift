@@ -172,13 +172,20 @@ extension CoreStoreObject {
                     switch child.value {
 
                     case let property as FieldAttributeProtocol:
+                        Internals.assert(
+                            object.rawObject?.isRunningInAllowedQueue() == true,
+                            "Attempted to access \(Internals.typeName(type(of: property).dynamicObjectType))'s value outside it's designated queue."
+                        )
                         attributes[property.keyPath] = type(of: property).read(
                             field: property,
-                            for: object.rawObject!,
-                            bypassThreadCheck: false
+                            for: object.rawObject!
                         )
 
                     case let property as FieldRelationshipProtocol:
+                        Internals.assert(
+                            object.rawObject?.isRunningInAllowedQueue() == true,
+                            "Attempted to access \(Internals.typeName(type(of: property).dynamicObjectType))'s value outside it's designated queue."
+                        )
                         attributes[property.keyPath] = type(of: property).valueForSnapshot(
                             field: property,
                             for: object.rawObject!
@@ -219,10 +226,23 @@ extension CoreStoreObject {
                 switch property {
 
                 case let property as FieldAttributeProtocol:
+                    Internals.assert(
+                        object.rawObject?.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(Internals.typeName(type(of: property).dynamicObjectType))'s value outside it's designated queue."
+                    )
                     values[property.keyPath] = type(of: property).read(
                         field: property,
-                        for: rawObject,
-                        bypassThreadCheck: false
+                        for: rawObject
+                    )
+
+                case let property as FieldRelationshipProtocol:
+                    Internals.assert(
+                        object.rawObject?.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(Internals.typeName(type(of: property).dynamicObjectType))'s value outside it's designated queue."
+                    )
+                    values[property.keyPath] = type(of: property).valueForSnapshot(
+                        field: property,
+                        for: object.rawObject!
                     )
 
                 default:

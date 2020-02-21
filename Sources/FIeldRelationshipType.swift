@@ -47,7 +47,7 @@ public protocol FieldRelationshipType {
 
     static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType
 
-    static func cs_valueForSnapshot(from value: NativeValueType?) -> SnapshotValueType
+    static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType
 }
 
 public protocol FieldRelationshipToOneType: FieldRelationshipType {}
@@ -88,9 +88,9 @@ extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrap
         return value?.objectID()
     }
 
-    public static func cs_valueForSnapshot(from value: NativeValueType?) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
 
-        return value?.objectID
+        return objectIDs.first
     }
 }
 
@@ -129,13 +129,9 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
         return value.map({ $0.objectID() })
     }
 
-    public static func cs_valueForSnapshot(from value: NativeValueType?) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
 
-        guard let value = value else {
-
-            return []
-        }
-        return value.map({ ($0 as! NSManagedObject).objectID })
+        return objectIDs
     }
 }
 
@@ -173,12 +169,8 @@ extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelation
         return SnapshotValueType(value.map({ $0.objectID() }))
     }
 
-    public static func cs_valueForSnapshot(from value: NativeValueType?) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
 
-        guard let value = value else {
-
-            return []
-        }
-        return .init(value.map({ ($0 as! NSManagedObject).objectID }))
+        return .init(objectIDs)
     }
 }
