@@ -380,7 +380,7 @@ extension ObjectPublisher where O: CoreStoreObject {
                 return nil
         }
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject) as! V?
+        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
     }
 
     /**
@@ -396,7 +396,7 @@ extension ObjectPublisher where O: CoreStoreObject {
                 return nil
         }
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject) as! V?
+        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
     }
 
     /**
@@ -412,7 +412,7 @@ extension ObjectPublisher where O: CoreStoreObject {
                 return nil
         }
         let field = object[keyPath: member]
-        return type(of: field).read(field: field, for: rawObject) as! V?
+        return type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V?
     }
 
     /**
@@ -428,7 +428,7 @@ extension ObjectPublisher where O: CoreStoreObject {
                 return nil
         }
         let field = object[keyPath: member]
-        guard let value = type(of: field).read(field: field, for: rawObject) as! V? else {
+        guard let value = type(of: field).read(field: field, for: rawObject, bypassThreadCheck: false) as! V? else {
 
             return nil
         }

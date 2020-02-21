@@ -99,7 +99,7 @@ extension FieldContainer {
                     instance.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!) as! V
+                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!, bypassThreadCheck: false) as! V
             }
             set {
 
@@ -138,10 +138,10 @@ extension FieldContainer {
 
         // MARK: FieldProtocol
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject, bypassThreadCheck: Bool) -> Any? {
 
             Internals.assert(
-                rawObject.isRunningInAllowedQueue() == true,
+                bypassThreadCheck || rawObject.isRunningInAllowedQueue() == true,
                 "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
             )
             let field = field as! Self

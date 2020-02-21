@@ -31,6 +31,6 @@ import CoreData
 
 internal protocol FieldProtocol: PropertyProtocol {
     
-    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any?
+    static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject, bypassThreadCheck: Bool) -> Any?
     static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?)
 }

@@ -75,7 +75,7 @@ extension FieldContainer {
          - parameter keyPath: the permanent attribute name for this property.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
-         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.primitiveValue(for:)` instead of `ObjectProxy<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
          - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
@@ -128,7 +128,7 @@ extension FieldContainer {
                     instance.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!) as! V
+                return self.read(field: instance[keyPath: storageKeyPath], for: instance.rawObject!, bypassThreadCheck: false) as! V
             }
             set {
 
@@ -167,10 +167,10 @@ extension FieldContainer {
 
         // MARK: FieldProtocol
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject, bypassThreadCheck: Bool) -> Any? {
 
             Internals.assert(
-                rawObject.isRunningInAllowedQueue() == true,
+                bypassThreadCheck || rawObject.isRunningInAllowedQueue() == true,
                 "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
             )
             let field = field as! Self
@@ -344,7 +344,7 @@ extension FieldContainer.Stored where V: FieldOptionalType {
      - parameter keyPath: the permanent attribute name for this property.
      - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
      - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
-     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.primitiveValue(for:)` instead of `ObjectProxy<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
      - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively.
      - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */

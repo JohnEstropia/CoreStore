@@ -172,10 +172,17 @@ extension CoreStoreObject {
                     switch child.value {
 
                     case let property as FieldAttributeProtocol:
-                        attributes[property.keyPath] = type(of: property).read(field: property, for: object.rawObject!)
+                        attributes[property.keyPath] = type(of: property).read(
+                            field: property,
+                            for: object.rawObject!,
+                            bypassThreadCheck: false
+                        )
 
                     case let property as FieldRelationshipProtocol:
-                        attributes[property.keyPath] = type(of: property).valueForSnapshot(field: property, for: object.rawObject!)
+                        attributes[property.keyPath] = type(of: property).valueForSnapshot(
+                            field: property,
+                            for: object.rawObject!
+                        )
 
                     case let property as AttributeProtocol:
                         attributes[property.keyPath] = property.valueForSnapshot
@@ -212,7 +219,11 @@ extension CoreStoreObject {
                 switch property {
 
                 case let property as FieldAttributeProtocol:
-                    values[property.keyPath] = type(of: property).read(field: property, for: rawObject)
+                    values[property.keyPath] = type(of: property).read(
+                        field: property,
+                        for: rawObject,
+                        bypassThreadCheck: false
+                    )
 
                 default:
                     continue
