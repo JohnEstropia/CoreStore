@@ -325,7 +325,7 @@ extension FieldContainer.Virtual where V: FieldOptionalType {
 
         self.init(
             keyPath: keyPath,
-            isOptional: false,
+            isOptional: true,
             customGetter: customGetter,
             customSetter: customSetter,
             affectedByKeyPaths: affectedByKeyPaths
