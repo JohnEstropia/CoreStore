@@ -133,11 +133,11 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return FieldContainer<O>.Stored<V>.read(field: field, for: rawObject) as! V
+                return FieldContainer<OBase>.Stored<V>.read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 
-                FieldContainer<O>.Stored<V>.modify(field: field, for: rawObject, newValue: $0)
+                FieldContainer<OBase>.Stored<V>.modify(field: field, for: rawObject, newValue: $0)
             }
             self.getPrimitiveValue = {
 
@@ -159,11 +159,11 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return FieldContainer<O>.Virtual<V>.read(field: field, for: rawObject) as! V
+                return FieldContainer<OBase>.Virtual<V>.read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 
-                FieldContainer<O>.Virtual<V>.modify(field: field, for: rawObject, newValue: $0)
+                FieldContainer<OBase>.Virtual<V>.modify(field: field, for: rawObject, newValue: $0)
             }
             self.getPrimitiveValue = {
 
@@ -192,11 +192,11 @@ public struct ObjectProxy<O: CoreStoreObject> {
             let keyPathString = field.keyPath
             self.getValue = {
 
-                return FieldContainer<O>.Coded<V>.read(field: field, for: rawObject) as! V
+                return FieldContainer<OBase>.Coded<V>.read(field: field, for: rawObject) as! V
             }
             self.setValue = {
 
-                FieldContainer<O>.Coded<V>.modify(field: field, for: rawObject, newValue: $0)
+                FieldContainer<OBase>.Coded<V>.modify(field: field, for: rawObject, newValue: $0)
             }
             self.getPrimitiveValue = {
 
