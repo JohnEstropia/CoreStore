@@ -91,7 +91,6 @@ extension FieldContainer {
 
             self.init(
                 keyPath: keyPath,
-                isOptional: false,
                 customGetter: customGetter,
                 customSetter: customSetter,
                 affectedByKeyPaths: affectedByKeyPaths
@@ -283,7 +282,6 @@ extension FieldContainer {
 
         fileprivate init(
             keyPath: KeyPathString,
-            isOptional: Bool,
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
             customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
@@ -292,7 +290,7 @@ extension FieldContainer {
             self.entityDescriptionValues = {
                 (
                     attributeType: .undefinedAttributeType,
-                    isOptional: isOptional,
+                    isOptional: true,
                     isTransient: true,
                     allowsExternalBinaryDataStorage: false,
                     versionHashModifier: nil,
@@ -325,7 +323,6 @@ extension FieldContainer.Virtual where V: FieldOptionalType {
 
         self.init(
             keyPath: keyPath,
-            isOptional: true,
             customGetter: customGetter,
             customSetter: customSetter,
             affectedByKeyPaths: affectedByKeyPaths
