@@ -100,7 +100,7 @@ extension FieldContainer {
         /**
          Overload for compiler error message only
          */
-        @available(*, unavailable, message: "Field.Computed properties are not allowed to have initial values, including `nil`.")
+        @available(*, unavailable, message: "Field.Virtual properties are not allowed to have initial values, including `nil`.")
         public init(
             wrappedValue initial: @autoclosure @escaping () -> V,
             _ keyPath: KeyPathString,
