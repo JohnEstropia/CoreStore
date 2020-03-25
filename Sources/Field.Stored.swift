@@ -40,11 +40,8 @@ extension FieldContainer {
          @Field.Stored("species")
          var species = ""
 
-         @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
-         var pluralName: String = ""
-
-         @Field.Coded("color", coder: FieldCoders.Plist.self)
-         var color: UIColor?
+         @Field.Stored("nickname")
+         var nickname: String?
      }
      ```
      - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Stored(...) var` syntax will be ignored.     

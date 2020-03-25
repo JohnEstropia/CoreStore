@@ -34,7 +34,6 @@ extension FieldContainer {
     // MARK: - Relationship
 
     @propertyWrapper
-//    @dynamicMemberLookup
     public struct Relationship<V: FieldRelationshipType>: RelationshipKeyPathStringConvertible, FieldRelationshipProtocol {
 
         /**
