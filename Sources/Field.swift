@@ -32,9 +32,9 @@ import Foundation
 extension DynamicObject where Self: CoreStoreObject {
 
     /**
-     The containing type for value propertiess. `Field` properties support any type that conforms to `ImportableAttributeType`.
+     The containing type for value propertiess.
      ```
-     class Animal: CoreStoreObject {
+     class Pet: CoreStoreObject {
          @Field.Stored("species")
          var species = ""
 
@@ -42,10 +42,19 @@ extension DynamicObject where Self: CoreStoreObject {
          var nickname: String?
 
          @Field.Coded("color", coder: FieldCoders.Plist.self)
-         var color: UIColor?
+         var eyeColor: UIColor?
+
+         @Field.Relationship("owner", inverse: \.$pets)
+         var owner: Person?
+
+         @Field.Relationship("children")
+         var children: Array<Pet>
+
+         @Field.Relationship("parents", inverse: \.$children)
+         var parents: Set<Pet>
      }
      ```
-     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.*(...) var` syntax will be ignored.
+     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.*(...) var` syntax will result in undefined behavior.
      */
     public typealias Field = FieldContainer<Self>
 }
@@ -54,9 +63,9 @@ extension DynamicObject where Self: CoreStoreObject {
 // MARK: - FieldContainer
 
 /**
- The containing type for value properties. Use the `DynamicObject.Field` typealias instead for shorter syntax.
+ The containing type for value properties. Use the `Field` typealias instead for shorter syntax.
  ```
- class Animal: CoreStoreObject {
+ class Pet: CoreStoreObject {
      @Field.Stored("species")
      var species = ""
 
@@ -64,7 +73,16 @@ extension DynamicObject where Self: CoreStoreObject {
      var nickname: String?
 
      @Field.Coded("color", coder: FieldCoders.Plist.self)
-     var color: UIColor?
+     var eyeColor: UIColor?
+
+     @Field.Relationship("owner", inverse: \.$pets)
+     var owner: Person?
+
+     @Field.Relationship("children")
+     var children: Array<Pet>
+
+     @Field.Relationship("parents", inverse: \.$children)
+     var parents: Set<Pet>
  }
  ```
  */
