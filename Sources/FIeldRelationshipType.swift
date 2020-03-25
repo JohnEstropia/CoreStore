@@ -29,36 +29,83 @@ import Foundation
 
 // MARK: - FieldRelationshipType
 
+/**
+ Values to be used for `Field.Relationship` properties.
+ */
 public protocol FieldRelationshipType {
 
+    /**
+     The destination object's type
+     */
     associatedtype DestinationObjectType: CoreStoreObject
 
+    /**
+     The Objective-C native type synthesized by Core Data
+     */
     associatedtype NativeValueType: AnyObject
 
+    /**
+     The corresponding value for this field returned from `ObjectSnapshot` properties.
+     */
     associatedtype SnapshotValueType
 
+    /**
+     The corresponding value for this field returned from `ObjectPublisher` properties.
+     */
     associatedtype PublishedType
 
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_toReturnType(from value: NativeValueType?) -> Self
 
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_toPublishedType(from value: SnapshotValueType, in context: NSManagedObjectContext) -> PublishedType
 
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_toNativeType(from value: Self) -> NativeValueType?
 
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType
 
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType
 }
+
+
+// MARK: - FieldRelationshipToOneType: FieldRelationshipType
 
 public protocol FieldRelationshipToOneType: FieldRelationshipType {}
 
 
+// MARK: - FieldRelationshipToManyType: FieldRelationshipType where Self: Sequence
+
 public protocol FieldRelationshipToManyType: FieldRelationshipType where Self: Sequence {}
+
+
+// MARK: - FieldRelationshipToManyOrderedType: FieldRelationshipToManyType
+
 public protocol FieldRelationshipToManyOrderedType: FieldRelationshipToManyType {}
+
+
+// MARK: - FieldRelationshipToManyUnorderedType: FieldRelationshipToManyType
+
 public protocol FieldRelationshipToManyUnorderedType: FieldRelationshipToManyType {}
 
 
+// MARK: - Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrapped: CoreStoreObject
+
 extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrapped: CoreStoreObject {
+
+    // MARK: FieldRelationshipType
 
     public typealias DestinationObjectType = Wrapped
 
@@ -95,7 +142,11 @@ extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrap
 }
 
 
+// MARK: - Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelationshipToManyOrderedType where Element: CoreStoreObject
+
 extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelationshipToManyOrderedType where Element: CoreStoreObject {
+
+    // MARK: FieldRelationshipType
 
     public typealias DestinationObjectType = Element
 
@@ -135,7 +186,12 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
     }
 }
 
+
+// MARK: - Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelationshipToManyUnorderedType where Element: CoreStoreObject
+
 extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelationshipToManyUnorderedType where Element: CoreStoreObject {
+
+    // MARK: FieldRelationshipType
 
     public typealias DestinationObjectType = Element
 

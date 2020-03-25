@@ -32,6 +32,10 @@ extension FieldCoders {
 
     // MARK: - Plist
 
+    /**
+     A `FieldCoderType` that implements Binary-Plist encoding and decoding of `Codable` values.
+     - Important: Due to restrictions of `JSONEncoder`, the value will be contained in single-item array before encoding.
+     */
     public struct Plist<V: Codable>: FieldCoderType {
 
         // MARK: FieldCoderType

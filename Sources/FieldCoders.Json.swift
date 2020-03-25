@@ -32,6 +32,10 @@ extension FieldCoders {
 
     // MARK: - Json
 
+    /**
+     A `FieldCoderType` that implements JSON encoding and decoding of `Codable` values.
+     - Important: Due to restrictions of `JSONEncoder`, the value will be contained in single-item array before encoding.     
+     */
     public struct Json<V: Codable>: FieldCoderType {
 
         // MARK: FieldCoderType

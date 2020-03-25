@@ -29,10 +29,30 @@ import CoreData
 
 // MARK: - FieldCoderType
 
+/**
+ Types that implement encoding to and decoding from `Data` to be used in `Field.Coded` properties' `coder:` argument.
+ ```
+ class Person: CoreStoreObject {
+
+     @Field.Coded("profile", coder: FieldCoders.Json.self)
+     var profile: Profile = .init()
+ }
+ ```
+ */
 public protocol FieldCoderType {
 
+    /**
+     The type to encode to and decode from `Data`
+     */
     associatedtype FieldStoredValue
 
+    /**
+     Encodes the value to `Data`
+     */
     static func encodeToStoredData(_ fieldValue: FieldStoredValue?) -> Data?
+
+    /**
+     Decodes the value from `Data`
+     */
     static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue?
 }

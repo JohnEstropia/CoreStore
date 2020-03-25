@@ -33,6 +33,23 @@ extension FieldContainer {
 
     // MARK: - Relationship
 
+    /**
+     The containing type for relationships. Any `CoreStoreObject` subclass can be a destination type. Inverse relationships should be declared from the destination type as well, using the `inverse:` argument for the relationship.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Set<Dog>
+     }
+     ```
+     - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Relationship(...) var` syntax will be ignored.
+     */
     @propertyWrapper
     public struct Relationship<V: FieldRelationshipType>: RelationshipKeyPathStringConvertible, FieldRelationshipProtocol {
 
@@ -264,8 +281,32 @@ extension FieldContainer {
     }
 }
 
+
+// MARK: - FieldContainer.Relationship where V: FieldRelationshipToOneType
+
 extension FieldContainer.Relationship where V: FieldRelationshipToOneType {
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Set<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init(
         _ keyPath: KeyPathString,
         deleteRule: DeleteRule = .nullify,
@@ -288,6 +329,28 @@ extension FieldContainer.Relationship where V: FieldRelationshipToOneType {
         )
     }
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Set<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init<D>(
         _ keyPath: KeyPathString,
         inverse: KeyPath<V.DestinationObjectType, FieldContainer<V.DestinationObjectType>.Relationship<D>>,
@@ -311,11 +374,40 @@ extension FieldContainer.Relationship where V: FieldRelationshipToOneType {
         )
     }
 }
+
+
+// MARK: - FieldContainer.Relationship: ToManyRelationshipKeyPathStringConvertible where V: FieldRelationshipToManyType
 
 extension FieldContainer.Relationship: ToManyRelationshipKeyPathStringConvertible where V: FieldRelationshipToManyType {}
 
+
+// MARK: - FieldContainer.Relationship where V: FieldRelationshipToManyOrderedType
+
 extension FieldContainer.Relationship where V: FieldRelationshipToManyOrderedType {
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Array<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init(
         _ keyPath: KeyPathString,
         minCount: Int = 0,
@@ -340,6 +432,30 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyOrderedTyp
         )
     }
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Array<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init<D>(
         _ keyPath: KeyPathString,
         minCount: Int = 0,
@@ -366,8 +482,34 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyOrderedTyp
     }
 }
 
+
+// MARK: - FieldContainer.Relationship where V: FieldRelationshipToManyUnorderedType
+
 extension FieldContainer.Relationship where V: FieldRelationshipToManyUnorderedType {
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Set<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init(
         _ keyPath: KeyPathString,
         minCount: Int = 0,
@@ -392,6 +534,30 @@ extension FieldContainer.Relationship where V: FieldRelationshipToManyUnorderedT
         )
     }
 
+    /**
+    Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+     ```
+     class Dog: CoreStoreObject {
+
+         @Field.Relationship("master")
+         var master: Person?
+     }
+
+     class Person: CoreStoreObject {
+
+         @Field.Relationship("pets", inverse: \.$master)
+         var pets: Set<Dog>
+     }
+     ```
+     - parameter keyPath: the permanent name for this relationship.
+     - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+     - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+     - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init<D>(
         _ keyPath: KeyPathString,
         minCount: Int = 0,

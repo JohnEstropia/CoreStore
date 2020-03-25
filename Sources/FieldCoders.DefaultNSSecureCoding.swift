@@ -30,6 +30,9 @@ import Foundation
 
 extension FieldCoders {
 
+    /**
+     A `FieldCoderType` that implements the default Core Data transformable attribute behavior, which uses a `ValueTransformer` named `.secureUnarchiveFromDataTransformerName`.
+     */
     public struct DefaultNSSecureCoding<T: DefaultNSSecureCodable>: FieldCoderType {
 
         // MARK: FieldCoderType
@@ -64,6 +67,11 @@ extension FieldCoders {
 }
 
 
+// MARK: - DefaultNSSecureCodable
+
+/**
+ Types that are supported by `FieldCoders.DefaultNSSecureCoding`
+ */
 public protocol DefaultNSSecureCodable: NSObject, NSSecureCoding {}
 
 extension NSArray: DefaultNSSecureCodable {}

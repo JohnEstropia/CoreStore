@@ -28,6 +28,9 @@ import Foundation
 
 // MARK: - FieldOptionalType
 
+/**
+ Optional values to be used for `Field` properties.
+ */
 public protocol FieldOptionalType: ExpressibleByNilLiteral {
 
     /**
@@ -36,7 +39,7 @@ public protocol FieldOptionalType: ExpressibleByNilLiteral {
     associatedtype Wrapped
 
     /**
-     The wrapped value
+    Used internally by CoreStore. Do not call directly.
      */
     var cs_wrappedValue: Wrapped? { get }
 }
@@ -46,7 +49,7 @@ public protocol FieldOptionalType: ExpressibleByNilLiteral {
 
 extension Optional: FieldOptionalType {
 
-    // MARK: Public
+    // MARK: FieldOptionalType
     
     @inlinable
     public var cs_wrappedValue: Wrapped? {

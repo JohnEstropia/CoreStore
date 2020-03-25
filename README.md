@@ -1888,7 +1888,7 @@ From the **File** - **Swift Packages** - **Add Package Dependency…** menu, sea
 ```
 CoreStore
 ```
-where `JohnEstropia` is the *Owner*. Then add to your project.
+where `JohnEstropia` is the *Owner* (forks may appear as well). Then add to your project.
 
 
 ### Objective-C support

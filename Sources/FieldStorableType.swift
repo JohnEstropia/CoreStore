@@ -30,6 +30,9 @@ import CoreGraphics
 
 // MARK: - FieldStorableType
 
+/**
+ Values to be used for `Field.Stored` properties.
+ */
 public protocol FieldStorableType {
 
     /**
@@ -38,18 +41,18 @@ public protocol FieldStorableType {
     associatedtype FieldStoredNativeType
 
     /**
-     The `NSAttributeType` for this type
+     The `NSAttributeType` for this type. Used internally by CoreStore. Do not call directly.
      */
     static var cs_rawAttributeType: NSAttributeType { get }
 
     /**
-     Creates an instance of this type from raw native value.
+     Creates an instance of this type from raw native value. Used internally by CoreStore. Do not call directly.
      */
     @inline(__always)
     static func cs_fromFieldStoredNativeType(_ value: FieldStoredNativeType) -> Self
 
     /**
-     Creates `FieldStoredNativeType` value from this instance.
+     Creates `FieldStoredNativeType` value from this instance. Used internally by CoreStore. Do not call directly.     
      */
     @inline(__always)
     func cs_toFieldStoredNativeType() -> Any?

@@ -32,6 +32,9 @@ extension FieldCoders {
 
     // MARK: - NSCoding
 
+    /**
+     A `FieldCoderType` that implements encoding and decoding of `NSCoding` values
+     */
     public struct NSCoding<V: Foundation.NSObject & Foundation.NSCoding>: FieldCoderType {
 
         // MARK: FieldCoderType

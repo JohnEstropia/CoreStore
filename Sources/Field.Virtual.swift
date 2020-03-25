@@ -34,17 +34,20 @@ extension FieldContainer {
     // MARK: - Virtual
 
     /**
-     The containing type for computed property values. Any type that conforms to `FieldStorableType` are supported.
+     The containing type for computed property values. Because this value is not persisted to the backing store, any type is supported. `Field.Virtual` properties are not allowed to have initial values, including `nil` for optional types.
      ```
      class Animal: CoreStoreObject {
+
+         @Field.Virtual(
+             "pluralName",
+             customGetter: { (object, field) in
+                 return object.$species.value + "s"
+             }
+         )
+         var pluralName: String
+
          @Field.Stored("species")
-         var species = ""
-
-         @Field.Virtual("pluralName", customGetter: Animal.pluralName(_:))
-         var pluralName: String = ""
-
-         @Field.Coded("color", coder: FieldCoders.Plist.self)
-         var color: UIColor?
+         var species: String = ""
      }
      ```
      - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Virtual(...) var` syntax will be ignored.
@@ -53,34 +56,25 @@ extension FieldContainer {
     public struct Virtual<V>: AttributeKeyPathStringConvertible, FieldAttributeProtocol {
 
         /**
-         Initializes the metadata for the property.
+         Initializes the metadata for the property. `Field.Virtual` properties are not allowed to have initial values, including `nil` for optional types.
          ```
          class Person: CoreStoreObject {
-             @Field.Stored("title")
-             var title: String = "Mr."
 
-             @Field.Stored("name")
-             var name: String = ""
-
-             @Field.Virtual("displayName", customGetter: Person.getName(_:))
-             var displayName: String = ""
-
-             private static func getName(_ object: ObjectProxy<Person>) -> String {
-                 let cachedDisplayName = object.primitiveValue(for: \.$displayName)
-                 if !cachedDisplayName.isEmpty {
-                     return cachedDisplayName
+             @Field.Virtual(
+                 "pluralName",
+                 customGetter: { (object, field) in
+                     return object.$species.value + "s"
                  }
-                 let title = object.value(for: \.$title)
-                 let name = object.value(for: \.$name)
-                 let displayName = "\(title) \(name)"
-                 object.setPrimitiveValue(displayName, for: { $0.displayName })
-                 return displayName
-             }
+             )
+             var pluralName: String
+
+             @Field.Stored("species")
+             var species: String = ""
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
-         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
-         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `ObjectProxy<O>.$property.primitiveValue` instead of `ObjectProxy<O>.$property.value`, which would unintentionally execute the same closure again recursively.
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
@@ -318,8 +312,32 @@ extension FieldContainer {
 }
 
 
+// MARK: - FieldContainer.Virtual where V: FieldOptionalType
+
 extension FieldContainer.Virtual where V: FieldOptionalType {
 
+    /**
+     Initializes the metadata for the property. `Field.Virtual` properties are not allowed to have initial values, including `nil` for optional types.
+     ```
+     class Person: CoreStoreObject {
+
+         @Field.Virtual(
+             "pluralName",
+             customGetter: { (object, field) in
+                 return object.$species.value + "s"
+             }
+         )
+         var pluralName: String?
+
+         @Field.Stored("species")
+         var species: String = ""
+     }
+     ```
+     - parameter keyPath: the permanent attribute name for this property.
+     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
+     - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     */
     public init(
         _ keyPath: KeyPathString,
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,

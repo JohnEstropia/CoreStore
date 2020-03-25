@@ -35,6 +35,7 @@ extension DynamicObject where Self: CoreStoreObject {
      The containing type for value propertiess.
      ```
      class Pet: CoreStoreObject {
+
          @Field.Stored("species")
          var species = ""
 
@@ -66,6 +67,7 @@ extension DynamicObject where Self: CoreStoreObject {
  The containing type for value properties. Use the `Field` typealias instead for shorter syntax.
  ```
  class Pet: CoreStoreObject {
+ 
      @Field.Stored("species")
      var species = ""
 
