@@ -1,8 +1,8 @@
 //
-//  AttributeProtocol.swift
+//  FieldAttributeProtocol.swift
 //  CoreStore
 //
-//  Copyright © 2018 John Rommel Estropia
+//  Copyright © 2020 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - FieldAttributeProtocol
 
-internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
+internal protocol FieldAttributeProtocol: FieldProtocol {
 
     typealias EntityDescriptionValues = (
         attributeType: NSAttributeType,
@@ -38,13 +38,14 @@ internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
         allowsExternalBinaryDataStorage: Bool,
         versionHashModifier: String?,
         renamingIdentifier: String?,
-        affectedByKeyPaths: Set<String>,
+        valueTransformer: Internals.AnyFieldCoder?,
+        affectedByKeyPaths: Set<KeyPathString>,
         defaultValue: Any?
     )
 
+    static var dynamicObjectType: CoreStoreObject.Type { get }
+
     var entityDescriptionValues: () -> EntityDescriptionValues { get }
-    var rawObject: CoreStoreManagedObject? { get set }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any? { get }
 }

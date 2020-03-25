@@ -359,6 +359,42 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
 }
 
 
+// MARK: - KeyPath where Root: CoreStoreObject, Value: FieldContainer<Root>.Stored<QueryableAttributeType & Equatable>
+
+/**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$nickname == "John"))
+ ```
+ */
+public func == <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>(keyPath, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$nickname != "John"))
+ ```
+ */
+public func != <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return !Where<O>(keyPath, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by checking if a sequence contains the value of a property
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
+ ```
+ */
+public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>) -> Where<O> where S.Iterator.Element == V {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
+}
+
+
 // MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Equatable>
 
 /**
@@ -436,12 +472,34 @@ public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueCon
 /**
  Creates a `Where` clause by comparing if a property is less than a value
  ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age < 20))
+ ```
+ */
+public func < <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is less than a value
+ ```
  let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
  ```
  */
 public func < <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age > 20))
+ ```
+ */
+public func > <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
 }
 
 /**
@@ -458,12 +516,34 @@ public func > <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Require
 /**
  Creates a `Where` clause by comparing if a property is less than or equal to a value
  ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age <= 20))
+ ```
+ */
+public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is less than or equal to a value
+ ```
  let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
  ```
  */
 public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than or equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age >= 20))
+ ```
+ */
+public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
 }
 
 /**
@@ -483,6 +563,17 @@ public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Requir
 /**
  Creates a `Where` clause by comparing if a property is less than a value
  ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age < 20))
+ ```
+ */
+public func < <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+
+    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is less than a value
+ ```
  let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
  ```
  */
@@ -496,6 +587,17 @@ public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
 
         return Where<O>("%K < nil", O.meta[keyPath: keyPath].keyPath)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age > 20))
+ ```
+ */
+public func > <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+
+    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
 }
 
 /**
@@ -519,6 +621,17 @@ public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
 /**
  Creates a `Where` clause by comparing if a property is less than or equal to a value
  ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age <= 20))
+ ```
+ */
+public func <= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+
+    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is less than or equal to a value
+ ```
  let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
  ```
  */
@@ -532,6 +645,17 @@ public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
         
         return Where<O>("%K <= nil", O.meta[keyPath: keyPath].keyPath)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than or equal to a value
+ ```
+ let person = dataStack.fetchOne(From<Person>().where(\.$age >= 20))
+ ```
+ */
+public func >= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+
+    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
 }
 
 /**
@@ -558,6 +682,17 @@ public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
 /**
  Creates a `Where` clause by comparing if a property is equal to a value
  ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.$master == john))
+ ```
+ */
+public func == <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: D.DestinationObjectType?) -> Where<O> {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
@@ -580,6 +715,17 @@ public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 /**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.$master != john))
+ ```
+ */
+public func != <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: D.DestinationObjectType?) -> Where<O> {
+
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
@@ -597,6 +743,17 @@ public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by checking if a sequence contains a value of a property
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.$master))
+ ```
+ */
+public func ~= <O, D: FieldRelationshipToOneType, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>) -> Where<O> where S.Iterator.Element == D.DestinationObjectType {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
 }
 
 /**

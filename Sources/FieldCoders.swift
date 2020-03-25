@@ -1,8 +1,8 @@
 //
-//  AttributeProtocol.swift
+//  FieldCoders.swift
 //  CoreStore
 //
-//  Copyright © 2018 John Rommel Estropia
+//  Copyright © 2020 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,8 @@
 //  SOFTWARE.
 //
 
-import Foundation
-import CoreData
 
-
-// MARK: - AttributeProtocol
-
-internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
-
-    typealias EntityDescriptionValues = (
-        attributeType: NSAttributeType,
-        isOptional: Bool,
-        isTransient: Bool,
-        allowsExternalBinaryDataStorage: Bool,
-        versionHashModifier: String?,
-        renamingIdentifier: String?,
-        affectedByKeyPaths: Set<String>,
-        defaultValue: Any?
-    )
-
-    var entityDescriptionValues: () -> EntityDescriptionValues { get }
-    var rawObject: CoreStoreManagedObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any? { get }
-}
+/**
+ Namespace for Built-in Field Coders
+ */
+public enum FieldCoders {}

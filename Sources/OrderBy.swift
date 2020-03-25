@@ -185,6 +185,14 @@ public struct OrderBy<O: DynamicObject>: OrderByClause, FetchClause, QueryClause
         
         
         // MARK: CoreStoreObject Key Paths
+
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<T>(_ attribute: KeyPath<O, FieldContainer<O>.Stored<T>>) -> SortKey {
+
+            return .ascending(O.meta[keyPath: attribute].keyPath)
+        }
         
         /**
          Indicates that the `KeyPathString` should be sorted in ascending order
@@ -216,6 +224,14 @@ public struct OrderBy<O: DynamicObject>: OrderByClause, FetchClause, QueryClause
         public static func ascending<T>(_ attribute: KeyPath<O, TransformableContainer<O>.Optional<T>>) -> SortKey {
             
             return .ascending(O.meta[keyPath: attribute].keyPath)
+        }
+
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<T>(_ attribute: KeyPath<O, FieldContainer<O>.Stored<T>>) -> SortKey {
+
+            return .descending(O.meta[keyPath: attribute].keyPath)
         }
         
         /**

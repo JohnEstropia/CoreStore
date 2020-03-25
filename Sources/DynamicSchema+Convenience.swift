@@ -68,89 +68,124 @@ extension DynamicSchema {
                 for (attributeName, attribute) in attributesByName {
                     
                     let containerType: String
-                    if attribute.attributeType == .transformableAttributeType {
-                        
-                        if attribute.isOptional {
-                            
-                            containerType = "Transformable.Optional"
-                        }
-                        else {
-                            
-                            containerType = "Transformable.Required"
-                        }
+                    if attribute.isTransient || attribute.attributeType == .undefinedAttributeType {
+
+                        containerType = "Field.Virtual"
+                    }
+                    else if attribute.attributeType == .transformableAttributeType {
+
+                        containerType = "Field.Coded"
                     }
                     else {
-                        
-                        if attribute.isOptional {
-                            
-                            containerType = "Value.Optional"
-                        }
-                        else {
-                            
-                            containerType = "Value.Required"
-                        }
+
+                        containerType = "Field.Stored"
                     }
-                    let valueType: Any.Type
+                    var valueTypeString: String
                     var defaultString = ""
+                    var coderString = ""
                     switch attribute.attributeType {
                         
                     case .integer16AttributeType:
-                        valueType = Int16.self
+                        valueTypeString = String(describing: Int16.self)
                         if let defaultValue = (attribute.defaultValue as! Int16.QueryableNativeType?).flatMap(Int16.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: \(defaultValue)"
+                            defaultString = " = \(defaultValue)"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .integer32AttributeType:
-                        valueType = Int32.self
+                        valueTypeString = String(describing: Int32.self)
                         if let defaultValue = (attribute.defaultValue as! Int32.QueryableNativeType?).flatMap(Int32.cs_fromQueryableNativeType) {
-                            
-                            defaultString = ", initial: \(defaultValue)"
+
+                            defaultString = " = \(defaultValue)"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .integer64AttributeType:
-                        valueType = Int64.self
+                        valueTypeString = String(describing: Int64.self)
                         if let defaultValue = (attribute.defaultValue as! Int64.QueryableNativeType?).flatMap(Int64.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: \(defaultValue)"
+                            defaultString = " = \(defaultValue)"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .decimalAttributeType:
-                        valueType = NSDecimalNumber.self
+                        valueTypeString = String(describing: NSDecimalNumber.self)
                         if let defaultValue = (attribute.defaultValue as! NSDecimalNumber?) {
                             
-                            defaultString = ", initial: NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
+                            defaultString = " = NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .doubleAttributeType:
-                        valueType = Double.self
+                        valueTypeString = String(describing: Double.self)
                         if let defaultValue = (attribute.defaultValue as! Double.QueryableNativeType?).flatMap(Double.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: \(defaultValue)"
+                            defaultString = " = \(defaultValue)"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .floatAttributeType:
-                        valueType = Float.self
+                        valueTypeString = String(describing: Float.self)
                         if let defaultValue = (attribute.defaultValue as! Float.QueryableNativeType?).flatMap(Float.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: \(defaultValue)"
+                            defaultString = " = \(defaultValue)"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .stringAttributeType:
-                        valueType = String.self
+                        valueTypeString = String(describing: String.self)
                         if let defaultValue = (attribute.defaultValue as! String.QueryableNativeType?).flatMap(String.cs_fromQueryableNativeType) {
-                            
-                            // TODO: escape strings
-                            defaultString = ", initial: \"\(defaultValue)\""
+
+                            defaultString = " = \"\(defaultValue.replacingOccurrences(of: "\\", with: "\\\\"))\""
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .booleanAttributeType:
-                        valueType = Bool.self
+                        valueTypeString = String(describing: Bool.self)
                         if let defaultValue = (attribute.defaultValue as! Bool.QueryableNativeType?).flatMap(Bool.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: \(defaultValue ? "true" : "false")"
+                            defaultString = " = \(defaultValue ? "true" : "false")"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .dateAttributeType:
-                        valueType = Date.self
+                        valueTypeString = String(describing: Date.self)
                         if let defaultValue = (attribute.defaultValue as! Date.QueryableNativeType?).flatMap(Date.cs_fromQueryableNativeType) {
                             
-                            defaultString = ", initial: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
+                            defaultString = " = Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .binaryDataAttributeType:
-                        valueType = Data.self
+                        valueTypeString = String(describing: Data.self)
                         if let defaultValue = (attribute.defaultValue as! Data.QueryableNativeType?).flatMap(Data.cs_fromQueryableNativeType) {
                             
                             let bytes = defaultValue.withUnsafeBytes { (pointer) in
@@ -158,46 +193,106 @@ extension DynamicSchema {
                                     .bindMemory(to: UInt64.self)
                                     .map({ "\("0x\(String($0, radix: 16, uppercase: false))")" })
                             }
-                            defaultString = ", initial: Data(bytes: [\(bytes.joined(separator: ", "))])"
+                            defaultString = " = Data(bytes: [\(bytes.joined(separator: ", "))])"
+                        }
+                        else if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
                         }
                     case .transformableAttributeType:
+                        if let valueTransformerName = attribute.valueTransformerName {
+
+                            coderString = ", coder: /* Required compatible FieldCoderType implementation for ValueTransformer named \"\(valueTransformerName)\" */"
+                        }
+                        else {
+
+                            coderString = ", coder: FieldCoders.NSCoding.self"
+                        }
                         if let attributeValueClassName = attribute.attributeValueClassName {
-                            
-                            valueType = NSClassFromString(attributeValueClassName)!
+
+                            valueTypeString = String(describing: NSClassFromString(attributeValueClassName)!)
+                        }
+                        else {
+
+                            valueTypeString = "/* <required> */"
+                        }
+                        if let defaultValue = attribute.defaultValue {
+
+                            switch defaultValue {
+
+                            case let defaultValueBox as Internals.AnyFieldCoder.TransformableDefaultValueCodingBox:
+                                if let defaultValue = defaultValueBox.value {
+
+                                    defaultString = " = /* \"\(defaultValue)\" */"
+                                }
+                                else if attribute.isOptional {
+
+                                    defaultString = " = nil"
+                                }
+                                else {
+
+                                    defaultString = " = /* <required> */"
+                                }
+
+                            case let defaultValue:
+                                defaultString = " = /* \"\(defaultValue)\" */"
+                            }
+                        }
+                        else if attribute.isOptional {
+
+                            defaultString = " = nil"
                         }
                         else {
                             
-                            valueType = (NSCoding & NSCopying).self
+                            defaultString = " = /* <required> */"
                         }
-                        if let defaultValue = attribute.defaultValue {
-                            
-                            defaultString = ", initial: /* \"\(defaultValue)\" */"
+                        if attribute.isOptional {
+
+                            valueTypeString += "?"
                         }
-                        else if !attribute.isOptional {
-                            
-                            defaultString = ", initial: /* required */"
+
+                    case .undefinedAttributeType where attribute.isTransient:
+                        coderString = ", customGetter: \\* <required> *\\"
+                        if let attributeValueClassName = attribute.attributeValueClassName {
+
+                            valueTypeString = String(describing: NSClassFromString(attributeValueClassName)!)
                         }
+                        else {
+
+                            valueTypeString = " = /* <required> */"
+                        }
+                        if attribute.isOptional {
+
+                            valueTypeString += "?"
+                            defaultString = " = nil"
+                        }
+
                     default:
                         fatalError("Unsupported attribute type: \(attribute.attributeType.rawValue)")
                     }
-                    let transientString = attribute.isTransient ? ", isTransient: true" : ""
-                    // TODO: escape strings
                     let versionHashModifierString = attribute.versionHashModifier
-                        .flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
-                    // TODO: escape strings
+                        .map({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+
                     let renamingIdentifierString = attribute.renamingIdentifier
-                        .flatMap({ ($0 == attributeName ? "" : ", renamingIdentifier: \"\($0)\"") as String }) ?? ""
-                    output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(defaultString)\(transientString)\(versionHashModifierString)\(renamingIdentifierString))\n")
+                        .map({ ($0 == attributeName ? "" : ", previousVersionKeyPath: \"\($0)\"") }) ?? ""
+                    if attributeName.hasPrefix("_") {
+
+                        output.append("    #warning(\"Field variable names cannot start with underscores)")
+                    }
+                    output.append("    @\(containerType)(\"\(attributeName)\"\(versionHashModifierString)\(renamingIdentifierString)\(coderString))\n")
+                    output.append("    var \(attributeName): \(valueTypeString)\(defaultString)\n\n")
                 }
             }
             
             let relationshipsByName = entity.relationshipsByName
             if !relationshipsByName.isEmpty {
-                
+
                 output.append("    \n")
                 for (relationshipName, relationship) in relationshipsByName {
                     
                     let containerType: String
+                    let destinationEntityName = relationship.destinationEntity!.name!
                     var minCountString = ""
                     var maxCountString = ""
                     if relationship.isToMany {
@@ -206,11 +301,11 @@ extension DynamicSchema {
                         let maxCount = relationship.maxCount
                         if relationship.isOrdered {
                             
-                            containerType = "Relationship.ToManyOrdered"
+                            containerType = "[\(destinationEntityName)]"
                         }
                         else {
                             
-                            containerType = "Relationship.ToManyUnordered"
+                            containerType = "Set<\(destinationEntityName)>"
                         }
                         if minCount > 0 {
                             
@@ -222,16 +317,16 @@ extension DynamicSchema {
                         }
                     }
                     else {
-                        
-                        containerType = "Relationship.ToOne"
+
+                        containerType = "\(destinationEntityName)?"
                     }
                     var inverseString = ""
                     let relationshipQualifier = "\(entityName).\(relationshipName)"
                     if !addedInverse.contains(relationshipQualifier),
                         let inverseRelationship = relationship.inverseRelationship {
                         
-                        inverseString = ", inverse: { $0.\(inverseRelationship.name) }"
-                        addedInverse.insert("\(relationship.destinationEntity!.name!).\(inverseRelationship.name)")
+                        inverseString = ", inverse: \\.$\(inverseRelationship.name)"
+                        addedInverse.insert("\(destinationEntityName).\(inverseRelationship.name)")
                     }
                     var deleteRuleString = ""
                     if relationship.deleteRule != .nullifyDeleteRule {
@@ -252,10 +347,15 @@ extension DynamicSchema {
                         }
                     }
                     let versionHashModifierString = relationship.versionHashModifier
-                        .flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+                        .map({ ", versionHashModifier: \"\($0)\"" }) ?? ""
                     let renamingIdentifierString = relationship.renamingIdentifier
-                        .flatMap({ ($0 == relationshipName ? "" : ", renamingIdentifier: \"\($0)\"") as String }) ?? ""
-                    output.append("    let \(relationshipName) = \(containerType)<\(relationship.destinationEntity!.name!)>(\"\(relationshipName)\"\(inverseString)\(deleteRuleString)\(minCountString)\(maxCountString)\(versionHashModifierString)\(renamingIdentifierString))\n")
+                        .map({ ($0 == relationshipName ? "" : ", previousVersionKeyPath: \"\($0)\"") }) ?? ""
+                    if relationshipName.hasPrefix("_") {
+
+                        output.append("    #error(\"Field variable names cannot start with underscores)\n")
+                    }
+                    output.append("    @Field.Relationship(\"\(relationshipName)\"\(minCountString)\(maxCountString)\(inverseString)\(deleteRuleString)\(versionHashModifierString)\(renamingIdentifierString))\n")
+                    output.append("    var \(relationshipName): \(containerType)\n\n")
                 }
             }
         }

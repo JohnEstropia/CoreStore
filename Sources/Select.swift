@@ -379,45 +379,15 @@ extension SelectTerm where O: NSManagedObject {
 // MARK: - SelectTerm where O: CoreStoreObject
 
 extension SelectTerm where O: CoreStoreObject {
-    
+
     /**
      Provides a `SelectTerm` to a `Select` clause for querying an entity attribute.
      - parameter keyPath: the attribute name
      - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
      */
-    public static func attribute<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>) -> SelectTerm<O> {
-        
-        return self.attribute(O.meta[keyPath: keyPath].keyPath)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying an entity attribute.
-     - parameter keyPath: the attribute name
-     - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
-     */
-    public static func attribute<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>) -> SelectTerm<O> {
-        
-        return self.attribute(O.meta[keyPath: keyPath].keyPath)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying an entity attribute.
-     - parameter keyPath: the attribute name
-     - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
-     */
-    public static func attribute<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<V>>) -> SelectTerm<O> {
-        
-        return self.attribute(O.meta[keyPath: keyPath].keyPath)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying an entity attribute.
-     - parameter keyPath: the attribute name
-     - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
-     */
-    public static func attribute<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> SelectTerm<O> {
-        
-        return self.attribute(O.meta[keyPath: keyPath].keyPath)
+    public static func attribute<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O, K>) -> SelectTerm<O> where K.ObjectType == O {
+
+        return self.attribute(O.meta[keyPath: keyPath].cs_keyPathString)
     }
     
     /**
@@ -426,42 +396,9 @@ extension SelectTerm where O: CoreStoreObject {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
      */
-    public static func average<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
+    public static func average<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O, K>, as alias: KeyPathString? = nil) -> SelectTerm<O> where K.ObjectType == O{
         
-        return self.average(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
-     */
-    public static func average<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.average(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
-     */
-    public static func average<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.average(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
-     */
-    public static func average<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.average(O.meta[keyPath: keyPath].keyPath, as: alias)
+        return self.average(O.meta[keyPath: keyPath].cs_keyPathString, as: alias)
     }
     
     /**
@@ -470,46 +407,10 @@ extension SelectTerm where O: CoreStoreObject {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
-    public static func count<V>(_ keyPath: KeyPath<O,
-        ValueContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
+    public static func count<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O,
+        K>, as alias: KeyPathString? = nil) -> SelectTerm<O> where K.ObjectType == O {
         
-        return self.count(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for a count query.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for a count query
-     */
-    public static func count<V>(_ keyPath: KeyPath<O,
-        ValueContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.count(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for a count query.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for a count query
-     */
-    public static func count<V>(_ keyPath: KeyPath<O,
-        TransformableContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.count(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for a count query.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for a count query
-     */
-    public static func count<V>(_ keyPath: KeyPath<O,
-        TransformableContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.count(O.meta[keyPath: keyPath].keyPath, as: alias)
+        return self.count(O.meta[keyPath: keyPath].cs_keyPathString, as: alias)
     }
     
     /**
@@ -518,46 +419,10 @@ extension SelectTerm where O: CoreStoreObject {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
      */
-    public static func maximum<V>(_ keyPath: KeyPath<O,
-        ValueContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
+    public static func maximum<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O,
+        K>, as alias: KeyPathString? = nil) -> SelectTerm<O> where K.ObjectType == O {
         
-        return self.maximum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
-     */
-    public static func maximum<V>(_ keyPath: KeyPath<O,
-        ValueContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.maximum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
-     */
-    public static func maximum<V>(_ keyPath: KeyPath<O,
-        TransformableContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.maximum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
-     */
-    public static func maximum<V>(_ keyPath: KeyPath<O,
-        TransformableContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.maximum(O.meta[keyPath: keyPath].keyPath, as: alias)
+        return self.maximum(O.meta[keyPath: keyPath].cs_keyPathString, as: alias)
     }
     
     /**
@@ -566,42 +431,9 @@ extension SelectTerm where O: CoreStoreObject {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
      */
-    public static func minimum<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
+    public static func minimum<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O, K>, as alias: KeyPathString? = nil) -> SelectTerm<O> where K.ObjectType == O {
         
-        return self.minimum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
-     */
-    public static func minimum<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.minimum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
-     */
-    public static func minimum<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.minimum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
-     */
-    public static func minimum<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.minimum(O.meta[keyPath: keyPath].keyPath, as: alias)
+        return self.minimum(O.meta[keyPath: keyPath].cs_keyPathString, as: alias)
     }
     
     /**
@@ -610,42 +442,9 @@ extension SelectTerm where O: CoreStoreObject {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func sum<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
+    public static func sum<K: AttributeKeyPathStringConvertible>(_ keyPath: KeyPath<O, K>, as alias: KeyPathString? = nil) -> SelectTerm<O> where K.ObjectType == O {
         
-        return self.sum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
-     */
-    public static func sum<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.sum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
-     */
-    public static func sum<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.sum(O.meta[keyPath: keyPath].keyPath, as: alias)
-    }
-    
-    /**
-     Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
-     - parameter keyPath: the attribute name
-     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
-     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
-     */
-    public static func sum<V>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<V>>, as alias: KeyPathString? = nil) -> SelectTerm<O> {
-        
-        return self.sum(O.meta[keyPath: keyPath].keyPath, as: alias)
+        return self.sum(O.meta[keyPath: keyPath].cs_keyPathString, as: alias)
     }
 }
 

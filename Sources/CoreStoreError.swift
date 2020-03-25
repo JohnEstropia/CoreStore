@@ -198,9 +198,6 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case (.userError(let error1), .userError(let error2)):
             switch (error1, error2) {
-                
-            case (let error1 as AnyHashable, let error2 as AnyHashable):
-                return error1 == error2
             
             case (let error1 as NSError, let error2 as NSError):
                 return error1.isEqual(error2)

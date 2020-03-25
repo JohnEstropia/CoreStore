@@ -1,8 +1,8 @@
 //
-//  AttributeProtocol.swift
+//  FieldCoderType.swift
 //  CoreStore
 //
-//  Copyright © 2018 John Rommel Estropia
+//  Copyright © 2020 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,24 +27,32 @@ import Foundation
 import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - FieldCoderType
 
-internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
+/**
+ Types that implement encoding to and decoding from `Data` to be used in `Field.Coded` properties' `coder:` argument.
+ ```
+ class Person: CoreStoreObject {
 
-    typealias EntityDescriptionValues = (
-        attributeType: NSAttributeType,
-        isOptional: Bool,
-        isTransient: Bool,
-        allowsExternalBinaryDataStorage: Bool,
-        versionHashModifier: String?,
-        renamingIdentifier: String?,
-        affectedByKeyPaths: Set<String>,
-        defaultValue: Any?
-    )
+     @Field.Coded("profile", coder: FieldCoders.Json.self)
+     var profile: Profile = .init()
+ }
+ ```
+ */
+public protocol FieldCoderType {
 
-    var entityDescriptionValues: () -> EntityDescriptionValues { get }
-    var rawObject: CoreStoreManagedObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any? { get }
+    /**
+     The type to encode to and decode from `Data`
+     */
+    associatedtype FieldStoredValue
+
+    /**
+     Encodes the value to `Data`
+     */
+    static func encodeToStoredData(_ fieldValue: FieldStoredValue?) -> Data?
+
+    /**
+     Decodes the value from `Data`
+     */
+    static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue?
 }

@@ -174,21 +174,41 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
         
         self.init(NSPredicate(format: "\(keyPath) == nil"))
     }
-    
+
     /**
      Initializes a `Where` clause that compares equality
-     
+
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<U: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: U?) {
-        
+    public init<V: FieldStorableType>(_ keyPath: KeyPathString, isEqualTo value: V) {
+
         switch value {
-            
+
         case nil,
              is NSNull:
             self.init(NSPredicate(format: "\(keyPath) == nil"))
-            
+
+        case let value:
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toFieldStoredNativeType() as Any]))
+        }
+    }
+
+    /**
+     Initializes a `Where` clause that compares equality
+
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    @_disfavoredOverload
+    public init<U: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: U?) {
+
+        switch value {
+
+        case nil,
+             is NSNull:
+            self.init(NSPredicate(format: "\(keyPath) == nil"))
+
         case let value?:
             self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryableNativeType()]))
         }
@@ -222,6 +242,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
         
         self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [objectID]))
     }
+
+    /**
+     Initializes a `Where` clause that compares membership
+
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: FieldStorableType {
+
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toFieldStoredNativeType() }) as NSArray))
+    }
     
     /**
      Initializes a `Where` clause that compares membership
@@ -229,6 +260,7 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
+    @_disfavoredOverload
     public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: QueryableAttributeType {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
@@ -408,6 +440,28 @@ extension Where where O: NSManagedObject {
 // MARK: - Where where O: CoreStoreObject
 
 extension Where where O: CoreStoreObject {
+
+    /**
+     Initializes a `Where` clause that compares equality
+
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isEqualTo value: V) {
+
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
+
+    /**
+     Initializes a `Where` clause that compares equality
+
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<V: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isEqualTo value: V.DestinationObjectType?) {
+
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
     
     /**
      Initializes a `Where` clause that compares equality to `nil`

@@ -94,9 +94,10 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
             firstLine = ".progressiveMigrationRequired"
             info.append(("localStoreURL", localStoreURL))
 
-        case .asynchronousMigrationRequired(let localStoreURL):
+        case .asynchronousMigrationRequired(let localStoreURL, let NSError):
             firstLine = ".asynchronousMigrationRequired"
             info.append(("localStoreURL", localStoreURL))
+            info.append(("NSError", NSError))
             
         case .internalError(let NSError):
             firstLine = ".internalError"

@@ -1,8 +1,8 @@
 //
-//  AttributeProtocol.swift
+//  FieldCoders.Plist.swift
 //  CoreStore
 //
-//  Copyright © 2018 John Rommel Estropia
+//  Copyright © 2020 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,27 +24,40 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - FieldCoders
 
-internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
+extension FieldCoders {
 
-    typealias EntityDescriptionValues = (
-        attributeType: NSAttributeType,
-        isOptional: Bool,
-        isTransient: Bool,
-        allowsExternalBinaryDataStorage: Bool,
-        versionHashModifier: String?,
-        renamingIdentifier: String?,
-        affectedByKeyPaths: Set<String>,
-        defaultValue: Any?
-    )
+    // MARK: - Plist
 
-    var entityDescriptionValues: () -> EntityDescriptionValues { get }
-    var rawObject: CoreStoreManagedObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any? { get }
+    /**
+     A `FieldCoderType` that implements Binary-Plist encoding and decoding of `Codable` values.
+     - Important: Due to restrictions of `JSONEncoder`, the value will be contained in single-item array before encoding.
+     */
+    public struct Plist<V: Codable>: FieldCoderType {
+
+        // MARK: FieldCoderType
+
+        public typealias FieldStoredValue = V
+
+        public static func encodeToStoredData(_ fieldValue: FieldStoredValue?) -> Data? {
+
+            guard let fieldValue = fieldValue else {
+
+                return nil
+            }
+            return try! PropertyListEncoder().encode([fieldValue])
+        }
+
+        public static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue? {
+
+            guard let data = data else {
+
+                return nil
+            }
+            return try! PropertyListDecoder().decode([FieldStoredValue].self, from: data).first
+        }
+    }
 }

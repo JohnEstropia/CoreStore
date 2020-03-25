@@ -73,22 +73,22 @@ public struct LocalStorageOptions: OptionSet, ExpressibleByNilLiteral {
     /**
      Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
      */
-    public static let none = LocalStorageOptions(rawValue: 0)
+    public static let none: LocalStorageOptions = []
     
     /**
      Tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead
      */
-    public static let recreateStoreOnModelMismatch = LocalStorageOptions(rawValue: 1 << 0)
+    public static let recreateStoreOnModelMismatch: LocalStorageOptions = .init(rawValue: 1 << 0)
     
     /**
      Tells the `DataStack` to prevent progressive migrations for the store
      */
-    public static let preventProgressiveMigration = LocalStorageOptions(rawValue: 1 << 1)
+    public static let preventProgressiveMigration: LocalStorageOptions = .init(rawValue: 1 << 1)
     
     /**
      Tells the `DataStack` to allow lightweight migration for the store when added synchronously
      */
-    public static let allowSynchronousLightweightMigration = LocalStorageOptions(rawValue: 1 << 2)
+    public static let allowSynchronousLightweightMigration: LocalStorageOptions = .init(rawValue: 1 << 2)
     
     
     

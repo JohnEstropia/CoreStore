@@ -110,13 +110,8 @@ public struct VersionLock: ExpressibleByDictionaryLiteral, Equatable {
         
         var hashesByEntityName: [EntityName: Data] = [:]
         for (entityName, intArray) in keyValues {
-            
-            hashesByEntityName[entityName] = Data(
-                buffer: UnsafeBufferPointer(
-                    start: intArray,
-                    count: intArray.count
-                )
-            )
+
+            hashesByEntityName[entityName] = intArray.withUnsafeBufferPointer(Data.init(buffer:))
         }
         self.hashesByEntityName = hashesByEntityName
     }

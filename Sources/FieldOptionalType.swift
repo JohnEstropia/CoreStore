@@ -1,8 +1,8 @@
 //
-//  AttributeProtocol.swift
+//  FieldOptionalType.swift
 //  CoreStore
 //
-//  Copyright © 2018 John Rommel Estropia
+//  Copyright © 2020 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,27 +24,36 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - FieldOptionalType
 
-internal protocol AttributeProtocol: AnyObject, PropertyProtocol {
+/**
+ Optional values to be used for `Field` properties.
+ */
+public protocol FieldOptionalType: ExpressibleByNilLiteral {
 
-    typealias EntityDescriptionValues = (
-        attributeType: NSAttributeType,
-        isOptional: Bool,
-        isTransient: Bool,
-        allowsExternalBinaryDataStorage: Bool,
-        versionHashModifier: String?,
-        renamingIdentifier: String?,
-        affectedByKeyPaths: Set<String>,
-        defaultValue: Any?
-    )
+    /**
+     The type for the wrapped value
+     */
+    associatedtype Wrapped
 
-    var entityDescriptionValues: () -> EntityDescriptionValues { get }
-    var rawObject: CoreStoreManagedObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any? { get }
+    /**
+    Used internally by CoreStore. Do not call directly.
+     */
+    var cs_wrappedValue: Wrapped? { get }
+}
+
+
+// MARK: - Optional: FieldOptionalType
+
+extension Optional: FieldOptionalType {
+
+    // MARK: FieldOptionalType
+    
+    @inlinable
+    public var cs_wrappedValue: Wrapped? {
+
+        return self
+    }
 }

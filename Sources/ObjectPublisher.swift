@@ -370,6 +370,87 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>) -> V? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject
+            else {
+
+                return nil
+        }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> V? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject
+            else {
+
+                return nil
+        }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>) -> V? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject
+            else {
+
+                return nil
+        }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
+        let field = object[keyPath: member]
+        return type(of: field).read(field: field, for: rawObject) as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>) -> V.PublishedType? {
+
+        guard
+            let object = self.object,
+            let rawObject = object.rawObject
+            else {
+
+                return nil
+        }
+        Internals.assert(
+            rawObject.isRunningInAllowedQueue() == true,
+            "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
+        )
+        let field = object[keyPath: member]
+        let snapshotValue = V.cs_valueForSnapshot(from: rawObject.objectIDs(forRelationshipNamed: field.keyPath))
+        return V.cs_toPublishedType(from: snapshotValue, in: self.context)
+     }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
