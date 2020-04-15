@@ -36,7 +36,7 @@ extension FieldContainer {
     /**
      The containing type for stored property values. Any type that conforms to `FieldStorableType` are supported.
      ```
-     class Animal: CoreStoreObject {
+     class Person: CoreStoreObject {
 
          @Field.Stored("title")
          var title: String = "Mr."

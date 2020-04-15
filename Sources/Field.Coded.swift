@@ -40,6 +40,15 @@ extension FieldContainer {
 
          @Field.Coded("eyeColor", coder: FieldCoders.NSCoding.self)
          var eyeColor: UIColor = .black
+
+         @Field.Coded(
+             "bloodType",
+             coder: {
+                 encode: { $0.toData() },
+                 decode: { BloodType(fromData: $0) }
+             }
+         )
+         var bloodType: BloodType = .unknown
      }
      ```
      - Important: `Field` properties are required to be used as `@propertyWrapper`s. Any other declaration not using the `@Field.Stored(...) var` syntax will be ignored.
@@ -94,8 +103,14 @@ extension FieldContainer {
          ```
          class Person: CoreStoreObject {
 
-             @Field.Coded("eyeColor", coder: FieldCoders.NSCoding.self)
-             var eyeColor: UIColor = .black
+             @Field.Coded(
+                 "bloodType",
+                 coder: {
+                     encode: { $0.toData() },
+                     decode: { BloodType(fromData: $0) }
+                 }
+             )
+             var bloodType: BloodType = .unknown
          }
          ```
          - parameter initial: the initial value for the property when the object is first created.
@@ -416,8 +431,14 @@ extension FieldContainer.Coded where V: FieldOptionalType {
      ```
      class Person: CoreStoreObject {
 
-         @Field.Coded("eyeColor", coder: FieldCoders.NSCoding.self)
-         var eyeColor: UIColor? = nil
+         @Field.Coded(
+             "bloodType",
+             coder: {
+                 encode: { $0.toData() },
+                 decode: { BloodType(fromData: $0) }
+             }
+         )
+         var bloodType: BloodType?
      }
      ```
      - parameter initial: the initial value for the property when the object is first created.
