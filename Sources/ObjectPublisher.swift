@@ -95,6 +95,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             Internals.Closure(callback),
             forKey: observer
         )
+        _ = self.lazySnapshot
     }
 
     /**
