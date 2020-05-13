@@ -68,7 +68,7 @@ extension FieldContainer {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            wrappedValue initial: @autoclosure @escaping () -> V,
+            wrappedValue initial: @autoclosure @escaping () -> V?,
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
@@ -87,6 +87,28 @@ extension FieldContainer {
                 customSetter: customSetter,
                 affectedByKeyPaths: affectedByKeyPaths
             )
+        }
+
+        public init(
+          wrappedValue initial: @autoclosure @escaping () -> V,
+          _ keyPath: KeyPathString,
+          versionHashModifier: @autoclosure @escaping () -> String? = nil,
+          previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+          customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+          customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+          affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+        ) {
+
+          self.init(
+            wrappedValue: initial,
+            keyPath: keyPath,
+            isOptional: false,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            customGetter: customGetter,
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
+          )
         }
 
 
@@ -267,7 +289,7 @@ extension FieldContainer {
         // MARK: FilePrivate
 
         fileprivate init(
-            wrappedValue initial: @escaping () -> V,
+            wrappedValue initial: @escaping () -> V?,
             keyPath: KeyPathString,
             isOptional: Bool,
             versionHashModifier: @escaping () -> String?,
