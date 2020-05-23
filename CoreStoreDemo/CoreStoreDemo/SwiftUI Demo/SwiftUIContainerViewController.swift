@@ -33,8 +33,8 @@ final class SwiftUIContainerViewController: UIViewController {
                 rootView: SwiftUIView(
                     palettes: ColorsDemo.stack.publishList(
                         From<Palette>()
-                            .sectionBy(\.colorName)
-                            .orderBy(.ascending(\.hue))
+                            .sectionBy(\.$colorName)
+                            .orderBy(.ascending(\.$hue))
                     )
                 )
                 .environment(\.dataStack, ColorsDemo.stack)

@@ -209,15 +209,17 @@ public final class CoreStoreSchema: DynamicSchema {
             let rawModel = NSManagedObjectModel()
             var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
             var allCustomGettersSetters: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+            var allCustomInitializers: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer]] = [:]
             var allFieldCoders: [DynamicEntity: [KeyPathString: Internals.AnyFieldCoder]] = [:]
             for entity in self.allEntities {
                 
-                let (entityDescription, customGetterSetterByKeyPaths, fieldCoders) = self.entityDescription(
+                let (entityDescription, customGetterSetterByKeyPaths, customInitializerByKeyPaths, fieldCoders) = self.entityDescription(
                     for: entity,
                     initializer: CoreStoreSchema.firstPassCreateEntityDescription(from:in:)
                 )
                 entityDescriptionsByEntity[entity] = (entityDescription.copy() as! NSEntityDescription)
                 allCustomGettersSetters[entity] = customGetterSetterByKeyPaths
+                allCustomInitializers[entity] = customInitializerByKeyPaths
                 allFieldCoders[entity] = fieldCoders
             }
             CoreStoreSchema.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
@@ -225,6 +227,7 @@ public final class CoreStoreSchema: DynamicSchema {
             CoreStoreSchema.fourthPassSynthesizeManagedObjectClasses(
                 for: entityDescriptionsByEntity,
                 allCustomGettersSetters: allCustomGettersSetters,
+                allCustomInitializers: allCustomInitializers,
                 allFieldCoders: allFieldCoders
             )
             
@@ -257,6 +260,7 @@ public final class CoreStoreSchema: DynamicSchema {
     
     private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
     private var customGettersSettersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+    private var customInitializersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer]] = [:]
     private var fieldCodersByEntity: [DynamicEntity: [KeyPathString: Internals.AnyFieldCoder]] = [:]
     private weak var cachedRawModel: NSManagedObjectModel?
     
@@ -265,11 +269,13 @@ public final class CoreStoreSchema: DynamicSchema {
         initializer: (DynamicEntity, ModelVersion) -> (
             entity: NSEntityDescription,
             customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter],
+            customInitializersByEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
             fieldCoders: [KeyPathString: Internals.AnyFieldCoder]
         )
     ) -> (
         entity: NSEntityDescription,
         customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter],
+        customInitializerByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
         fieldCoders: [KeyPathString: Internals.AnyFieldCoder]
     ) {
         
@@ -278,23 +284,31 @@ public final class CoreStoreSchema: DynamicSchema {
             return (
                 cachedEntityDescription,
                 self.customGettersSettersByEntity[entity] ?? [:],
+                self.customInitializersByEntity[entity] ?? [:],
                 self.fieldCodersByEntity[entity] ?? [:]
             )
         }
         let modelVersion = self.modelVersion
-        let (entityDescription, customGetterSetterByKeyPaths, fieldCoders) = withoutActuallyEscaping(
+        let (entityDescription, customGetterSetterByKeyPaths, customInitializerByKeyPaths, fieldCoders) = withoutActuallyEscaping(
             initializer,
             do: { $0(entity, modelVersion) }
         )
         self.entityDescriptionsByEntity[entity] = entityDescription
         self.customGettersSettersByEntity[entity] = customGetterSetterByKeyPaths
+        self.customInitializersByEntity[entity] = customInitializerByKeyPaths
         self.fieldCodersByEntity[entity] = fieldCoders
-        return (entityDescription, customGetterSetterByKeyPaths, fieldCoders)
+        return (
+            entityDescription,
+            customGetterSetterByKeyPaths,
+            customInitializerByKeyPaths,
+            fieldCoders
+        )
     }
 
     private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (
         entity: NSEntityDescription,
         customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter],
+        customInitializerByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
         fieldCoders: [KeyPathString: Internals.AnyFieldCoder]
     ) {
         
@@ -306,6 +320,7 @@ public final class CoreStoreSchema: DynamicSchema {
         entityDescription.managedObjectClassName = CoreStoreManagedObject.cs_subclassName(for: entity, in: modelVersion)
         
         var keyPathsByAffectedKeyPaths: [KeyPathString: Set<KeyPathString>] = [:]
+        var customInitialValuesByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer] = [:]
         var customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter] = [:]
         var fieldCoders: [KeyPathString: Internals.AnyFieldCoder] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
@@ -338,6 +353,7 @@ public final class CoreStoreSchema: DynamicSchema {
 
                     keyPathsByAffectedKeyPaths[attribute.keyPath] = entityDescriptionValues.affectedByKeyPaths
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
+                    customInitialValuesByKeyPaths[attribute.keyPath] = attribute.initializer
                     fieldCoders[attribute.keyPath] = valueTransformer
 
                 case let relationship as FieldRelationshipProtocol:
@@ -401,7 +417,12 @@ public final class CoreStoreSchema: DynamicSchema {
         }
         entityDescription.properties = createProperties(for: entity.type as! CoreStoreObject.Type)
         entityDescription.keyPathsByAffectedKeyPaths = keyPathsByAffectedKeyPaths
-        return (entityDescription, customGetterSetterByKeyPaths, fieldCoders)
+        return (
+            entityDescription,
+            customGetterSetterByKeyPaths,
+            customInitialValuesByKeyPaths,
+            fieldCoders
+        )
     }
     
     private static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
@@ -597,10 +618,15 @@ public final class CoreStoreSchema: DynamicSchema {
     private static func fourthPassSynthesizeManagedObjectClasses(
         for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription],
         allCustomGettersSetters: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]],
+        allCustomInitializers: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer]],
         allFieldCoders: [DynamicEntity: [KeyPathString: Internals.AnyFieldCoder]]
     ) {
         
-        func createManagedObjectSubclass(for entityDescription: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]?) {
+        func createManagedObjectSubclass(
+            for entityDescription: NSEntityDescription,
+            customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]?,
+            customInitializers: [KeyPathString: CoreStoreManagedObject.CustomInitializer]?
+        ) {
             
             let superEntity = entityDescription.superentity
             let className = entityDescription.managedObjectClassName!
@@ -612,7 +638,8 @@ public final class CoreStoreSchema: DynamicSchema {
                 
                 createManagedObjectSubclass(
                     for: superEntity,
-                    customGetterSetterByKeyPaths: superEntity.coreStoreEntity.flatMap({ allCustomGettersSetters[$0] })
+                    customGetterSetterByKeyPaths: superEntity.coreStoreEntity.flatMap({ allCustomGettersSetters[$0] }),
+                    customInitializers: superEntity.coreStoreEntity.flatMap({ allCustomInitializers[$0] })
                 )
             }
             let superClass = Internals.with { () -> CoreStoreManagedObject.Type in
@@ -675,40 +702,80 @@ public final class CoreStoreSchema: DynamicSchema {
                         }
                     }
             }
-            
-            let newSelector = NSSelectorFromString("cs_keyPathsForValuesAffectingValueForKey:")
-            let keyPathsByAffectedKeyPaths = entityDescription.keyPathsByAffectedKeyPaths
-            let keyPathsForValuesAffectingValue: @convention(block) (Any, String) -> Set<String> = { (instance, keyPath) in
-                
-                if let keyPaths = keyPathsByAffectedKeyPaths[keyPath] {
+            swizzle_keyPathsForValuesAffectingValueForKey: do {
+
+                let newSelector = NSSelectorFromString("cs_keyPathsForValuesAffectingValueForKey:")
+                let keyPathsByAffectedKeyPaths = entityDescription.keyPathsByAffectedKeyPaths
+                let keyPathsForValuesAffectingValue: @convention(block) (Any, String) -> Set<String> = { (instance, keyPath) in
                     
-                    return keyPaths
+                    if let keyPaths = keyPathsByAffectedKeyPaths[keyPath] {
+                        
+                        return keyPaths
+                    }
+                    return []
                 }
-                return []
-            }
-            let origSelector = #selector(CoreStoreManagedObject.keyPathsForValuesAffectingValue(forKey:))
-            
-            let metaClass: AnyClass = object_getClass(managedObjectClass)!
-            let origMethod = class_getClassMethod(managedObjectClass, origSelector)!
-            
-            let origImp = method_getImplementation(origMethod)
-            let newImp = imp_implementationWithBlock(keyPathsForValuesAffectingValue)
-            
-            if class_addMethod(metaClass, origSelector, newImp, method_getTypeEncoding(origMethod)) {
+                let origSelector = #selector(CoreStoreManagedObject.keyPathsForValuesAffectingValue(forKey:))
                 
-                class_replaceMethod(metaClass, newSelector, origImp, method_getTypeEncoding(origMethod))
-            }
-            else {
+                let metaClass: AnyClass = object_getClass(managedObjectClass)!
+                let origMethod = class_getClassMethod(managedObjectClass, origSelector)!
                 
-                let newMethod = class_getClassMethod(managedObjectClass, newSelector)!
-                method_exchangeImplementations(origMethod, newMethod)
+                let origImp = method_getImplementation(origMethod)
+                let newImp = imp_implementationWithBlock(keyPathsForValuesAffectingValue)
+                
+                if class_addMethod(metaClass, origSelector, newImp, method_getTypeEncoding(origMethod)) {
+                    
+                    class_replaceMethod(metaClass, newSelector, origImp, method_getTypeEncoding(origMethod))
+                }
+                else {
+                    
+                    let newMethod = class_getClassMethod(managedObjectClass, newSelector)!
+                    method_exchangeImplementations(origMethod, newMethod)
+                }
+            }
+            swizzle_awakeFromInsert: do {
+
+                let newSelector = NSSelectorFromString("cs_awakeFromInsert")
+                let awakeFromInsertValue: @convention(block) (Any) -> Void
+                if let customInitializers = customInitializers,
+                    !customInitializers.isEmpty {
+                    
+                    let initializers = Array(customInitializers.values)
+                    awakeFromInsertValue = { (instance) in
+                        
+                        initializers.forEach {
+                            
+                            $0(instance)
+                        }
+                    }
+                }
+                else {
+                    
+                    awakeFromInsertValue = { _ in }
+                }
+                let origSelector = #selector(CoreStoreManagedObject.awakeFromInsert)
+                
+                let origMethod = class_getInstanceMethod(managedObjectClass, origSelector)!
+                
+                let origImp = method_getImplementation(origMethod)
+                let newImp = imp_implementationWithBlock(awakeFromInsertValue)
+                
+                if class_addMethod(managedObjectClass, origSelector, newImp, method_getTypeEncoding(origMethod)) {
+                    
+                    class_replaceMethod(managedObjectClass, newSelector, origImp, method_getTypeEncoding(origMethod))
+                }
+                else {
+                    
+                    let newMethod = class_getInstanceMethod(managedObjectClass, newSelector)!
+                    method_exchangeImplementations(origMethod, newMethod)
+                }
             }
         }
         for (dynamicEntity, entityDescription) in entityDescriptionsByEntity {
             
             createManagedObjectSubclass(
                 for: entityDescription,
-                customGetterSetterByKeyPaths: allCustomGettersSetters[dynamicEntity]
+                customGetterSetterByKeyPaths: allCustomGettersSetters[dynamicEntity],
+                customInitializers: allCustomInitializers[dynamicEntity]
             )
         }
 

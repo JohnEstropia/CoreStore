@@ -115,27 +115,6 @@ extension NSEntityDescription {
         }
     }
     
-    @nonobjc
-    internal var customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter] {
-        
-        get {
-            
-            if let userInfo = self.userInfo,
-                let value = userInfo[UserInfoKey.CoreStoreManagedObjectCustomGetterSetterByKeyPaths] {
-                
-                return value as! [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]
-            }
-            return [:]
-        }
-        set {
-            
-            cs_setUserInfo { (userInfo) in
-                
-                userInfo[UserInfoKey.CoreStoreManagedObjectCustomGetterSetterByKeyPaths] = newValue
-            }
-        }
-    }
-    
     
     // MARK: Private
     
@@ -151,7 +130,6 @@ extension NSEntityDescription {
         fileprivate static let CoreStoreManagedObjectUniqueConstraints = "CoreStoreManagedObjectUniqueConstraints"
         
         fileprivate static let CoreStoreManagedObjectKeyPathsByAffectedKeyPaths = "CoreStoreManagedObjectKeyPathsByAffectedKeyPaths"
-        fileprivate static let CoreStoreManagedObjectCustomGetterSetterByKeyPaths = "CoreStoreManagedObjectCustomGetterSetterByKeyPaths"
         
     }
     

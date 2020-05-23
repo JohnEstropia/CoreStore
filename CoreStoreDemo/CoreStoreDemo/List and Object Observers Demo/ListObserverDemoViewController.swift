@@ -158,8 +158,7 @@ final class ListObserverDemoViewController: UITableViewController {
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
                 
-                let palette = transaction.create(Into<Palette>())
-                palette.setInitialValues(in: transaction)
+                _ = transaction.create(Into<Palette>())
             },
             completion: { _ in }
         )
@@ -171,8 +170,8 @@ final class ListObserverDemoViewController: UITableViewController {
 
                 for palette in try transaction.fetchAll(From<Palette>()) {
 
-                    palette.hue .= Palette.randomHue()
-                    palette.colorName .= nil
+                    palette.hue = Palette.randomHue()
+                    palette.colorName = nil
                 }
             },
             completion: { _ in }

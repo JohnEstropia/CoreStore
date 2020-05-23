@@ -85,6 +85,30 @@ extension FieldContainer {
                 renamingIdentifier: previousVersionKeyPath,
                 customGetter: customGetter,
                 customSetter: customSetter,
+                dynamicInitialValue: nil,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
+        }
+        
+        public init(
+            _ keyPath: KeyPathString,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+            dynamicInitialValue: @escaping () -> V
+        ) {
+
+            self.init(
+                wrappedValue: nil,
+                keyPath: keyPath,
+                isOptional: false,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: previousVersionKeyPath,
+                customGetter: customGetter,
+                customSetter: customSetter,
+                dynamicInitialValue: dynamicInitialValue,
                 affectedByKeyPaths: affectedByKeyPaths
             )
         }
@@ -262,18 +286,36 @@ extension FieldContainer {
                 )
             }
         }
+        
+        internal var initializer: CoreStoreManagedObject.CustomInitializer? {
+            
+            guard let dynamicInitialValue = self.dynamicInitialValue else {
+                
+                return nil
+            }
+            let keyPath = self.keyPath
+            return { (_ id: Any) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                rawObject.setPrimitiveValue(
+                    dynamicInitialValue().cs_toFieldStoredNativeType(),
+                    forKey: keyPath
+                )
+            }
+        }
 
 
         // MARK: FilePrivate
 
         fileprivate init(
-            wrappedValue initial: @escaping () -> V,
+            wrappedValue initial: (() -> V)?,
             keyPath: KeyPathString,
             isOptional: Bool,
             versionHashModifier: @escaping () -> String?,
             renamingIdentifier: @escaping () -> String?,
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)?,
+            dynamicInitialValue: (() -> V)?,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
 
             self.keyPath = keyPath
@@ -287,11 +329,12 @@ extension FieldContainer {
                     renamingIdentifier: renamingIdentifier(),
                     valueTransformer: nil,
                     affectedByKeyPaths: affectedByKeyPaths(),
-                    defaultValue: initial().cs_toFieldStoredNativeType()
+                    defaultValue: initial?().cs_toFieldStoredNativeType()
                 )
             }
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.dynamicInitialValue = dynamicInitialValue
         }
 
 
@@ -299,6 +342,7 @@ extension FieldContainer {
 
         private let customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?
         private let customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)?
+        private let dynamicInitialValue: (() -> V)?
     }
 }
 
@@ -331,7 +375,8 @@ extension FieldContainer.Stored where V: FieldOptionalType {
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
         customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
-        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
+    ) {
 
         self.init(
             wrappedValue: initial,
@@ -341,6 +386,30 @@ extension FieldContainer.Stored where V: FieldOptionalType {
             renamingIdentifier: previousVersionKeyPath,
             customGetter: customGetter,
             customSetter: customSetter,
+            dynamicInitialValue: nil,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+    
+    public init(
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+        dynamicInitialValue: @escaping () -> V
+    ) {
+
+        self.init(
+            wrappedValue: nil,
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            customGetter: customGetter,
+            customSetter: customSetter,
+            dynamicInitialValue: dynamicInitialValue,
             affectedByKeyPaths: affectedByKeyPaths
         )
     }

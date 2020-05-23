@@ -61,8 +61,8 @@ struct SwiftUIView: View {
 
                                     for palette in try transaction.fetchAll(From<Palette>()) {
 
-                                        palette.hue .= Palette.randomHue()
-                                        palette.colorName .= nil
+                                        palette.hue = Palette.randomHue()
+                                        palette.colorName = nil
                                     }
                                 },
                                 completion: { _ in }
@@ -79,8 +79,7 @@ struct SwiftUIView: View {
                             self.dataStack.perform(
                                 asynchronous: { transaction in
 
-                                    let palette = transaction.create(Into<Palette>())
-                                    palette.setInitialValues(in: transaction)
+                                    _ = transaction.create(Into<Palette>())
                                 },
                                 completion: { _ in }
                             )
@@ -173,8 +172,8 @@ struct SwiftUIView_Previews: PreviewProvider {
         SwiftUIView(
             palettes: ColorsDemo.stack.publishList(
                 From<Palette>()
-                    .sectionBy(\.colorName)
-                    .orderBy(.ascending(\.hue))
+                    .sectionBy(\.$colorName)
+                    .orderBy(.ascending(\.$hue))
             )
         )
         .environment(\.dataStack, ColorsDemo.stack)

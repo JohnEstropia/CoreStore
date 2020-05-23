@@ -275,6 +275,8 @@ extension FieldContainer {
                 )
             }
         }
+        
+        let initializer: CoreStoreManagedObject.CustomInitializer? = nil
 
 
         // MARK: FilePrivate

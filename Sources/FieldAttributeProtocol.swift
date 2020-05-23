@@ -48,4 +48,5 @@ internal protocol FieldAttributeProtocol: FieldProtocol {
     var entityDescriptionValues: () -> EntityDescriptionValues { get }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }
+    var initializer: CoreStoreManagedObject.CustomInitializer? { get }
 }

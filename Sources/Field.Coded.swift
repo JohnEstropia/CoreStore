@@ -94,6 +94,32 @@ extension FieldContainer {
                 valueTransformer: { Internals.AnyFieldCoder(fieldCoderType) },
                 customGetter: customGetter,
                 customSetter: customSetter,
+                dynamicInitialValue: nil,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
+        }
+        
+        public init<Coder: FieldCoderType>(
+            _ keyPath: KeyPathString,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+            coder fieldCoderType: Coder.Type,
+            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+            dynamicInitialValue: @escaping () -> V
+        ) where Coder.FieldStoredValue == V {
+
+            self.init(
+                defaultValue: nil,
+                keyPath: keyPath,
+                isOptional: false,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: previousVersionKeyPath,
+                valueTransformer: { Internals.AnyFieldCoder(fieldCoderType) },
+                customGetter: customGetter,
+                customSetter: customSetter,
+                dynamicInitialValue: dynamicInitialValue,
                 affectedByKeyPaths: affectedByKeyPaths
             )
         }
@@ -142,6 +168,32 @@ extension FieldContainer {
                 valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
                 customGetter: customGetter,
                 customSetter: customSetter,
+                dynamicInitialValue: nil,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
+        }
+        
+        public init(
+            _ keyPath: KeyPathString,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+            coder: (encode: (V) -> Data?, decode: (Data?) -> V),
+            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+            dynamicInitialValue: @escaping () -> V
+        ) {
+
+            self.init(
+                defaultValue: nil,
+                keyPath: keyPath,
+                isOptional: false,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: previousVersionKeyPath,
+                valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
+                customGetter: customGetter,
+                customSetter: customSetter,
+                dynamicInitialValue: dynamicInitialValue,
                 affectedByKeyPaths: affectedByKeyPaths
             )
         }
@@ -333,12 +385,29 @@ extension FieldContainer {
                 )
             }
         }
+        
+        internal var initializer: CoreStoreManagedObject.CustomInitializer? {
+            
+            guard let dynamicInitialValue = self.dynamicInitialValue else {
+                
+                return nil
+            }
+            let keyPath = self.keyPath
+            return { (_ id: Any) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                rawObject.setPrimitiveValue(
+                    dynamicInitialValue(),
+                    forKey: keyPath
+                )
+            }
+        }
 
 
         // MARK: FilePrivate
 
         fileprivate init(
-            defaultValue: @escaping () -> Any?,
+            defaultValue: (() -> Any?)?,
             keyPath: KeyPathString,
             isOptional: Bool,
             versionHashModifier: @escaping () -> String?,
@@ -346,6 +415,7 @@ extension FieldContainer {
             valueTransformer: @escaping () -> Internals.AnyFieldCoder?,
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
             customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
+            dynamicInitialValue: (() -> V)?,
             affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
 
             self.keyPath = keyPath
@@ -361,14 +431,17 @@ extension FieldContainer {
                     renamingIdentifier: renamingIdentifier(),
                     valueTransformer: fieldCoder,
                     affectedByKeyPaths: affectedByKeyPaths(),
-                    defaultValue: Internals.AnyFieldCoder.TransformableDefaultValueCodingBox(
-                        defaultValue: defaultValue(),
-                        fieldCoder: fieldCoder
-                    )
+                    defaultValue: defaultValue.map {
+                        Internals.AnyFieldCoder.TransformableDefaultValueCodingBox(
+                            defaultValue: $0(),
+                            fieldCoder: fieldCoder
+                        ) as Any
+                    }
                 )
             }
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.dynamicInitialValue = dynamicInitialValue
         }
 
 
@@ -376,6 +449,7 @@ extension FieldContainer {
 
         private let customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?
         private let customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)?
+        private let dynamicInitialValue: (() -> V)?
     }
 }
 
@@ -422,6 +496,32 @@ extension FieldContainer.Coded where V: FieldOptionalType {
             valueTransformer: { Internals.AnyFieldCoder(coder) },
             customGetter: customGetter,
             customSetter: customSetter,
+            dynamicInitialValue: nil,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+    
+    public init<Coder: FieldCoderType>(
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        coder: Coder.Type,
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+        dynamicInitialValue: @escaping () -> V
+    ) where Coder.FieldStoredValue == V.Wrapped {
+
+        self.init(
+            defaultValue: nil,
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(coder) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            dynamicInitialValue: dynamicInitialValue,
             affectedByKeyPaths: affectedByKeyPaths
         )
     }
@@ -470,6 +570,32 @@ extension FieldContainer.Coded where V: FieldOptionalType {
             valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
             customGetter: customGetter,
             customSetter: customSetter,
+            dynamicInitialValue: nil,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+    
+    public init(
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        coder: (encode: (V) -> Data?, decode: (Data?) -> V),
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+        dynamicInitialValue: @escaping () -> V
+    ) {
+
+        self.init(
+            defaultValue: nil,
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(tag: UUID(), encode: coder.encode, decode: coder.decode) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            dynamicInitialValue: dynamicInitialValue,
             affectedByKeyPaths: affectedByKeyPaths
         )
     }
@@ -516,6 +642,31 @@ extension FieldContainer.Coded where V: DefaultNSSecureCodable {
             valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V>.self) },
             customGetter: customGetter,
             customSetter: customSetter,
+            dynamicInitialValue: nil,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+    
+    public init(
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+        dynamicInitialValue: @escaping () -> V
+    ) {
+
+        self.init(
+            defaultValue: nil,
+            keyPath: keyPath,
+            isOptional: false,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V>.self) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            dynamicInitialValue: dynamicInitialValue,
             affectedByKeyPaths: affectedByKeyPaths
         )
     }
@@ -562,6 +713,31 @@ extension FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSS
             valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V.Wrapped>.self) },
             customGetter: customGetter,
             customSetter: customSetter,
+            dynamicInitialValue: nil,
+            affectedByKeyPaths: affectedByKeyPaths
+        )
+    }
+    
+    public init(
+        _ keyPath: KeyPathString,
+        versionHashModifier: @autoclosure @escaping () -> String? = nil,
+        previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
+        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
+        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
+        dynamicInitialValue: @escaping () -> V
+    ) {
+
+        self.init(
+            defaultValue: nil,
+            keyPath: keyPath,
+            isOptional: true,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: previousVersionKeyPath,
+            valueTransformer: { Internals.AnyFieldCoder(FieldCoders.DefaultNSSecureCoding<V.Wrapped>.self) },
+            customGetter: customGetter,
+            customSetter: customSetter,
+            dynamicInitialValue: dynamicInitialValue,
             affectedByKeyPaths: affectedByKeyPaths
         )
     }

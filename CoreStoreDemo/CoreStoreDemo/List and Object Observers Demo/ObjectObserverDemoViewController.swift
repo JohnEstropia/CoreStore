@@ -43,7 +43,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue))) {
+        if let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.$hue))) {
             
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
@@ -52,12 +52,11 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
             _ = try? ColorsDemo.stack.perform(
                 synchronous: { (transaction) in
                     
-                    let palette = transaction.create(Into<Palette>())
-                    palette.setInitialValues(in: transaction)
+                    _ = transaction.create(Into<Palette>())
                 }
             )
             
-            let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue)))!
+            let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.$hue)))!
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
         
@@ -119,7 +118,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.hue .= Int(hue)
+                    palette.hue = Int(hue)
                 }
             },
             completion: { _ in }
@@ -134,7 +133,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.saturation .= saturation
+                    palette.saturation = saturation
                 }
             },
             completion: { _ in }
@@ -149,7 +148,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.brightness .= brightness
+                    palette.brightness = brightness
                 }
             },
             completion: { _ in }
@@ -169,7 +168,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     func reloadPaletteInfo(_ palette: Palette, changedKeys: Set<String>?) {
         
-        self.colorNameLabel?.text = palette.colorName.value
+        self.colorNameLabel?.text = palette.colorName
         
         let color = palette.color
         self.colorNameLabel?.textColor = color
@@ -177,17 +176,17 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         
         self.hsbLabel?.text = palette.colorText
         
-        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.hue)) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.$hue)) == true {
             
-            self.hueSlider?.value = Float(palette.hue.value)
+            self.hueSlider?.value = Float(palette.hue)
         }
-        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.saturation)) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.$saturation)) == true {
             
-            self.saturationSlider?.value = palette.saturation.value
+            self.saturationSlider?.value = palette.saturation
         }
-        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.brightness)) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.$brightness)) == true {
             
-            self.brightnessSlider?.value = palette.brightness.value
+            self.brightnessSlider?.value = palette.brightness
         }
     }
 }
