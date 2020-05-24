@@ -49,9 +49,16 @@ class Animal: CoreStoreObject {
 }
 
 class Dog: Animal {
+    
+    static let commonNicknames = ["Spot", "Benjie", "Max", "Milo"]
 
-    @Field.Stored("nickname")
-    var nickname: String?
+    @Field.Stored(
+        "nickname",
+        dynamicInitialValue: {
+            commonNicknames[.random(in: commonNicknames.indices)]
+        }
+    )
+    var nickname: String
 
     @Field.Stored("age")
     var age: Int = 1
@@ -67,7 +74,7 @@ struct CustomType {
     var string = "customString"
 }
 
-enum Job: String {
+enum Job: String, CaseIterable {
 
     case unemployed
     case engineer
@@ -139,9 +146,12 @@ class Person: CoreStoreObject {
         coder: (
             encode: { $0.toData() },
             decode: { $0.flatMap(Job.init(data:)) ?? .unemployed }
-        )
+        ),
+        dynamicInitialValue: {
+            Job.allCases[.random(in: Job.allCases.indices)]
+        }
     )
-    var job: Job = .unemployed
+    var job: Job
 
     @Field.Relationship("spouse")
     var spouse: Person?
@@ -152,7 +162,7 @@ class Person: CoreStoreObject {
     @Field.Relationship("_spouseInverse", inverse: \.$spouse)
     private var spouseInverse: Person?
     
-    static func getDisplayName(_ object: ObjectProxy<Person>, _ field: ObjectProxy<Person>.FieldProxy<String?>) -> String? {
+    private static func getDisplayName(_ object: ObjectProxy<Person>, _ field: ObjectProxy<Person>.FieldProxy<String?>) -> String? {
 
         if let value = field.primitiveValue {
 
@@ -165,7 +175,7 @@ class Person: CoreStoreObject {
         return value
     }
     
-    static func keyPathsAffectingDisplayName() -> Set<String> {
+    private static func keyPathsAffectingDisplayName() -> Set<String> {
         
         return [
             String(keyPath: \Person.$title),
@@ -192,7 +202,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 ],
                 versionLock: [
                     "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
-                    "Dog": [0xe3f0afeb109b283a, 0x29998d292938eb61, 0x6aab788333cfc2a3, 0x492ff1d295910ea7],
+                    "Dog": [0xad6de93adc5565d, 0x7897e51253eba5a3, 0xd12b9ce0b13600f3, 0x5a4827cd794cd15e],
                     "Person": [0xf3e6ba6016bbedc6, 0x50dedf64f0eba490, 0xa32088a0ee83468d, 0xb72d1d0b37bd0992]
                 ]
             )
@@ -247,8 +257,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species, "Swift")
-                    XCTAssertEqual(dog.nickname, nil)
                     XCTAssertEqual(dog.age, 1)
+                    XCTAssertTrue(Dog.commonNicknames.contains(dog.nickname))
 
                     for property in Dog.metaProperties(includeSuperclasses: true) {
 
@@ -264,7 +274,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                             XCTAssertTrue(property is FieldContainer<Animal>.Coded<Color?>)
 
                         case String(keyPath: \Dog.$nickname):
-                            XCTAssertTrue(property is FieldContainer<Dog>.Stored<String?>)
+                            XCTAssertTrue(property is FieldContainer<Dog>.Stored<String>)
 
                         case String(keyPath: \Dog.$age):
                             XCTAssertTrue(property is FieldContainer<Dog>.Stored<Int>)
@@ -335,7 +345,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let person = transaction.create(Into<Person>())
                     XCTAssertTrue(person.pets.isEmpty)
                     XCTAssertEqual(person.customField.string, "customString")
-                    XCTAssertEqual(person.job, .unemployed)
+                    let initialJob = person.job
+                    XCTAssertTrue(Job.allCases.contains(initialJob))
                     
                     XCTAssertEqual(
                         person.rawObject!
@@ -385,7 +396,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     personSnapshot3.$name = "James"
                     XCTAssertEqual(personSnapshot1.$name, "John")
                     XCTAssertEqual(personSnapshot1.$displayName, "Mr. John")
-                    XCTAssertEqual(personSnapshot1.$job, .unemployed)
+                    XCTAssertEqual(personSnapshot1.$job, initialJob)
                     XCTAssertEqual(personSnapshot2.$name, "John")
                     XCTAssertEqual(personSnapshot2.$displayName, "Sir John")
                     XCTAssertEqual(personSnapshot2.$job, .engineer)
