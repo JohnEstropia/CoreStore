@@ -132,8 +132,8 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                 )
             }
+            self.waitAndCheckExpectations()
         }
-        self.waitAndCheckExpectations()
     }
     
     @objc
@@ -267,8 +267,8 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                 )
             }
+            self.waitAndCheckExpectations()
         }
-        self.waitAndCheckExpectations()
     }
     
     @objc

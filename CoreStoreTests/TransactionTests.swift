@@ -622,8 +622,8 @@ final class TransactionTests: BaseTestCase {
                     }
                 )
             }
+            self.waitAndCheckExpectations()
         }
-        self.waitAndCheckExpectations()
     }
     
     @objc
@@ -755,8 +755,8 @@ final class TransactionTests: BaseTestCase {
                     }
                 )
             }
+            self.waitAndCheckExpectations()
         }
-        self.waitAndCheckExpectations()
     }
     
     @objc
@@ -896,8 +896,8 @@ final class TransactionTests: BaseTestCase {
                     }
                 )
             }
+            self.waitAndCheckExpectations()
         }
-        self.waitAndCheckExpectations()
     }
     
     @objc

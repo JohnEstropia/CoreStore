@@ -505,7 +505,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTFail()
                 }
             )
-            self.waitAndCheckExpectations()
+        }
+        
+        self.waitForExpectations(timeout: 10, handler: { _ in })
+        
+        self.addTeardownBlock {
+            dataStack.unsafeRemoveAllPersistentStoresAndWait()
         }
     }
     

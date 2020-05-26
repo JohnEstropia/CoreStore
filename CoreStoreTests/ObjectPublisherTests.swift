@@ -144,6 +144,7 @@ class ObjectPublisherTests: BaseTestDataTestCase {
                     XCTFail()
                 }
             )
+            
             self.waitAndCheckExpectations()
 
             withExtendedLifetime(objectPublisher, {})

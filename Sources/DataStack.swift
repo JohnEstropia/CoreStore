@@ -370,6 +370,44 @@ public final class DataStack: Equatable {
         }
     }
     
+    /**
+     Prepares deinitializing the `DataStack` by removing all persistent stores. This is not necessary, but can help silence SQLite warnings when actively releasing and recreating `DataStack`s.
+     - parameter completion: the closure to execute after all persistent stores are removed
+     */
+    public func unsafeRemoveAllPersistentStores(completion: @escaping () -> Void = {}) {
+        
+        let coordinator = self.coordinator
+        coordinator.performAsynchronously {
+            
+            withExtendedLifetime(coordinator) { coordinator in
+                
+                coordinator.persistentStores.forEach {
+                    
+                    _ = try? coordinator.remove($0)
+                }
+            }
+            DispatchQueue.main.async(execute: completion)
+        }
+    }
+    
+    /**
+     Prepares deinitializing the `DataStack` by removing all persistent stores. This is not necessary, but can help silence SQLite warnings when actively releasing and recreating `DataStack`s.
+     */
+    public func unsafeRemoveAllPersistentStoresAndWait() {
+        
+        let coordinator = self.coordinator
+        coordinator.performSynchronously {
+            
+            withExtendedLifetime(coordinator) { coordinator in
+                
+                coordinator.persistentStores.forEach {
+                    
+                    _ = try? coordinator.remove($0)
+                }
+            }
+        }
+    }
+    
     
     // MARK: 3rd Party Utilities
     
@@ -509,16 +547,6 @@ public final class DataStack: Equatable {
     
     deinit {
         
-        let coordinator = self.coordinator
-        coordinator.performAsynchronously {
-            
-            withExtendedLifetime(coordinator) { coordinator in
-                
-                coordinator.persistentStores.forEach {
-                    
-                    _ = try? coordinator.remove($0)
-                }
-            }
-        }
+        self.unsafeRemoveAllPersistentStores()
     }
 }

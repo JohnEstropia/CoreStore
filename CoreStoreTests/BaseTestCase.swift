@@ -62,6 +62,9 @@ class BaseTestCase: XCTestCase {
             
             XCTFail(error.coreStoreDumpString)
         }
+        self.addTeardownBlock {
+            stack.unsafeRemoveAllPersistentStoresAndWait()
+        }
     }
     
     @nonobjc
