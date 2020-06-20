@@ -1817,21 +1817,21 @@ The `@Field.Stored` property wrapper is used for persisted value types. This is 
 <tr><th>Before</th><th>`@Field.Stored`</th></tr>
 <tr>
 <td><pre lang=swift>
-class Person: CoreStoreObject {
+    class Person: CoreStoreObject {
 
-    let title = Value.Required<String>("title", initial: "Mr.")
-    let nickname = Value.Optional<String>("nickname")
-}
+        let title = Value.Required<String>("title", initial: "Mr.")
+        let nickname = Value.Optional<String>("nickname")
+    }
 </pre></td>
 <td><pre lang=swift>
-class Person: CoreStoreObject {
+    class Person: CoreStoreObject {
 
-    @Field.Stored("title")
-    var title: String = "Mr."
+        @Field.Stored("title")
+        var title: String = "Mr."
 
-    @Field.Stored("nickname")
-    var nickname: String?
-}
+        @Field.Stored("nickname")
+        var nickname: String?
+    }
 </pre></td>
 </tr>
 </table>
@@ -1848,36 +1848,36 @@ The `@Field.Virtual` property wrapper is used for unsaved, computed value types.
 <tr><th>Before</th><th>`@Field.Virtual`</th></tr>
 <tr>
 <td><pre lang=swift>
-class Animal: CoreStoreObject {
+    class Animal: CoreStoreObject {
 
-    let speciesPlural = Value.Required<String>(
-        "speciesPlural",
-        transient: true,
-        customGetter: Animal.getSpeciesPlural(_:)
-    )
-    
-    let species = Value.Required<String>("species", initial: "")
-    
-    static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
-        let species = partialObject.value(for: { $0.species })
-        return species + "s"
+        let speciesPlural = Value.Required<String>(
+            "speciesPlural",
+            transient: true,
+            customGetter: Animal.getSpeciesPlural(_:)
+        )
+        
+        let species = Value.Required<String>("species", initial: "")
+        
+        static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
+            let species = partialObject.value(for: { $0.species })
+            return species + "s"
+        }
     }
-}
 </pre></td>
 <td><pre lang=swift>
-class Animal: CoreStoreObject {
+    class Animal: CoreStoreObject {
 
-    @Field.Virtual(
-        "speciesPlural",
-        customGetter: { (object, field) in
-            return object.$species.value + "s"
-        }
-    )
-    var speciesPlural: String
+        @Field.Virtual(
+            "speciesPlural",
+            customGetter: { (object, field) in
+                return object.$species.value + "s"
+            }
+        )
+        var speciesPlural: String
 
-    @Field.Stored("species")
-    var species: String = ""
-}
+        @Field.Stored("species")
+        var species: String = ""
+    }
 </pre></td>
 </tr>
 </table>
@@ -1896,17 +1896,17 @@ The `@Field.Coded` property wrapper is used for binary-codable values. This is t
 <tr><th>Before</th><th>`@Field.Coded`</th></tr>
 <tr>
 <td><pre lang=swift>
-class Vehicle: CoreStoreObject {
+    class Vehicle: CoreStoreObject {
 
-    let color = Transformable.Optional<UIColor>("color", initial: .white)
-}
+        let color = Transformable.Optional<UIColor>("color", initial: .white)
+    }
 </pre></td>
 <td><pre lang=swift>
-class Vehicle: CoreStoreObject {
+    class Vehicle: CoreStoreObject {
 
-    @Field.Coded("color", coder: FieldCoders.NSCoding.self)
-    var color: UIColor? = .white
-}
+        @Field.Coded("color", coder: FieldCoders.NSCoding.self)
+        var color: UIColor? = .white
+    }
 </pre></td>
 </tr>
 </table>
@@ -1949,26 +1949,26 @@ The type of relationship is determined by the `@Field.Relationship`  generic typ
 <tr><th>Before</th><th>`@Field.Stored`</th></tr>
 <tr>
 <td><pre lang=swift>
-class Pet: CoreStoreObject {
+    class Pet: CoreStoreObject {
 
-    let master = Relationship.ToOne<Person>("master")
-}
-class Person: CoreStoreObject {
+        let master = Relationship.ToOne<Person>("master")
+    }
+    class Person: CoreStoreObject {
 
-    let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
-}
+        let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
+    }
 </pre></td>
 <td><pre lang=swift>
-class Pet: CoreStoreObject {
+    class Pet: CoreStoreObject {
 
-    @Field.Relationship("master")
-    var master: Person?
-}
-class Person: CoreStoreObject {
+        @Field.Relationship("master")
+        var master: Person?
+    }
+    class Person: CoreStoreObject {
 
-    @Field.Relationship("pets", inverse: \.$master)
-    var pets: Set<Pet>
-}
+        @Field.Relationship("pets", inverse: \.$master)
+        var pets: Set<Pet>
+    }
 </pre></td>
 </tr>
 </table>
