@@ -33,7 +33,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 ### Features
 
-- 🆕**Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
+- **Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
 - **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
 - **🔍Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (`min`, `max`, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
@@ -1729,31 +1729,35 @@ To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C sour
 Starting CoreStore 4.0, we can now create persisted objects without depending on *.xcdatamodeld* Core Data files. The new `CoreStoreObject` subclass replaces `NSManagedObject`, and specially-typed properties declared on these classes will be synthesized as Core Data attributes.
 ```swift
 class Animal: CoreStoreObject {
-    let species = Value.Required<String>("species", initial: "")
+    @Field.Stored("species")
+    var species: String = ""
 }
 
 class Dog: Animal {
-    let nickname = Value.Optional<String>("nickname")
-    let master = Relationship.ToOne<Person>("master")
+    @Field.Stored("nickname")
+    var nickname: String?
+    
+    @Field.Relationship("master")
+    var master: Person?
 }
 
 class Person: CoreStoreObject {
-    let name = Value.Required<String>("name", initial: "")
-    let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+    @Field.Stored("name")
+    var name: String = ""
+    
+    @Field.Relationship("pets", inverse: \Dog.$master)
+    var pets: Set<Dog>
 }
 ```
 The property names to be saved to Core Data is specified as the `keyPath` argument. This lets us refactor our Swift code without affecting the underlying database. For example:
 ```swift
 class Person: CoreStoreObject {
-    private let _name = Value.Required<String>("name", initial: "")
+    @Field.Stored("name")
+    private var internalName: String = ""
     // note property name is independent of the storage key name
 }
 ```
-Here we added an underscore to the property name and made it `private`, but the underlying key-path `"name"` was unchanged so our model will not trigger a data migration.
-
-> ⚠️**Important:** As a rule, CoreStore can only process *stored properties*. Computed, `static`, `weak`, or `lazy` properties will be ignored and will not be added to the store. It is also strictly advised use `let` instead of `var` to declare these properties, as any changes to the property value will break the schema.
-
-Also note how `Relationship`s are linked statically with the `inverse:` argument. **All relationships are required to have an "inverse" relationship**. Unfortunately, due to Swift compiler limitation we can only declare the `inverse:` on one end of the relationship-pair.
+Here we used the property name `internalName` and made it `private`, but the underlying key-path `"name"` was unchanged so our model will not trigger a data migration.
 
 To tell the `DataStack` about these types, add all `CoreStoreObject`s' entities to a `CoreStoreSchema`:
 ```swift
@@ -1772,36 +1776,249 @@ CoreStoreDefaults.dataStack.addStorage(/* ... */)
 ```
 And that's all CoreStore needs to build the model; **we don't need *.xcdatamodeld* files anymore.**
 
-These special properties' values can be accessed or mutated using `.value`:
+In addition, `@Field` properties can be used to create type-safe key-path strings
 ```swift
-dataStack.perform(
-    asynchronous: { (transaction) in
-        let dog: Dog = transaction.fetchOne(From<Dog>())!
-        // ...
-        let nickname = dog.nickname.value // String?
-        let species = dog.species.value // String
-        let age = dog.age.value // Int
-        // ...
-        dog.age.value = age + 1
-    },
-    completion: { /* ... */ }
-)
-```
-
-In addition, `Value` and `Relationship` properties can be used to create type-safe key-paths
-```swift
-let keyPath: String = Dog.keyPath { $0.nickname }
+let keyPath = String(keyPath: \Dog.$nickname)
 ```
 as well as `Where` and `OrderBy` clauses
 ```swift
 let puppies = try dataStack.fetchAll(
     From<Dog>()
-        .where(\.age < 1)
-        .orderBy(.ascending(\.age))
+        .where(\.$age < 5)
+        .orderBy(.ascending(\.$age))
 )
 ```
 
 All CoreStore APIs that are usable with `NSManagedObject`s are also available for `CoreStoreObject`s. These include `ListMonitor`s, `ImportableObject`s, fetching, etc.
+
+### New `@Field` Property Wrapper syntax
+
+> ⚠️**Important:** `@Field` properties are only supported for `CoreStoreObject` subclasses. If you are using `NSManagedObject`s, you need to keep using `@NSManaged` for your attributes.
+
+Starting CoreStore 7.1.0, `CoreStoreObject` properties may be converted to `@Field` Property Wrappers.
+
+> ‼️ Please take note of the warnings below before converting or else the model's hash might change.
+
+**If conversion is too risky, the current `Value.Required`, `Value.Optional`, `Transformable.Required`, `Transformable.Optional`, `Relationship.ToOne`, `Relationship.ToManyOrdered`, and `Relationship.ToManyUnordered` will all be supported for while so you can opt to use them as is for now.**
+
+> ‼️ This cannot be stressed enough, but please make sure to set your schema's [`VersionLock`](#versionlocks) before converting!
+
+#### `@Field.Stored`
+
+The `@Field.Stored` property wrapper is used for persisted value types. This is the replacement for "non-transient" `Value.Required` and `Value.Optional` properties.
+
+<table>
+<tr><th>Before</th><th>`@Field.Stored`</th></tr>
+<tr>
+<td><pre lang=swift>
+class Person: CoreStoreObject {
+
+    let title = Value.Required<String>("title", initial: "Mr.")
+    let nickname = Value.Optional<String>("nickname")
+}
+</pre></td>
+<td><pre lang=swift>
+class Person: CoreStoreObject {
+
+    @Field.Stored("title")
+    var title: String = "Mr."
+
+    @Field.Stored("nickname")
+    var nickname: String?
+}
+</pre></td>
+</tr>
+</table>
+
+> ⚠️ Only `Value.Required` and `Value.Optional` that are NOT transient values can be converted to `Field.Stored`. For transient/computed properties, refer to [`@Field.Virtual`](#field_virtual) properties in the next section.
+> ⚠️ When converting, make sure that all parameters, including the default values, are exactly the same or else the model's hash might change.
+
+
+#### `@Field.Virtual`
+
+The `@Field.Virtual` property wrapper is used for unsaved, computed value types. This is the replacement for "transient" `Value.Required` and `Value.Optional` properties.
+
+<table>
+<tr><th>Before</th><th>`@Field.Virtual`</th></tr>
+<tr>
+<td><pre lang=swift>
+class Animal: CoreStoreObject {
+
+    let speciesPlural = Value.Required<String>(
+        "speciesPlural",
+        transient: true,
+        customGetter: Animal.getSpeciesPlural(_:)
+    )
+    
+    let species = Value.Required<String>("species", initial: "")
+    
+    static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
+        let species = partialObject.value(for: { $0.species })
+        return species + "s"
+    }
+}
+</pre></td>
+<td><pre lang=swift>
+class Animal: CoreStoreObject {
+
+    @Field.Virtual(
+        "speciesPlural",
+        customGetter: { (object, field) in
+            return object.$species.value + "s"
+        }
+    )
+    var speciesPlural: String
+
+    @Field.Stored("species")
+    var species: String = ""
+}
+</pre></td>
+</tr>
+</table>
+
+> ⚠️ Only `Value.Required` and `Value.Optional` that ARE transient values can be converted to `Field.Virtual`. For non-transient properties, refer to [`@Field.Stored`](#field_stored) properties in the next section.
+> ⚠️ When converting, make sure that all parameters, including the default values, are exactly the same or else the model's hash might change.
+
+
+#### `@Field.Coded`
+
+The `@Field.Coded` property wrapper is used for binary-codable values. This is the new counterpart, **not replacement**, for `Transformable.Required` and `Transformable.Optional` properties. `@Field.Coded` also supports other encodings such as JSON and custom binary converters.
+
+> ‼️ The current `Transformable.Required` and `Transformable.Optional` mechanism have no safe one-to-one conversion to `@Field.Coded`. Please use `@Field.Coded` only for newly added attributes.
+
+<table>
+<tr><th>Before</th><th>`@Field.Coded`</th></tr>
+<tr>
+<td><pre lang=swift>
+class Vehicle: CoreStoreObject {
+
+    let color = Transformable.Optional<UIColor>("color", initial: .white)
+}
+</pre></td>
+<td><pre lang=swift>
+class Vehicle: CoreStoreObject {
+
+    @Field.Coded("color", coder: FieldCoders.NSCoding.self)
+    var color: UIColor? = .white
+}
+</pre></td>
+</tr>
+</table>
+
+Built-in encoders such as `FieldCoders.NSCoding`, `FieldCoders.Json`, and `FieldCoders.Plist` are available, and custom encoding/decoding is also supported:
+```swift
+class Person: CoreStoreObject {
+
+    struct CustomInfo: Codable {
+        // ...
+    }
+
+    @Field.Coded("otherInfo", coder: FieldCoders.Json.self)
+    var otherInfo: CustomInfo?
+
+    @Field.Coded(
+        "photo",
+        coder: {
+            encode: { $0.toData() },
+            decode: { Photo(fromData: $0) }
+        }
+    )
+    var photo: Photo?
+}
+```
+
+> ‼️**Important:** Any changes in the encoders/decoders are not reflected in the `VersionLock`, so make sure that the encoder and decoder logic is compatible for all versions of your persistent store.
+
+#### `@Field.Relationship`
+
+The `@Field.Relationship` property wrapper is used for link relationships with other `CoreStoreObject`s. This is the replacement for `Relationship.ToOne`, `Relationship.ToManyOrdered`, and `Relationship.ToManyUnordered` properties.
+
+The type of relationship is determined by the `@Field.Relationship`  generic type:
+
+- `Optional<T>` : To-one relationship
+- `Array<T>` : To-many ordered relationship
+- `Set<T>` : To-many unordered relationship
+
+<table>
+<tr><th>Before</th><th>`@Field.Stored`</th></tr>
+<tr>
+<td><pre lang=swift>
+class Pet: CoreStoreObject {
+
+    let master = Relationship.ToOne<Person>("master")
+}
+class Person: CoreStoreObject {
+
+    let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
+}
+</pre></td>
+<td><pre lang=swift>
+class Pet: CoreStoreObject {
+
+    @Field.Relationship("master")
+    var master: Person?
+}
+class Person: CoreStoreObject {
+
+    @Field.Relationship("pets", inverse: \.$master)
+    var pets: Set<Pet>
+}
+</pre></td>
+</tr>
+</table>
+
+> ⚠️ When converting, make sure that all parameters, including the default values, are exactly the same or else the model's hash might change.
+
+Also note how `Relationship`s are linked statically with the `inverse:` argument. **All relationships are required to have an "inverse" relationship**. Unfortunately, due to Swift compiler limitation we can declare the `inverse:` on only one of the relationship-pair.
+
+#### `@Field` usage notes 
+
+**Accessor syntax**
+
+When using key-path utilities, properties using `@Field` property wrappers need to use the `$` syntax:
+
+- Before: `From<Person>.where(\.title == "Mr.")`
+- After: `From<Person>.where(\.$title == "Mr.")`
+
+This applies to property access using `ObjectPublisher`s and `ObjectSnapshot`s.
+
+- Before: `let name = personSnapshot.name`
+- After: `let name = personSnapshot.$name`
+
+
+**Default values vs. Initial values**
+
+One common mistake when assigning default values to `CoreStoreObject` properties is to assign it a value and expect it to be evaluated whenever an object is created:
+
+```swift
+// ❌
+class Person: CoreStoreObject {
+
+    @Field.Stored("identifier")
+    var identifier: UUID = UUID() // Wrong!
+    
+    @Field.Stored("createdDate")
+    var createdDate: Date = Date() // Wrong!
+}
+```
+
+This default value will be evaluated only when the `DataStack` sets up the schema, and all instances will end up having the same values. This syntax for "default values" are usually used only for actual reasonable constant values, or sentinel values such as `""` or `0`.
+
+For actual "initial values", `@Field.Stored` and `@Field.Coded` now supports dynamic evaluation during object creation via the `dynamicInitialValue:` argument:
+
+```swift
+// ✅
+class Person: CoreStoreObject {
+
+    @Field.Stored("identifier", dynamicInitialValue: { UUID() })
+    var identifier: UUID
+    
+    @Field.Stored("createdDate", dynamicInitialValue: { Date() })
+    var createdDate: Date
+}
+```
+When using this feature, a "default value" should not be assigned (i.e. no `=` expression). 
+
 
 ### `VersionLock`s
 
@@ -1840,8 +2057,8 @@ Once the version lock is set, any changes in the properties or to the model will
 # Installation
 - Requires:
     - iOS 10 SDK and above
-    - Swift 5.1 (Xcode 11+)
-    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2)
+    - Swift 5.2 (Xcode 11.4+)
+    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4)
 - Dependencies:
     - *None*
 - Other notes:
@@ -1850,7 +2067,7 @@ Once the version lock is set, any changes in the properties or to the model will
 ### Install with CocoaPods
 In your `Podfile`, add
 ```
-pod 'CoreStore', '~> 7.0'
+pod 'CoreStore', '~> 7.1'
 ```
 and run 
 ```
@@ -1861,7 +2078,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 7.0.0
+github "JohnEstropia/CoreStore" >= 7.1.0
 ```
 and run 
 ```
@@ -1872,7 +2089,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.0.0"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.1.0"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.
