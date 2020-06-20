@@ -94,6 +94,12 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Observe detailed list changes](#observe-detailed-list-changes)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
+        - [New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
+            - [`@Field.Stored` ](#fieldstored)
+            - [`@Field.Virtual` ](#fieldvirtual)
+            - [`@Field.Coded` ](#fieldcoded)
+            - [`@Field.Relationship` ](#fieldrelationship)
+            - [`@Field` usage notes](#field-usage-notes)
         - [`VersionLock`s](#versionlocks)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
@@ -1830,7 +1836,7 @@ class Person: CoreStoreObject {
 </tr>
 </table>
 
-> ⚠️ Only `Value.Required` and `Value.Optional` that are NOT transient values can be converted to `Field.Stored`. For transient/computed properties, refer to [`@Field.Virtual`](#field_virtual) properties in the next section.
+> ⚠️ Only `Value.Required` and `Value.Optional` that are NOT transient values can be converted to `Field.Stored`. For transient/computed properties, refer to [`@Field.Virtual`](#fieldvirtual) properties in the next section.
 > ⚠️ When converting, make sure that all parameters, including the default values, are exactly the same or else the model's hash might change.
 
 
@@ -1876,7 +1882,7 @@ class Animal: CoreStoreObject {
 </tr>
 </table>
 
-> ⚠️ Only `Value.Required` and `Value.Optional` that ARE transient values can be converted to `Field.Virtual`. For non-transient properties, refer to [`@Field.Stored`](#field_stored) properties in the next section.
+> ⚠️ Only `Value.Required` and `Value.Optional` that ARE transient values can be converted to `Field.Virtual`. For non-transient properties, refer to [`@Field.Stored`](#fieldstored) properties in the previous section.
 > ⚠️ When converting, make sure that all parameters, including the default values, are exactly the same or else the model's hash might change.
 
 
