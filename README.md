@@ -2073,7 +2073,7 @@ Once the version lock is set, any changes in the properties or to the model will
 ### Install with CocoaPods
 In your `Podfile`, add
 ```
-pod 'CoreStore', '~> 7.1'
+pod 'CoreStore', '~> 7.2'
 ```
 and run 
 ```
@@ -2084,7 +2084,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 7.1.0
+github "JohnEstropia/CoreStore" >= 7.2.0
 ```
 and run 
 ```
@@ -2095,7 +2095,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.1.0"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.2.0"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.
