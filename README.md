@@ -88,18 +88,18 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
     - [Logging and error reporting](#logging-and-error-reporting)
     - [Observing changes and notifications](#observing-changes-and-notifications)
         - [Observe a single property](#observe-a-single-property)
-        - 🆕[Observe a single object's updates](#observe-a-single-objects-updates)
+        - [Observe a single object's updates](#observe-a-single-objects-updates)
         - [Observe a single object's per-property updates](#observe-a-single-objects-per-property-updates)
-        - 🆕[Observe a diffable list](#observe-a-diffable-list)
+        - [Observe a diffable list](#observe-a-diffable-list)
         - [Observe detailed list changes](#observe-detailed-list-changes)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
-        - [New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
-            - [`@Field.Stored` ](#fieldstored)
-            - [`@Field.Virtual` ](#fieldvirtual)
-            - [`@Field.Coded` ](#fieldcoded)
-            - [`@Field.Relationship` ](#fieldrelationship)
-            - [`@Field` usage notes](#field-usage-notes)
+        - 🆕[New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
+            - 🆕[`@Field.Stored` ](#fieldstored)
+            - 🆕[`@Field.Virtual` ](#fieldvirtual)
+            - 🆕[`@Field.Coded` ](#fieldcoded)
+            - 🆕[`@Field.Relationship` ](#fieldrelationship)
+            - 🆕[`@Field` usage notes](#field-usage-notes)
         - [`VersionLock`s](#versionlocks)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
@@ -1817,21 +1817,21 @@ The `@Field.Stored` property wrapper is used for persisted value types. This is 
 <tr><th>Before</th><th>`@Field.Stored`</th></tr>
 <tr>
 <td><pre lang=swift>
-    class Person: CoreStoreObject {
-
-        let title = Value.Required<String>("title", initial: "Mr.")
-        let nickname = Value.Optional<String>("nickname")
-    }
+class Person: CoreStoreObject {
+    <br />
+    let title = Value.Required<String>("title", initial: "Mr.")
+    let nickname = Value.Optional<String>("nickname")
+}
 </pre></td>
 <td><pre lang=swift>
-    class Person: CoreStoreObject {
-
-        @Field.Stored("title")
-        var title: String = "Mr."
-
-        @Field.Stored("nickname")
-        var nickname: String?
-    }
+class Person: CoreStoreObject {
+    <br />
+    @Field.Stored("title")
+    var title: String = "Mr."
+    <br />
+    @Field.Stored("nickname")
+    var nickname: String?
+}
 </pre></td>
 </tr>
 </table>
@@ -1848,36 +1848,36 @@ The `@Field.Virtual` property wrapper is used for unsaved, computed value types.
 <tr><th>Before</th><th>`@Field.Virtual`</th></tr>
 <tr>
 <td><pre lang=swift>
-    class Animal: CoreStoreObject {
-
-        let speciesPlural = Value.Required<String>(
-            "speciesPlural",
-            transient: true,
-            customGetter: Animal.getSpeciesPlural(_:)
-        )
-        
-        let species = Value.Required<String>("species", initial: "")
-        
-        static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
-            let species = partialObject.value(for: { $0.species })
-            return species + "s"
-        }
+class Animal: CoreStoreObject {
+    <br />
+    let speciesPlural = Value.Required<String>(
+        "speciesPlural",
+        transient: true,
+        customGetter: Animal.getSpeciesPlural(_:)
+    )
+    <br />
+    let species = Value.Required<String>("species", initial: "")
+    <br />
+    static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
+        let species = partialObject.value(for: { $0.species })
+        return species + "s"
     }
+}
 </pre></td>
 <td><pre lang=swift>
-    class Animal: CoreStoreObject {
-
-        @Field.Virtual(
-            "speciesPlural",
-            customGetter: { (object, field) in
-                return object.$species.value + "s"
-            }
-        )
-        var speciesPlural: String
-
-        @Field.Stored("species")
-        var species: String = ""
-    }
+class Animal: CoreStoreObject {
+    <br />
+    @Field.Virtual(
+        "speciesPlural",
+        customGetter: { (object, field) in
+            return object.$species.value + "s"
+        }
+    )
+    var speciesPlural: String
+    <br />
+    @Field.Stored("species")
+    var species: String = ""
+}
 </pre></td>
 </tr>
 </table>
@@ -1896,17 +1896,17 @@ The `@Field.Coded` property wrapper is used for binary-codable values. This is t
 <tr><th>Before</th><th>`@Field.Coded`</th></tr>
 <tr>
 <td><pre lang=swift>
-    class Vehicle: CoreStoreObject {
-
-        let color = Transformable.Optional<UIColor>("color", initial: .white)
-    }
+class Vehicle: CoreStoreObject {
+    <br />
+    let color = Transformable.Optional<UIColor>("color", initial: .white)
+}
 </pre></td>
 <td><pre lang=swift>
-    class Vehicle: CoreStoreObject {
-
-        @Field.Coded("color", coder: FieldCoders.NSCoding.self)
-        var color: UIColor? = .white
-    }
+class Vehicle: CoreStoreObject {
+    <br />
+    @Field.Coded("color", coder: FieldCoders.NSCoding.self)
+    var color: UIColor? = .white
+}
 </pre></td>
 </tr>
 </table>
@@ -1914,14 +1914,14 @@ The `@Field.Coded` property wrapper is used for binary-codable values. This is t
 Built-in encoders such as `FieldCoders.NSCoding`, `FieldCoders.Json`, and `FieldCoders.Plist` are available, and custom encoding/decoding is also supported:
 ```swift
 class Person: CoreStoreObject {
-
+    <br />
     struct CustomInfo: Codable {
         // ...
     }
-
+    <br />
     @Field.Coded("otherInfo", coder: FieldCoders.Json.self)
     var otherInfo: CustomInfo?
-
+    <br />
     @Field.Coded(
         "photo",
         coder: {
@@ -1949,26 +1949,26 @@ The type of relationship is determined by the `@Field.Relationship`  generic typ
 <tr><th>Before</th><th>`@Field.Stored`</th></tr>
 <tr>
 <td><pre lang=swift>
-    class Pet: CoreStoreObject {
-
-        let master = Relationship.ToOne<Person>("master")
-    }
-    class Person: CoreStoreObject {
-
-        let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
-    }
+class Pet: CoreStoreObject {
+    <br />
+    let master = Relationship.ToOne<Person>("master")
+}
+class Person: CoreStoreObject {
+    <br />
+    let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
+}
 </pre></td>
 <td><pre lang=swift>
-    class Pet: CoreStoreObject {
-
-        @Field.Relationship("master")
-        var master: Person?
-    }
-    class Person: CoreStoreObject {
-
-        @Field.Relationship("pets", inverse: \.$master)
-        var pets: Set<Pet>
-    }
+class Pet: CoreStoreObject {
+    <br />
+    @Field.Relationship("master")
+    var master: Person?
+}
+class Person: CoreStoreObject {
+    <br />
+    @Field.Relationship("pets", inverse: \.$master)
+    var pets: Set<Pet>
+}
 </pre></td>
 </tr>
 </table>
