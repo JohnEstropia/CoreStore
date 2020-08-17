@@ -10,7 +10,7 @@ extension Modern.PokedexDemo {
 
     // MARK: - Modern.PokedexDemo.Move
     
-    enum PokemonType: String, CaseIterable, FieldStorableType {
+    enum PokemonType: String, CaseIterable, ImportableAttributeType, FieldStorableType {
         
         // MARK: Internal
         

@@ -79,7 +79,7 @@ public struct ObjectProxy<O: CoreStoreObject> {
         /**
          Returns the value for the specified property from the object’s private internal storage.
 
-         Accessing this property does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily to implement custom accessor methods that need direct access to the object's private storage.
+         This method is used primarily to implement custom accessor methods that need direct access to the object's private storage.
          */
         public var primitiveValue: V? {
 
@@ -95,8 +95,6 @@ public struct ObjectProxy<O: CoreStoreObject> {
 
         /**
          Returns the value for the property identified by a given key.
-
-         Accessing this property triggers the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`).
          */
         public var value: V {
 
@@ -147,6 +145,11 @@ public struct ObjectProxy<O: CoreStoreObject> {
             }
             self.setPrimitiveValue = {
 
+                rawObject.willChangeValue(forKey: keyPathString)
+                defer {
+                    
+                    rawObject.didChangeValue(forKey: keyPathString)
+                }
                 rawObject.setPrimitiveValue(
                     $0.cs_toFieldStoredNativeType(),
                     forKey: keyPathString
@@ -179,7 +182,7 @@ public struct ObjectProxy<O: CoreStoreObject> {
                 }
             }
             self.setPrimitiveValue = {
-
+                
                 rawObject.setPrimitiveValue(
                     $0,
                     forKey: keyPathString
@@ -216,7 +219,12 @@ public struct ObjectProxy<O: CoreStoreObject> {
                 }
             }
             self.setPrimitiveValue = {
+                
+                rawObject.willChangeValue(forKey: keyPathString)
+                defer {
 
+                    rawObject.didChangeValue(forKey: keyPathString)
+                }
                 rawObject.setPrimitiveValue(
                     $0,
                     forKey: keyPathString

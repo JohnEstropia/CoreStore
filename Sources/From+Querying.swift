@@ -814,6 +814,39 @@ extension QueryChainBuilder where O: CoreStoreObject {
      - parameter keyPath: a key path to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
+    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) -> QueryChainBuilder<O, R> {
+        
+        return self.groupBy(GroupBy<O>(keyPath))
+    }
+    
+    /**
+     Adds a `GroupBy` clause to the `QueryChainBuilder`
+     
+     - parameter keyPath: a key path to group the query results with
+     - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
+     */
+    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) -> QueryChainBuilder<O, R> {
+        
+        return self.groupBy(GroupBy<O>(keyPath))
+    }
+    
+    /**
+     Adds a `GroupBy` clause to the `QueryChainBuilder`
+     
+     - parameter keyPath: a key path to group the query results with
+     - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
+     */
+    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) -> QueryChainBuilder<O, R> {
+        
+        return self.groupBy(GroupBy<O>(keyPath))
+    }
+    
+    /**
+     Adds a `GroupBy` clause to the `QueryChainBuilder`
+     
+     - parameter keyPath: a key path to group the query results with
+     - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
+     */
     public func groupBy<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) -> QueryChainBuilder<O, R> {
         
         return self.groupBy(GroupBy<O>(keyPath))

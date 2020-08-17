@@ -419,6 +419,94 @@ import Combine
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension ListPublisher: ObservableObject {}
 
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+extension ListPublisher: Publisher {
+    
+    // MARK: Publisher
+    
+    public typealias Output = ListSnapshot<O>
+    public typealias Failure = Never
+
+    public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
+        
+        subscriber.receive(
+            subscription: ListSnapshotSubscription(
+                publisher: self,
+                subscriber: subscriber
+            )
+        )
+    }
+    
+    
+    // MARK: - ListSnapshotSubscriber
+    
+    fileprivate final class ListSnapshotSubscriber: Subscriber {
+        
+        // MARK: Subscriber
+        
+        typealias Failure = Never
+        
+        func receive(subscription: Subscription) {
+            
+            subscription.request(.unlimited)
+        }
+        
+        func receive(_ input: Output) -> Subscribers.Demand {
+            
+            return .unlimited
+        }
+        
+        func receive(completion: Subscribers.Completion<Failure>) {}
+    }
+    
+    
+    // MARK: - ListSnapshotSubscription
+    
+    fileprivate final class ListSnapshotSubscription<S: Subscriber>: Subscription where S.Input == Output, S.Failure == Never {
+        
+        // MARK: FilePrivate
+        
+        init(publisher: ListPublisher<O>, subscriber: S) {
+            
+            self.publisher = publisher
+            self.subscriber = subscriber
+        }
+        
+        
+        // MARK: Subscription
+        
+        func request(_ demand: Subscribers.Demand) {
+            
+            guard demand > 0 else {
+                
+                return
+            }
+            self.publisher.addObserver(self) { [weak self] (publisher) in
+                
+                guard let self = self, let subscriber = self.subscriber else {
+                    
+                    return
+                }
+                _ = subscriber.receive(publisher.snapshot)
+            }
+        }
+        
+        
+        // MARK: Cancellable
+        
+        func cancel() {
+            self.publisher.removeObserver(self)
+            self.subscriber = nil
+        }
+        
+        
+        // MARK: Private
+        
+        private let publisher: ListPublisher<O>
+        private var subscriber: S?
+    }
+}
+
 #endif
 
 // MARK: - ListPublisher

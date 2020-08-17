@@ -129,6 +129,36 @@ extension GroupBy where O: CoreStoreObject {
      
      - parameter keyPath: a key path to group results with
      */
+    public init<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
         
         self.init([O.meta[keyPath: keyPath].keyPath])
