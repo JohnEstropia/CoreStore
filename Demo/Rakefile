@@ -1,0 +1,42 @@
+# coding: utf-8
+
+task :format do
+    
+    require 'xcodeproj'
+    require 'fileutils'
+
+    project_path = 'Demo.xcodeproj'
+    ignore_targets = []
+
+    # http://www.rubydoc.info/github/CocoaPods/Xcodeproj
+    project = Xcodeproj::Project.open(project_path)
+    validTargets = project.targets.select { |target| target.respond_to?(:product_type) }
+
+    validTargets.each do |target|
+        if ignore_targets.include?(target.display_name)
+            next
+        end
+        case target.product_type
+
+        when 'com.apple.product-type.application', 'com.apple.product-type.framework'
+            target.source_build_phase.files.sort! do |f1, f2|
+                result = (f1.display_name.count "+") <=> (f2.display_name.count "+")
+                if result != 0
+                    next -result
+                end
+                result = (f1.display_name.count "-") <=> (f2.display_name.count "-")
+                if result != 0
+                    next -result
+                end
+                result = (f1.display_name.count ".") <=> (f2.display_name.count ".")
+                if result != 0
+                    next result
+                end
+                (f1.display_name <=> f2.display_name)
+            end
+
+        end
+    end
+
+    project.save()
+end

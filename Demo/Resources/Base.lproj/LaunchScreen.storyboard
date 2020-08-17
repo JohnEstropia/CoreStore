@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController interfaceStyle="dark" id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Bp2-lt-3DL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Copyright © 2020 John Rommel Estropia. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Yn3-8H-uzI">
+                                <rect key="frame" x="20" y="827" width="374" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" name="foreground"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="coreStoreIcon" translatesAutoresizingMaskIntoConstraints="NO" id="IrK-8p-pit">
+                                <rect key="frame" x="37" y="143.5" width="340" height="340"/>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CoreStore" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="8Vu-0U-3hd">
+                                <rect key="frame" x="20" y="503.5" width="374" height="57.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="50"/>
+                                <color key="textColor" name="foreground"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="Yn3-8H-uzI" firstAttribute="leading" secondItem="Bp2-lt-3DL" secondAttribute="leading" constant="20" symbolic="YES" id="7Dq-xP-k2v"/>
+                            <constraint firstItem="IrK-8p-pit" firstAttribute="centerY" secondItem="Bp2-lt-3DL" secondAttribute="centerY" multiplier="0.7" id="HUz-XL-l27"/>
+                            <constraint firstItem="IrK-8p-pit" firstAttribute="centerX" secondItem="Bp2-lt-3DL" secondAttribute="centerX" id="TSf-yM-hl1"/>
+                            <constraint firstAttribute="centerX" secondItem="8Vu-0U-3hd" secondAttribute="centerX" id="TX2-HT-cKs"/>
+                            <constraint firstItem="Z3i-EZ-UGs" firstAttribute="bottom" secondItem="Yn3-8H-uzI" secondAttribute="bottom" constant="14" id="hAb-SJ-Qnm"/>
+                            <constraint firstAttribute="centerX" secondItem="Yn3-8H-uzI" secondAttribute="centerX" id="pNf-eo-RXZ"/>
+                            <constraint firstItem="8Vu-0U-3hd" firstAttribute="leading" secondItem="Bp2-lt-3DL" secondAttribute="leading" constant="20" symbolic="YES" id="pef-yD-C5e"/>
+                            <constraint firstItem="8Vu-0U-3hd" firstAttribute="top" secondItem="IrK-8p-pit" secondAttribute="bottom" constant="20" id="xQP-tq-hNL"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Z3i-EZ-UGs"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="coreStoreIcon" width="340" height="340"/>
+        <namedColor name="background">
+            <color red="0.15700000524520874" green="0.2199999988079071" blue="0.29399999976158142" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="foreground">
+            <color red="0.90600001811981201" green="0.92500001192092896" blue="0.92900002002716064" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

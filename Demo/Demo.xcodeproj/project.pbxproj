@@ -1,0 +1,698 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911C24E5429200E7E8BD /* AppDelegate.swift */; };
+		B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */; };
+		B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3912024E5429200E7E8BD /* Menu.MainView.swift */; };
+		B5A3912324E5429300E7E8BD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A3912224E5429300E7E8BD /* Images.xcassets */; };
+		B5A3912624E5429300E7E8BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A3912524E5429300E7E8BD /* Preview Assets.xcassets */; };
+		B5A3912924E5429300E7E8BD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5A3912724E5429300E7E8BD /* LaunchScreen.storyboard */; };
+		B5A3913424E6170500E7E8BD /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3913324E6170500E7E8BD /* Menu.swift */; };
+		B5A3915324E6537F00E7E8BD /* Menu.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915224E6537F00E7E8BD /* Menu.ItemView.swift */; };
+		B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915824E685EC00E7E8BD /* Classic.swift */; };
+		B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915A24E685FE00E7E8BD /* Modern.swift */; };
+		B5A3915E24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */; };
+		B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */; };
+		B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */; };
+		B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */; };
+		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5A3916D24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916824E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3916E24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916824E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5A3916F24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916924E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3917024E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916924E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5A3917124E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916A24E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3917224E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916A24E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917424E6990200E7E8BD /* MapKit.framework */; };
+		B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917624E6990700E7E8BD /* CoreLocation.framework */; };
+		B5A3917924E6991600E7E8BD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917824E6991600E7E8BD /* SwiftUI.framework */; };
+		B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917B24E6A76C00E7E8BD /* LazyView.swift */; };
+		B5A3917E24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */; };
+		B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917F24E787D900E7E8BD /* InstructionsView.swift */; };
+		B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */; };
+		B5A3918624E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918524E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift */; };
+		B5A3918824E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */; };
+		B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */; };
+		B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */; };
+		B5A3918F24E7E06500E7E8BD /* Modern.ColorsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */; };
+		B5A3919224E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919124E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift */; };
+		B5A3919424E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */; };
+		B5A3919624E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */; };
+		B5A3919824E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */; };
+		B5A3919A24E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */; };
+		B5A3919E24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */; };
+		B5A391A024E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */; };
+		B5A391A224E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */; };
+		B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */; };
+		B5A391A624E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */; };
+		B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */; };
+		B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */; };
+		B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */; };
+		B5A391AE24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */; };
+		B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */; };
+		B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */; };
+		B5A391B624E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */; };
+		B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */; };
+		B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */; };
+		B5A391BD24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391BC24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B5A3917324E698F900E7E8BD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
+				B5A3917224E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
+				B5A3917024E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
+				B5A3916E24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B5A3911924E5429200E7E8BD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A3911C24E5429200E7E8BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B5A3912024E5429200E7E8BD /* Menu.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.MainView.swift; sourceTree = "<group>"; };
+		B5A3912224E5429300E7E8BD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B5A3912524E5429300E7E8BD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B5A3912824E5429300E7E8BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B5A3913324E6170500E7E8BD /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		B5A3913924E62A9A00E7E8BD /* Rakefile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = Rakefile; sourceTree = SOURCE_ROOT; };
+		B5A3914124E62D3900E7E8BD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B5A3915224E6537F00E7E8BD /* Menu.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.ItemView.swift; sourceTree = "<group>"; };
+		B5A3915824E685EC00E7E8BD /* Classic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classic.swift; sourceTree = "<group>"; };
+		B5A3915A24E685FE00E7E8BD /* Modern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.swift; sourceTree = "<group>"; };
+		B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.swift; sourceTree = "<group>"; };
+		B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.MapView.swift; sourceTree = "<group>"; };
+		B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.Place.swift; sourceTree = "<group>"; };
+		B5A3916724E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A3916824E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A3916924E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A3916A24E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A3917424E6990200E7E8BD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/MapKit.framework; sourceTree = DEVELOPER_DIR; };
+		B5A3917624E6990700E7E8BD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
+		B5A3917824E6991600E7E8BD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
+		B5A3917B24E6A76C00E7E8BD /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
+		B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.Geocoder.swift; sourceTree = "<group>"; };
+		B5A3917F24E787D900E7E8BD /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
+		B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.swift; sourceTree = "<group>"; };
+		B5A3918524E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.TimeZone.swift; sourceTree = "<group>"; };
+		B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.ListView.swift; sourceTree = "<group>"; };
+		B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.ItemView.swift; sourceTree = "<group>"; };
+		B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.swift; sourceTree = "<group>"; };
+		B5A3919124E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.Palette.swift; sourceTree = "<group>"; };
+		B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.ListView.swift; sourceTree = "<group>"; };
+		B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.ItemView.swift; sourceTree = "<group>"; };
+		B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.Filter.swift; sourceTree = "<group>"; };
+		B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.DetailView.swift; sourceTree = "<group>"; };
+		B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.swift; sourceTree = "<group>"; };
+		B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.swift; sourceTree = "<group>"; };
+		B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ListViewController.swift; sourceTree = "<group>"; };
+		B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ListView.swift; sourceTree = "<group>"; };
+		B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ItemCell.swift; sourceTree = "<group>"; };
+		B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailView.swift; sourceTree = "<group>"; };
+		B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailViewController.swift; sourceTree = "<group>"; };
+		B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.swift; sourceTree = "<group>"; };
+		B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonSpecies.swift; sourceTree = "<group>"; };
+		B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Move.swift; sourceTree = "<group>"; };
+		B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonForm.swift; sourceTree = "<group>"; };
+		B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonType.swift; sourceTree = "<group>"; };
+		B5A391BC24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Ability.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B5A3911624E5429200E7E8BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */,
+				B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
+				B5A3917124E698F900E7E8BD /* CoreStore.framework in Frameworks */,
+				B5A3917924E6991600E7E8BD /* SwiftUI.framework in Frameworks */,
+				B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */,
+				B5A3916F24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
+				B5A3916D24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B5A3910E24E5424E00E7E8BD = {
+			isa = PBXGroup;
+			children = (
+				B5A3913D24E62C6C00E7E8BD /* Metadata */,
+				B5A3911B24E5429200E7E8BD /* Sources */,
+				B5A3913E24E62CB200E7E8BD /* Resources */,
+				B5A3911A24E5429200E7E8BD /* Products */,
+				B5A3916624E698F900E7E8BD /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		B5A3911A24E5429200E7E8BD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3911924E5429200E7E8BD /* Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B5A3911B24E5429200E7E8BD /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3911C24E5429200E7E8BD /* AppDelegate.swift */,
+				B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */,
+				B5A3915524E6858A00E7E8BD /* Demos */,
+				B5A3917A24E6A75F00E7E8BD /* Helpers */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		B5A3912424E5429300E7E8BD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3912524E5429300E7E8BD /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B5A3913D24E62C6C00E7E8BD /* Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3913924E62A9A00E7E8BD /* Rakefile */,
+				B5A3914124E62D3900E7E8BD /* Info.plist */,
+			);
+			name = Metadata;
+			sourceTree = "<group>";
+		};
+		B5A3913E24E62CB200E7E8BD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3912724E5429300E7E8BD /* LaunchScreen.storyboard */,
+				B5A3912224E5429300E7E8BD /* Images.xcassets */,
+				B5A3912424E5429300E7E8BD /* Preview Content */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B5A3915424E6857F00E7E8BD /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3913324E6170500E7E8BD /* Menu.swift */,
+				B5A3912024E5429200E7E8BD /* Menu.MainView.swift */,
+				B5A3915224E6537F00E7E8BD /* Menu.ItemView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		B5A3915524E6858A00E7E8BD /* Demos */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3915624E685B700E7E8BD /* Modern */,
+				B5A3915724E685D300E7E8BD /* Classic */,
+			);
+			path = Demos;
+			sourceTree = "<group>";
+		};
+		B5A3915624E685B700E7E8BD /* Modern */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3915A24E685FE00E7E8BD /* Modern.swift */,
+				B5A3915C24E6921E00E7E8BD /* PlacemarksDemo */,
+				B5A3918124E7A1EF00E7E8BD /* TimeZonesDemo */,
+				B5A3918D24E7DE7A00E7E8BD /* ColorsDemo */,
+				B5A391AF24E96AD600E7E8BD /* PokedexDemo */,
+			);
+			path = Modern;
+			sourceTree = "<group>";
+		};
+		B5A3915724E685D300E7E8BD /* Classic */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3915824E685EC00E7E8BD /* Classic.swift */,
+			);
+			path = Classic;
+			sourceTree = "<group>";
+		};
+		B5A3915C24E6921E00E7E8BD /* PlacemarksDemo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */,
+				B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */,
+				B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */,
+				B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */,
+				B5A3916324E698B300E7E8BD /* Models */,
+			);
+			path = PlacemarksDemo;
+			sourceTree = "<group>";
+		};
+		B5A3916324E698B300E7E8BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		B5A3916624E698F900E7E8BD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3917824E6991600E7E8BD /* SwiftUI.framework */,
+				B5A3917624E6990700E7E8BD /* CoreLocation.framework */,
+				B5A3917424E6990200E7E8BD /* MapKit.framework */,
+				B5A3916724E698F900E7E8BD /* CoreStore.framework */,
+				B5A3916824E698F900E7E8BD /* CoreStore.framework */,
+				B5A3916924E698F900E7E8BD /* CoreStore.framework */,
+				B5A3916A24E698F900E7E8BD /* CoreStore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5A3917A24E6A75F00E7E8BD /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3917B24E6A76C00E7E8BD /* LazyView.swift */,
+				B5A3917F24E787D900E7E8BD /* InstructionsView.swift */,
+				B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */,
+				B5A3915424E6857F00E7E8BD /* Menu */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B5A3918124E7A1EF00E7E8BD /* TimeZonesDemo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */,
+				B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */,
+				B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */,
+				B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */,
+				B5A3918424E7A53300E7E8BD /* Models */,
+			);
+			path = TimeZonesDemo;
+			sourceTree = "<group>";
+		};
+		B5A3918424E7A53300E7E8BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3918524E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		B5A3918D24E7DE7A00E7E8BD /* ColorsDemo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */,
+				B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */,
+				B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */,
+				B5A3919C24E8EE9000E7E8BD /* UIKit */,
+				B5A3919B24E8EE8100E7E8BD /* SwiftUI */,
+				B5A3919024E7E0B000E7E8BD /* Models */,
+			);
+			path = ColorsDemo;
+			sourceTree = "<group>";
+		};
+		B5A3919024E7E0B000E7E8BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3919124E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		B5A3919B24E8EE8100E7E8BD /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */,
+				B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */,
+				B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */,
+				B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */,
+			);
+			name = SwiftUI;
+			sourceTree = "<group>";
+		};
+		B5A3919C24E8EE9000E7E8BD /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */,
+				B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */,
+				B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */,
+				B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */,
+				B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */,
+				B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */,
+			);
+			name = UIKit;
+			sourceTree = "<group>";
+		};
+		B5A391AF24E96AD600E7E8BD /* PokedexDemo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */,
+				B5A391B224E96B7400E7E8BD /* Models */,
+			);
+			path = PokedexDemo;
+			sourceTree = "<group>";
+		};
+		B5A391B224E96B7400E7E8BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */,
+				B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */,
+				B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */,
+				B5A391BC24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift */,
+				B5A391B724E96E8600E7E8BD /* Attributes */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		B5A391B724E96E8600E7E8BD /* Attributes */ = {
+			isa = PBXGroup;
+			children = (
+				B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */,
+			);
+			name = Attributes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B5A3911824E5429200E7E8BD /* Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5A3912B24E5429300E7E8BD /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildPhases = (
+				B5A3911524E5429200E7E8BD /* Sources */,
+				B5A3911624E5429200E7E8BD /* Frameworks */,
+				B5A3911724E5429200E7E8BD /* Resources */,
+				B5A3917324E698F900E7E8BD /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Demo;
+			productName = Demo;
+			productReference = B5A3911924E5429200E7E8BD /* Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B5A3910F24E5424E00E7E8BD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1160;
+				LastUpgradeCheck = 1160;
+				TargetAttributes = {
+					B5A3911824E5429200E7E8BD = {
+						CreatedOnToolsVersion = 11.6;
+					};
+				};
+			};
+			buildConfigurationList = B5A3911224E5424E00E7E8BD /* Build configuration list for PBXProject "Demo" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B5A3910E24E5424E00E7E8BD;
+			productRefGroup = B5A3911A24E5429200E7E8BD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B5A3911824E5429200E7E8BD /* Demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B5A3911724E5429200E7E8BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A3912924E5429300E7E8BD /* LaunchScreen.storyboard in Resources */,
+				B5A3912624E5429300E7E8BD /* Preview Assets.xcassets in Resources */,
+				B5A3912324E5429300E7E8BD /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B5A3911524E5429200E7E8BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A3918824E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift in Sources */,
+				B5A391AE24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */,
+				B5A391A224E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */,
+				B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */,
+				B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */,
+				B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */,
+				B5A3915324E6537F00E7E8BD /* Menu.ItemView.swift in Sources */,
+				B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */,
+				B5A391A024E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift in Sources */,
+				B5A3913424E6170500E7E8BD /* Menu.swift in Sources */,
+				B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */,
+				B5A3918624E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift in Sources */,
+				B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */,
+				B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */,
+				B5A3919624E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */,
+				B5A3919A24E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */,
+				B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */,
+				B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */,
+				B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */,
+				B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */,
+				B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */,
+				B5A3919824E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift in Sources */,
+				B5A391B624E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift in Sources */,
+				B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */,
+				B5A3917E24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift in Sources */,
+				B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */,
+				B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */,
+				B5A3919224E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift in Sources */,
+				B5A3919424E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */,
+				B5A3918F24E7E06500E7E8BD /* Modern.ColorsDemo.swift in Sources */,
+				B5A3915E24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift in Sources */,
+				B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift in Sources */,
+				B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */,
+				B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */,
+				B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */,
+				B5A3919E24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift in Sources */,
+				B5A391A624E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift in Sources */,
+				B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */,
+				B5A391BD24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift in Sources */,
+				B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B5A3912724E5429300E7E8BD /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5A3912824E5429300E7E8BD /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B5A3911324E5424E00E7E8BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		B5A3911424E5424E00E7E8BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		B5A3912C24E5429300E7E8BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 2JT32EJ5BH;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B5A3912D24E5429300E7E8BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_ASSET_PATHS = "\"Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 2JT32EJ5BH;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B5A3911224E5424E00E7E8BD /* Build configuration list for PBXProject "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5A3911324E5424E00E7E8BD /* Debug */,
+				B5A3911424E5424E00E7E8BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B5A3912B24E5429300E7E8BD /* Build configuration list for PBXNativeTarget "Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5A3912C24E5429300E7E8BD /* Debug */,
+				B5A3912D24E5429300E7E8BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B5A3910F24E5424E00E7E8BD /* Project object */;
+}

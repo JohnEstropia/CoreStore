@@ -38,7 +38,7 @@ final class Palette: CoreStoreObject {
                 return colorName
             }
             let colorName: String
-            switch object.$hue.value % 360 {
+            switch object.$hue.value {
             case 0 ..< 20: colorName = "Lower Reds"
             case 20 ..< 57: colorName = "Oranges and Browns"
             case 57 ..< 90: colorName = "Yellow-Greens"
@@ -47,7 +47,8 @@ final class Palette: CoreStoreObject {
             case 197 ..< 241: colorName = "Blues"
             case 241 ..< 297: colorName = "Violets"
             case 297 ..< 331: colorName = "Magentas"
-            default: colorName = "Upper Reds"
+            case 331 ..< 360: colorName = "Upper Reds"
+            default: colorName = "<Invalid>"
             }
             field.primitiveValue = colorName
             return colorName
