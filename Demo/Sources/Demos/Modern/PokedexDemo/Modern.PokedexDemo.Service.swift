@@ -128,7 +128,9 @@ extension Modern.PokedexDemo {
 
                                     _ = try transaction.importUniqueObjects(
                                         Into<Modern.PokedexDemo.PokedexEntry>(),
-                                        sourceArray: results
+                                        sourceArray: results.enumerated().map { (index, json) in
+                                            (index: index, json: json)
+                                        }
                                     )
                                 },
                                 success: { result in

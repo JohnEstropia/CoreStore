@@ -457,7 +457,7 @@ extension DataStack {
                     
                     DispatchQueue.main.async {
                         
-                        _ = withExtendedLifetime(childProgress) { (_: Progress) -> Void in }
+                        withExtendedLifetime(childProgress) { (_: Progress) -> Void in }
                     }
                 }
             )

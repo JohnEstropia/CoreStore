@@ -32,7 +32,7 @@ extension Modern.PlacemarksDemo {
             "annotation",
             customGetter: { object, field in
                 
-                Annotation(
+                Modern.PlacemarksDemo.Place.Annotation(
                     latitude: object.$latitude.value,
                     longitude: object.$longitude.value,
                     title: object.$title.value,
@@ -47,7 +47,7 @@ extension Modern.PlacemarksDemo {
                 object.$subtitle.value = nil
             }
         )
-        var annotation: Annotation
+        var annotation: Modern.PlacemarksDemo.Place.Annotation
         
         func setRandomLocation() {
             
@@ -57,7 +57,7 @@ extension Modern.PlacemarksDemo {
             self.subtitle = nil
         }
         
-        // MARK: - Annotation
+        // MARK: - Modern.PlacemarksDemo.Place.Annotation
         
         final class Annotation: NSObject, MKAnnotation {
             

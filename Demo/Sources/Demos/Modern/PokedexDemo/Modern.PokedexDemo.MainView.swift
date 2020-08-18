@@ -32,13 +32,15 @@ extension Modern.PokedexDemo {
         // MARK: View
 
         var body: some View {
-            List() {
+            ScrollView {
                 ForEach(self.pokedexEntries.snapshot, id: \.self) { pokedexEntry in
                     LazyView {
-                        Text(pokedexEntry.snapshot?.$id ?? "")
+                        Text(pokedexEntry.snapshot?.$name ?? "")
                     }
+                    .frame(height: 100)
                 }
             }
+            .frame(minWidth: 0, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
             .overlay(
                 InstructionsView(
                     ("Random", "Sets random coordinate"),
@@ -61,6 +63,7 @@ extension Modern.PokedexDemo {
 
 #if DEBUG
 
+@available(iOS 14.0, *)
 struct _Demo_Modern_PokedexDemo_MainView_Preview: PreviewProvider {
 
     // MARK: PreviewProvider

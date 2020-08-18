@@ -779,7 +779,7 @@ public final class CoreStoreSchema: DynamicSchema {
             )
         }
 
-        _ = allFieldCoders
+        allFieldCoders
             .flatMap({ (_, values) in values })
             .reduce(
                 into: [:] as [NSValueTransformerName: Internals.AnyFieldCoder],

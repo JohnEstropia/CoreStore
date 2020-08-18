@@ -64,7 +64,7 @@ class ConvenienceTests: BaseTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = withExtendedLifetime(stack.beginUnsafe()) { (transaction: UnsafeDataTransaction) in
+            withExtendedLifetime(stack.beginUnsafe()) { (transaction: UnsafeDataTransaction) in
                 
                 let controller = transaction.createFetchedResultsController(
                     From<TestEntity1>(),
