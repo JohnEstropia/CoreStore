@@ -19,15 +19,18 @@ extension Modern.PokedexDemo {
         
         @Field.Stored("name")
         var name: String = ""
+
+        @Field.Stored("weight")
+        var weight: Int = 0
         
         @Field.Stored("pokemonType1")
         var pokemonType1: Modern.PokedexDemo.PokemonType = .normal
         
         @Field.Stored("pokemonType2")
         var pokemonType2: Modern.PokedexDemo.PokemonType?
-        
-        @Field.Relationship("species")
-        var species: Modern.PokedexDemo.PokemonSpecies?
+
+        @Field.Stored("spriteURL")
+        var spriteURL: URL?
         
         
         @Field.Stored("statHitPoints")
@@ -49,23 +52,17 @@ extension Modern.PokedexDemo {
         var statSpeed: Int = 0
         
         
-        @Field.Stored("spriteFrontURL")
-        var spriteFrontURL: URL?
-        
-        @Field.Stored("spriteBackURL")
-        var spriteBackURL: URL?
-        
-        @Field.Stored("spriteShinyFrontURL")
-        var spriteShinyFrontURL: URL?
-        
-        @Field.Stored("spriteShinyBackURL")
-        var spriteShinyBackURL: URL?
-        
-        
         @Field.Relationship("abilities", inverse: \.$learners)
         var abilities: Set<Modern.PokedexDemo.Ability>
         
         @Field.Relationship("moves", inverse: \.$learners)
         var moves: Set<Modern.PokedexDemo.Move>
+
+
+        @Field.Relationship("pokedexEntry", inverse: \.$form)
+        var pokedexEntry: Modern.PokedexDemo.PokedexEntry?
+
+        @Field.Relationship("species", inverse: \.$forms)
+        var species: Modern.PokedexDemo.PokemonSpecies?
     }
 }

@@ -22,8 +22,9 @@ extension Modern.PokedexDemo {
         
         @Field.Stored("weight")
         var weight: Int = 0
+
         
-        @Field.Relationship("forms", inverse: \.$species)
+        @Field.Relationship("forms")
         var forms: Set<Modern.PokedexDemo.PokemonForm>
     }
 }

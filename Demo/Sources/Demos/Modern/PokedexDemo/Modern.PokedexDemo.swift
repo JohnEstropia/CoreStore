@@ -23,10 +23,11 @@ extension Modern {
                 CoreStoreSchema(
                     modelVersion: "V1",
                     entities: [
-                        Entity<Modern.ColorsDemo.Palette>("Palette")
-                    ],
-                    versionLock: [
-                        "Palette": [0xbaf4eaee9353176a, 0xdd6ca918cc2b0c38, 0xd04fad8882d7cc34, 0x3e90ca38c091503f]
+                        Entity<Modern.PokedexDemo.PokedexEntry>("PokedexEntry"),
+                        Entity<Modern.PokedexDemo.PokemonSpecies>("PokemonSpecies"),
+                        Entity<Modern.PokedexDemo.PokemonForm>("PokemonForm"),
+                        Entity<Modern.PokedexDemo.Move>("Move"),
+                        Entity<Modern.PokedexDemo.Ability>("Ability")
                     ]
                 )
             )
@@ -36,31 +37,16 @@ extension Modern {
              */
             try! dataStack.addStorageAndWait(
                 SQLiteStore(
-                    fileName: "Modern.ColorsDemo.sqlite",
+                    fileName: "Modern.PokedexDemo.sqlite",
                     localStorageOptions: .recreateStoreOnModelMismatch
                 )
             )
             return dataStack
         }()
         
-        static let palettesPublisher: ListPublisher<Modern.ColorsDemo.Palette> = Modern.ColorsDemo.dataStack.publishList(
-            From<Modern.ColorsDemo.Palette>()
-                .sectionBy(\.$colorName)
-                .where(Modern.ColorsDemo.filter.whereClause())
-                .orderBy(.ascending(\.$hue))
+        static let pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry> = Modern.PokedexDemo.dataStack.publishList(
+            From<Modern.PokedexDemo.PokedexEntry>()
+                .orderBy(.ascending(\.$id))
         )
-        
-        static var filter: Modern.ColorsDemo.Filter = .all {
-            
-            didSet {
-                
-                try! Modern.ColorsDemo.palettesPublisher.refetch(
-                    From<Modern.ColorsDemo.Palette>()
-                        .sectionBy(\.$colorName)
-                        .where(self.filter.whereClause())
-                        .orderBy(.ascending(\.$hue))
-                )
-            }
-        }
     }
 }

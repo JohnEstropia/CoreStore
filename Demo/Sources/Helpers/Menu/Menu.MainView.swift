@@ -72,7 +72,9 @@ extension Menu {
                         Menu.ItemView(
                             title: "Pokedex API",
                             subtitle: "Importing JSON data from external source",
-                            destination: { EmptyView() }
+                            destination: {
+                                Modern.PokedexDemo.MainView()
+                            }
                         )
                     }
                     Section(header: Text("Classic (NSManagedObject subclasses)")) {
@@ -127,21 +129,9 @@ extension Menu {
                 }
                 .listStyle(GroupedListStyle())
                 .navigationBarTitle("CoreStore Demos")
-                Menu.DetailView()
+                Menu.PlaceholderView()
             }
             .navigationViewStyle(DoubleColumnNavigationViewStyle())
-        }
-    }
-
-    fileprivate struct DetailView: View {
-        
-        var selectedDate: Date?
-
-        var body: some View {
-            Group {
-                Text("Detail view content goes here")
-            }
-            .navigationBarTitle(Text("Detail"))
         }
     }
 }

@@ -132,7 +132,7 @@ extension Modern.ColorsDemo {
         
         private static func randomSaturation() -> Float {
             
-            return Float.random(in: 0.0 ... 1.0)
+            return Float.random(in: 0.4 ... 1.0)
         }
         
         private static func randomBrightness() -> Float {
