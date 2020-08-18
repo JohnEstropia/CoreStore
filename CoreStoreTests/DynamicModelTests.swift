@@ -55,7 +55,7 @@ class Dog: Animal {
     @Field.Stored(
         "nickname",
         dynamicInitialValue: {
-            commonNicknames[.random(in: commonNicknames.indices)]
+            commonNicknames.randomElement()!
         }
     )
     var nickname: String
@@ -148,7 +148,7 @@ class Person: CoreStoreObject {
             decode: { $0.flatMap(Job.init(data:)) ?? .unemployed }
         ),
         dynamicInitialValue: {
-            Job.allCases[.random(in: Job.allCases.indices)]
+            Job.allCases.randomElement()!
         }
     )
     var job: Job
