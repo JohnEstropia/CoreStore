@@ -32,33 +32,58 @@ extension Modern.PokedexDemo {
         // MARK: View
 
         var body: some View {
-            ZStack {
-                ScrollView {
-                    ForEach(self.pokedexEntries.snapshot.prefix(self.visibleItems), id: \.self) { pokedexEntry in
-                        LazyView {
-                            Text(pokedexEntry.snapshot?.$name ?? "")
-                        }
-                        .frame(height: 100)
-                        .frame(minWidth: 0, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                    }
-                    Button(
-                        action: {
-                            self.visibleItems = min(
-                                self.visibleItems + 50,
-                                self.pokedexEntries.snapshot.count
-                            )
-                        },
-                        label: { Text("Load more") }
-                    )
-                }
-                if self.service.isLoading {
-                    Color(.sRGB, white: 0, opacity: 0.3)
-                        .overlay(
+            let pokedexEntries = self.pokedexEntries.snapshot
+            let visibleItems = self.visibleItems
+            return ZStack {
+
+                if pokedexEntries.isEmpty {
+
+                    VStack(alignment: .center, spacing: 20) {
+                        Text("This demo needs to make a network connection to download Pokedex entries")
+                        if self.service.isLoading {
+
                             Text("Fetching Pokedex…")
-                                .foregroundColor(.white),
-                            alignment: .center
-                        )
-                        .edgesIgnoringSafeArea(.bottom)
+                        }
+                        else {
+                            
+                            Button(
+                                action: { self.service.fetchPokedexEntries() },
+                                label: {
+
+                                    Text("Download Pokedex Entries")
+                                }
+                            )
+                        }
+                    }
+                    .padding()
+                }
+                else {
+
+                    List {
+                        
+                        ForEach(0 ..< min(visibleItems, pokedexEntries.count), id: \.self) { index in
+                            LazyView {
+                                Modern.PokedexDemo.ItemView(
+                                    pokedexEntry: pokedexEntries[index],
+                                    service: self.service
+                                )
+                            }
+                            .frame(height: Modern.PokedexDemo.ItemView.preferredHeight)
+                            .frame(minWidth: 0, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        }
+                        if visibleItems < pokedexEntries.count {
+
+                            Spacer(minLength: Modern.PokedexDemo.ItemView.preferredHeight)
+                                .onAppear {
+
+                                    self.visibleItems = min(
+                                        visibleItems + 50,
+                                        pokedexEntries.count
+                                    )
+                                }
+                        }
+                    }
+                    .id(pokedexEntries)
                 }
             }
             .navigationBarTitle("Pokedex")

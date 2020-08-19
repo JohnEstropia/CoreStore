@@ -17,7 +17,7 @@ extension Modern.PokedexDemo {
 
         // MARK: Internal
 
-        private(set) var isLoading: Bool = true {
+        private(set) var isLoading: Bool = false {
             
             willSet {
                 
@@ -33,10 +33,7 @@ extension Modern.PokedexDemo {
             }
         }
 
-        init() {
-
-            self.fetchPokedexEntries()
-        }
+        init() {}
 
         static func parseJSON<Output>(_ json: Any?) throws -> Output {
 
@@ -44,6 +41,29 @@ extension Modern.PokedexDemo {
 
             case let json as Output:
                 return json
+
+            case let any:
+                throw Modern.PokedexDemo.Service.Error.parseError(
+                    expected: Output.self,
+                    actual: type(of: any)
+                )
+            }
+        }
+
+        static func parseJSON<JSONType, Output>(_ json: Any?, transformer: (JSONType) -> Output?) throws -> Output {
+
+            switch json {
+
+            case let json as JSONType:
+                let transformed = transformer(json)
+                if let json = transformed {
+
+                    return json
+                }
+                throw Modern.PokedexDemo.Service.Error.parseError(
+                    expected: Output.self,
+                    actual: type(of: transformed)
+                )
 
             case let any:
                 throw Modern.PokedexDemo.Service.Error.parseError(
@@ -96,14 +116,44 @@ extension Modern.PokedexDemo {
 
         func fetchPokemonForm(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
 
-            self.cancellable["pokedexEntry.\(pokedexEntry.$id)"] = URLSession.shared
-                .dataTaskPublisher(for: pokedexEntry.$url!)
-                .receive(on: DispatchQueue.main)
+            self.cancellable["pokemonForm.\(pokedexEntry.$id)"] = URLSession.shared
+                .dataTaskPublisher(for: pokedexEntry.$url)
                 .eraseToAnyPublisher()
                 .sink(
                     receiveCompletion: { _ in },
-                    receiveValue: { _ in
+                    receiveValue: { output in
 
+//                        do {
+//
+//                            let json: Dictionary<String, Any> = try Self.parseJSON(
+//                                try JSONSerialization.jsonObject(with: output.data, options: [])
+//                            )
+//                            let results: [Dictionary<String, Any>] = try Self.parseJSON(
+//                                json["results"]
+//                            )
+//                            Modern.PokedexDemo.dataStack.perform(
+//                                asynchronous: { transaction -> Void in
+//
+//                                    _ = try transaction.importUniqueObjects(
+//                                        Into<Modern.PokedexDemo.PokedexEntry>(),
+//                                        sourceArray: results.enumerated().map { (index, json) in
+//                                            (index: index, json: json)
+//                                        }
+//                                    )
+//                                },
+//                                success: { result in
+//
+//                                    promise(.success(result))
+//                                },
+//                                failure: { error in
+//
+//                                    promise(.failure(.saveError(error)))
+//                                }
+//                            )
+//                        }
+//                        catch {
+//
+//                        }
                     }
                 )
         }

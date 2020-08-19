@@ -43,7 +43,7 @@ extension Modern.TimeZonesDemo {
 
 #if DEBUG
 
-struct _Demo_Modern_TimeZone_ItemView_Preview: PreviewProvider {
+struct _Demo_Modern_TimeZonesDemo_ItemView_Preview: PreviewProvider {
     
     // MARK: PreviewProvider
     

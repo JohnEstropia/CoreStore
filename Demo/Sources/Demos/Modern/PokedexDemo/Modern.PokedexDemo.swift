@@ -46,7 +46,7 @@ extension Modern {
         
         static let pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry> = Modern.PokedexDemo.dataStack.publishList(
             From<Modern.PokedexDemo.PokedexEntry>()
-                .orderBy(.ascending(\.$id))
+                .orderBy(.ascending(\.$index))
         )
     }
 }
