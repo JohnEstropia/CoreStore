@@ -32,22 +32,52 @@ extension Modern.PokedexDemo {
         var body: some View {
 
             let pokedexEntry = self.pokedexEntry.snapshot
-            let form = pokedexEntry?.$form
-            let placeholderColor = Color.init(.sRGB, white: 0.95, opacity: 1)
+            let pokemonForm = pokedexEntry?.$pokemonForm?.snapshot
+            let pokemonDisplay = pokemonForm?.$pokemonDisplay?.snapshot
+            
             return HStack(spacing: 10) {
-                placeholderColor
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(10)
+                
+                LazyView {
+                    
+                    NetworkImageView(url: pokemonDisplay?.$spriteURL)
+                        .frame(width: 70, height: 70)
+                        .id(pokemonDisplay)
+                }
+                ZStack {
+                    
+                    if let pokemonForm = pokemonForm {
 
-                Text(form?.$name ?? pokedexEntry?.$id ?? "")
-                    .foregroundColor(form == nil ? placeholderColor : .init(.darkText))
-                    .fontWeight(form == nil ? .heavy : .regular)
-                    .frame(maxWidth: .infinity)
+                        VStack(alignment: .leading) {
+                            
+                            HStack {
+                                Text(pokemonDisplay?.$displayName ?? pokemonForm.$name)
+                                Spacer()
+                            }
+                            HStack {
+                                self.view(for: pokemonForm.$pokemonType1)
+                                if let pokemonType2 = pokemonForm.$pokemonType2 {
+                                    
+                                    self.view(for: pokemonType2)
+                                }
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                    }
+                    else {
+
+                        Text(pokedexEntry?.$id ?? "")
+                            .foregroundColor(Color(UIColor.placeholderText))
+                            .fontWeight(.heavy)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(maxWidth: .infinity)
             }
             .padding()
             .onAppear {
 
-                if let pokedexEntry = pokedexEntry, form == nil {
+                if let pokedexEntry = pokedexEntry {
 
                     self.service.fetchPokemonForm(for: pokedexEntry)
                 }
@@ -61,6 +91,19 @@ extension Modern.PokedexDemo {
         private var pokedexEntry: ObjectPublisher<Modern.PokedexDemo.PokedexEntry>
 
         private let service: Modern.PokedexDemo.Service
+        
+        private func view(for pokemonType: Modern.PokedexDemo.PokemonType) -> some View {
+            ZStack {
+                Color(pokemonType.color)
+                    .cornerRadius(5)
+                Text(pokemonType.rawValue)
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+            }
+        }
     }
 }
 
@@ -82,7 +125,7 @@ struct _Demo_Modern_PokedexDemo_ItemView_Preview: PreviewProvider {
                 }
                 let pokedexEntry = transaction.create(Into<Modern.PokedexDemo.PokedexEntry>())
                 pokedexEntry.id = "bulbasaur"
-                pokedexEntry.url = URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!
+                pokedexEntry.pokemonFormURL = URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!
             }
         )
 

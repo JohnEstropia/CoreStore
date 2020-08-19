@@ -83,7 +83,6 @@ extension Modern.PokedexDemo {
                                 }
                         }
                     }
-                    .id(pokedexEntries)
                 }
             }
             .navigationBarTitle("Pokedex")

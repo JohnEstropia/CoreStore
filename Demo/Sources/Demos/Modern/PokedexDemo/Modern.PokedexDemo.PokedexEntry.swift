@@ -21,14 +21,20 @@ extension Modern.PokedexDemo {
         var id: String = ""
 
         @Field.Stored(
-            "url",
+            "pokemonFormURL",
             dynamicInitialValue: { URL(string: "data:application/json,%7B%7D")! }
         )
-        var url: URL
+        var pokemonFormURL: URL
+        
+        @Field.Stored(
+            "updateHash",
+            dynamicInitialValue: { UUID() }
+        )
+        var updateHash: UUID
 
         
-        @Field.Relationship("form")
-        var form: Modern.PokedexDemo.PokemonForm?
+        @Field.Relationship("pokemonForm")
+        var pokemonForm: Modern.PokedexDemo.PokemonForm?
 
 
         // MARK: ImportableObject
@@ -48,7 +54,7 @@ extension Modern.PokedexDemo {
             set { self.id = newValue }
         }
 
-        static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> String? {
+        static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType? {
 
             let json = source.json
             return try Modern.PokedexDemo.Service.parseJSON(json["name"])
@@ -58,7 +64,7 @@ extension Modern.PokedexDemo {
 
             let json = source.json
             self.index = source.index
-            self.url = try Modern.PokedexDemo.Service.parseJSON(json["url"], transformer: URL.init(string:))
+            self.pokemonFormURL = try Modern.PokedexDemo.Service.parseJSON(json["url"], transformer: URL.init(string:))
         }
     }
 }

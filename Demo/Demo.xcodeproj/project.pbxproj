@@ -12,6 +12,7 @@
 		B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */; };
 		B531EFED24EB7453005F247D /* Modern.PokedexDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */; };
 		B54269C624ED190C00A66C23 /* Modern.PokedexDemo.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54269C524ED190C00A66C23 /* Modern.PokedexDemo.ItemView.swift */; };
+		B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E524ED6B98001134A1 /* NetworkImageView.swift */; };
 		B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911C24E5429200E7E8BD /* AppDelegate.swift */; };
 		B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */; };
 		B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3912024E5429200E7E8BD /* Menu.MainView.swift */; };
@@ -61,7 +62,7 @@
 		B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */; };
 		B5A391AE24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */; };
 		B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */; };
-		B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */; };
+		B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */; };
 		B5A391B624E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */; };
 		B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */; };
 		B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */; };
@@ -91,6 +92,7 @@
 		B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Service.swift; sourceTree = "<group>"; };
 		B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.MainView.swift; sourceTree = "<group>"; };
 		B54269C524ED190C00A66C23 /* Modern.PokedexDemo.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ItemView.swift; sourceTree = "<group>"; };
+		B566C8E524ED6B98001134A1 /* NetworkImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImageView.swift; sourceTree = "<group>"; };
 		B5A3911924E5429200E7E8BD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A3911C24E5429200E7E8BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -139,7 +141,7 @@
 		B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailView.swift; sourceTree = "<group>"; };
 		B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailViewController.swift; sourceTree = "<group>"; };
 		B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.swift; sourceTree = "<group>"; };
-		B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonSpecies.swift; sourceTree = "<group>"; };
+		B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonDisplay.swift; sourceTree = "<group>"; };
 		B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Move.swift; sourceTree = "<group>"; };
 		B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonForm.swift; sourceTree = "<group>"; };
 		B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonType.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			children = (
 				B5A3917B24E6A76C00E7E8BD /* LazyView.swift */,
 				B5A3917F24E787D900E7E8BD /* InstructionsView.swift */,
+				B566C8E524ED6B98001134A1 /* NetworkImageView.swift */,
 				B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */,
 				B5A3915424E6857F00E7E8BD /* Menu */,
 			);
@@ -387,8 +390,8 @@
 			isa = PBXGroup;
 			children = (
 				B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */,
-				B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift */,
 				B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */,
+				B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */,
 				B5A391B524E96C5500E7E8BD /* Modern.PokedexDemo.Move.swift */,
 				B5A391BC24E977E500E7E8BD /* Modern.PokedexDemo.Ability.swift */,
 				B5A391B724E96E8600E7E8BD /* Attributes */,
@@ -490,6 +493,7 @@
 				B5A3915E24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift in Sources */,
 				B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */,
 				B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */,
+				B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */,
 				B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */,
 				B5A3919824E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift in Sources */,
 				B5A391A624E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift in Sources */,
@@ -505,7 +509,7 @@
 				B54269C624ED190C00A66C23 /* Modern.PokedexDemo.ItemView.swift in Sources */,
 				B531EFE924EB5A53005F247D /* Modern.PokedexDemo.PokedexEntry.swift in Sources */,
 				B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */,
-				B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonSpecies.swift in Sources */,
+				B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift in Sources */,
 				B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */,
 				B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */,
 				B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */,

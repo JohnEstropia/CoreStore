@@ -32,12 +32,7 @@ extension Modern.PlacemarksDemo {
             "annotation",
             customGetter: { object, field in
                 
-                Modern.PlacemarksDemo.Place.Annotation(
-                    latitude: object.$latitude.value,
-                    longitude: object.$longitude.value,
-                    title: object.$title.value,
-                    subtitle: object.$subtitle.value
-                )
+                Modern.PlacemarksDemo.Place.Annotation(object)
             },
             customSetter: { object, field, newValue in
                 
@@ -114,6 +109,16 @@ extension Modern.PlacemarksDemo {
                 self.coordinate = .init(latitude: latitude, longitude: longitude)
                 self.title = title
                 self.subtitle = subtitle
+            }
+            
+            fileprivate init(_ object: ObjectProxy<Modern.PlacemarksDemo.Place>) {
+                
+                self.coordinate = .init(
+                    latitude: object.$latitude.value,
+                    longitude: object.$longitude.value
+                )
+                self.title = object.$title.value
+                self.subtitle = object.$subtitle.value
             }
         }
     }

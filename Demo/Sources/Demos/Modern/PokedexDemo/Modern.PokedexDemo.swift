@@ -24,8 +24,8 @@ extension Modern {
                     modelVersion: "V1",
                     entities: [
                         Entity<Modern.PokedexDemo.PokedexEntry>("PokedexEntry"),
-                        Entity<Modern.PokedexDemo.PokemonSpecies>("PokemonSpecies"),
                         Entity<Modern.PokedexDemo.PokemonForm>("PokemonForm"),
+                        Entity<Modern.PokedexDemo.PokemonDisplay>("PokemonDisplay"),
                         Entity<Modern.PokedexDemo.Move>("Move"),
                         Entity<Modern.PokedexDemo.Ability>("Ability")
                     ]
