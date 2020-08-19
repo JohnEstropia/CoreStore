@@ -13,15 +13,25 @@ extension Modern.PokedexDemo {
 
     // MARK: - Modern.PokedexDemo.Service
 
-    final class Service {
+    final class Service: ObservableObject {
 
         // MARK: Internal
 
-        @Published
-        var isLoading: Bool = true
-
-        @Published
-        var lastError: (error: Modern.PokedexDemo.Service.Error, retry: () -> Void)?
+        private(set) var isLoading: Bool = true {
+            
+            willSet {
+                
+                self.objectWillChange.send()
+            }
+        }
+        
+        private(set) var lastError: (error: Modern.PokedexDemo.Service.Error, retry: () -> Void)? {
+            
+            willSet {
+                
+                self.objectWillChange.send()
+            }
+        }
 
         init() {
 
@@ -49,7 +59,6 @@ extension Modern.PokedexDemo {
                 .handleEvents(
                     receiveSubscription: { [weak self] _ in
 
-                        print("Fetching Pokedex Entries")
                         guard let self = self else {
 
                             return
@@ -61,7 +70,6 @@ extension Modern.PokedexDemo {
                 .sink(
                     receiveCompletion: { [weak self] completion in
 
-                        print("Result (Fetching Pokedex Entries): \(completion)")
                         guard let self = self else {
 
                             return

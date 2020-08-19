@@ -69,7 +69,7 @@ extension FieldContainer {
          */
         public init(
             wrappedValue initial: @autoclosure @escaping () -> V,
-            _ keyPath: KeyPathString,
+            _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
@@ -370,7 +370,7 @@ extension FieldContainer.Stored where V: FieldOptionalType {
      */
     public init(
         wrappedValue initial: @autoclosure @escaping () -> V = nil,
-        _ keyPath: KeyPathString,
+        _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,

@@ -76,10 +76,10 @@ extension FieldContainer {
          */
         public init<Coder: FieldCoderType>(
             wrappedValue initial: @autoclosure @escaping () -> V,
-            _ keyPath: KeyPathString,
+            _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-            coder fieldCoderType: Coder.Type,
+            coder fieldCoderType: Coder.Type = { fatalError("'coder' argument required (SR-13069 workaround)") }(),
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
             customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
@@ -150,10 +150,10 @@ extension FieldContainer {
          */
         public init(
             wrappedValue initial: @autoclosure @escaping () -> V,
-            _ keyPath: KeyPathString,
+            _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-            coder: (encode: (V) -> Data?, decode: (Data?) -> V),
+            coder: (encode: (V) -> Data?, decode: (Data?) -> V) = { fatalError("'coder' argument required (SR-13069 workaround)") }(),
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
             customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
@@ -478,10 +478,10 @@ extension FieldContainer.Coded where V: FieldOptionalType {
      */
     public init<Coder: FieldCoderType>(
         wrappedValue initial: @autoclosure @escaping () -> V = nil,
-        _ keyPath: KeyPathString,
+        _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-        coder: Coder.Type,
+        coder: Coder.Type = { fatalError("'coder' argument required (SR-13069 workaround)") }(),
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
         customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
@@ -552,10 +552,10 @@ extension FieldContainer.Coded where V: FieldOptionalType {
      */
     public init(
         wrappedValue initial: @autoclosure @escaping () -> V = nil,
-        _ keyPath: KeyPathString,
+        _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-        coder: (encode: (V) -> Data?, decode: (Data?) -> V),
+        coder: (encode: (V) -> Data?, decode: (Data?) -> V) = { fatalError("'coder' argument required (SR-13069 workaround)") }(),
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
         customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
@@ -625,7 +625,7 @@ extension FieldContainer.Coded where V: DefaultNSSecureCodable {
      */
     public init(
         wrappedValue initial: @autoclosure @escaping () -> V,
-        _ keyPath: KeyPathString,
+        _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
@@ -696,7 +696,7 @@ extension FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSS
      */
     public init(
         wrappedValue initial: @autoclosure @escaping () -> V = nil,
-        _ keyPath: KeyPathString,
+        _ keyPath: KeyPathString = { fatalError("'keyPath' argument required (SR-13069 workaround)") }(),
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
