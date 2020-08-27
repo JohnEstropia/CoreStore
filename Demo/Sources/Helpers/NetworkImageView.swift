@@ -20,20 +20,25 @@ struct NetworkImageView: View {
     // MARK: View
     
     var body: some View {
+        
         if let image = self.imageDownloader.image {
-            
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+
+            return AnyView(
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            )
         }
         else {
-            
-            Circle()
-                .colorMultiply(Color(UIColor.placeholderText))
-                .onAppear {
-                
-                    self.imageDownloader.fetchImage()
-                }
+
+            return AnyView(
+                Circle()
+                    .colorMultiply(Color(UIColor.placeholderText))
+                    .onAppear {
+
+                        self.imageDownloader.fetchImage()
+                    }
+            )
         }
     }
     

@@ -44,33 +44,35 @@ extension Modern.PokedexDemo {
                         .id(pokemonDisplay)
                 }
                 ZStack {
-                    
-                    if let pokemonForm = pokemonForm {
+                    { () -> AnyView in
+                        if let pokemonForm = pokemonForm {
 
-                        VStack(alignment: .leading) {
-                            
-                            HStack {
-                                Text(pokemonDisplay?.$displayName ?? pokemonForm.$name)
-                                Spacer()
-                            }
-                            HStack {
-                                self.view(for: pokemonForm.$pokemonType1)
-                                if let pokemonType2 = pokemonForm.$pokemonType2 {
-                                    
-                                    self.view(for: pokemonType2)
+                            return AnyView(
+                                VStack(alignment: .leading) {
+
+                                    HStack {
+                                        Text(pokemonDisplay?.$displayName ?? pokemonForm.$name)
+                                        Spacer()
+                                    }
+                                    HStack {
+                                        self.view(for: pokemonForm.$pokemonType1)
+                                        pokemonForm.$pokemonType2.map(self.view(for:))
+                                        Spacer()
+                                    }
+                                    Spacer()
                                 }
-                                Spacer()
-                            }
-                            Spacer()
+                            )
                         }
-                    }
-                    else {
+                        else {
 
-                        Text(pokedexEntry?.$id ?? "")
-                            .foregroundColor(Color(UIColor.placeholderText))
-                            .fontWeight(.heavy)
-                            .frame(maxWidth: .infinity)
-                    }
+                            return AnyView(
+                                Text(pokedexEntry?.$id ?? "")
+                                    .foregroundColor(Color(UIColor.placeholderText))
+                                    .fontWeight(.heavy)
+                                    .frame(maxWidth: .infinity)
+                            )
+                        }
+                    }()
                 }
                 .frame(maxWidth: .infinity)
             }
