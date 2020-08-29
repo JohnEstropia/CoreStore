@@ -15,7 +15,7 @@ extension Modern.ColorsDemo.UIKit {
     final class ListViewController: UITableViewController {
         
         /**
-         ⭐️ Sample 1: Setting up a `DiffableDataSource.TableViewAdapter` that will manage tableView snapshot updates automatically. We can use the built-in `DiffableDataSource.TableViewAdapter` type directly, but in our case we want to enabled `UITableView` cell deletions so we create a custom subclass `DeletionEnabledDataSource` (see declatation below).
+         ⭐️ Sample 1: Setting up a `DiffableDataSource.TableViewAdapter` that will manage tableView snapshot updates automatically. We can use the built-in `DiffableDataSource.TableViewAdapter` type directly, but in our case we want to enabled `UITableView` cell deletions so we create a custom subclass `DeletionEnabledDataSource` (see declaration below).
          */
         private lazy var dataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> = DeletionEnabledDataSource(
             tableView: self.tableView,

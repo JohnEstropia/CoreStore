@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		B531EFE724EA762D005F247D /* Menu.PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */; };
-		B531EFE924EB5A53005F247D /* Modern.PokedexDemo.PokedexEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */; };
-		B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */; };
+		B531EFE924EB5A53005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE824EB5A52005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift */; };
+		B531EFEB24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift */; };
 		B531EFED24EB7453005F247D /* Modern.PokedexDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */; };
 		B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E524ED6B98001134A1 /* NetworkImageView.swift */; };
 		B566C8E824F9D406001134A1 /* Modern.PokedexDemo.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E724F9D406001134A1 /* Modern.PokedexDemo.ListView.swift */; };
 		B566C8EA24F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E924F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift */; };
 		B566C8EC24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8EB24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift */; };
-		B566C8EE24FA1EA3001134A1 /* Modern.PokedexDemo.PokemonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.PokemonDetails.swift */; };
+		B566C8EE24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift */; };
 		B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911C24E5429200E7E8BD /* AppDelegate.swift */; };
 		B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */; };
 		B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3912024E5429200E7E8BD /* Menu.MainView.swift */; };
@@ -28,7 +28,7 @@
 		B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915A24E685FE00E7E8BD /* Modern.swift */; };
 		B5A3915E24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */; };
 		B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */; };
-		B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */; };
+		B5A3916224E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916124E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift */; };
 		B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */; };
 		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; };
 		B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -46,28 +46,28 @@
 		B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917F24E787D900E7E8BD /* InstructionsView.swift */; };
 		B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */; };
 		B5A3918624E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918524E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift */; };
-		B5A3918824E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */; };
+		B5A3918824E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918724E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift */; };
 		B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */; };
 		B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */; };
 		B5A3918F24E7E06500E7E8BD /* Modern.ColorsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */; };
 		B5A3919224E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919124E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift */; };
-		B5A3919424E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */; };
-		B5A3919624E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */; };
+		B5A3919424E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919324E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift */; };
+		B5A3919624E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919524E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift */; };
 		B5A3919824E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */; };
-		B5A3919A24E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */; };
+		B5A3919A24E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919924E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift */; };
 		B5A3919E24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */; };
 		B5A391A024E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */; };
-		B5A391A224E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */; };
+		B5A391A224E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A124E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift */; };
 		B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */; };
-		B5A391A624E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */; };
+		B5A391A624E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A524E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift */; };
 		B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */; };
 		B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */; };
 		B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */; };
-		B5A391AE24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */; };
+		B5A391AE24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AD24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift */; };
 		B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */; };
-		B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */; };
-		B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */; };
-		B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */; };
+		B5A391B424E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B324E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift */; };
+		B5A391B924E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391B824E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift */; };
+		B5A391BB24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391BA24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift */; };
 		B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,14 +90,14 @@
 
 /* Begin PBXFileReference section */
 		B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.PlaceholderView.swift; sourceTree = "<group>"; };
-		B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokedexEntry.swift; sourceTree = "<group>"; };
-		B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Service.swift; sourceTree = "<group>"; };
+		B531EFE824EB5A52005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.PokedexEntry.swift"; sourceTree = "<group>"; };
+		B531EFEA24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.Service.swift"; sourceTree = "<group>"; };
 		B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.MainView.swift; sourceTree = "<group>"; };
 		B566C8E524ED6B98001134A1 /* NetworkImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImageView.swift; sourceTree = "<group>"; };
 		B566C8E724F9D406001134A1 /* Modern.PokedexDemo.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ListView.swift; sourceTree = "<group>"; };
 		B566C8E924F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ListViewController.swift; sourceTree = "<group>"; };
 		B566C8EB24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ItemCell.swift; sourceTree = "<group>"; };
-		B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.PokemonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonDetails.swift; sourceTree = "<group>"; };
+		B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Details.swift; sourceTree = "<group>"; };
 		B5A3911924E5429200E7E8BD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A3911C24E5429200E7E8BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -113,7 +113,7 @@
 		B5A3915A24E685FE00E7E8BD /* Modern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.swift; sourceTree = "<group>"; };
 		B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.swift; sourceTree = "<group>"; };
 		B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.MapView.swift; sourceTree = "<group>"; };
-		B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A3916124E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PlacemarksDemo.MainView.swift"; sourceTree = "<group>"; };
 		B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.Place.swift; sourceTree = "<group>"; };
 		B5A3916724E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A3916824E698F900E7E8BD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,28 +127,28 @@
 		B5A3917F24E787D900E7E8BD /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 		B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.swift; sourceTree = "<group>"; };
 		B5A3918524E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.TimeZone.swift; sourceTree = "<group>"; };
-		B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A3918724E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.TimeZonesDemo.MainView.swift"; sourceTree = "<group>"; };
 		B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.ListView.swift; sourceTree = "<group>"; };
 		B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.ItemView.swift; sourceTree = "<group>"; };
 		B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.swift; sourceTree = "<group>"; };
 		B5A3919124E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.Palette.swift; sourceTree = "<group>"; };
-		B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.ListView.swift; sourceTree = "<group>"; };
-		B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.ItemView.swift; sourceTree = "<group>"; };
+		B5A3919324E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.SwiftUI.ListView.swift"; sourceTree = "<group>"; };
+		B5A3919524E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift"; sourceTree = "<group>"; };
 		B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.Filter.swift; sourceTree = "<group>"; };
-		B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.DetailView.swift; sourceTree = "<group>"; };
+		B5A3919924E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift"; sourceTree = "<group>"; };
 		B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.SwiftUI.swift; sourceTree = "<group>"; };
 		B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.swift; sourceTree = "<group>"; };
-		B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ListViewController.swift; sourceTree = "<group>"; };
+		B5A391A124E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.UIKit.ListViewController.swift"; sourceTree = "<group>"; };
 		B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ListView.swift; sourceTree = "<group>"; };
-		B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A391A524E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.MainView.swift"; sourceTree = "<group>"; };
 		B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ItemCell.swift; sourceTree = "<group>"; };
 		B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailView.swift; sourceTree = "<group>"; };
-		B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailViewController.swift; sourceTree = "<group>"; };
+		B5A391AD24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift"; sourceTree = "<group>"; };
 		B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.swift; sourceTree = "<group>"; };
-		B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonDisplay.swift; sourceTree = "<group>"; };
-		B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonForm.swift; sourceTree = "<group>"; };
-		B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokemonType.swift; sourceTree = "<group>"; };
+		B5A391B324E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.Form.swift"; sourceTree = "<group>"; };
+		B5A391B824E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.Species.swift"; sourceTree = "<group>"; };
+		B5A391BA24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.PokemonType.swift"; sourceTree = "<group>"; };
 		B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -271,7 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				B5A3915D24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift */,
-				B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */,
+				B5A3916124E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift */,
 				B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */,
 				B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */,
 				B5A3916324E698B300E7E8BD /* Models */,
@@ -318,7 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */,
-				B5A3918724E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift */,
+				B5A3918724E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift */,
 				B5A3918924E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift */,
 				B5A3918B24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift */,
 				B5A3918424E7A53300E7E8BD /* Models */,
@@ -339,7 +339,7 @@
 			children = (
 				B5A3918E24E7E06500E7E8BD /* Modern.ColorsDemo.swift */,
 				B5A3919724E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift */,
-				B5A391A524E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift */,
+				B5A391A524E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift */,
 				B5A3919C24E8EE9000E7E8BD /* UIKit */,
 				B5A3919B24E8EE8100E7E8BD /* SwiftUI */,
 				B5A3919024E7E0B000E7E8BD /* Models */,
@@ -359,9 +359,9 @@
 			isa = PBXGroup;
 			children = (
 				B5A3919D24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift */,
-				B5A3919324E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift */,
-				B5A3919524E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift */,
-				B5A3919924E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift */,
+				B5A3919324E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift */,
+				B5A3919524E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift */,
+				B5A3919924E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift */,
 			);
 			name = SwiftUI;
 			sourceTree = "<group>";
@@ -371,10 +371,10 @@
 			children = (
 				B5A3919F24E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift */,
 				B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */,
-				B5A391A124E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift */,
+				B5A391A124E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift */,
 				B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */,
 				B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */,
-				B5A391AD24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift */,
+				B5A391AD24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift */,
 			);
 			name = UIKit;
 			sourceTree = "<group>";
@@ -383,7 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				B5A391B024E96AF600E7E8BD /* Modern.PokedexDemo.swift */,
-				B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */,
+				B531EFEA24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift */,
 				B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */,
 				B566C8E724F9D406001134A1 /* Modern.PokedexDemo.ListView.swift */,
 				B566C8E924F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift */,
@@ -396,10 +396,10 @@
 		B5A391B224E96B7400E7E8BD /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */,
-				B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.PokemonDetails.swift */,
-				B5A391B824E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift */,
-				B5A391B324E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift */,
+				B531EFE824EB5A52005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift */,
+				B566C8ED24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift */,
+				B5A391B824E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift */,
+				B5A391B324E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift */,
 				B5A391B724E96E8600E7E8BD /* Attributes */,
 			);
 			name = Models;
@@ -408,7 +408,7 @@
 		B5A391B724E96E8600E7E8BD /* Attributes */ = {
 			isa = PBXGroup;
 			children = (
-				B5A391BA24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift */,
+				B5A391BA24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift */,
 			);
 			name = Attributes;
 			sourceTree = "<group>";
@@ -487,12 +487,12 @@
 				B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */,
 				B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */,
 				B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */,
+				B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */,
 				B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */,
 				B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */,
-				B566C8EC24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift in Sources */,
 				B5A3913424E6170500E7E8BD /* Menu.swift in Sources */,
 				B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */,
-				B566C8EA24F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift in Sources */,
+				B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */,
 				B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */,
 				B5A3915324E6537F00E7E8BD /* Menu.ItemView.swift in Sources */,
 				B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */,
@@ -501,37 +501,37 @@
 				B5A3915E24E6922E00E7E8BD /* Modern.PlacemarksDemo.swift in Sources */,
 				B5A391B124E96AF600E7E8BD /* Modern.PokedexDemo.swift in Sources */,
 				B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */,
-				B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */,
-				B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */,
 				B5A3919824E7E67000E7E8BD /* Modern.ColorsDemo.Filter.swift in Sources */,
-				B5A391A624E8F4EA00E7E8BD /* Modern.ColorsDemo.MainView.swift in Sources */,
 				B5A3919224E7E0C600E7E8BD /* Modern.ColorsDemo.Palette.swift in Sources */,
 				B5A3919E24E8EEB600E7E8BD /* Modern.ColorsDemo.SwiftUI.swift in Sources */,
 				B5A391A024E8F00A00E7E8BD /* Modern.ColorsDemo.UIKit.swift in Sources */,
 				B5A3917E24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift in Sources */,
-				B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */,
 				B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */,
 				B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */,
-				B531EFE924EB5A53005F247D /* Modern.PokedexDemo.PokedexEntry.swift in Sources */,
-				B5A391B924E96F8500E7E8BD /* Modern.PokedexDemo.PokemonForm.swift in Sources */,
+				B566C8EE24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift in Sources */,
+				B566C8EC24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift in Sources */,
 				B566C8E824F9D406001134A1 /* Modern.PokedexDemo.ListView.swift in Sources */,
-				B5A391B424E96C0A00E7E8BD /* Modern.PokedexDemo.PokemonDisplay.swift in Sources */,
-				B5A391BB24E970A400E7E8BD /* Modern.PokedexDemo.PokemonType.swift in Sources */,
-				B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */,
-				B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */,
-				B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */,
-				B5A3918824E7A8F900E7E8BD /* Modern.TimeZonesDemo.MainView.swift in Sources */,
+				B566C8EA24F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift in Sources */,
 				B531EFED24EB7453005F247D /* Modern.PokedexDemo.MainView.swift in Sources */,
+				B5A3918C24E7B44B00E7E8BD /* Modern.TimeZonesDemo.ItemView.swift in Sources */,
+				B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */,
 				B5A3918624E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift in Sources */,
-				B566C8EE24FA1EA3001134A1 /* Modern.PokedexDemo.PokemonDetails.swift in Sources */,
-				B5A3919A24E8207A00E7E8BD /* Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */,
-				B5A3919624E7E4AC00E7E8BD /* Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */,
-				B5A3919424E7E36700E7E8BD /* Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */,
+				B5A391A624E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift in Sources */,
+				B5A3916224E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift in Sources */,
+				B5A391B424E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift in Sources */,
+				B531EFE924EB5A53005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift in Sources */,
+				B5A391BB24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift in Sources */,
+				B531EFEB24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift in Sources */,
+				B5A391B924E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift in Sources */,
+				B5A3918824E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift in Sources */,
 				B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */,
-				B5A391AE24E9150F00E7E8BD /* Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */,
 				B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */,
 				B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */,
-				B5A391A224E8F01F00E7E8BD /* Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */,
+				B5A3919A24E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */,
+				B5A3919624E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */,
+				B5A3919424E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */,
+				B5A391AE24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */,
+				B5A391A224E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

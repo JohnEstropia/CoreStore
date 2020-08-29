@@ -8,9 +8,12 @@ import CoreStore
 
 extension Modern.PokedexDemo {
 
-    // MARK: - Modern.PokedexDemo.PokemonForm
+    // MARK: - Modern.PokedexDemo.Species
     
-    final class PokemonForm: CoreStoreObject, ImportableUniqueObject {
+    /**
+     ⭐️ Sample 1: This sample shows how to declare `CoreStoreObject` subclasses that implement `ImportableUniqueObject`. For this class the `ImportSource` is a JSON `Dictionary`.
+     */
+    final class Species: CoreStoreObject, ImportableUniqueObject {
         
         // MARK: Internal
         
@@ -50,14 +53,14 @@ extension Modern.PokedexDemo {
         
         
         @Field.Coded(
-            "pokemonDisplayURLs",
+            "formsURLs",
             coder: FieldCoders.Json.self
         )
-        var pokemonDisplayURLs: [URL] = []
+        var formsURLs: [URL] = []
 
 
-        @Field.Relationship("pokemonDetails", inverse: \.$pokemonForm)
-        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
+        @Field.Relationship("details", inverse: \.$species)
+        var details: Modern.PokedexDemo.Details?
 
 
         // MARK: ImportableObject
@@ -69,7 +72,7 @@ extension Modern.PokedexDemo {
         
         typealias UniqueIDType = Int
 
-        static let uniqueIDKeyPath: String = String(keyPath: \Modern.PokedexDemo.PokemonForm.$id)
+        static let uniqueIDKeyPath: String = String(keyPath: \Modern.PokedexDemo.Species.$id)
 
         var uniqueIDValue: UniqueIDType {
 
@@ -129,11 +132,8 @@ extension Modern.PokedexDemo {
                 }
             }
             
-            self.pokemonDisplayURLs = try (Service.parseJSON(json["forms"]) as [Dictionary<String, Any>]).map { json in
-                
-                let pokemonDisplayURL = try Service.parseJSON(json["url"], transformer: URL.init(string:))
-                return pokemonDisplayURL
-            }
+            self.formsURLs = try (Service.parseJSON(json["forms"]) as [Dictionary<String, Any>])
+                .map({ try Service.parseJSON($0["url"], transformer: URL.init(string:)) })
         }
     }
 }

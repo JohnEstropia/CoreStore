@@ -14,13 +14,6 @@ extension Modern.PokedexDemo {
 
     struct MainView: View {
 
-        /**
-         ⭐️ Sample 1: Setting a sectioned `ListPublisher` declared as an `@ObservedObject`
-         */
-        @ObservedObject
-        private var pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry>
-
-
         // MARK: Internal
 
         init() {
@@ -44,7 +37,7 @@ extension Modern.PokedexDemo {
                 
                 if pokedexEntries.isEmpty {
                     
-                    VStack(alignment: .center, spacing: 20) {
+                    VStack(alignment: .center, spacing: 30) {
                         Text("This demo needs to make a network connection to download Pokedex entries")
                             .multilineTextAlignment(.center)
                         if self.service.isLoading {
@@ -70,6 +63,9 @@ extension Modern.PokedexDemo {
 
 
         // MARK: Private
+        
+        @ObservedObject
+        private var pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry>
 
         @ObservedObject
         private var service: Modern.PokedexDemo.Service = .init()

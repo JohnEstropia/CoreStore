@@ -102,6 +102,7 @@ extension Modern.PokedexDemo {
             do {
                 
                 nameLabel.translatesAutoresizingMaskIntoConstraints = false
+                nameLabel.textColor = UIColor.white
                 nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
                 nameLabel.numberOfLines = 0
                 nameLabel.textAlignment = .center
@@ -244,20 +245,20 @@ extension Modern.PokedexDemo {
                         
                         return
                     }
-                    self.pokemonDetails = newValue.snapshot?.$pokemonDetails
+                    self.details = newValue.snapshot?.$details
                     
                     self.didUpdateData(animated: true)
                 }
                 
-                self.pokemonDetails = newValue?.snapshot?.$pokemonDetails
+                self.details = newValue?.snapshot?.$details
             }
         }
         
-        private var pokemonDetails: ObjectPublisher<Modern.PokedexDemo.PokemonDetails>? {
+        private var details: ObjectPublisher<Modern.PokedexDemo.Details>? {
             
             didSet {
                 
-                let newValue = self.pokemonDetails
+                let newValue = self.details
                 guard newValue != oldValue else {
                     
                     return
@@ -269,24 +270,24 @@ extension Modern.PokedexDemo {
                         
                         return
                     }
-                    let pokemonDetails = newValue.snapshot
-                    self.pokemonForm = pokemonDetails?.$pokemonForm
-                    self.pokemonDisplays = pokemonDetails?.$pokemonDisplays
+                    let details = newValue.snapshot
+                    self.species = details?.$species
+                    self.forms = details?.$forms
                     
                     self.didUpdateData(animated: true)
                 }
                 
-                let pokemonDetails = newValue?.snapshot
-                self.pokemonForm = pokemonDetails?.$pokemonForm
-                self.pokemonDisplays = pokemonDetails?.$pokemonDisplays
+                let details = newValue?.snapshot
+                self.species = details?.$species
+                self.forms = details?.$forms
             }
         }
         
-        private var pokemonForm: ObjectPublisher<Modern.PokedexDemo.PokemonForm>? {
+        private var species: ObjectPublisher<Modern.PokedexDemo.Species>? {
             
             didSet {
                 
-                let newValue = self.pokemonForm
+                let newValue = self.species
                 guard newValue != oldValue else {
                     
                     return
@@ -299,19 +300,19 @@ extension Modern.PokedexDemo {
             }
         }
         
-        private var rotationCancellable: AnyCancellable?
-        private var pokemonDisplays: [ObjectPublisher<Modern.PokedexDemo.PokemonDisplay>]? {
+        private var formsRotationCancellable: AnyCancellable?
+        private var forms: [ObjectPublisher<Modern.PokedexDemo.Form>]? {
             
             didSet {
                 
-                let newValue = self.pokemonDisplays
+                let newValue = self.forms
                 guard newValue != oldValue else {
                     
                     return
                 }
-                self.pokemonDisplay = newValue?.first
+                self.currentForm = newValue?.first
                 
-                self.rotationCancellable = newValue.flatMap { newValue in
+                self.formsRotationCancellable = newValue.flatMap { newValue in
                     
                     guard !newValue.isEmpty else {
                         
@@ -328,7 +329,7 @@ extension Modern.PokedexDemo {
                                     
                                     return
                                 }
-                                self.pokemonDisplay = newValue[index % newValue.count]
+                                self.currentForm = newValue[index % newValue.count]
                                 self.didUpdateData(animated: true)
                             }
                         )
@@ -336,11 +337,11 @@ extension Modern.PokedexDemo {
             }
         }
         
-        private var pokemonDisplay: ObjectPublisher<Modern.PokedexDemo.PokemonDisplay>? {
+        private var currentForm: ObjectPublisher<Modern.PokedexDemo.Form>? {
             
             didSet {
                 
-                let newValue = self.pokemonDisplay
+                let newValue = self.currentForm
                 guard newValue != oldValue else {
                     
                     return
@@ -356,25 +357,25 @@ extension Modern.PokedexDemo {
         private func didUpdateData(animated: Bool) {
             
             let pokedexEntry = self.pokedexEntry?.snapshot
-            let pokemonForm = self.pokemonForm?.snapshot
-            let pokemonDisplay = self.pokemonDisplay?.snapshot
+            let species = self.species?.snapshot
+            let currentForm = self.currentForm?.snapshot
             
             self.placeholderLabel.text = pokedexEntry?.$id
-            self.placeholderLabel.isHidden = pokemonForm != nil
+            self.placeholderLabel.isHidden = species != nil
             
-            self.type1View.backgroundColor = pokemonForm?.$pokemonType1.color
+            self.type1View.backgroundColor = species?.$pokemonType1.color
                 ?? UIColor.clear
-            self.type1View.isHidden = pokemonForm == nil
+            self.type1View.isHidden = species == nil
             
-            self.type2View.backgroundColor = pokemonForm?.$pokemonType2?.color
-                ?? pokemonForm?.$pokemonType1.color
+            self.type2View.backgroundColor = species?.$pokemonType2?.color
+                ?? species?.$pokemonType1.color
                 ?? UIColor.clear
-            self.type2View.isHidden = pokemonForm == nil
+            self.type2View.isHidden = species == nil
             
-            self.nameLabel.text = pokemonDisplay?.$name ?? pokemonForm?.$name
-            self.nameLabel.isHidden = pokemonDisplay == nil && pokemonForm == nil
+            self.nameLabel.text = currentForm?.$name ?? species?.$name
+            self.nameLabel.isHidden = currentForm == nil && species == nil
             
-            self.imageURL = pokemonDisplay?.$spriteURL
+            self.imageURL = currentForm?.$spriteURL
             
             guard animated else {
                 

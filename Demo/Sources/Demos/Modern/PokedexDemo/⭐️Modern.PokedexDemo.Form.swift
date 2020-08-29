@@ -9,9 +9,12 @@ import UIKit
 
 extension Modern.PokedexDemo {
 
-    // MARK: - Modern.PokedexDemo.PokemonDisplay
+    // MARK: - Modern.PokedexDemo.Form
     
-    final class PokemonDisplay: CoreStoreObject, ImportableUniqueObject {
+    /**
+     ⭐️ Sample 1: This sample shows how to declare `CoreStoreObject` subclasses that implement `ImportableUniqueObject`. For this class the `ImportSource` is a JSON `Dictionary`.
+     */
+    final class Form: CoreStoreObject, ImportableUniqueObject {
         
         // MARK: Internal
         
@@ -25,8 +28,8 @@ extension Modern.PokedexDemo {
         var spriteURL: URL?
         
         
-        @Field.Relationship("pokemonDetails", inverse: \.$pokemonDisplays)
-        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
+        @Field.Relationship("details", inverse: \.$forms)
+        var details: Modern.PokedexDemo.Details?
         
         
         // MARK: ImportableObject
@@ -38,7 +41,7 @@ extension Modern.PokedexDemo {
         
         typealias UniqueIDType = Int
 
-        static let uniqueIDKeyPath: String = String(keyPath: \Modern.PokedexDemo.PokemonDisplay.$id)
+        static let uniqueIDKeyPath: String = String(keyPath: \Modern.PokedexDemo.Form.$id)
 
         var uniqueIDValue: UniqueIDType {
 

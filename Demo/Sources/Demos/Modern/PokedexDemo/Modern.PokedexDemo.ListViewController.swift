@@ -14,50 +14,6 @@ extension Modern.PokedexDemo {
     
     final class ListViewController: UICollectionViewController {
         
-        /**
-         ⭐️ Sample 1: Setting up a `DiffableDataSource.TableViewAdapter` that will manage tableView snapshot updates automatically. We can use the built-in `DiffableDataSource.TableViewAdapter` type directly, but in our case we want to enabled `UITableView` cell deletions so we create a custom subclass `DeletionEnabledDataSource` (see declatation below).
-         */
-        private lazy var dataSource: DiffableDataSource.CollectionViewAdapter<Modern.PokedexDemo.PokedexEntry> = .init(
-            collectionView: self.collectionView,
-            dataStack: Modern.PokedexDemo.dataStack,
-            cellProvider: { (collectionView, indexPath, pokedexEntry) in
-                
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: Modern.PokedexDemo.ItemCell.reuseIdentifier,
-                    for: indexPath
-                ) as! Modern.PokedexDemo.ItemCell
-                cell.setPokedexEntry(pokedexEntry, service: self.service)
-                return cell
-            }
-        )
-        
-        /**
-         ⭐️ Sample 2: Once the views are created, we can start binding `ListPublisher` updates to the `DiffableDataSource`. We typically call this at the end of `viewDidLoad`. Note that the `addObserver`'s closure argument will only be called on the succeeding updates, so to immediately display the current values, we need to call `dataSource.apply()` once.
-         */
-        private func startObservingList() {
-            
-            self.listPublisher.addObserver(self) { (listPublisher) in
-                
-                self.dataSource.apply(
-                    listPublisher.snapshot,
-                    animatingDifferences: true
-                )
-            }
-            self.dataSource.apply(
-                self.listPublisher.snapshot,
-                animatingDifferences: false
-            )
-        }
-        
-        /**
-         ⭐️ Sample 3: We can end monitoring updates anytime. `removeObserver()` was called here for illustration purposes only. `ListPublisher`s safely remove deallocated observers automatically.
-         */
-        deinit {
-            
-            self.listPublisher.removeObserver(self)
-        }
-        
-        
         // MARK: Internal
         
         init(
@@ -84,6 +40,17 @@ extension Modern.PokedexDemo {
             )
             super.init(collectionViewLayout: layout)
         }
+        
+        @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            
+            fatalError()
+        }
+        
+        deinit {
+            
+            self.listPublisher.removeObserver(self)
+        }
 
         
         // MARK: UIViewController
@@ -91,6 +58,8 @@ extension Modern.PokedexDemo {
         override func viewDidLoad() {
             
             super.viewDidLoad()
+            
+            self.collectionView.backgroundColor = UIColor.systemBackground
             
             self.collectionView.register(
                 Modern.PokedexDemo.ItemCell.self,
@@ -106,10 +75,34 @@ extension Modern.PokedexDemo {
         private let service: Modern.PokedexDemo.Service
         private let listPublisher: ListPublisher<Modern.PokedexDemo.PokedexEntry>
         
-        @available(*, unavailable)
-        required init?(coder: NSCoder) {
+        private lazy var dataSource: DiffableDataSource.CollectionViewAdapter<Modern.PokedexDemo.PokedexEntry> = .init(
+            collectionView: self.collectionView,
+            dataStack: Modern.PokedexDemo.dataStack,
+            cellProvider: { (collectionView, indexPath, pokedexEntry) in
+                
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: Modern.PokedexDemo.ItemCell.reuseIdentifier,
+                    for: indexPath
+                ) as! Modern.PokedexDemo.ItemCell
+                cell.setPokedexEntry(pokedexEntry, service: self.service)
+                return cell
+            }
+        )
+        
+        private func startObservingList() {
             
-            fatalError()
+            self.listPublisher.addObserver(self) { (listPublisher) in
+                
+                self.dataSource.apply(
+                    listPublisher.snapshot,
+                    animatingDifferences: true
+                )
+            }
+            self.dataSource.apply(
+                self.listPublisher.snapshot,
+                animatingDifferences: false
+            )
         }
+        
     }
 }

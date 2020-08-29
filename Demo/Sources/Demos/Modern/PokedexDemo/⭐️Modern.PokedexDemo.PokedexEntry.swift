@@ -9,7 +9,10 @@ import CoreStore
 extension Modern.PokedexDemo {
 
     // MARK: - Modern.PokedexDemo.PokedexEntry
-
+    
+    /**
+     ⭐️ Sample 1: This sample shows how to declare `CoreStoreObject` subclasses that implement `ImportableUniqueObject`. For this class the `ImportSource` is a tuple.
+     */
     final class PokedexEntry: CoreStoreObject, ImportableUniqueObject {
 
         // MARK: Internal
@@ -21,14 +24,14 @@ extension Modern.PokedexDemo {
         var id: String = ""
 
         @Field.Stored(
-            "pokemonFormURL",
+            "speciesURL",
             dynamicInitialValue: { URL(string: "data:application/json,%7B%7D")! }
         )
-        var pokemonFormURL: URL
+        var speciesURL: URL
 
         
-        @Field.Relationship("pokemonDetails")
-        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
+        @Field.Relationship("details")
+        var details: Modern.PokedexDemo.Details?
 
 
         // MARK: ImportableObject
@@ -37,7 +40,8 @@ extension Modern.PokedexDemo {
         
         func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
             
-            self.pokemonDetails = transaction.create(Into<Modern.PokedexDemo.PokemonDetails>())
+            self.details = transaction.create(Into<Modern.PokedexDemo.Details>())
+            
             try self.update(from: source, in: transaction)
         }
 
@@ -64,7 +68,7 @@ extension Modern.PokedexDemo {
 
             let json = source.json
             self.index = source.index
-            self.pokemonFormURL = try Modern.PokedexDemo.Service.parseJSON(json["url"], transformer: URL.init(string:))
+            self.speciesURL = try Modern.PokedexDemo.Service.parseJSON(json["url"], transformer: URL.init(string:))
         }
     }
 }
