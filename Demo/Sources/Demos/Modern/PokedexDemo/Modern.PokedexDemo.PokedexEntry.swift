@@ -25,21 +25,21 @@ extension Modern.PokedexDemo {
             dynamicInitialValue: { URL(string: "data:application/json,%7B%7D")! }
         )
         var pokemonFormURL: URL
-        
-        @Field.Stored(
-            "updateHash",
-            dynamicInitialValue: { UUID() }
-        )
-        var updateHash: UUID
 
         
-        @Field.Relationship("pokemonForm")
-        var pokemonForm: Modern.PokedexDemo.PokemonForm?
+        @Field.Relationship("pokemonDetails")
+        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
 
 
         // MARK: ImportableObject
 
         typealias ImportSource = (index: Int, json: Dictionary<String, Any>)
+        
+        func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
+            
+            self.pokemonDetails = transaction.create(Into<Modern.PokedexDemo.PokemonDetails>())
+            try self.update(from: source, in: transaction)
+        }
 
 
         // MARK: ImportableUniqueObject

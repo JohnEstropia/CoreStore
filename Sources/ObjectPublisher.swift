@@ -83,9 +83,14 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
      Calling `addObserver(_:_:)` multiple times on the same observer is safe.
 
      - parameter observer: an object to become owner of the specified `callback`
+     - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
      - parameter callback: the closure to execute when changes occur
      */
-    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (ObjectPublisher<O>) -> Void) {
+    public func addObserver<T: AnyObject>(
+        _ observer: T,
+        notifyInitial: Bool = false,
+        _ callback: @escaping (ObjectPublisher<O>) -> Void
+    ) {
 
         Internals.assert(
             Thread.isMainThread,
@@ -96,6 +101,11 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             forKey: observer
         )
         _ = self.lazySnapshot
+        
+        if notifyInitial {
+            
+            callback(self)
+        }
     }
 
     /**

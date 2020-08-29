@@ -49,25 +49,15 @@ extension Modern.PokedexDemo {
         var statSpeed: Int = 0
         
         
-        @Field.Stored(
-            "pokemonDisplayURL",
-            dynamicInitialValue: { URL(string: "data:application/json,%7B%7D")! }
+        @Field.Coded(
+            "pokemonDisplayURLs",
+            coder: FieldCoders.Json.self
         )
-        var pokemonDisplayURL: URL
-        
-
-        @Field.Relationship("display", inverse: \.$pokedexForm)
-        var pokemonDisplay: Modern.PokedexDemo.PokemonDisplay?
-        
-        @Field.Relationship("abilities", inverse: \.$learners)
-        var abilities: Set<Modern.PokedexDemo.Ability>
-        
-        @Field.Relationship("moves", inverse: \.$learners)
-        var moves: Set<Modern.PokedexDemo.Move>
+        var pokemonDisplayURLs: [URL] = []
 
 
-        @Field.Relationship("pokedexEntry", inverse: \.$pokemonForm)
-        var pokedexEntry: Modern.PokedexDemo.PokedexEntry?
+        @Field.Relationship("pokemonDetails", inverse: \.$pokemonForm)
+        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
 
 
         // MARK: ImportableObject
@@ -139,25 +129,10 @@ extension Modern.PokedexDemo {
                 }
             }
             
-            do {
+            self.pokemonDisplayURLs = try (Service.parseJSON(json["forms"]) as [Dictionary<String, Any>]).map { json in
                 
-                let abilities: [Dictionary<String, Any>] = try Service.parseJSON(json["abilities"])
-            }
-            do {
-                
-                let moves: [Dictionary<String, Any>] = try Service.parseJSON(json["moves"])
-            }
-            
-            for json in try Service.parseJSON(json["forms"]) as [Dictionary<String, Any>] {
-                
-                let name: String = try Service.parseJSON(json["name"])
                 let pokemonDisplayURL = try Service.parseJSON(json["url"], transformer: URL.init(string:))
-                
-                guard name == self.name else {
-                    
-                    continue
-                }
-                self.pokemonDisplayURL = pokemonDisplayURL
+                return pokemonDisplayURL
             }
         }
     }

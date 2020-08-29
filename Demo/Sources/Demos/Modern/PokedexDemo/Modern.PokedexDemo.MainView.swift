@@ -33,15 +33,21 @@ extension Modern.PokedexDemo {
 
         var body: some View {
             let pokedexEntries = self.pokedexEntries.snapshot
-            let visibleItems = self.visibleItems
             return ZStack {
-
+                
+                Modern.PokedexDemo.ListView(
+                    service: self.service,
+                    listPublisher: self.pokedexEntries
+                )
+                .frame(minHeight: 0, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.vertical)
+                
                 if pokedexEntries.isEmpty {
-
+                    
                     VStack(alignment: .center, spacing: 20) {
                         Text("This demo needs to make a network connection to download Pokedex entries")
                         if self.service.isLoading {
-
+                            
                             Text("Fetching Pokedex…")
                         }
                         else {
@@ -49,40 +55,13 @@ extension Modern.PokedexDemo {
                             Button(
                                 action: { self.service.fetchPokedexEntries() },
                                 label: {
-
+                                    
                                     Text("Download Pokedex Entries")
                                 }
                             )
                         }
                     }
                     .padding()
-                }
-                else {
-
-                    List {
-                        
-                        ForEach(0 ..< min(visibleItems, pokedexEntries.count), id: \.self) { index in
-                            LazyView {
-                                Modern.PokedexDemo.ItemView(
-                                    pokedexEntry: pokedexEntries[index],
-                                    service: self.service
-                                )
-                            }
-                            .frame(height: Modern.PokedexDemo.ItemView.preferredHeight)
-                            .frame(minWidth: 0, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                        }
-                        if visibleItems < pokedexEntries.count {
-
-                            Spacer(minLength: Modern.PokedexDemo.ItemView.preferredHeight)
-                                .onAppear {
-
-                                    self.visibleItems = min(
-                                        visibleItems + 50,
-                                        pokedexEntries.count
-                                    )
-                                }
-                        }
-                    }
                 }
             }
             .navigationBarTitle("Pokedex")
@@ -93,9 +72,6 @@ extension Modern.PokedexDemo {
 
         @ObservedObject
         private var service: Modern.PokedexDemo.Service = .init()
-        
-        @State
-        private var visibleItems: Int = 50
     }
 }
 

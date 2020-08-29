@@ -113,9 +113,14 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      Calling `addObserver(_:_:)` multiple times on the same observer is safe.
 
      - parameter observer: an object to become owner of the specified `callback`
+     - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
      - parameter callback: the closure to execute when changes occur
      */
-    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (ListPublisher<O>) -> Void) {
+    public func addObserver<T: AnyObject>(
+        _ observer: T,
+        notifyInitial: Bool = false,
+        _ callback: @escaping (ListPublisher<O>) -> Void
+    ) {
 
         Internals.assert(
             Thread.isMainThread,
@@ -125,6 +130,10 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             Internals.Closure(callback),
             forKey: observer
         )
+        if notifyInitial {
+            
+            callback(self)
+        }
     }
 
     /**

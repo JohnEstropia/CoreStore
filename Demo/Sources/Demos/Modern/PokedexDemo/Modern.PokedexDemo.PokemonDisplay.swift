@@ -18,15 +18,15 @@ extension Modern.PokedexDemo {
         @Field.Stored("id")
         var id: Int = 0
         
-        @Field.Stored("displayName")
-        var displayName: String?
+        @Field.Stored("name")
+        var name: String?
         
         @Field.Stored("spriteURL")
         var spriteURL: URL?
-
         
-        @Field.Relationship("form")
-        var pokedexForm: Modern.PokedexDemo.PokemonForm?
+        
+        @Field.Relationship("pokemonDetails", inverse: \.$pokemonDisplays)
+        var pokemonDetails: Modern.PokedexDemo.PokemonDetails?
         
         
         // MARK: ImportableObject
@@ -57,22 +57,8 @@ extension Modern.PokedexDemo {
             typealias Service = Modern.PokedexDemo.Service
             let json = source
             
-            for json in try Service.parseJSON(json["names"]) as [Dictionary<String, Any>] {
-                
-                let displayName: String = try Service.parseJSON(json["name"])
-                let language: String = try Service.parseJSON(
-                    json["language"],
-                    transformer: { (json: Dictionary<String, Any>) in
-                        try Service.parseJSON(json["name"])
-                    }
-                )
-                switch language {
-                    
-                case "en":  self.displayName = displayName
-                default:    break
-                }
-            }
-            self.spriteURL = try Service.parseJSON(
+            self.name = try Service.parseJSON(json["name"])
+            self.spriteURL = try? Service.parseJSON(
                 json["sprites"],
                 transformer: { (json: Dictionary<String, Any>) in
                     try Service.parseJSON(json["front_default"], transformer: URL.init(string:))

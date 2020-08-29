@@ -128,12 +128,21 @@ extension Modern.PokedexDemo {
                     receiveValue: {}
                 )
         }
+        
+        func fetchDetails(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
+            
+            self.fetchPokemonFormIfNeeded(for: pokedexEntry)
+        }
 
-        func fetchPokemonForm(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
-
-            if let pokedexForm = pokedexEntry.$pokemonForm?.snapshot {
+        private func fetchPokemonFormIfNeeded(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
+            
+            guard let pokemonDetails = pokedexEntry.$pokemonDetails?.snapshot else {
                 
-                self.fetchPokemonDisplay(for: pokedexForm)
+                return
+            }
+            if let pokedexForm = pokemonDetails.$pokemonForm?.snapshot {
+                
+                self.fetchPokemonDisplayIfNeeded(for: pokedexForm)
                 return
             }
             self.cancellable["pokemonForm.\(pokedexEntry.$id)"] = URLSession.shared
@@ -157,11 +166,7 @@ extension Modern.PokedexDemo {
                                         
                                         throw Modern.PokedexDemo.Service.Error.unexpected
                                     }
-                                    if let pokedexEntry = pokedexEntry.asEditable(in: transaction) {
-                                        
-                                        pokedexForm.pokedexEntry = pokedexEntry
-                                        pokedexEntry.updateHash = .init()
-                                    }
+                                    pokemonDetails.asEditable(in: transaction)?.pokemonForm = pokedexForm
                                     return pokedexForm
                                 },
                                 success: { pokemonForm in
@@ -204,43 +209,80 @@ extension Modern.PokedexDemo {
                     },
                     receiveValue: { pokemonForm in
 
-                        self.fetchPokemonDisplay(for: pokemonForm)
+                        self.fetchPokemonDisplayIfNeeded(for: pokemonForm)
                     }
                 )
         }
         
-        func fetchPokemonDisplay(for pokemonForm: ObjectSnapshot<Modern.PokedexDemo.PokemonForm>) {
-
-            if let pokemonDisplay = pokemonForm.$pokemonDisplay?.snapshot {
+        func fetchPokemonDisplayIfNeeded(for pokemonForm: ObjectSnapshot<Modern.PokedexDemo.PokemonForm>) {
+            
+            guard
+                let pokemonDetails = pokemonForm.$pokemonDetails?.snapshot,
+                pokemonDetails.$pokemonDisplays.isEmpty
+            else {
                 
                 return
             }
-            self.cancellable["pokemonDisplay.\(pokemonForm.$id)"] = URLSession.shared
-                .dataTaskPublisher(for: pokemonForm.$pokemonDisplayURL)
-                .mapError({ .networkError($0) })
+            
+            
+            
+            self.cancellable["pokemonDisplay.\(pokemonForm.$id)"] = pokemonForm
+                .$pokemonDisplayURLs
+                .map(
+                    { url in
+                        URLSession.shared
+                            .dataTaskPublisher(for: url)
+                            .mapError({ Modern.PokedexDemo.Service.Error.networkError($0) })
+                            .tryMap(
+                                { output -> Dictionary<String, Any> in
+                                    
+                                    try Self.parseJSON(
+                                        try JSONSerialization.jsonObject(with: output.data, options: [])
+                                    )
+                                }
+                            )
+                            .mapError(
+                                { error -> Modern.PokedexDemo.Service.Error in
+                                    switch error {
+                                    
+                                    case let error as Modern.PokedexDemo.Service.Error:
+                                        return error
+                                        
+                                    case let error:
+                                        return Modern.PokedexDemo.Service.Error.otherError(error)
+                                    }
+                                }
+                            )
+                            .eraseToAnyPublisher()
+                    }
+                )
+                .reduce(
+                    into: Just<[Dictionary<String, Any>]>([])
+                        .setFailureType(to: Modern.PokedexDemo.Service.Error.self)
+                        .eraseToAnyPublisher(),
+                    { (result, publisher) in
+                        result = result
+                            .zip(publisher, { $0 + [$1] })
+                            .eraseToAnyPublisher()
+                    }
+                )
                 .flatMap(
-                    { output in
+                    { outputs in
 
                         return Future<Void, Modern.PokedexDemo.Service.Error> { promise in
                             
                             Modern.PokedexDemo.dataStack.perform(
                                 asynchronous: { transaction -> Void in
 
-                                    let json: Dictionary<String, Any> = try Self.parseJSON(
-                                        try JSONSerialization.jsonObject(with: output.data, options: [])
-                                    )
-                                    guard let pokemonDisplay = try transaction.importUniqueObject(
+                                    let pokemonDisplays = try transaction.importUniqueObjects(
                                         Into<Modern.PokedexDemo.PokemonDisplay>(),
-                                        source: json
-                                    ) else {
+                                        sourceArray: outputs
+                                    )
+                                    guard !pokemonDisplays.isEmpty else {
                                         
                                         throw Modern.PokedexDemo.Service.Error.unexpected
                                     }
-                                    if let pokemonForm = pokemonForm.asEditable(in: transaction) {
-                                        
-                                        pokemonDisplay.pokedexForm = pokemonForm
-                                        pokemonForm.pokedexEntry?.updateHash = .init()
-                                    }
+                                    pokemonDetails.asEditable(in: transaction)?.pokemonDisplays = pokemonDisplays
                                 },
                                 success: {
                                     
