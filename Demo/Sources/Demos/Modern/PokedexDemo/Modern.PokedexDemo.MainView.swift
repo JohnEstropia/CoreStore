@@ -46,6 +46,7 @@ extension Modern.PokedexDemo {
                     
                     VStack(alignment: .center, spacing: 20) {
                         Text("This demo needs to make a network connection to download Pokedex entries")
+                            .multilineTextAlignment(.center)
                         if self.service.isLoading {
                             
                             Text("Fetching Pokedex…")
