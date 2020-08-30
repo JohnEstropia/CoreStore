@@ -20,12 +20,9 @@ extension Modern.ColorsDemo.UIKit {
         
         func setPalette(_ palette: Modern.ColorsDemo.Palette) {
 
-            self.imageView?.image = UIImage(
-                color: palette.color,
-                size: .init(width: 30, height: 30),
-                cornerRadius: 5
-            )
+            self.contentView.backgroundColor = palette.color
             self.textLabel?.text = palette.colorText
+            self.textLabel?.textColor = palette.brightness > 0.6 ? .black : .white
         }
     }
 }

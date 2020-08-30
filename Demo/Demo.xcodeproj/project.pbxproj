@@ -11,7 +11,6 @@
 		B531EFE924EB5A53005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE824EB5A52005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift */; };
 		B531EFEB24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift */; };
 		B531EFED24EB7453005F247D /* Modern.PokedexDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */; };
-		B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E524ED6B98001134A1 /* NetworkImageView.swift */; };
 		B566C8E824F9D406001134A1 /* Modern.PokedexDemo.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E724F9D406001134A1 /* Modern.PokedexDemo.ListView.swift */; };
 		B566C8EA24F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8E924F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift */; };
 		B566C8EC24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566C8EB24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift */; };
@@ -60,7 +59,6 @@
 		B5A391A224E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A124E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift */; };
 		B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */; };
 		B5A391A624E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A524E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift */; };
-		B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */; };
 		B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */; };
 		B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */; };
 		B5A391AE24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A391AD24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift */; };
@@ -93,7 +91,6 @@
 		B531EFE824EB5A52005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.PokedexEntry.swift"; sourceTree = "<group>"; };
 		B531EFEA24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.PokedexDemo.Service.swift"; sourceTree = "<group>"; };
 		B531EFEC24EB7453005F247D /* Modern.PokedexDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.MainView.swift; sourceTree = "<group>"; };
-		B566C8E524ED6B98001134A1 /* NetworkImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImageView.swift; sourceTree = "<group>"; };
 		B566C8E724F9D406001134A1 /* Modern.PokedexDemo.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ListView.swift; sourceTree = "<group>"; };
 		B566C8E924F9D412001134A1 /* Modern.PokedexDemo.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ListViewController.swift; sourceTree = "<group>"; };
 		B566C8EB24F9D694001134A1 /* Modern.PokedexDemo.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.ItemCell.swift; sourceTree = "<group>"; };
@@ -141,7 +138,6 @@
 		B5A391A124E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.UIKit.ListViewController.swift"; sourceTree = "<group>"; };
 		B5A391A324E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ListView.swift; sourceTree = "<group>"; };
 		B5A391A524E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.MainView.swift"; sourceTree = "<group>"; };
-		B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		B5A391A924E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.ItemCell.swift; sourceTree = "<group>"; };
 		B5A391AB24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.ColorsDemo.UIKit.DetailView.swift; sourceTree = "<group>"; };
 		B5A391AD24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift"; sourceTree = "<group>"; };
@@ -306,9 +302,7 @@
 			children = (
 				B5A3917B24E6A76C00E7E8BD /* LazyView.swift */,
 				B5A3917F24E787D900E7E8BD /* InstructionsView.swift */,
-				B566C8E524ED6B98001134A1 /* NetworkImageView.swift */,
 				B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */,
-				B5A391A724E90F1000E7E8BD /* UIImage+Extensions.swift */,
 				B5A3915424E6857F00E7E8BD /* Menu */,
 			);
 			path = Helpers;
@@ -484,7 +478,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5A391A824E90F1000E7E8BD /* UIImage+Extensions.swift in Sources */,
 				B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */,
 				B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */,
 				B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */,
@@ -492,7 +485,6 @@
 				B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */,
 				B5A3913424E6170500E7E8BD /* Menu.swift in Sources */,
 				B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */,
-				B566C8E624ED6B98001134A1 /* NetworkImageView.swift in Sources */,
 				B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */,
 				B5A3915324E6537F00E7E8BD /* Menu.ItemView.swift in Sources */,
 				B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */,

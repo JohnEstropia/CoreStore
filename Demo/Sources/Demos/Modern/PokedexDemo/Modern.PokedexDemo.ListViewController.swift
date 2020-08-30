@@ -33,7 +33,10 @@ extension Modern.PokedexDemo {
             
             let screenWidth = UIScreen.main.bounds.inset(by: layout.sectionInset).width
             let cellsPerRow: CGFloat = 3
-            let cellWidth = floor((screenWidth - ((cellsPerRow - 1) * layout.minimumInteritemSpacing)) / cellsPerRow)
+            let cellWidth = min(
+                230,
+                floor((screenWidth - ((cellsPerRow - 1) * layout.minimumInteritemSpacing)) / cellsPerRow)
+            )
             layout.itemSize = .init(
                 width: cellWidth,
                 height: ceil(cellWidth * (4 / 3))

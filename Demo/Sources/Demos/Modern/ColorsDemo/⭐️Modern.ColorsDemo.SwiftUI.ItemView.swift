@@ -37,12 +37,12 @@ extension Modern.ColorsDemo.SwiftUI {
                 return AnyView(EmptyView())
             }
             return AnyView(
-                HStack {
-                    Color(palette.$color)
-                        .cornerRadius(5)
-                        .frame(width: 30, height: 30, alignment: .leading)
+                Color(palette.$color).overlay(
                     Text(palette.$colorText)
-                }
+                        .foregroundColor(palette.$brightness > 0.6 ? .black : .white)
+                        .padding(),
+                    alignment: .leading
+                )
             )
         }
     }

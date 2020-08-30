@@ -36,6 +36,7 @@ extension Modern.ColorsDemo.SwiftUI {
                                     Modern.ColorsDemo.SwiftUI.ItemView(palette)
                                 }
                             )
+                            .listRowInsets(.init())
                         }
                         .onDelete { itemIndices in
                             
