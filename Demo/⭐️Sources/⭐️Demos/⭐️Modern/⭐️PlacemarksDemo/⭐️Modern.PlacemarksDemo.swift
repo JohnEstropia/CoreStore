@@ -17,6 +17,9 @@ extension Modern {
         
         // MARK: Internal
         
+        /**
+         ⭐️ Sample 1: Setting up the `DataStack` and storage
+         */
         static let dataStack: DataStack = {
             
             let dataStack = DataStack(

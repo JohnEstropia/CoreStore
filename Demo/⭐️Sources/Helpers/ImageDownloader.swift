@@ -1,9 +1,6 @@
 //
-//  ImageDownloader.swift
-//  Demo
-//
-//  Created by John Rommel Estropia on 2020/08/29.
-//
+// Demo
+// Copyright © 2020 John Rommel Estropia, Inc. All rights reserved.
 
 import Foundation
 import UIKit

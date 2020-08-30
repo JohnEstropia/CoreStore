@@ -5,11 +5,11 @@
 import CoreStore
 
 
-// MARK: - Modern.ColorsDemo
+// MARK: - Classic.ColorsDemo
 
-extension Modern.ColorsDemo {
+extension Classic.ColorsDemo {
     
-    // MARK: - Modern.ColorsDemo.Filter
+    // MARK: - Classic.ColorsDemo.Filter
     
     enum Filter: String, CaseIterable {
         
@@ -23,13 +23,13 @@ extension Modern.ColorsDemo {
             return allCases[(allCases.firstIndex(of: self)! + 1) % allCases.count]
         }
         
-        func whereClause() -> Where<Modern.ColorsDemo.Palette> {
+        func whereClause() -> Where<Classic.ColorsDemo.Palette> {
             
             switch self {
                 
             case .all: return .init()
-            case .light: return (\Modern.ColorsDemo.Palette.$brightness >= 0.9)
-            case .dark: return (\Modern.ColorsDemo.Palette.$brightness <= 0.4)
+            case .light: return (\.brightness >= 0.9)
+            case .dark: return (\.brightness <= 0.4)
             }
         }
     }

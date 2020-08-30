@@ -59,7 +59,7 @@ extension FieldContainer {
              var title: String = "Mr."
          }
          ```
-         - parameter initial: the initial value for the property when the object is first created.
+         - parameter initial: the initial value for the property that is shared for all instances of this object. Note that this is evaluated during `DataStack` setup, not during object creation. To assign a value during object creation, use the `dynamicInitialValue` argument instead.
          - parameter keyPath: the permanent attribute name for this property.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
@@ -90,6 +90,23 @@ extension FieldContainer {
             )
         }
         
+        /**
+         Initializes the metadata for the property.
+         ```
+         class Person: CoreStoreObject {
+
+             @Field.Stored("title", dynamicInitialValue: { Person.randomTitle() })
+             var title: String
+         }
+         ```
+         - parameter keyPath: the permanent attribute name for this property.
+         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+         - parameter dynamicInitialValue: the initial value for the property when the object is first created.
+         */
         public init(
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
@@ -360,7 +377,7 @@ extension FieldContainer.Stored where V: FieldOptionalType {
          var nickname: String?
      }
      ```
-     - parameter initial: the initial value for the property when the object is first created.
+     - parameter initial: the initial value for the property that is shared for all instances of this object. Note that this is evaluated during `DataStack` setup, not during object creation. To assign a value during object creation, use the `dynamicInitialValue` argument instead.     
      - parameter keyPath: the permanent attribute name for this property.
      - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
      - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
@@ -391,6 +408,23 @@ extension FieldContainer.Stored where V: FieldOptionalType {
         )
     }
     
+    /**
+     Initializes the metadata for the property.
+     ```
+     class Person: CoreStoreObject {
+
+         @Field.Stored("nickname", dynamicInitialValue: { Person.randomNickname() })
+         var nickname: String?
+     }
+     ```
+     - parameter keyPath: the permanent attribute name for this property.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter previousVersionKeyPath: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property's `keyPath` with a matching destination entity property's `previousVersionKeyPath` indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's `keyPath`.
+     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `ObjectProxy<O>`, which acts as a type-safe proxy for the receiver. When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively. Do not make assumptions on the thread/queue that the closure is executed on; accessors may be called from `NSError` logs for example.
+     - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `ObjectProxy<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `ObjectProxy<O>`, make sure to use `field.primitiveValue` instead of `field.value`, which would unintentionally execute the same closure again recursively.
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
+     - parameter dynamicInitialValue: the initial value for the property when the object is first created.
+     */
     public init(
         _ keyPath: KeyPathString,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,

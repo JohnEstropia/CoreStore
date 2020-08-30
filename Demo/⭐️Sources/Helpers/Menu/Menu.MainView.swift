@@ -79,34 +79,23 @@ extension Menu {
                     }
                     Section(header: Text("Classic (NSManagedObject subclasses)")) {
                         Menu.ItemView(
-                            title: "Placemarks (Swift)",
+                            title: "Placemarks",
                             subtitle: "Making changes using transactions in Swift",
                             destination: { EmptyView() }
                         )
-                        Menu.ItemView(
-                            title: "Placemarks (Objective-C)",
-                            subtitle: "Making changes using transactions in Objective-C",
-                            destination: { EmptyView() }
-                        )
+                        .disabled(true)
                         Menu.ItemView(
                             title: "Time Zones",
                             subtitle: "Fetching objects and Querying raw values",
                             destination: { EmptyView() }
                         )
+                        .disabled(true)
                         Menu.ItemView(
-                            title: "Colors (Swift)",
-                            subtitle: "Observing list changes and single-object changes in Swift",
-                            destination: { EmptyView() }
-                        )
-                        Menu.ItemView(
-                            title: "Colors (Objective-C)",
-                            subtitle: "Observing list changes and single-object changes in Objective-C",
-                            destination: { EmptyView() }
-                        )
-                        Menu.ItemView(
-                            title: "Pokedex API",
-                            subtitle: "Importing JSON data from external source",
-                            destination: { EmptyView() }
+                            title: "Colors",
+                            subtitle: "Observing list changes and single-object changes using ListMonitor",
+                            destination: {
+                                Classic.ColorsDemo.MainView()
+                            }
                         )
                     }
                     Section(header: Text("Advanced")) {

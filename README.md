@@ -1914,14 +1914,14 @@ class Vehicle: CoreStoreObject {
 Built-in encoders such as `FieldCoders.NSCoding`, `FieldCoders.Json`, and `FieldCoders.Plist` are available, and custom encoding/decoding is also supported:
 ```swift
 class Person: CoreStoreObject {
-    <br />
+    
     struct CustomInfo: Codable {
         // ...
     }
-    <br />
+    
     @Field.Coded("otherInfo", coder: FieldCoders.Json.self)
     var otherInfo: CustomInfo?
-    <br />
+    
     @Field.Coded(
         "photo",
         coder: {

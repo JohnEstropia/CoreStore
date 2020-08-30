@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Palette" representedClassName="Classic_ColorsDemo_Palette" syncable="YES">
+        <attribute name="brightness" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="colorGroup" optional="YES" transient="YES" attributeType="String"/>
+        <attribute name="hue" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="saturation" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+    <elements>
+        <element name="Palette" positionX="-63" positionY="-18" width="128" height="103"/>
+    </elements>
+</model>

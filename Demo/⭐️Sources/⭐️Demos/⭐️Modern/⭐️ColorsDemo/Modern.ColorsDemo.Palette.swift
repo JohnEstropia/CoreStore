@@ -49,31 +49,31 @@ extension Modern.ColorsDemo {
         var brightness: Float
         
         @Field.Virtual(
-            "colorName",
+            "colorGroup",
             customGetter: { object, field in
                 
-                if let colorName = field.primitiveValue {
+                if let colorGroup = field.primitiveValue {
                     
-                    return colorName
+                    return colorGroup
                 }
-                let colorName: String
+                let colorGroup: String
                 switch object.$hue.value * 359 {
                     
-                case 0 ..< 20: colorName = "Lower Reds"
-                case 20 ..< 57: colorName = "Oranges and Browns"
-                case 57 ..< 90: colorName = "Yellow-Greens"
-                case 90 ..< 159: colorName = "Greens"
-                case 159 ..< 197: colorName = "Blue-Greens"
-                case 197 ..< 241: colorName = "Blues"
-                case 241 ..< 297: colorName = "Violets"
-                case 297 ..< 331: colorName = "Magentas"
-                default: colorName = "Upper Reds"
+                case 0 ..< 20: colorGroup = "Lower Reds"
+                case 20 ..< 57: colorGroup = "Oranges and Browns"
+                case 57 ..< 90: colorGroup = "Yellow-Greens"
+                case 90 ..< 159: colorGroup = "Greens"
+                case 159 ..< 197: colorGroup = "Blue-Greens"
+                case 197 ..< 241: colorGroup = "Blues"
+                case 241 ..< 297: colorGroup = "Violets"
+                case 297 ..< 331: colorGroup = "Magentas"
+                default: colorGroup = "Upper Reds"
                 }
-                field.primitiveValue = colorName
-                return colorName
+                field.primitiveValue = colorGroup
+                return colorGroup
             }
         )
-        var colorName: String
+        var colorGroup: String
         
         @Field.Virtual(
             "color",
@@ -120,7 +120,7 @@ extension Modern.ColorsDemo {
         
         private static func resetVirtualProperties(_ object: ObjectProxy<Modern.ColorsDemo.Palette>) {
 
-            object.$colorName.primitiveValue = nil
+            object.$colorGroup.primitiveValue = nil
             object.$color.primitiveValue = nil
             object.$colorText.primitiveValue = nil
         }

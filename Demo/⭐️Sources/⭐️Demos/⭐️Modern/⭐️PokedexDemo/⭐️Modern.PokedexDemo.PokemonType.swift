@@ -9,7 +9,7 @@ import UIKit
 
 extension Modern.PokedexDemo {
 
-    // MARK: - Modern.PokedexDemo.Move
+    // MARK: - Modern.PokedexDemo.PokemonType
     
     /**
      ⭐️ Sample 1: Types that will be used with `@Field.Stored` need to implement both `ImportableAttributeType` and `FieldStorableType`. In this case, `RawRepresentable` types with primitive `RawValue`s have built-in implementations so we only have to declare conformance to `ImportableAttributeType` and `FieldStorableType`.
