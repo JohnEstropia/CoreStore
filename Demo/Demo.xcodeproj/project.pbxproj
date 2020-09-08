@@ -76,6 +76,16 @@
 		B5A543EF24FB84D1000DC5E3 /* Classic.ColorsDemo.LIstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543EE24FB84D1000DC5E3 /* Classic.ColorsDemo.LIstView.swift */; };
 		B5A543F124FB84DD000DC5E3 /* ⭐️Classic.ColorsDemo.ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543F024FB84DD000DC5E3 /* ⭐️Classic.ColorsDemo.ListViewController.swift */; };
 		B5A543F324FB84EC000DC5E3 /* Classic.ColorsDemo.ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543F224FB84EC000DC5E3 /* Classic.ColorsDemo.ItemCell.swift */; };
+		B5A543F624FBF13A000DC5E3 /* Advanced.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543F524FBF13A000DC5E3 /* Advanced.swift */; };
+		B5A543FB2504840E000DC5E3 /* Advanced.EvolutionDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543FA2504840E000DC5E3 /* Advanced.EvolutionDemo.swift */; };
+		B5A543FF250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A543FE250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift */; };
+		B5A54401250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A54400250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift */; };
+		B5A54403250487D5000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A54402250487D4000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift */; };
+		B5A54405250487F5000DC5E3 /* Advanced.EvolutionDemo.CreatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A54404250487F5000DC5E3 /* Advanced.EvolutionDemo.CreatureType.swift */; };
+		B5A5440725049480000DC5E3 /* Advanced.EvolutionDemo.CreatureV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5440625049480000DC5E3 /* Advanced.EvolutionDemo.CreatureV1.swift */; };
+		B5A5440925049489000DC5E3 /* Advanced.EvolutionDemo.CreatureV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5440825049489000DC5E3 /* Advanced.EvolutionDemo.CreatureV2.swift */; };
+		B5A5440B25049492000DC5E3 /* Advanced.EvolutionDemo.CreatureV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5440A25049492000DC5E3 /* Advanced.EvolutionDemo.CreatureV3.swift */; };
+		B5A5440D2504949C000DC5E3 /* Advanced.EvolutionDemo.CreatureV4.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5440C2504949C000DC5E3 /* Advanced.EvolutionDemo.CreatureV4.swift */; };
 		B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
@@ -165,6 +175,16 @@
 		B5A543EE24FB84D1000DC5E3 /* Classic.ColorsDemo.LIstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classic.ColorsDemo.LIstView.swift; sourceTree = "<group>"; };
 		B5A543F024FB84DD000DC5E3 /* ⭐️Classic.ColorsDemo.ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Classic.ColorsDemo.ListViewController.swift"; sourceTree = "<group>"; };
 		B5A543F224FB84EC000DC5E3 /* Classic.ColorsDemo.ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classic.ColorsDemo.ItemCell.swift; sourceTree = "<group>"; };
+		B5A543F524FBF13A000DC5E3 /* Advanced.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.swift; sourceTree = "<group>"; };
+		B5A543FA2504840E000DC5E3 /* Advanced.EvolutionDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.swift; sourceTree = "<group>"; };
+		B5A543FE250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.MainView.swift; sourceTree = "<group>"; };
+		B5A54400250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.ListView.swift; sourceTree = "<group>"; };
+		B5A54402250487D4000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.ItemView.swift; sourceTree = "<group>"; };
+		B5A54404250487F5000DC5E3 /* Advanced.EvolutionDemo.CreatureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.CreatureType.swift; sourceTree = "<group>"; };
+		B5A5440625049480000DC5E3 /* Advanced.EvolutionDemo.CreatureV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.CreatureV1.swift; sourceTree = "<group>"; };
+		B5A5440825049489000DC5E3 /* Advanced.EvolutionDemo.CreatureV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.CreatureV2.swift; sourceTree = "<group>"; };
+		B5A5440A25049492000DC5E3 /* Advanced.EvolutionDemo.CreatureV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.CreatureV3.swift; sourceTree = "<group>"; };
+		B5A5440C2504949C000DC5E3 /* Advanced.EvolutionDemo.CreatureV4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.CreatureV4.swift; sourceTree = "<group>"; };
 		B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -259,6 +279,7 @@
 			children = (
 				B5A3915624E685B700E7E8BD /* ⭐️Modern */,
 				B5A3915724E685D300E7E8BD /* ⭐️Classic */,
+				B5A543F424FBF107000DC5E3 /* ⭐️Advanced */,
 			);
 			path = "⭐️Demos";
 			sourceTree = "<group>";
@@ -453,6 +474,63 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		B5A543F424FBF107000DC5E3 /* ⭐️Advanced */ = {
+			isa = PBXGroup;
+			children = (
+				B5A543F524FBF13A000DC5E3 /* Advanced.swift */,
+				B5A543F7250482D8000DC5E3 /* Accounts */,
+				B5A543F8250482EF000DC5E3 /* EvolutionDemo */,
+				B5A543F9250482F7000DC5E3 /* Logger */,
+			);
+			path = "⭐️Advanced";
+			sourceTree = "<group>";
+		};
+		B5A543F7250482D8000DC5E3 /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Accounts;
+			sourceTree = "<group>";
+		};
+		B5A543F8250482EF000DC5E3 /* EvolutionDemo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A543FA2504840E000DC5E3 /* Advanced.EvolutionDemo.swift */,
+				B5A543FE250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift */,
+				B5A54400250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift */,
+				B5A54402250487D4000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift */,
+				B5A543FD25048794000DC5E3 /* Models */,
+			);
+			path = EvolutionDemo;
+			sourceTree = "<group>";
+		};
+		B5A543F9250482F7000DC5E3 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				B5A543FC2504876F000DC5E3 /* Models */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		B5A543FC2504876F000DC5E3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		B5A543FD25048794000DC5E3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5A54404250487F5000DC5E3 /* Advanced.EvolutionDemo.CreatureType.swift */,
+				B5A5440625049480000DC5E3 /* Advanced.EvolutionDemo.CreatureV1.swift */,
+				B5A5440825049489000DC5E3 /* Advanced.EvolutionDemo.CreatureV2.swift */,
+				B5A5440A25049492000DC5E3 /* Advanced.EvolutionDemo.CreatureV3.swift */,
+				B5A5440C2504949C000DC5E3 /* Advanced.EvolutionDemo.CreatureV4.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -526,9 +604,11 @@
 			files = (
 				B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */,
 				B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */,
+				B5A54401250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift in Sources */,
 				B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */,
 				B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */,
 				B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */,
+				B5A543F624FBF13A000DC5E3 /* Advanced.swift in Sources */,
 				B5A3913424E6170500E7E8BD /* Menu.swift in Sources */,
 				B5A543DB24FB7513000DC5E3 /* Classic.ColorsDemo.xcdatamodeld in Sources */,
 				B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */,
@@ -550,6 +630,7 @@
 				B5A543E724FB82BB000DC5E3 /* Classic.ColorsDemo.Filter.swift in Sources */,
 				B5A543ED24FB84BE000DC5E3 /* Classic.ColorsDemo.MainView.swift in Sources */,
 				B5A3917E24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift in Sources */,
+				B5A54403250487D5000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift in Sources */,
 				B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */,
 				B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */,
 				B566C8EE24FA1EA3001134A1 /* Modern.PokedexDemo.Details.swift in Sources */,
@@ -561,22 +642,29 @@
 				B5A3918A24E7AD1800E7E8BD /* Modern.TimeZonesDemo.ListView.swift in Sources */,
 				B5A3918624E7A54A00E7E8BD /* Modern.TimeZonesDemo.TimeZone.swift in Sources */,
 				B5A391A624E8F4EA00E7E8BD /* ⭐️Modern.ColorsDemo.MainView.swift in Sources */,
+				B5A543FF250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift in Sources */,
 				B5A3916224E697BA00E7E8BD /* ⭐️Modern.PlacemarksDemo.MainView.swift in Sources */,
+				B5A54405250487F5000DC5E3 /* Advanced.EvolutionDemo.CreatureType.swift in Sources */,
 				B5A543EB24FB84AF000DC5E3 /* ⭐️Classic.ColorsDemo.DetailViewController.swift in Sources */,
+				B5A543FB2504840E000DC5E3 /* Advanced.EvolutionDemo.swift in Sources */,
 				B5A391B424E96C0A00E7E8BD /* ⭐️Modern.PokedexDemo.Form.swift in Sources */,
 				B531EFE924EB5A53005F247D /* ⭐️Modern.PokedexDemo.PokedexEntry.swift in Sources */,
 				B5A391BB24E970A400E7E8BD /* ⭐️Modern.PokedexDemo.PokemonType.swift in Sources */,
 				B531EFEB24EB5ECD005F247D /* ⭐️Modern.PokedexDemo.Service.swift in Sources */,
 				B5A391B924E96F8500E7E8BD /* ⭐️Modern.PokedexDemo.Species.swift in Sources */,
+				B5A5440D2504949C000DC5E3 /* Advanced.EvolutionDemo.CreatureV4.swift in Sources */,
 				B5A3918824E7A8F900E7E8BD /* ⭐️Modern.TimeZonesDemo.MainView.swift in Sources */,
 				B5A391AC24E9143B00E7E8BD /* Modern.ColorsDemo.UIKit.DetailView.swift in Sources */,
 				B5A391AA24E9104300E7E8BD /* Modern.ColorsDemo.UIKit.ItemCell.swift in Sources */,
 				B5A391A424E8F04300E7E8BD /* Modern.ColorsDemo.UIKit.ListView.swift in Sources */,
 				B5A543E924FB84A1000DC5E3 /* Classic.ColorsDemo.DetailView.swift in Sources */,
 				B5A3919A24E8207A00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.DetailView.swift in Sources */,
+				B5A5440925049489000DC5E3 /* Advanced.EvolutionDemo.CreatureV2.swift in Sources */,
 				B5A543F124FB84DD000DC5E3 /* ⭐️Classic.ColorsDemo.ListViewController.swift in Sources */,
 				B5A3919624E7E4AC00E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ItemView.swift in Sources */,
 				B5A3919424E7E36700E7E8BD /* ⭐️Modern.ColorsDemo.SwiftUI.ListView.swift in Sources */,
+				B5A5440B25049492000DC5E3 /* Advanced.EvolutionDemo.CreatureV3.swift in Sources */,
+				B5A5440725049480000DC5E3 /* Advanced.EvolutionDemo.CreatureV1.swift in Sources */,
 				B5A391AE24E9150F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.DetailViewController.swift in Sources */,
 				B5A391A224E8F01F00E7E8BD /* ⭐️Modern.ColorsDemo.UIKit.ListViewController.swift in Sources */,
 				B5A543DD24FB78F9000DC5E3 /* Classic.ColorsDemo.Palette.swift in Sources */,

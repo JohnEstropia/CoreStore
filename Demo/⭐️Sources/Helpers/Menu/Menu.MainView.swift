@@ -79,18 +79,6 @@ extension Menu {
                     }
                     Section(header: Text("Classic (NSManagedObject subclasses)")) {
                         Menu.ItemView(
-                            title: "Placemarks",
-                            subtitle: "Making changes using transactions in Swift",
-                            destination: { EmptyView() }
-                        )
-                        .disabled(true)
-                        Menu.ItemView(
-                            title: "Time Zones",
-                            subtitle: "Fetching objects and Querying raw values",
-                            destination: { EmptyView() }
-                        )
-                        .disabled(true)
-                        Menu.ItemView(
                             title: "Colors",
                             subtitle: "Observing list changes and single-object changes using ListMonitor",
                             destination: {
@@ -104,16 +92,19 @@ extension Menu {
                             subtitle: "Switching between multiple persistent stores",
                             destination: { EmptyView() }
                         )
+                        .disabled(true)
                         Menu.ItemView(
                             title: "Evolution",
                             subtitle: "Migrating and reverse-migrating stores",
                             destination: { EmptyView() }
                         )
+                        .disabled(true)
                         Menu.ItemView(
                             title: "Logger",
                             subtitle: "Implementing a custom logger",
                             destination: { EmptyView() }
                         )
+                        .disabled(true)
                     }
                 }
                 .listStyle(GroupedListStyle())

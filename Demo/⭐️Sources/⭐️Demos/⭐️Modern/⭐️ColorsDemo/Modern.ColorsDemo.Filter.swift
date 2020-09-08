@@ -28,7 +28,7 @@ extension Modern.ColorsDemo {
             switch self {
                 
             case .all: return .init()
-            case .light: return (\.$brightness >= 0.9)
+            case .light: return (\.$brightness >= 0.6)
             case .dark: return (\.$brightness <= 0.4)
             }
         }
