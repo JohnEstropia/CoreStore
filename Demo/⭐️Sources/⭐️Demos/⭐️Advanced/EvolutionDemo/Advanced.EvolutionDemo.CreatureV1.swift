@@ -11,7 +11,7 @@ extension Advanced.EvolutionDemo {
 
     // MARK: - Advanced.EvolutionDemo.CreatureV1
     
-    final class CreatureV1: CoreStoreObject {
+    final class CreatureV1: CoreStoreObject, Advanced.EvolutionDemo.CreatureType {
         
         // MARK: Internal
         
@@ -23,5 +23,8 @@ extension Advanced.EvolutionDemo {
 
         @Field.Stored("hasTail")
         var hasTail: Bool = false
+
+        @Field.Stored("numberOfFlagella")
+        var numberOfFlagella: Int32 = 0
     }
 }
