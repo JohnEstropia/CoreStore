@@ -16,9 +16,9 @@ extension Advanced.EvolutionDemo {
 
 // MARK: - Advanced.EvolutionDemo.CreatureType
 
-protocol Advanced_EvolutionDemo_CreatureType: CoreStoreObject, CustomStringConvertible {
+protocol Advanced_EvolutionDemo_CreatureType: DynamicObject, CustomStringConvertible {
 
     var dnaCode: Int64 { get }
 
-    func mutate()
+    func mutate(in transaction: BaseDataTransaction)
 }

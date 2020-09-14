@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Creature" representedClassName="Advanced_EvolutionDemo_V1_Creature" syncable="YES">
+        <attribute name="dnaCode" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="numberOfFlagella" attributeType="Integer 32" defaultValueString="2" usesScalarValueType="YES"/>
+    </entity>
+    <elements>
+        <element name="Creature" positionX="-27" positionY="18" width="128" height="73"/>
+    </elements>
+</model>
