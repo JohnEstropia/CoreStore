@@ -18,7 +18,13 @@ extension Advanced.EvolutionDemo {
 
 protocol Advanced_EvolutionDemo_CreatureType: DynamicObject, CustomStringConvertible {
 
-    var dnaCode: Int64 { get }
+    var dnaCode: Int64 { get set }
+
+    static func dataSource(in dataStack: DataStack) -> Advanced.EvolutionDemo.CreaturesDataSource
+
+    static func count(in transaction: BaseDataTransaction) throws -> Int
+
+    static func create(in transaction: BaseDataTransaction) -> Self
 
     func mutate(in transaction: BaseDataTransaction)
 }

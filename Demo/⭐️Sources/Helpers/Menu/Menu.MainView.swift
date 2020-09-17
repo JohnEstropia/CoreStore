@@ -96,9 +96,10 @@ extension Menu {
                         Menu.ItemView(
                             title: "Evolution",
                             subtitle: "Migrating and reverse-migrating stores",
-                            destination: { EmptyView() }
+                            destination: {
+                                Advanced.EvolutionDemo.MainView()
+                            }
                         )
-                        .disabled(true)
                         Menu.ItemView(
                             title: "Logger",
                             subtitle: "Implementing a custom logger",

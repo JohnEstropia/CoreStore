@@ -33,10 +33,6 @@ import CoreData
  All CoreStore's utilities are designed around `DynamicObject` instances. `NSManagedObject` and `CoreStoreObject` instances all conform to `DynamicObject`.
  */
 public protocol DynamicObject: AnyObject {
-    /**
-     The object ID for this instance
-     */
-    typealias ObjectID = NSManagedObjectID
     
     /**
      Used internally by CoreStore. Do not call directly.
@@ -72,6 +68,11 @@ public protocol DynamicObject: AnyObject {
 extension DynamicObject {
     
     // MARK: Internal
+
+    /**
+     The object ID for this instance
+     */
+    public typealias ObjectID = NSManagedObjectID
     
     internal func runtimeType() -> Self.Type {
         

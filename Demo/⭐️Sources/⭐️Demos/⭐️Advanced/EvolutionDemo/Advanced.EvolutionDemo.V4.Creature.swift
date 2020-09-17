@@ -60,6 +60,31 @@ extension Advanced.EvolutionDemo.V4 {
         
         
         // MARK: Advanced.EvolutionDemo.CreatureType
+
+        static func dataSource(in dataStack: DataStack) -> Advanced.EvolutionDemo.CreaturesDataSource {
+
+            return .init(
+                listPublisher: dataStack.publishList(
+                    From<Advanced.EvolutionDemo.V4.Creature>()
+                        .orderBy(.descending(\.$dnaCode))
+                ),
+                dataStack: dataStack
+            )
+        }
+
+        static func count(in transaction: BaseDataTransaction) throws -> Int {
+
+            return try transaction.fetchCount(
+                From<Advanced.EvolutionDemo.V4.Creature>()
+            )
+        }
+
+        static func create(in transaction: BaseDataTransaction) -> Advanced.EvolutionDemo.V4.Creature {
+
+            return transaction.create(
+                Into<Advanced.EvolutionDemo.V4.Creature>()
+            )
+        }
         
         func mutate(in transaction: BaseDataTransaction) {
             

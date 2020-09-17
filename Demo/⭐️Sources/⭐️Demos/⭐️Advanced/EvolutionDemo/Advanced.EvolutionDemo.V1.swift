@@ -18,7 +18,7 @@ extension Advanced.EvolutionDemo {
         
         // MARK: Internal
         
-        static let name: ModelVersion = "Advanced.Evolution.V1"
+        static let name: ModelVersion = "Advanced.EvolutionDemo.V1"
         
         typealias Creature = Advanced_EvolutionDemo_V1_Creature
     }

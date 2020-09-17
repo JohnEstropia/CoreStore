@@ -18,6 +18,6 @@ extension Advanced.EvolutionDemo {
         
         // MARK: Internal
         
-        static let name: ModelVersion = "Advanced.Evolution.V4"
+        static let name: ModelVersion = "Advanced.EvolutionDemo.V4"
     }
 }

@@ -30,6 +30,31 @@ final class Advanced_EvolutionDemo_V1_Creature: NSManagedObject, Advanced.Evolut
     
     
     // MARK: Advanced.EvolutionDemo.CreatureType
+
+    static func dataSource(in dataStack: DataStack) -> Advanced.EvolutionDemo.CreaturesDataSource {
+
+        return .init(
+            listPublisher: dataStack.publishList(
+                From<Advanced.EvolutionDemo.V1.Creature>()
+                    .orderBy(.descending(\.dnaCode))
+            ),
+            dataStack: dataStack
+        )
+    }
+
+    static func count(in transaction: BaseDataTransaction) throws -> Int {
+
+        return try transaction.fetchCount(
+            From<Advanced.EvolutionDemo.V1.Creature>()
+        )
+    }
+
+    static func create(in transaction: BaseDataTransaction) -> Advanced.EvolutionDemo.V1.Creature {
+
+        return transaction.create(
+            Into<Advanced.EvolutionDemo.V1.Creature>()
+        )
+    }
     
     func mutate(in transaction: BaseDataTransaction) {
         
