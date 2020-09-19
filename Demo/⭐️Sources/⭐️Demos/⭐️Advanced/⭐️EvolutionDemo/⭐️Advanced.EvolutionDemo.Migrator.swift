@@ -73,6 +73,28 @@ extension Advanced.EvolutionDemo {
             )
         }
 
+        /**
+         ⭐️ Sample 3: Find the model version used by an existing `SQLiteStore`, or just return the latest version if the store is not created yet.
+         */
+        private func findCurrentVersion() -> ModelVersion {
+
+            let allVersions = Advanced.EvolutionDemo.GeologicalPeriod.allCases
+                .map({ $0.version })
+
+            // Since we are only interested in finding current version, we'll assume an upgrading `MigrationChain`
+            let dataStack = self.createDataStack(
+                exactCurrentModelVersion: nil,
+                migrationChain: MigrationChain(allVersions)
+            )
+            let migrations = try! dataStack.requiredMigrationsForStorage(
+                self.accessSQLiteStore()
+            )
+
+            // If no migrations are needed, it means either the store is not created yet, or the store is already at the latest model version. In either case, we already know that the store will use the latest version
+            return migrations.first?.sourceVersion
+                ?? allVersions.last!
+        }
+
 
         // MARK: Internal
 
@@ -111,25 +133,14 @@ extension Advanced.EvolutionDemo {
         
         private func synchronizeCurrentVersion() {
 
-            // Since we are only interested in finding current version, we'll assume an upgrading `MigrationChain`
-            let dataStack = self.createDataStack(
-                exactCurrentModelVersion: nil,
-                migrationChain: MigrationChain(
-                    Advanced.EvolutionDemo.GeologicalPeriod.allCases.map({ $0.version })
-                )
-            )
-            let migrations = try! dataStack.requiredMigrationsForStorage(
-                self.accessSQLiteStore()
-            )
-            if let period = migrations.first
-                .flatMap({ Advanced.EvolutionDemo.GeologicalPeriod(rawValue: $0.sourceVersion) }) {
-
-                self.selectModelVersion(period)
-            }
+            guard
+                let currentPeriod = Advanced.EvolutionDemo.GeologicalPeriod(rawValue: self.findCurrentVersion())
             else {
 
                 self.selectModelVersion(self.currentPeriod)
+                return
             }
+            self.selectModelVersion(currentPeriod)
         }
         
         private func selectModelVersion(_ period: Advanced.EvolutionDemo.GeologicalPeriod) {

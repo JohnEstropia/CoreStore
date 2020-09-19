@@ -12,6 +12,9 @@ extension Advanced.EvolutionDemo {
 
     // MARK: - Advanced.EvolutionDemo.CreaturesDataSource
 
+    /**
+     A type-erasing adapter to support different `ListPublisher` types
+     */
     final class CreaturesDataSource: ObservableObject {
 
         // MARK: Internal

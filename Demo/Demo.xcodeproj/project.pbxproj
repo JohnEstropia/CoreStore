@@ -102,7 +102,7 @@
 		B5D6F1FE250E0B3F00DF5D2F /* Advanced.EvolutionDemo.GeologicalPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F1FD250E0B3F00DF5D2F /* Advanced.EvolutionDemo.GeologicalPeriod.swift */; };
 		B5D6F205250E0DD600DF5D2F /* Advanced.EvolutionDemo.V3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F204250E0DD600DF5D2F /* Advanced.EvolutionDemo.V3.swift */; };
 		B5D6F207250E0E3B00DF5D2F /* Advanced.EvolutionDemo.V4.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F206250E0E3B00DF5D2F /* Advanced.EvolutionDemo.V4.swift */; };
-		B5D6F209250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F208250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift */; };
+		B5D6F209250E14AA00DF5D2F /* ⭐️Advanced.EvolutionDemo.Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F208250E14AA00DF5D2F /* ⭐️Advanced.EvolutionDemo.Migrator.swift */; };
 		B5D6F210250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D6F20E250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodeld */; };
 		B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
@@ -219,7 +219,7 @@
 		B5D6F1FD250E0B3F00DF5D2F /* Advanced.EvolutionDemo.GeologicalPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.GeologicalPeriod.swift; sourceTree = "<group>"; };
 		B5D6F204250E0DD600DF5D2F /* Advanced.EvolutionDemo.V3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.V3.swift; sourceTree = "<group>"; };
 		B5D6F206250E0E3B00DF5D2F /* Advanced.EvolutionDemo.V4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.V4.swift; sourceTree = "<group>"; };
-		B5D6F208250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.Migrator.swift; sourceTree = "<group>"; };
+		B5D6F208250E14AA00DF5D2F /* ⭐️Advanced.EvolutionDemo.Migrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "⭐️Advanced.EvolutionDemo.Migrator.swift"; sourceTree = "<group>"; };
 		B5D6F20F250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Advanced.EvolutionDemo.V1.xcdatamodel; sourceTree = "<group>"; };
 		B5D6F211250E1E7000DF5D2F /* Advanced.EvolutionDemo.V2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Advanced.EvolutionDemo.V2.xcdatamodel; sourceTree = "<group>"; };
 		B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -515,21 +515,12 @@
 			isa = PBXGroup;
 			children = (
 				B5A543F524FBF13A000DC5E3 /* Advanced.swift */,
-				B5A543F7250482D8000DC5E3 /* Accounts */,
-				B5A543F8250482EF000DC5E3 /* EvolutionDemo */,
-				B5A543F9250482F7000DC5E3 /* Logger */,
+				B5A543F8250482EF000DC5E3 /* ⭐️EvolutionDemo */,
 			);
 			path = "⭐️Advanced";
 			sourceTree = "<group>";
 		};
-		B5A543F7250482D8000DC5E3 /* Accounts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Accounts;
-			sourceTree = "<group>";
-		};
-		B5A543F8250482EF000DC5E3 /* EvolutionDemo */ = {
+		B5A543F8250482EF000DC5E3 /* ⭐️EvolutionDemo */ = {
 			isa = PBXGroup;
 			children = (
 				B5A543FA2504840E000DC5E3 /* Advanced.EvolutionDemo.swift */,
@@ -537,27 +528,12 @@
 				B5A543FE250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift */,
 				B5A54400250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift */,
 				B5A54402250487D4000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift */,
-				B5D6F208250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift */,
+				B5D6F208250E14AA00DF5D2F /* ⭐️Advanced.EvolutionDemo.Migrator.swift */,
 				B5C18F3225138700001BEFB3 /* Advanced.EvolutionDemo.ProgressView.swift */,
 				B54D2F842511B70B004BEC7D /* Advanced.EvolutionDemo.CreaturesDataSource.swift */,
 				B5A543FD25048794000DC5E3 /* Models */,
 			);
-			path = EvolutionDemo;
-			sourceTree = "<group>";
-		};
-		B5A543F9250482F7000DC5E3 /* Logger */ = {
-			isa = PBXGroup;
-			children = (
-				B5A543FC2504876F000DC5E3 /* Models */,
-			);
-			path = Logger;
-			sourceTree = "<group>";
-		};
-		B5A543FC2504876F000DC5E3 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Models;
+			path = "⭐️EvolutionDemo";
 			sourceTree = "<group>";
 		};
 		B5A543FD25048794000DC5E3 /* Models */ = {
@@ -714,7 +690,7 @@
 				B5A54403250487D5000DC5E3 /* Advanced.EvolutionDemo.ItemView.swift in Sources */,
 				B5A54401250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift in Sources */,
 				B5A543FF250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift in Sources */,
-				B5D6F209250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift in Sources */,
+				B5D6F209250E14AA00DF5D2F /* ⭐️Advanced.EvolutionDemo.Migrator.swift in Sources */,
 				B5C18F3325138700001BEFB3 /* Advanced.EvolutionDemo.ProgressView.swift in Sources */,
 				B5D6F1F8250E07FD00DF5D2F /* Advanced.EvolutionDemo.V1.swift in Sources */,
 				B5D6F210250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodeld in Sources */,
@@ -793,14 +769,14 @@
 		B5A3911324E5424E00E7E8BD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Debug;
 		};
 		B5A3911424E5424E00E7E8BD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Release;
 		};
