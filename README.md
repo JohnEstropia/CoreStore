@@ -56,7 +56,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 - [TL;DR (a.k.a. sample codes)](#tldr-aka-sample-codes)
 - [Architecture](#architecture)
-- CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
+- CoreStore Tutorials (All of these have demos in the **Demo** app project!)
     - [Setting up](#setting-up)
         - [In-memory store](#in-memory-store)
         - [Local store](#local-store)
@@ -172,7 +172,7 @@ let maxAge = try dataStack.queryValue(
 
 But really, there's a reason I wrote this huge *README*. Read up on the details!
 
-Check out the **CoreStoreDemo** app project for sample codes as well!
+Check out the **Demo** app project for sample codes as well!
 
 
 

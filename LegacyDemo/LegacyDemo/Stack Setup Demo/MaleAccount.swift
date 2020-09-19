@@ -1,0 +1,15 @@
+//
+//  MaleAccount.swift
+//  LegacyDemo
+//
+//  Created by John Rommel Estropia on 2015/06/06.
+//  Copyright © 2018 John Rommel Estropia. All rights reserved.
+//
+
+import Foundation
+import CoreData
+
+class MaleAccount: UserAccount {
+
+
+}
