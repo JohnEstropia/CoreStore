@@ -71,7 +71,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     public subscript(index: Index) -> ObjectPublisher<O> {
 
         let context = self.context!
-        let itemID = self.diffableSnapshot.itemIdentifiers[index]
+        let itemID = self.diffableSnapshot.itemIdentifier(atAllItemsIndex: index)!
         return context.objectPublisher(objectID: itemID)
     }
 
@@ -83,16 +83,13 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      */
     public subscript(safeIndex index: Index) -> ObjectPublisher<O>? {
 
-        guard let context = self.context else {
+        guard
+            let context = self.context,
+            let itemID = self.diffableSnapshot.itemIdentifier(atAllItemsIndex: index)
+        else {
 
             return nil
         }
-        let itemIDs = self.diffableSnapshot.itemIdentifiers
-        guard itemIDs.indices.contains(index) else {
-
-            return nil
-        }
-        let itemID = itemIDs[index]
         return context.objectPublisher(objectID: itemID)
     }
 
@@ -603,14 +600,69 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     
     public var startIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.startIndex
+        return 0
     }
     
     public var endIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.endIndex
+        return self.diffableSnapshot.numberOfItems
     }
-    
+
+    public func index(after i: Index) -> Index {
+
+        return i + 1
+    }
+
+    public func formIndex(after i: inout Index) {
+
+        return i += 1
+    }
+
+    public func index(before i: Index) -> Index {
+
+        return i - 1
+    }
+
+    public func formIndex(before i: inout Index) {
+
+        return i -= 1
+    }
+
+
+    // MARK: BidirectionalCollection
+
+    public func index(_ i: Index, offsetBy distance: Int) -> Index {
+
+        return i + distance
+    }
+
+    public func index(_ i: Index, offsetBy distance: Int, limitedBy limit: Int) -> Index? {
+
+        let length = limit - i
+        if distance > 0
+            ? length >= 0 && length < distance
+            : length <= 0 && length > distance {
+
+            return nil
+        }
+        return i + distance
+    }
+
+    public func distance(from start: Index, to end: Index) -> Int {
+
+        return end - start
+    }
+
+    public subscript(bounds: Range<Index>) -> ArraySlice<Element> {
+
+        guard let context = self.context else {
+
+            return .init()
+        }
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(atAllItemsBounds: bounds)
+        return ArraySlice(itemIDs.map(context.objectPublisher(objectID:)))
+    }
+
     
     // MARK: Sequence
     

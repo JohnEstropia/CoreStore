@@ -78,7 +78,7 @@ extension Internals {
 
         var numberOfItems: Int {
 
-            return self.structure.allItemIDs.count
+            return self.structure.allItemsCount
         }
 
         var numberOfSections: Int {
@@ -104,6 +104,59 @@ extension Internals {
         func numberOfItems(inSection identifier: String) -> Int {
 
             return self.itemIdentifiers(inSection: identifier).count
+        }
+
+        func itemIdentifier(atAllItemsIndex index: Int) -> NSManagedObjectID? {
+
+            guard index >= 0 else {
+
+                return nil
+            }
+            var remainingIndex = index
+            for section in self.structure.sections {
+
+                let elements = section.elements
+                let sectionCount = elements.count
+                if remainingIndex < sectionCount {
+
+                    return elements[remainingIndex].differenceIdentifier
+                }
+
+                remainingIndex -= sectionCount
+            }
+            return nil
+        }
+
+        func itemIdentifiers(atAllItemsBounds bounds: Range<Int>) -> [NSManagedObjectID] {
+
+            var remainingIndex = bounds.lowerBound
+            var itemIdentifiers: [NSManagedObjectID] = []
+            for section in self.structure.sections {
+
+                let elements = section.elements
+                let sectionCount = elements.count
+                if remainingIndex < sectionCount {
+
+                    itemIdentifiers.append(
+                        contentsOf: elements[remainingIndex..<min(sectionCount, bounds.count)]
+                            .map({ $0.differenceIdentifier })
+                    )
+                }
+                else if !itemIdentifiers.isEmpty {
+
+                    itemIdentifiers.append(
+                        contentsOf: elements.prefix(bounds.count - itemIdentifiers.count)
+                            .map({ $0.differenceIdentifier })
+                    )
+                }
+                if itemIdentifiers.count >= bounds.count {
+
+                    return itemIdentifiers
+                }
+
+                remainingIndex -= sectionCount
+            }
+            return itemIdentifiers
         }
 
         func itemIdentifiers(inSection identifier: String) -> [NSManagedObjectID] {
@@ -330,6 +383,14 @@ extension Internals {
             var allSectionIDs: [String] {
 
                 return self.sections.map({ $0.differenceIdentifier })
+            }
+
+            var allItemsCount: Int {
+
+                return self.sections.reduce(into: 0) { (result, section) in
+
+                    result += section.elements.count
+                }
             }
 
             var allItemIDs: [NSManagedObjectID] {
