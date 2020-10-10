@@ -268,6 +268,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
+ ```
+ */
+public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: O) -> Where<O> where O.ObjectType: NSManagedObject {
+    
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object.cs_id())
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
@@ -276,6 +287,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
 public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ objectID: NSManagedObjectID) -> Where<O> {
     
     return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
+ ```
+ */
+public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: O) -> Where<O> where O.ObjectType: NSManagedObject {
+    
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object.cs_id())
 }
 
 /**
@@ -304,6 +326,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
+ ```
+ */
+public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: O?) -> Where<O> where O.ObjectType: NSManagedObject {
+    
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object?.cs_toRaw())
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
@@ -312,6 +345,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
 public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
+ ```
+ */
+public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: O?) -> Where<O> where O.ObjectType: NSManagedObject {
+    
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object?.cs_toRaw())
 }
 
 /**
@@ -696,6 +740,17 @@ public func == <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldCon
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
+public func == <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: R?) -> Where<O> where D.DestinationObjectType == R.ObjectType {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object?.objectID())
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
+ ```
+ */
 public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
@@ -721,6 +776,17 @@ public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 public func != <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: D.DestinationObjectType?) -> Where<O> {
 
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
+ ```
+ */
+public func != <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: R?) -> Where<O> where D.DestinationObjectType == R.ObjectType {
+
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object?.objectID())
 }
 
 /**
