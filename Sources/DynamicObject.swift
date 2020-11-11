@@ -217,7 +217,8 @@ extension CoreStoreObject {
 
             guard
                 let object = context.fetchExisting(id) as CoreStoreObject?,
-                let rawObject = object.rawObject
+                let rawObject = object.rawObject,
+                !rawObject.isDeleted
                 else {
 
                     return nil

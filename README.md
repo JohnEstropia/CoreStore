@@ -2095,7 +2095,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.3.0"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.3.1"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.
