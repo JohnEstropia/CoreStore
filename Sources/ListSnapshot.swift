@@ -597,20 +597,32 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         self.diffableSnapshot.reloadSections(sectionIDs)
     }
 
-    
-    
+
     // MARK: RandomAccessCollection
     
     public var startIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.startIndex
+        return 0
     }
     
     public var endIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.endIndex
+        return self.diffableSnapshot.numberOfItems
     }
-    
+
+
+    // MARK: BidirectionalCollection
+
+    public func index(_ i: Int, offsetBy distance: Int) -> Int {
+
+        return i + distance
+    }
+
+    public func distance(from start: Int, to end: Int) -> Int {
+
+        return end - start
+    }
+
     
     // MARK: Sequence
     

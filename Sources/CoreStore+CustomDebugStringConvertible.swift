@@ -1189,7 +1189,6 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier as Any),
             ("isIndexedBySpotlight", self.isIndexedBySpotlight),
-            ("isStoredInExternalRecord", self.isStoredInExternalRecord),
             ("renamingIdentifier", self.renamingIdentifier as Any)
         )
     }
@@ -1363,11 +1362,9 @@ extension NSRelationshipDescription: CoreStoreDebugStringConvertible {
             ("isOptional", self.isOptional),
             ("isTransient", self.isTransient),
             ("userInfo", self.userInfo as Any),
-            ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier as Any),
             ("isIndexedBySpotlight", self.isIndexedBySpotlight),
-            ("isStoredInExternalRecord", self.isStoredInExternalRecord),
             ("renamingIdentifier", self.renamingIdentifier as Any)
         )
     }
