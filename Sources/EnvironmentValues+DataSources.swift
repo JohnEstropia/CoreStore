@@ -45,6 +45,7 @@ extension EnvironmentValues {
      var dataStack: DataStack
      ```
      */
+    @available(*, unavailable, message: "Removed due to being prone to mis-initialization. Please pass your DataStack instance directly, or inject using a method with more deterministic timing.")
     public var dataStack: DataStack {
         
         get {
