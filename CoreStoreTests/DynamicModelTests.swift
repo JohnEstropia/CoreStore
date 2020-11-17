@@ -290,19 +290,6 @@ class DynamicModelTests: BaseTestDataTestCase {
                         }
                     }
 
-//                    #if swift(>=5.1)
-//
-//                    let dogKeyPathBuilder = Dog.keyPathBuilder()
-//                    XCTAssertEqual(dogKeyPathBuilder.species.keyPathString, "SELF.species")
-//                    XCTAssertEqual(dogKeyPathBuilder.master.title.keyPathString, "SELF.master.title")
-//                    let a = dogKeyPathBuilder.master
-//                    let b = dogKeyPathBuilder.master.spouse
-//                    let c = dogKeyPathBuilder.master.spouse.pets
-//                    let d = dogKeyPathBuilder.master.spouse.pets.color
-//                    XCTAssertEqual(dogKeyPathBuilder.master.spouse.pets.color.keyPathString, "SELF.master.spouse.pets.color")
-//
-//                    #endif
-
                     let didSetObserver = dog.observe(\.$species, options: [.new, .old]) { (object, change) in
 
                         XCTAssertEqual(object, dog)

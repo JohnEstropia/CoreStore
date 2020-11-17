@@ -449,20 +449,18 @@ extension ObjectPublisher where O: NSManagedObject {
     /**
      Returns the value for the property identified by a given key.
      */
-     @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
-    public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
+    public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V! {
 
-        fatalError()
-//        return self.snapshot[dynamicMember: member]
+        return self.snapshot?[dynamicMember: member]
     }
 
-    /**
-     Returns the value for the property identified by a given key.
-     */
+
+    // MARK: Deprecated
+
+    @available(*, deprecated, message: "Accessing the property directly now works")
     public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
 
-        let key = String(keyPath: keyPath)
-        return self.snapshot?.dictionaryForValues()[key] as! V?
+        return self[dynamicMember: keyPath]
     }
 }
 

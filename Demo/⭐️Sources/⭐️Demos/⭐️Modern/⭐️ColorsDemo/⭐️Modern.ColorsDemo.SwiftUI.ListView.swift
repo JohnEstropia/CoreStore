@@ -5,6 +5,7 @@
 import CoreStore
 import SwiftUI
 
+
 // MARK: - Modern.ColorsDemo.SwiftUI
 
 extension Modern.ColorsDemo.SwiftUI {
@@ -39,7 +40,7 @@ extension Modern.ColorsDemo.SwiftUI {
                             .listRowInsets(.init())
                         }
                         .onDelete { itemIndices in
-                            
+
                             self.deleteColors(at: itemIndices, in: sectionID)
                         }
                     }

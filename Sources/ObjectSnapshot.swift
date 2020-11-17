@@ -144,29 +144,33 @@ extension ObjectSnapshot where O: NSManagedObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
-    public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
+    public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V! {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! V
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V?
+        }
+        set  {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
-    /**
-     Returns the value for the property identified by a given key.
-     */
+
+    // MARK: Deprecated
+
+    @available(*, deprecated, message: "Accessing the property directly now works")
     public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
 
-        let key = String(keyPath: keyPath)
-        return self.values[key] as! V?
+        return self[dynamicMember: keyPath]
     }
 
-    /**
-     Mutates the value for the property identified by a given key.
-     */
+    @available(*, deprecated, message: "Mutating the property directly now works")
     public mutating func setValue<V: AllowedObjectiveCKeyPathValue>(_ value: V!, forKeyPath keyPath: KeyPath<O, V>) {
 
-        let key = String(keyPath: keyPath)
-        self.values[key] = value
+        self[dynamicMember: keyPath]  = value
     }
 }
 

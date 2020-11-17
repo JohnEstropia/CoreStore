@@ -77,17 +77,10 @@ final class WhereTests: XCTestCase {
 
             do {
 
-//                let keyPathBuilder = TestEntity1.keyPathBuilder()
-
-//                let kp = \TestEntity1.testToOne
-//                print(keyPathBuilder.testString)
-//                print(keyPathBuilder.testToOne)
-//                print(keyPathBuilder.testToOne.testEntityID)
                 XCTAssertAllEqual(
                     #keyPath(TestEntity1.testToOne.testEntityID),
                     (\TestEntity1.testToOne ~ \.testEntityID).description,
                     String(keyPath: \TestEntity1.testToOne ~ \.testEntityID)
-//                    keyPathBuilder.testToOne.testEntityID.keyPathString
                 )
                 XCTAssertAllEqual(
                     #keyPath(TestEntity1.testToOne.testToOne.testToManyUnordered),
