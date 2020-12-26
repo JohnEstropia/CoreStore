@@ -98,7 +98,7 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
     public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
 
         return lhs.id == rhs.id
-            && lhs.valuesRef == rhs.valuesRef
+            && (lhs.generation == rhs.generation || lhs.valuesRef == rhs.valuesRef)
     }
 
 
@@ -122,18 +122,27 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
         self.id = objectID
         self.context = context
         self.values = values
+        self.generation = .init()
     }
 
 
     // MARK: FilePrivate
 
-    fileprivate var values: [String: Any]
+    fileprivate var values: [String: Any] {
+        
+        didSet {
+            
+            self.generation = .init()
+        }
+    }
 
 
     // MARK: Private
 
     private let id: O.ObjectID
     private let context: NSManagedObjectContext
+    
+    private var generation: UUID
 
     private var valuesRef: NSDictionary {
 
