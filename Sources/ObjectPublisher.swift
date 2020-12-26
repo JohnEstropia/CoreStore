@@ -173,6 +173,11 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
         }
         return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
 
 
     // MARK: Equatable

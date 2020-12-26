@@ -86,6 +86,11 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
         let context = transaction.unsafeContext()
         return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
 
 
     // MARK: Equatable

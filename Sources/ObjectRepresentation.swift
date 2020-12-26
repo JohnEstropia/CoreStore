@@ -67,6 +67,11 @@ public protocol ObjectRepresentation {
      A thread-safe `struct` that is a full-copy of the object's properties
      */
     func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    func cs_dataStack() -> DataStack?
 }
 
 extension NSManagedObject: ObjectRepresentation {}
@@ -141,5 +146,10 @@ extension DynamicObject where Self: ObjectRepresentation {
 
         let context = transaction.unsafeContext()
         return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
+    }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.cs_toRaw().managedObjectContext?.parentStack
     }
 }
