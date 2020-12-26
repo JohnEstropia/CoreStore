@@ -469,7 +469,7 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo null: Void?) {
+    public init<V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isEqualTo null: Void?) {
         
         self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
     }
@@ -480,9 +480,42 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo null: Void?) {
+    public init<V: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isEqualTo null: Void?) {
         
         self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<V, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isMemberOf list: S) where S.Iterator.Element == V {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<V: FieldRelationshipToOneType, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isMemberOf list: S) where S.Iterator.Element == V.DestinationObjectType {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<V: FieldRelationshipToOneType, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
     }
     
     /**
@@ -505,6 +538,28 @@ extension Where where O: CoreStoreObject {
     public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo value: V?) {
         
         self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality to `nil`
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter null: the arguments for the `==` operator
+     */
+    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo null: Void?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality to `nil`
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter null: the arguments for the `==` operator
+     */
+    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo null: Void?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
     }
     
     /**
