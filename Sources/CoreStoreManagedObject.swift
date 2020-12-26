@@ -48,6 +48,6 @@ import Foundation
 
 private enum Static {
     
-    static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue")
+    static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue", qos: .userInteractive)
     static var cache: [ObjectIdentifier: [KeyPathString: Set<KeyPathString>]] = [:]
 }

@@ -254,7 +254,7 @@ public final class CoreStoreSchema: DynamicSchema {
     
     // MARK: Private
     
-    private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.coreStoreDataModelBarrierQueue")
+    private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.coreStoreDataModelBarrierQueue", qos: .userInteractive)
     
     private let allEntities: Set<DynamicEntity>
     

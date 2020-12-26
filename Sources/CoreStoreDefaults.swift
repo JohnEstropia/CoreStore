@@ -69,7 +69,7 @@ public enum CoreStoreDefaults {
 
     // MARK: Private
 
-    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue")
+    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue", qos: .userInteractive)
 
     private static var defaultStackInstance: DataStack?
 }

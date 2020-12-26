@@ -31,7 +31,7 @@ import Foundation
 extension DispatchQueue {
     
     @nonobjc @inline(__always)
-    internal static func serial(_ label: String, qos: DispatchQoS = .default) -> DispatchQueue {
+    internal static func serial(_ label: String, qos: DispatchQoS) -> DispatchQueue {
         
         return DispatchQueue(
             label: label,
@@ -43,7 +43,7 @@ extension DispatchQueue {
     }
     
     @nonobjc @inline(__always)
-    internal static func concurrent(_ label: String, qos: DispatchQoS = .default) -> DispatchQueue {
+    internal static func concurrent(_ label: String, qos: DispatchQoS) -> DispatchQueue {
         
         return DispatchQueue(
             label: label,

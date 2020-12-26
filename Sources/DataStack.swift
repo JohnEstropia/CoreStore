@@ -440,8 +440,8 @@ public final class DataStack: Equatable {
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     internal let schemaHistory: SchemaHistory
-    internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue")
-    internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue")
+    internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue", qos: .utility)
+    internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue", qos: .userInteractive)
     internal let migrationQueue: OperationQueue = Internals.with {
         
         let migrationQueue = OperationQueue()
