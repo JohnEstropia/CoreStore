@@ -48,16 +48,24 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
 
         return self.values
     }
-
     
-    // MARK: ObjectRepresentation
-
-    public typealias ObjectType = O
+    
+    // MARK: AnyObjectRepresentation
     
     public func objectID() -> O.ObjectID {
         
         return self.id
     }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
+
+    
+    // MARK: ObjectRepresentation
+
+    public typealias ObjectType = O
     
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
@@ -85,11 +93,6 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
         
         let context = transaction.unsafeContext()
         return ObjectSnapshot<O>(objectID: self.id, context: context)
-    }
-    
-    public func cs_dataStack() -> DataStack? {
-        
-        return self.context.parentStack
     }
 
 

@@ -40,12 +40,7 @@ import CoreData
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
 @available(macOS 10.12, *)
-public final class ObjectMonitor<O: DynamicObject>: Equatable {
-
-    /**
-     The object type represented by this `ObjectMonitor`
-     */
-    public typealias ObjectType = O
+public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation {
     
     /**
      Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
@@ -153,6 +148,51 @@ public final class ObjectMonitor<O: DynamicObject>: Equatable {
     public func hash(into hasher: inout Hasher) {
 
         hasher.combine(ObjectIdentifier(self))
+    }
+    
+    
+    // MARK: AnyObjectRepresentation
+    
+    public func objectID() -> O.ObjectID {
+        
+        return self.id
+    }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
+    
+    
+    // MARK: ObjectRepresentation
+    
+    public typealias ObjectType = O
+    
+    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
+        
+        return dataStack.unsafeContext().objectPublisher(objectID: self.id)
+    }
+
+    public func asReadOnly(in dataStack: DataStack) -> O? {
+
+        return dataStack.unsafeContext().fetchExisting(self.id)
+    }
+    
+    public func asEditable(in transaction: BaseDataTransaction) -> O? {
+        
+        return transaction.unsafeContext().fetchExisting(self.id)
+    }
+    
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
+        
+        let context = dataStack.unsafeContext()
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
+    }
+    
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
+        
+        let context = transaction.unsafeContext()
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
     
     

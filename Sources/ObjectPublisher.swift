@@ -125,14 +125,22 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     }
     
     
-    // MARK: ObjectRepresentation
-
-    public typealias ObjectType = O
+    // MARK: AnyObjectRepresentation
     
     public func objectID() -> O.ObjectID {
         
         return self.id
     }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
+    
+    
+    // MARK: ObjectRepresentation
+
+    public typealias ObjectType = O
     
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
@@ -172,11 +180,6 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             return self.lazySnapshot
         }
         return ObjectSnapshot<O>(objectID: self.id, context: context)
-    }
-    
-    public func cs_dataStack() -> DataStack? {
-        
-        return self.context.parentStack
     }
 
 

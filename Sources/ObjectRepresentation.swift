@@ -26,22 +26,36 @@
 import CoreData
 
 
+// MARK: - AnyObjectRepresentation
+
+/**
+ Used internally by CoreStore. Do not conform to directly.
+ */
+public protocol AnyObjectRepresentation {
+    
+    /**
+     The internal ID for the object.
+     */
+    func objectID() -> NSManagedObjectID
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    func cs_dataStack() -> DataStack?
+}
+
+
 // MARK - ObjectRepresentation
 
 /**
  An object that acts as interfaces for `CoreStoreObject`s or `NSManagedObject`s
  */
-public protocol ObjectRepresentation {
+public protocol ObjectRepresentation: AnyObjectRepresentation {
     
     /**
      The object type represented by this protocol
      */
     associatedtype ObjectType: DynamicObject
-    
-    /**
-     The internal ID for the object.
-     */
-    func objectID() -> ObjectType.ObjectID
     
     /**
      An instance that may be observed for object changes.
@@ -67,11 +81,6 @@ public protocol ObjectRepresentation {
      A thread-safe `struct` that is a full-copy of the object's properties
      */
     func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
-    
-    /**
-     Used internally by CoreStore. Do not call directly.
-     */
-    func cs_dataStack() -> DataStack?
 }
 
 extension NSManagedObject: ObjectRepresentation {}
@@ -101,14 +110,22 @@ extension DynamicObject where Self: ObjectRepresentation {
             .managedObjectContext
             .flatMap({ ObjectSnapshot<Self>(objectID: self.cs_id(), context: $0) })
     }
-
-
-    // MARK: ObjectRepresentation
-
+    
+    
+    // MARK: AnyObjectRepresentation
+    
     public func objectID() -> Self.ObjectID {
 
         return self.cs_id()
     }
+    
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.cs_toRaw().managedObjectContext?.parentStack
+    }
+
+
+    // MARK: ObjectRepresentation
 
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<Self> {
 
@@ -146,10 +163,5 @@ extension DynamicObject where Self: ObjectRepresentation {
 
         let context = transaction.unsafeContext()
         return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
-    }
-    
-    public func cs_dataStack() -> DataStack? {
-        
-        return self.cs_toRaw().managedObjectContext?.parentStack
     }
 }
