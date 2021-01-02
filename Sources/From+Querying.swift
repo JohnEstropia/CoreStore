@@ -43,6 +43,28 @@ extension From {
     }
     
     /**
+     Creates a `FetchChainBuilder` that `AND`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `&&` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
+     */
+    public func `where`(combineByAnd clauses: Where<O>...) -> FetchChainBuilder<O> {
+        
+        return self.fetchChain(appending: clauses.combinedByAnd())
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `OR`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `||` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
+     */
+    public func `where`(combineByOr clauses: Where<O>...) -> FetchChainBuilder<O> {
+        
+        return self.fetchChain(appending: clauses.combinedByOr())
+    }
+    
+    /**
      Creates a `FetchChainBuilder` with a predicate using the specified string format and arguments
      
      - parameter format: the format string for the predicate
@@ -295,11 +317,6 @@ extension From where O: CoreStoreObject {
         
         return self.fetchChain(appending: clause(O.meta))
     }
-
-    public func `where`(combinedByAnd clause: Where<O>, _ others: Where<O>...) -> FetchChainBuilder<O> {
-
-        return self.fetchChain(appending: ([clause] + others).combinedByAnd())
-    }
     
     /**
      Creates a `QueryChainBuilder` that starts with a `Select` clause created from the specified key path
@@ -545,6 +562,28 @@ extension FetchChainBuilder {
     }
     
     /**
+     Creates a `FetchChainBuilder` that `AND`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `&&` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
+     */
+    public func `where`(combineByAnd clauses: Where<O>...) -> FetchChainBuilder<O> {
+        
+        return self.fetchChain(appending: clauses.combinedByAnd())
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `OR`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `||` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
+     */
+    public func `where`(combineByOr clauses: Where<O>...) -> FetchChainBuilder<O> {
+        
+        return self.fetchChain(appending: clauses.combinedByOr())
+    }
+    
+    /**
      Adds a `Where` clause to the `FetchChainBuilder`
      
      - parameter format: the format string for the predicate
@@ -680,6 +719,28 @@ extension QueryChainBuilder {
     public func `where`(_ clause: Where<O>) -> QueryChainBuilder<O, R> {
         
         return self.queryChain(appending: clause)
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `AND`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `&&` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
+     */
+    public func `where`(combineByAnd clauses: Where<O>...) -> QueryChainBuilder<O> {
+        
+        return self.queryChain(appending: clauses.combinedByAnd())
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `OR`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `||` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
+     */
+    public func `where`(combineByOr clauses: Where<O>...) -> QueryChainBuilder<O> {
+        
+        return self.queryChain(appending: clauses.combinedByOr())
     }
     
     /**
@@ -955,6 +1016,28 @@ extension SectionMonitorChainBuilder {
     public func `where`(_ clause: Where<O>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionMonitorChain(appending: clause)
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `AND`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `&&` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
+     */
+    public func `where`(combineByAnd clauses: Where<O>...) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionMonitorChain(appending: clauses.combinedByAnd())
+    }
+    
+    /**
+     Creates a `FetchChainBuilder` that `OR`s the specified `Where` clauses. Use this overload if the compiler cannot infer the types when chaining multiple `||` operators.
+     
+     - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
+     - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
+     */
+    public func `where`(combineByOr clauses: Where<O>...) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionMonitorChain(appending: clauses.combinedByOr())
     }
     
     /**
