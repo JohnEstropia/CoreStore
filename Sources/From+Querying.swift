@@ -727,7 +727,7 @@ extension QueryChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
      */
-    public func `where`(combineByAnd clauses: Where<O>...) -> QueryChainBuilder<O> {
+    public func `where`(combineByAnd clauses: Where<O>...) -> QueryChainBuilder<O, R> {
         
         return self.queryChain(appending: clauses.combinedByAnd())
     }
@@ -738,7 +738,7 @@ extension QueryChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
      */
-    public func `where`(combineByOr clauses: Where<O>...) -> QueryChainBuilder<O> {
+    public func `where`(combineByOr clauses: Where<O>...) -> QueryChainBuilder<O, R> {
         
         return self.queryChain(appending: clauses.combinedByOr())
     }
