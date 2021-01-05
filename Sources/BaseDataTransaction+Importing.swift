@@ -229,8 +229,21 @@ extension BaseDataTransaction {
                         continue
                     }
                     try autoreleasepool {
-
-                        if let object = existingObjectsByID[objectID] {
+                        
+                        var existingObject = existingObjectsByID[objectID]
+                        if existingObject == nil {
+                            
+                            existingObject = self.context.insertedObjects.first(where: { (object) -> Bool in
+                                
+                                guard let object = object as? O else {
+                                    
+                                    return false
+                                }
+                                return object.uniqueIDValue == objectID
+                                
+                            }) as? O
+                        }
+                        if let object = existingObject {
                             
                             guard entityType.shouldUpdate(from: source, in: self) else {
                                 
