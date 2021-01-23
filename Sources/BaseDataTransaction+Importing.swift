@@ -230,7 +230,10 @@ extension BaseDataTransaction {
                     }
                     try autoreleasepool {
 
-                        if let object = existingObjectsByID[objectID] {
+                        if let object = existingObjectsByID[objectID]
+                            ?? self.context.insertedObjects
+                            .compactMap({ O.cs_matches(object: $0) ? O.cs_fromRaw(object: $0) : nil })
+                            .first(where: { $0.uniqueIDValue == objectID }) {
                             
                             guard entityType.shouldUpdate(from: source, in: self) else {
                                 

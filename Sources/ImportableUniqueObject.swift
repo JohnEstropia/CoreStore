@@ -53,7 +53,7 @@ import CoreData
  )
  ```
  */
-public protocol ImportableUniqueObject: ImportableObject {
+public protocol ImportableUniqueObject: ImportableObject, Hashable {
     
     /**
      The data type for the entity's unique ID attribute

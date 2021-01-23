@@ -63,7 +63,7 @@ extension DiffableDataSource {
      */
     open class TableViewAdapter<O: DynamicObject>: BaseAdapter<O, DefaultTableViewTarget<UITableView>>, UITableViewDataSource {
 
-        // MARK: Publi
+        // MARK: Public
 
         /**
          Initializes the `DiffableDataSource.TableViewAdapter`. This instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
