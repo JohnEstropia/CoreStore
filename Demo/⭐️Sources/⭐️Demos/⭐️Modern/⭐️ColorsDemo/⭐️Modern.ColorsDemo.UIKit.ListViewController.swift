@@ -36,17 +36,13 @@ extension Modern.ColorsDemo.UIKit {
          */
         private func startObservingList() {
             
+            let dataSource = self.dataSource
             self.listPublisher.addObserver(self) { (listPublisher) in
                 
-                self.dataSource.apply(
-                    listPublisher.snapshot,
-                    animatingDifferences: true
-                )
+                dataSource.apply(listPublisher.snapshot, animatingDifferences: true)
             }
-            self.dataSource.apply(
-                listPublisher.snapshot,
-                animatingDifferences: false
-            )
+            
+            dataSource.apply(self.listPublisher.snapshot, animatingDifferences: false)
         }
         
         /**

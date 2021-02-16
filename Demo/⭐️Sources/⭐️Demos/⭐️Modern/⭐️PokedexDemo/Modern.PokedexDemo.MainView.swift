@@ -12,30 +12,28 @@ extension Modern.PokedexDemo {
 
     // MARK: - Modern.PokedexDemo.MainView
 
-    struct MainView: View {
+    struct MainView<ListView: View>: View {
 
         // MARK: Internal
-
-        init() {
-
-            self.pokedexEntries = Modern.PokedexDemo.pokedexEntries
+        
+        init(
+            listView: @escaping () -> ListView
+        ) {
+            
+            self.listView = listView
         }
 
 
         // MARK: View
 
         var body: some View {
-            let pokedexEntries = self.pokedexEntries.snapshot
-            return ZStack {
+            ZStack {
                 
-                Modern.PokedexDemo.ListView(
-                    service: self.service,
-                    listPublisher: self.pokedexEntries
-                )
+                self.listView()
                 .frame(minHeight: 0, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.vertical)
                 
-                if pokedexEntries.isEmpty {
+                if self.pokedexEntries.isEmpty {
                     
                     VStack(alignment: .center, spacing: 30) {
                         Text("This demo needs to make a network connection to download Pokedex entries")
@@ -64,11 +62,17 @@ extension Modern.PokedexDemo {
 
         // MARK: Private
         
-        @ObservedObject
-        private var pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry>
+        @LiveList(
+            From<Modern.PokedexDemo.PokedexEntry>()
+                .orderBy(.ascending(\.$index)),
+            in: Modern.PokedexDemo.dataStack
+        )
+        private var pokedexEntries
 
         @ObservedObject
         private var service: Modern.PokedexDemo.Service = .init()
+        
+        private let listView: () -> ListView
     }
 }
 
@@ -82,7 +86,9 @@ struct _Demo_Modern_PokedexDemo_MainView_Preview: PreviewProvider {
 
     static var previews: some View {
 
-        Modern.PokedexDemo.MainView()
+        Modern.PokedexDemo.MainView(
+            listView: Modern.PokedexDemo.UIKit.ListView.init
+        )
     }
 }
 

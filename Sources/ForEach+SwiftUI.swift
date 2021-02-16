@@ -1,5 +1,5 @@
 //
-//  ObjectReader.swift
+//  ForEach+SwiftUI.swift
 //  CoreStore
 //
 //  Copyright © 2021 John Rommel Estropia
@@ -29,53 +29,28 @@ import Combine
 import SwiftUI
 
 
-// MARK: - ObjectReader
+// MARK: - ForEach
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+extension ForEach where Content: View {
     
-    // MARK: Internal
-    
-    public init(
-        _ objectPublisher: ObjectPublisher<Object>?,
-        @ViewBuilder content: @escaping (Value) -> Content
-    ) where Value == LiveObject<Object>.Item {
+    // MARK: Public
+
+    public init<O: DynamicObject>(
+        _ listSnapshot: Data,
+        @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
+    ) where Data == LiveList<O>.Items, ID == O.ObjectID {
         
-        self._object = .init(objectPublisher)
-        self.content = content
-        self.keyPath = \.self
+        self.init(listSnapshot, id: \.cs_objectID, content: content)
     }
     
-    public init(
-        _ objectPublisher: ObjectPublisher<Object>?,
-        keyPath: KeyPath<LiveObject<Object>.Item, Value>,
-        @ViewBuilder content: @escaping (Value) -> Content
-    ) {
+    public init<O: DynamicObject>(
+        _ objectPublishers: Data,
+        @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
+    ) where Data.Element == ObjectPublisher<O>, ID == O.ObjectID {
         
-        self._object = .init(objectPublisher)
-        self.content = content
-        self.keyPath = keyPath
+        self.init(objectPublishers, id: \.cs_objectID, content: content)
     }
-    
-    
-    // MARK: View
-    
-    public var body: some View {
-        
-        if let object = self.object {
-            
-            self.content(object[keyPath: self.keyPath])
-        }
-    }
-    
-    
-    // MARK: Private
-    
-    @LiveObject
-    private var object: LiveObject<Object>.Item?
-    
-    private let content: (Value) -> Content
-    private let keyPath: KeyPath<LiveObject<Object>.Item, Value>
 }
 
 #endif

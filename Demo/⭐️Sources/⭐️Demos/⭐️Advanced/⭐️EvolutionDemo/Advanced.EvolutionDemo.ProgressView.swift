@@ -45,17 +45,16 @@ extension Advanced.EvolutionDemo {
                         .padding(.horizontal)
                     GeometryReader { geometry in
                         ZStack(alignment: .leading) {
-                            Color.gray
-                                .opacity(0.2)
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.gray.opacity(0.2))
                                 .frame(width: geometry.size.width, height: 8)
-                                .cornerRadius(4.0)
-                            Color.blue
+                            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                .fill(Color.blue)
                                 .frame(
                                     width: geometry.size.width
                                         * self.progressObserver.fractionCompleted,
                                     height: 8
                                 )
-                                .cornerRadius(4.0)
                         }
                     }
                     .fixedSize(horizontal: false, vertical: true)

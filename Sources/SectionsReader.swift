@@ -1,5 +1,5 @@
 //
-//  ObjectReader.swift
+//  SectionsReader.swift
 //  CoreStore
 //
 //  Copyright © 2021 John Rommel Estropia
@@ -29,32 +29,20 @@ import Combine
 import SwiftUI
 
 
-// MARK: - ObjectReader
+// MARK: - SectionsReader
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
+public struct SectionsReader<Object: DynamicObject, Content: View>: View {
     
     // MARK: Internal
     
     public init(
-        _ objectPublisher: ObjectPublisher<Object>?,
-        @ViewBuilder content: @escaping (Value) -> Content
-    ) where Value == LiveObject<Object>.Item {
-        
-        self._object = .init(objectPublisher)
-        self.content = content
-        self.keyPath = \.self
-    }
-    
-    public init(
-        _ objectPublisher: ObjectPublisher<Object>?,
-        keyPath: KeyPath<LiveObject<Object>.Item, Value>,
-        @ViewBuilder content: @escaping (Value) -> Content
+        _ listPublisher: ListPublisher<Object>,
+        @ViewBuilder content: @escaping (LiveList<Object>.Items) -> Content
     ) {
         
-        self._object = .init(objectPublisher)
+        self._list = .init(listPublisher)
         self.content = content
-        self.keyPath = keyPath
     }
     
     
@@ -62,20 +50,16 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
     
     public var body: some View {
         
-        if let object = self.object {
-            
-            self.content(object[keyPath: self.keyPath])
-        }
+        self.content(self.list)
     }
     
     
     // MARK: Private
     
-    @LiveObject
-    private var object: LiveObject<Object>.Item?
+    @LiveList
+    private var list: LiveList<Object>.Items
     
-    private let content: (Value) -> Content
-    private let keyPath: KeyPath<LiveObject<Object>.Item, Value>
+    private let content: (LiveList<Object>.Items) -> Content
 }
 
 #endif

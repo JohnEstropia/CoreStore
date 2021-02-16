@@ -20,8 +20,8 @@ struct InstructionsView: View {
     
     var body: some View {
         ZStack(alignment: .center) {
-            Color.white
-                .cornerRadius(10)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color.white)
                 .shadow(color: Color(.sRGB, white: 0.5, opacity: 0.3), radius: 2, x: 1, y: 1)
             VStack(alignment: .leading, spacing: 3) {
                 ForEach(self.rows, id: \.header) { row in

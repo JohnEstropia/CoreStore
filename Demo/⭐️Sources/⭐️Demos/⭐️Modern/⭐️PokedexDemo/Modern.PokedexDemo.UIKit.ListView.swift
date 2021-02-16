@@ -5,9 +5,9 @@
 import CoreStore
 import SwiftUI
 
-// MARK: - Modern.PokedexDemo
+// MARK: - Modern.PokedexDemo.UIKit
 
-extension Modern.PokedexDemo {
+extension Modern.PokedexDemo.UIKit {
     
     // MARK: - Modern.PokedexDemo.ListView
 
@@ -15,19 +15,20 @@ extension Modern.PokedexDemo {
         
         // MARK: Internal
         
-        init(
-            service: Modern.PokedexDemo.Service,
-            listPublisher: ListPublisher<Modern.PokedexDemo.PokedexEntry>
-        ) {
+        init() {
             
-            self.service = service
-            self.listPublisher = listPublisher
+            self.service = Modern.PokedexDemo.Service.init()
+            self.listPublisher = Modern.PokedexDemo.dataStack
+                .publishList(
+                    From<Modern.PokedexDemo.PokedexEntry>()
+                        .orderBy(.ascending(\.$index))
+                )
         }
         
         
         // MARK: UIViewControllerRepresentable
 
-        typealias UIViewControllerType = Modern.PokedexDemo.ListViewController
+        typealias UIViewControllerType = Modern.PokedexDemo.UIKit.ListViewController
 
         func makeUIViewController(context: Self.Context) -> UIViewControllerType {
             
@@ -53,7 +54,7 @@ extension Modern.PokedexDemo {
 
 #if DEBUG
 
-struct _Demo_Modern_PokedexDemo_ListView_Preview: PreviewProvider {
+struct _Demo_Modern_PokedexDemo_UIKit_ListView_Preview: PreviewProvider {
     
     // MARK: PreviewProvider
     
@@ -62,10 +63,7 @@ struct _Demo_Modern_PokedexDemo_ListView_Preview: PreviewProvider {
         let service = Modern.PokedexDemo.Service()
         service.fetchPokedexEntries()
         
-        return Modern.PokedexDemo.ListView(
-            service: service,
-            listPublisher: Modern.PokedexDemo.pokedexEntries
-        )
+        return Modern.PokedexDemo.UIKit.ListView()
     }
 }
 

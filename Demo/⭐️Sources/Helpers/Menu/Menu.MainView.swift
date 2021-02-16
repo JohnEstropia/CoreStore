@@ -73,7 +73,9 @@ extension Menu {
                             title: "Pokedex API",
                             subtitle: "Importing JSON data from external source",
                             destination: {
-                                Modern.PokedexDemo.MainView()
+                                Modern.PokedexDemo.MainView(
+                                    listView: Modern.PokedexDemo.UIKit.ListView.init
+                                )
                             }
                         )
                     }

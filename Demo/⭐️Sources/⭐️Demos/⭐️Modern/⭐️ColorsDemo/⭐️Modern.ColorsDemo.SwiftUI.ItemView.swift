@@ -16,15 +16,15 @@ extension Modern.ColorsDemo.SwiftUI {
         /**
          ⭐️ Sample 1: Setting an `ObjectPublisher` declared as an `@ObservedObject`
          */
-        @ObservedObject
-        private var palette: ObjectPublisher<Modern.ColorsDemo.Palette>
+        @LiveObject
+        private var palette: LiveObject<Modern.ColorsDemo.Palette>.Item?
         
         
         // MARK: Internal
         
         internal init(_ palette: ObjectPublisher<Modern.ColorsDemo.Palette>) {
             
-            self.palette = palette
+            self._palette = .init(palette)
         }
         
         
@@ -32,18 +32,16 @@ extension Modern.ColorsDemo.SwiftUI {
 
         var body: some View {
             
-            guard let palette = self.palette.snapshot else {
+            if let palette = self.palette {
                 
-                return AnyView(EmptyView())
-            }
-            return AnyView(
                 Color(palette.$color).overlay(
                     Text(palette.$colorText)
                         .foregroundColor(palette.$brightness > 0.6 ? .black : .white)
                         .padding(),
                     alignment: .leading
                 )
-            )
+                .animation(.default)
+            }
         }
     }
 }

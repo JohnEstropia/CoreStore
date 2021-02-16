@@ -6,9 +6,9 @@ import CoreStore
 import UIKit
 
 
-// MARK: - Modern.PokedexDemo
+// MARK: - Modern.PokedexDemo.UIKit
 
-extension Modern.PokedexDemo {
+extension Modern.PokedexDemo.UIKit {
     
     // MARK: - Modern.PokedexDemo.ListViewController
     
@@ -65,8 +65,8 @@ extension Modern.PokedexDemo {
             self.collectionView.backgroundColor = UIColor.systemBackground
             
             self.collectionView.register(
-                Modern.PokedexDemo.ItemCell.self,
-                forCellWithReuseIdentifier: Modern.PokedexDemo.ItemCell.reuseIdentifier
+                Modern.PokedexDemo.UIKit.ItemCell.self,
+                forCellWithReuseIdentifier: Modern.PokedexDemo.UIKit.ItemCell.reuseIdentifier
             )
 
             self.startObservingList()
@@ -84,9 +84,9 @@ extension Modern.PokedexDemo {
             cellProvider: { (collectionView, indexPath, pokedexEntry) in
                 
                 let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: Modern.PokedexDemo.ItemCell.reuseIdentifier,
+                    withReuseIdentifier: Modern.PokedexDemo.UIKit.ItemCell.reuseIdentifier,
                     for: indexPath
-                ) as! Modern.PokedexDemo.ItemCell
+                ) as! Modern.PokedexDemo.UIKit.ItemCell
                 cell.setPokedexEntry(pokedexEntry, service: self.service)
                 return cell
             }

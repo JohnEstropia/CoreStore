@@ -7,9 +7,9 @@ import CoreStore
 import UIKit
 
 
-// MARK: - Modern.PokedexDemo
+// MARK: - Modern.PokedexDemo.UIKit
 
-extension Modern.PokedexDemo {
+extension Modern.PokedexDemo.UIKit {
 
     // MARK: - Modern.PokedexDemo.ItemCell
     
@@ -17,7 +17,7 @@ extension Modern.PokedexDemo {
         
         // MARK: Internal
         
-        static let reuseIdentifier: String = NSStringFromClass(Modern.PokedexDemo.ItemCell.self)
+        static let reuseIdentifier: String = NSStringFromClass(Modern.PokedexDemo.UIKit.ItemCell.self)
         
         func setPokedexEntry(
             _ pokedexEntry: Modern.PokedexDemo.PokedexEntry,
@@ -61,6 +61,7 @@ extension Modern.PokedexDemo {
                 
                 contentView.backgroundColor = UIColor.placeholderText.withAlphaComponent(0.1)
                 contentView.layer.cornerRadius = 10
+                contentView.layer.cornerCurve = .continuous
                 contentView.layer.masksToBounds = true
             }
             

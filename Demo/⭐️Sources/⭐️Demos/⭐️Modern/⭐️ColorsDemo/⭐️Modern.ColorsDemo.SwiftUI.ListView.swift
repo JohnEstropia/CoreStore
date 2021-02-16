@@ -5,7 +5,6 @@
 import CoreStore
 import SwiftUI
 
-
 // MARK: - Modern.ColorsDemo.SwiftUI
 
 extension Modern.ColorsDemo.SwiftUI {
@@ -17,39 +16,43 @@ extension Modern.ColorsDemo.SwiftUI {
         /**
          ⭐️ Sample 1: Setting a sectioned `ListPublisher` declared as an `@ObservedObject`
          */
-        @ObservedObject
-        private var listPublisher: ListPublisher<Modern.ColorsDemo.Palette>
+        @LiveList
+        private var palettes: LiveList<Modern.ColorsDemo.Palette>.Items
         
         /**
          ⭐️ Sample 2: Assigning sections and items of the `ListPublisher` to corresponding `View`s
          */
          var body: some View {
-            let listSnapshot = self.listPublisher.snapshot
             return List {
-                ForEach(listSnapshot.sectionIDs, id: \.self) { (sectionID) in
+                
+                ForEachSection(in: self.palettes) { sectionID, palettes in
+                    
                     Section(header: Text(sectionID)) {
-                        ForEach(listSnapshot.items(inSectionWithID: sectionID), id: \.self) { palette in
+                        
+                        ForEach(palettes) { palette in
+                            
                             Button(
                                 action: {
+                                    
                                     self.onPaletteTapped(palette)
                                 },
                                 label: {
+                                    
                                     Modern.ColorsDemo.SwiftUI.ItemView(palette)
                                 }
                             )
                             .listRowInsets(.init())
                         }
                         .onDelete { itemIndices in
-
+                            
                             self.deleteColors(at: itemIndices, in: sectionID)
                         }
                     }
                 }
-                GeometryReader { geometry in
-                    Spacer(minLength: geometry.safeAreaInsets.bottom)
-                }
             }
+            .animation(.default)
             .listStyle(PlainListStyle())
+            .edgesIgnoringSafeArea([])
          }
         
         
@@ -60,7 +63,7 @@ extension Modern.ColorsDemo.SwiftUI {
             onPaletteTapped: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> Void
         ) {
             
-            self.listPublisher = listPublisher
+            self._palettes = .init(listPublisher)
             self.onPaletteTapped = onPaletteTapped
         }
         
@@ -71,7 +74,7 @@ extension Modern.ColorsDemo.SwiftUI {
         
         private func deleteColors(at indices: IndexSet, in sectionID: String) {
             
-            let objectIDsToDelete = self.listPublisher.snapshot.itemIDs(
+            let objectIDsToDelete = self.palettes.itemIDs(
                 inSectionWithID: sectionID,
                 atIndices: indices
             )

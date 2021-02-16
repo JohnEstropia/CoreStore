@@ -201,6 +201,14 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             }
         )
     }
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    public func cs_dataStack() -> DataStack? {
+        
+        return self.context.parentStack
+    }
 
 
     // MARK: Public (3rd Party Utilities)

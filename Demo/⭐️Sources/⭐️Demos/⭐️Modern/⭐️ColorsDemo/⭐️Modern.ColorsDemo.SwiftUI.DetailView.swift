@@ -17,8 +17,8 @@ extension Modern.ColorsDemo.SwiftUI {
         /**
          ⭐️ Sample 1: Setting an `ObjectPublisher` declared as an `@ObservedObject`
          */
-        @ObservedObject
-        private var palette: ObjectPublisher<Modern.ColorsDemo.Palette>
+        @LiveObject
+        private var palette: LiveObject<Modern.ColorsDemo.Palette>.Item?
         
         /**
          ⭐️ Sample 2: Setting properties that can be binded to controls (`Slider` in this case) by creating custom `@Binding` instances that updates the store when the values change.
@@ -34,7 +34,7 @@ extension Modern.ColorsDemo.SwiftUI {
 
         init(_ palette: ObjectPublisher<Modern.ColorsDemo.Palette>) {
 
-            self.palette = palette
+            self._palette = .init(palette)
             self._hue = Binding(
                 get: { palette.hue ?? 0 },
                 set: { percentage in
@@ -84,56 +84,50 @@ extension Modern.ColorsDemo.SwiftUI {
         
         var body: some View {
             
-            guard let snapshot = self.palette.snapshot else {
+            if let palette = self.palette {
                 
-                return AnyView(EmptyView())
-            }
-            return AnyView(
-                GeometryReader { geometry in
-                    ZStack(alignment: .bottom) {
-                        Color(snapshot.$color)
-                        ZStack {
-                            Color.white
-                                .cornerRadius(10)
-                                .shadow(color: Color(.sRGB, white: 0.5, opacity: 0.3), radius: 2, x: 1, y: 1)
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Text("H: \(Int(snapshot.$hue * 359))°")
-                                        .frame(width: 80)
-                                    Slider(
-                                        value: self.$hue,
-                                        in: 0 ... 1,
-                                        step: 1 / 359
-                                    )
-                                }
-                                HStack {
-                                    Text("S: \(Int(snapshot.$saturation * 100))%")
-                                        .frame(width: 80)
-                                    Slider(
-                                        value: self.$saturation,
-                                        in: 0 ... 1,
-                                        step: 1 / 100
-                                    )
-                                }
-                                HStack {
-                                    Text("B: \(Int(snapshot.$brightness * 100))%")
-                                        .frame(width: 80)
-                                    Slider(
-                                        value: self.$brightness,
-                                        in: 0 ... 1,
-                                        step: 1 / 100
-                                    )
-                                }
+                ZStack(alignment: .center) {
+                    Color(palette.$color)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color.white)
+                            .shadow(color: Color(.sRGB, white: 0.5, opacity: 0.3), radius: 2, x: 1, y: 1)
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("H: \(Int(palette.$hue * 359))°")
+                                    .frame(width: 80)
+                                Slider(
+                                    value: self.$hue,
+                                    in: 0 ... 1,
+                                    step: 1 / 359
+                                )
                             }
-                            .foregroundColor(Color(.sRGB, white: 0, opacity: 0.8))
-                            .padding()
+                            HStack {
+                                Text("S: \(Int(palette.$saturation * 100))%")
+                                    .frame(width: 80)
+                                Slider(
+                                    value: self.$saturation,
+                                    in: 0 ... 1,
+                                    step: 1 / 100
+                                )
+                            }
+                            HStack {
+                                Text("B: \(Int(palette.$brightness * 100))%")
+                                    .frame(width: 80)
+                                Slider(
+                                    value: self.$brightness,
+                                    in: 0 ... 1,
+                                    step: 1 / 100
+                                )
+                            }
                         }
-                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(Color(.sRGB, white: 0, opacity: 0.8))
                         .padding()
-                        .padding(geometry.safeAreaInsets)
                     }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding()
                 }
-            )
+            }
         }
     }
 }

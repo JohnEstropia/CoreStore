@@ -13,12 +13,6 @@ extension Modern.ColorsDemo {
 
     struct MainView<ListView: View, DetailView: View>: View {
         
-        /**
-         ⭐️ Sample 1: Setting a sectioned `ListPublisher` declared as an `@ObservedObject`
-         */
-        @ObservedObject
-        private var listPublisher: ListPublisher<Modern.ColorsDemo.Palette>
-        
         // MARK: Internal
         
         init(
@@ -30,38 +24,24 @@ extension Modern.ColorsDemo {
             
             self.listView = listView
             self.detailView = detailView
-            self.listPublisher = Modern.ColorsDemo.palettesPublisher
-            self._filter = Binding(
-                get: { Modern.ColorsDemo.filter },
-                set: { Modern.ColorsDemo.filter = $0 }
-            )
         }
         
         
         // MARK: View
         
         var body: some View {
-            let detailView: AnyView
-            if let selectedPalette = self.selectedPalette {
-                
-                detailView = AnyView(
-                    self.detailView(selectedPalette)
-                )
-            }
-            else {
-                
-                detailView = AnyView(EmptyView())
-            }
-            let listPublisher = self.listPublisher
             return VStack(spacing: 0) {
-                self.listView(listPublisher, { self.selectedPalette = $0 })
+                self.listView(self.$palettes, { self.selectedPalette = $0 })
                     .navigationBarTitle(
-                        Text("Colors (\(listPublisher.snapshot.numberOfItems) objects)")
+                        Text("Colors (\(self.palettes.count) objects)")
                     )
                     .frame(minHeight: 0, maxHeight: .infinity)
-                detailView
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(minHeight: 0, maxHeight: .infinity)
+                self.selectedPalette.map {
+                    
+                    self.detailView($0)
+                        .edgesIgnoringSafeArea(.all)
+                        .frame(minHeight: 0, maxHeight: .infinity)
+                }
             }
             .navigationBarItems(
                 leading: HStack {
@@ -91,6 +71,9 @@ extension Modern.ColorsDemo {
         
         // MARK: Private
         
+        @LiveList(Modern.ColorsDemo.palettesPublisher)
+        private var palettes: LiveList<Modern.ColorsDemo.Palette>.Items
+        
         private let listView: (
             _ listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,
             _ onPaletteTapped: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> Void
@@ -103,12 +86,13 @@ extension Modern.ColorsDemo {
         @State
         private var selectedPalette: ObjectPublisher<Modern.ColorsDemo.Palette>?
         
-        @Binding
-        private var filter: Modern.ColorsDemo.Filter
+        @State
+        private var filter: Modern.ColorsDemo.Filter = Modern.ColorsDemo.filter
         
         private func changeFilter() {
             
             Modern.ColorsDemo.filter = Modern.ColorsDemo.filter.next()
+            self.filter = Modern.ColorsDemo.filter
         }
         
         private func clearColors() {

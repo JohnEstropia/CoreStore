@@ -202,6 +202,11 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
 
     // MARK: Internal
+    
+    internal var cs_objectID: O.ObjectID {
+        
+        return self.objectID()
+    }
 
     internal static func createUncached(objectID: O.ObjectID, context: NSManagedObjectContext) -> ObjectPublisher<O> {
 
