@@ -41,9 +41,9 @@ import AppKit
 
 internal protocol FetchedDiffableDataSourceSnapshotHandler: AnyObject {
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot)
+    var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? { get }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String?
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot)
 }
 
 
@@ -92,6 +92,7 @@ extension Internals {
 
             var snapshot = Internals.DiffableDataSourceSnapshot(
                 sections: controller.sections ?? [],
+                sectionIndexTransformer: self.handler.map({ $0.sectionIndexTransformer }) ?? { _ in nil },
                 fetchOffset: controller.fetchRequest.fetchOffset,
                 fetchLimit: controller.fetchRequest.fetchLimit
             )
@@ -109,10 +110,7 @@ extension Internals {
         @objc
         dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
 
-            return self.handler?.controller(
-                controller,
-                sectionIndexTitleForSectionName: sectionName
-            )
+            return self.handler?.sectionIndexTransformer(sectionName)
         }
         
         @objc

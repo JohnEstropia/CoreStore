@@ -367,7 +367,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     }
 
 
-    // MARK: - Deprecated
+    // MARK: Deprecated
 
     @available(*, deprecated, renamed: "O")
     public typealias D = O
@@ -380,6 +380,11 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
 extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
+    
+    internal var sectionIndexTransformer: (KeyPathString?) -> String? {
+        
+        return { _ in nil }
+    }
     
     internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
@@ -416,11 +421,6 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     }
     
     internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) { }
-    
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
-        
-        return sectionName
-    }
 }
     
     

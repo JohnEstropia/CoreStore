@@ -191,6 +191,11 @@ extension Internals {
             }
             return self.sections[section].elements.count
         }
+        
+        func sectionIndexTitles() -> [String] {
+            
+            return self.sections.compactMap({ $0.indexTitle })
+        }
 
 
         // MARK: Private

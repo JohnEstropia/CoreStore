@@ -51,10 +51,10 @@ public final class CSSectionBy: NSObject {
     }
     
     /**
-     Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
      */
     @objc

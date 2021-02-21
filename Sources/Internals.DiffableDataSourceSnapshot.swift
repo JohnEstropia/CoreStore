@@ -47,10 +47,16 @@ extension Internals {
 
         // MARK: Internal
 
-        init(sections: [NSFetchedResultsSectionInfo], fetchOffset: Int, fetchLimit: Int) {
+        init(
+            sections: [NSFetchedResultsSectionInfo],
+            sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?,
+            fetchOffset: Int,
+            fetchLimit: Int
+        ) {
 
             self.structure = .init(
                 sections: sections,
+                sectionIndexTransformer: sectionIndexTransformer,
                 fetchOffset: Swift.max(0, fetchOffset),
                 fetchLimit: (fetchLimit > 0) ? fetchLimit : nil
             )
@@ -264,11 +270,18 @@ extension Internals {
 
         internal struct Section: DifferentiableSection, Equatable {
 
+            let indexTitle: String?
             var isReloaded: Bool
 
-            init(differenceIdentifier: String, items: [Item] = [], isReloaded: Bool = false) {
+            init(
+                differenceIdentifier: String,
+                indexTitle: String?,
+                items: [Item] = [],
+                isReloaded: Bool = false
+            ) {
                 
                 self.differenceIdentifier = differenceIdentifier
+                self.indexTitle = indexTitle
                 self.elements = items
                 self.isReloaded = isReloaded
             }
@@ -292,6 +305,7 @@ extension Internals {
 
                 self.init(
                     differenceIdentifier: source.differenceIdentifier,
+                    indexTitle: source.indexTitle,
                     items: Array(elements),
                     isReloaded: source.isReloaded
                 )
@@ -329,16 +343,23 @@ extension Internals {
 
             // MARK: Internal
 
+            let sectionIndexTransformer: (_ sectionName: String?) -> String?
             var sections: [Section]
             private(set) var reloadedItems: Set<NSManagedObjectID>
 
             init() {
 
+                self.sectionIndexTransformer = { _ in nil }
                 self.sections = []
                 self.reloadedItems = []
             }
 
-            init(sections: [NSFetchedResultsSectionInfo], fetchOffset: Int, fetchLimit: Int?) {
+            init(
+                sections: [NSFetchedResultsSectionInfo],
+                sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?,
+                fetchOffset: Int,
+                fetchLimit: Int?
+            ) {
 
                 let sliceItems: (_ array: [Any], _ offset: Int) -> Array<Any>.SubSequence
                 if let fetchLimit = fetchLimit {
@@ -373,9 +394,14 @@ extension Internals {
                         continue
                     }
                     newSections.append(
-                        Section(differenceIdentifier: section.name, items: items)
+                        Section(
+                            differenceIdentifier: section.name,
+                            indexTitle: section.indexTitle,
+                            items: items
+                        )
                     )
                 }
+                self.sectionIndexTransformer = sectionIndexTransformer
                 self.sections = newSections
                 self.reloadedItems = []
             }
@@ -545,7 +571,14 @@ extension Internals {
 
             mutating func append<C: Collection>(sectionIDs: C) where C.Element == String {
 
-                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
+                let sectionIndexTransformer = self.sectionIndexTransformer
+                let newSections = sectionIDs.lazy.map {
+                    
+                    return Section(
+                        differenceIdentifier: $0,
+                        indexTitle: sectionIndexTransformer($0)
+                    )
+                }
                 self.sections.append(contentsOf: newSections)
             }
 
@@ -555,7 +588,14 @@ extension Internals {
 
                     Internals.abort("Section \"\(beforeSectionID)\" does not exist")
                 }
-                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
+                let sectionIndexTransformer = self.sectionIndexTransformer
+                let newSections = sectionIDs.lazy.map {
+                    
+                    return Section(
+                        differenceIdentifier: $0,
+                        indexTitle: sectionIndexTransformer($0)
+                    )
+                }
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
@@ -565,8 +605,15 @@ extension Internals {
 
                     Internals.abort("Section \"\(afterSectionID)\" does not exist")
                 }
+                let sectionIndexTransformer = self.sectionIndexTransformer
                 let sectionIndex = self.sections.index(after: beforeIndex)
-                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
+                let newSections = sectionIDs.lazy.map {
+                    
+                    return Section(
+                        differenceIdentifier: $0,
+                        indexTitle: sectionIndexTransformer($0)
+                    )
+                }
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 

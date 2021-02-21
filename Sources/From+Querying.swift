@@ -71,7 +71,10 @@ extension From {
      - parameter args: the arguments for `format`
      - returns: a `FetchChainBuilder` with a predicate using the specified string format and arguments
      */
-    public func `where`(format: String, _ args: Any...) -> FetchChainBuilder<O> {
+    public func `where`(
+        format: String,
+        _ args: Any...
+    ) -> FetchChainBuilder<O> {
         
         return self.fetchChain(appending: Where<O>(format, argumentArray: args))
     }
@@ -83,7 +86,10 @@ extension From {
      - parameter argumentArray: the arguments for `format`
      - returns: a `FetchChainBuilder` with a predicate using the specified string format and arguments
      */
-    public func `where`(format: String, argumentArray: [Any]?) -> FetchChainBuilder<O> {
+    public func `where`(
+        format: String,
+        argumentArray: [Any]?
+    ) -> FetchChainBuilder<O> {
         
         return self.fetchChain(appending: Where<O>(format, argumentArray: argumentArray))
     }
@@ -106,7 +112,10 @@ extension From {
      - parameter sortKeys: a series of other `SortKey`s
      - returns: a `FetchChainBuilder` with a series of `SortKey`s
      */
-    public func orderBy(_ sortKey: OrderBy<O>.SortKey, _ sortKeys: OrderBy<O>.SortKey...) -> FetchChainBuilder<O> {
+    public func orderBy(
+        _ sortKey: OrderBy<O>.SortKey,
+        _ sortKeys: OrderBy<O>.SortKey...
+    ) -> FetchChainBuilder<O> {
         
         return self.fetchChain(appending: OrderBy<O>([sortKey] + sortKeys))
     }
@@ -178,7 +187,11 @@ extension From {
      - parameter selectTerms: a series of `SelectTerm`s
      - returns: a `QueryChainBuilder` that starts with a `Select` clause created from the specified `SelectTerm`s
      */
-    public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm<O>, _ selectTerms: SelectTerm<O>...) -> QueryChainBuilder<O, R> {
+    public func select<R>(
+        _ resultType: R.Type,
+        _ selectTerm: SelectTerm<O>,
+        _ selectTerms: SelectTerm<O>...
+    ) -> QueryChainBuilder<O, R> {
         
         return self.select(resultType, [selectTerm] + selectTerms)
     }
@@ -190,7 +203,10 @@ extension From {
      - parameter selectTerms: a series of `SelectTerm`s
      - returns: a `QueryChainBuilder` that starts with a `Select` clause created from the specified `SelectTerm`s
      */
-    public func select<R>(_ resultType: R.Type, _ selectTerms: [SelectTerm<O>]) -> QueryChainBuilder<O, R> {
+    public func select<R>(
+        _ resultType: R.Type,
+        _ selectTerms: [SelectTerm<O>]
+    ) -> QueryChainBuilder<O, R> {
         
         return .init(
             from: self,
@@ -224,19 +240,22 @@ extension From {
     @available(macOS 10.12, *)
     public func sectionBy(_ sectionKeyPath: KeyPathString) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(sectionKeyPath, { $0 })
+        return self.sectionBy(sectionKeyPath, sectionIndexTransformer: { _ in nil })
     }
     
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
      
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the key path to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy(_ sectionKeyPath: KeyPathString, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy(
+        _ sectionKeyPath: KeyPathString,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
         
         return .init(
             from: self,
@@ -256,6 +275,22 @@ extension From {
     private func fetchChain<S: Sequence>(appending clauses: S) -> FetchChainBuilder<O> where S.Element == FetchClause {
         
         return .init(from: self, fetchClauses: Array(clauses))
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy(
+        _ sectionKeyPath: KeyPathString,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
 }
 
@@ -284,21 +319,46 @@ extension From where O: NSManagedObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, T>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, { $0 })
+        return self.sectionBy(
+            sectionKeyPath._kvcKeyPathString!,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
      
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, T>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
+        return self.sectionBy(
+            sectionKeyPath._kvcKeyPathString!,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, T>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath._kvcKeyPathString!,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
 }
 
@@ -371,7 +431,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
@@ -383,7 +446,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
 
     /**
@@ -395,7 +461,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) -> SectionMonitorChainBuilder<O> {
 
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
@@ -407,7 +476,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
@@ -419,7 +491,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
@@ -431,7 +506,10 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
     
     /**
@@ -443,105 +521,244 @@ extension From where O: CoreStoreObject {
     @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: { _ in nil }
+        )
     }
 
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
 
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
 
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
 
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
 
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
 
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
 
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
 
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
 
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
-    }
-    
-    /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
-     
-     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
-     - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
-     - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
-     */
-    @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
-        
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
-    }
-    
-    /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
-     
-     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
-     - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
-     - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
-     */
-    @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
-        
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
     
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
      
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
     
     /**
-     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
      
      - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
     @available(macOS 10.12, *)
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
         
-        return self.sectionBy(O.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    /**
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
+     - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
+     */
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    /**
+     Creates a `SectionMonitorChainBuilder` with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
+     - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
+     */
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
+        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            O.meta[keyPath: sectionKeyPath].keyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
+    }
+    
+    @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
+    @available(macOS 10.12, *)
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
+        _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+    ) -> SectionMonitorChainBuilder<O> {
+        
+        return self.sectionBy(
+            sectionKeyPath,
+            sectionIndexTransformer: sectionIndexTransformer
+        )
     }
 }
 

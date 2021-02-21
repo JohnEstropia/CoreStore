@@ -1008,7 +1008,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     
     fileprivate var fetchedResultsController: Internals.CoreStoreFetchedResultsController
     fileprivate let taskGroup = DispatchGroup()
-    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String?
+    internal let sectionByIndexTransformer: (_ sectionName: KeyPathString?) -> String?
     
     private let isSectioned: Bool
     
@@ -1092,11 +1092,11 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         
         if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
             
-            self.sectionIndexTransformer = sectionIndexTransformer
+            self.sectionByIndexTransformer = sectionIndexTransformer
         }
         else {
             
-            self.sectionIndexTransformer = { $0 }
+            self.sectionByIndexTransformer = { _ in nil }
         }
         self.transactionQueue = transactionQueue
         self.applyFetchClauses = applyFetchClauses
@@ -1279,7 +1279,7 @@ extension ListMonitor where O: CoreStoreObject {
     }
 
 
-    // MARK: - Deprecated
+    // MARK: Deprecated
 
     @available(*, deprecated, renamed: "O")
     public typealias D = O
@@ -1292,6 +1292,11 @@ extension ListMonitor where O: CoreStoreObject {
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
+    
+    internal var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? {
+        
+        return self.sectionByIndexTransformer
+    }
     
     internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
@@ -1391,11 +1396,6 @@ extension ListMonitor: FetchedResultsControllerHandler {
             name: Notification.Name.listMonitorDidChangeList,
             object: self
         )
-    }
-    
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
-    
-        return self.sectionIndexTransformer(sectionName)
     }
 }
 

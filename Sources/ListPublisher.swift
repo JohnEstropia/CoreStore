@@ -243,6 +243,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 
 
     // MARK: Internal
+    
+    internal private(set) lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
 
     internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
 
@@ -299,7 +301,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         self.query = (
             from: from,
             sectionBy: sectionBy,
-            sectionIndexTransformer: sectionBy?.sectionIndexTransformer ?? { $0 },
+            sectionIndexTransformer: sectionBy?.sectionIndexTransformer ?? { _ in nil },
             applyFetchClauses: applyFetchClauses
         )
         (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
@@ -336,8 +338,6 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 
     private lazy var observers: NSMapTable<AnyObject, Internals.Closure<ListPublisher<O>, Void>> = .weakToStrongObjects()
 
-    private lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
-
     private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedDiffableDataSourceSnapshotDelegate) {
 
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
@@ -365,7 +365,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         self.query = (
             from: from,
             sectionBy: sectionBy,
-            sectionIndexTransformer: sectionBy?.sectionIndexTransformer ?? { $0 },
+            sectionIndexTransformer: sectionBy?.sectionIndexTransformer ?? { _ in nil },
             applyFetchClauses: applyFetchClauses
         )
         (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
@@ -414,6 +414,11 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 extension ListPublisher: FetchedDiffableDataSourceSnapshotHandler {
 
     // MARK: FetchedDiffableDataSourceSnapshotHandler
+    
+    internal var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? {
+        
+        return self.query.sectionIndexTransformer
+    }
 
     internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot) {
 
@@ -421,11 +426,6 @@ extension ListPublisher: FetchedDiffableDataSourceSnapshotHandler {
             diffableSnapshot: snapshot,
             context: controller.managedObjectContext
         )
-    }
-    
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
-    
-        return self.query.sectionIndexTransformer(sectionName)
     }
 }
 

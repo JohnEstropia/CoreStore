@@ -32,6 +32,8 @@ import CoreData
 @available(macOS 10.12, *)
 internal protocol FetchedResultsControllerHandler: AnyObject {
     
+    var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? { get }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?)
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType)
@@ -39,8 +41,6 @@ internal protocol FetchedResultsControllerHandler: AnyObject {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String?
 }
 
 
@@ -253,10 +253,7 @@ extension Internals {
         @objc
         dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
 
-            return self.handler?.controller(
-                controller,
-                sectionIndexTitleForSectionName: sectionName
-            )
+            return self.handler?.sectionIndexTransformer(sectionName)
         }
 
 
