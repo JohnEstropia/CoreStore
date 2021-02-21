@@ -46,7 +46,10 @@ extension Modern {
         
         static let palettesPublisher: ListPublisher<Modern.ColorsDemo.Palette> = Modern.ColorsDemo.dataStack.publishList(
             From<Modern.ColorsDemo.Palette>()
-                .sectionBy(\.$colorGroup)
+                .sectionBy(
+                    \.$colorGroup,
+                    sectionIndexTransformer: { $0?.first?.uppercased() }
+                )
                 .where(Modern.ColorsDemo.filter.whereClause())
                 .orderBy(.ascending(\.$hue))
         )
@@ -57,7 +60,10 @@ extension Modern {
                 
                 try! Modern.ColorsDemo.palettesPublisher.refetch(
                     From<Modern.ColorsDemo.Palette>()
-                        .sectionBy(\.$colorGroup)
+                        .sectionBy(
+                            \.$colorGroup,
+                            sectionIndexTransformer: { $0?.first?.uppercased() }
+                        )
                         .where(self.filter.whereClause())
                         .orderBy(.ascending(\.$hue))
                 )

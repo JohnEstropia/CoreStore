@@ -192,9 +192,18 @@ extension Internals {
             return self.sections[section].elements.count
         }
         
-        func sectionIndexTitles() -> [String] {
+        func sectionIndexTitle(for section: Int) -> String? {
             
-            return self.sections.compactMap({ $0.indexTitle })
+            guard self.sections.indices.contains(section) else {
+
+                return nil
+            }
+            return self.sections[section].indexTitle
+        }
+        
+        func sectionIndexTitlesForAllSections() -> [String?] {
+            
+            return self.sections.map({ $0.indexTitle })
         }
 
 

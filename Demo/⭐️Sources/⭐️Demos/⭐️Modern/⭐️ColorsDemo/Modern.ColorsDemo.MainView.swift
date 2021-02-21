@@ -72,7 +72,7 @@ extension Modern.ColorsDemo {
         // MARK: Private
         
         @LiveList(Modern.ColorsDemo.palettesPublisher)
-        private var palettes: LiveList<Modern.ColorsDemo.Palette>.Items
+        private var palettes: ListSnapshot
         
         private let listView: (
             _ listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,

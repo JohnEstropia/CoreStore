@@ -15,9 +15,9 @@ extension Modern.ColorsDemo.UIKit {
     final class ListViewController: UITableViewController {
         
         /**
-         ⭐️ Sample 1: Setting up a `DiffableDataSource.TableViewAdapter` that will manage tableView snapshot updates automatically. We can use the built-in `DiffableDataSource.TableViewAdapter` type directly, but in our case we want to enabled `UITableView` cell deletions so we create a custom subclass `DeletionEnabledDataSource` (see declaration below).
+         ⭐️ Sample 1: Setting up a `DiffableDataSource.TableViewAdapter` that will manage tableView snapshot updates automatically. We can use the built-in `DiffableDataSource.TableViewAdapter` type directly, but in our case we want to enabled `UITableView` cell deletions so we create a custom subclass `CustomDataSource` (see declaration below).
          */
-        private lazy var dataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> = DeletionEnabledDataSource(
+        private lazy var dataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> = CustomDataSource(
             tableView: self.tableView,
             dataStack: Modern.ColorsDemo.dataStack,
             cellProvider: { (tableView, indexPath, palette) in
@@ -54,9 +54,11 @@ extension Modern.ColorsDemo.UIKit {
         }
 
         /**
-         ⭐️ Sample 4: This is the custom `DiffableDataSource.TableViewAdapter` subclass we wrote that enabled swipe-to-delete gestures on the `UITableView`.
+         ⭐️ Sample 4: This is the custom `DiffableDataSource.TableViewAdapter` subclass we wrote that enabled swipe-to-delete gestures and section index titles on the `UITableView`.
          */
-        final class DeletionEnabledDataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> {
+        final class CustomDataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> {
+            
+            // MARK: UITableViewDataSource
 
             override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
@@ -78,6 +80,16 @@ extension Modern.ColorsDemo.UIKit {
                 default:
                     break
                 }
+            }
+            
+            override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+                
+                return self.sectionIndexTitlesForAllSections().compactMap({ $0 })
+            }
+            
+            override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+                
+                return index
             }
         }
         

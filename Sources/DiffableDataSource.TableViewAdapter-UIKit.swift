@@ -157,6 +157,18 @@ extension DiffableDataSource {
 
         @objc
         open dynamic func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {}
+        
+        @objc
+        open dynamic func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+            
+            return nil
+        }
+        
+        @objc
+        open dynamic func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+            
+            return index
+        }
 
 
         // MARK: Private
@@ -255,7 +267,7 @@ extension DiffableDataSource {
 }
 
 
-// MARK: - Deprecated
+// MARK: Deprecated
 
 extension DiffableDataSource {
 

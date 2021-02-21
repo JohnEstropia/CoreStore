@@ -31,14 +31,41 @@ import SwiftUI
 
 // MARK: - LiveList
 
+/**
+ A property wrapper type that can read `ListPublisher` changes.
+ */
 @propertyWrapper
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct LiveList<Object: DynamicObject>: DynamicProperty {
     
     // MARK: Public
     
-    public typealias Items = ListSnapshot<Object>
-    
+    /**
+     Creates an instance that observes `ListPublisher` changes and exposes a `ListSnapshot` value.
+     ```
+     @LiveList
+     var people: ListSnapshot<Person>
+     
+     init(listPublisher: ListPublisher<Person>) {
+     
+        self._people = .init(listPublisher)
+     }
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(objectIn: self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter listPublisher: The `ListPublisher` that the `LiveList` will observe changes for
+     */
     public init(
         _ listPublisher: ListPublisher<Object>
     ) {
@@ -46,6 +73,105 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
         self.observer = .init(listPublisher: listPublisher)
     }
     
+    /**
+     Creates an instance that observes the specified `FetchChainableBuilderType` and exposes a `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>()
+             .where(\.isMember == true)
+             .orderBy(.ascending(\.lastName))
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(objectIn: self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     */
+    public init<B: FetchChainableBuilderType>(
+        _ clauseChain: B,
+        in dataStack: DataStack
+    ) where B.ObjectType == Object {
+        
+        self.init(dataStack.publishList(clauseChain))
+    }
+    
+    /**
+     Creates an instance that observes the specified `SectionMonitorBuilderType` and exposes a `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>()
+             .sectionBy(\.age)
+             .where(\.isMember == true)
+             .orderBy(.ascending(\.lastName))
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+         List {
+             
+             ForEach(sectionIn: self.people) { section in
+                 
+                 Section(header: Text(section.sectionID)) {
+
+                     ForEach(objectIn: section) { person in
+
+                         ProfileView(person)
+                     }
+                 }
+             }
+         }
+         .animation(.default)
+     }
+     ```
+     
+     - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
+     */
+    public init<B: SectionMonitorBuilderType>(
+        _ clauseChain: B,
+        in dataStack: DataStack
+    ) where B.ObjectType == Object {
+        
+        self.init(dataStack.publishList(clauseChain))
+    }
+    
+    /**
+     Creates an instance that observes the specified `From` and `FetchClause`s and exposes a `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>(),
+         Where<Person>(\.isMember == true),
+         OrderBy<Person>(.ascending(\.lastName))
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(objectIn: self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     */
     public init(
         _ from: From<Object>,
         _ fetchClauses: FetchClause...,
@@ -55,6 +181,34 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
         self.init(from, fetchClauses, in: dataStack)
     }
     
+    /**
+     Creates an instance that observes the specified `From` and `FetchClause`s and exposes a `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>(),
+         [
+             Where<Person>(\.isMember == true),
+             OrderBy<Person>(.ascending(\.lastName))
+         ]
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(objectIn: self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     */
     public init(
         _ from: From<Object>,
         _ fetchClauses: [FetchClause],
@@ -64,14 +218,40 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
         self.init(dataStack.publishList(from, fetchClauses))
     }
     
-    public init<B: FetchChainableBuilderType>(
-        _ clauseChain: B,
-        in dataStack: DataStack
-    ) where B.ObjectType == Object {
-        
-        self.init(dataStack.publishList(clauseChain))
-    }
-    
+    /**
+     Creates an instance that observes the specified `From`, `SectionBy`, and `FetchClause`s and exposes a sectioned `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>(),
+         SectionBy(\.age),
+         Where<Person>(\.isMember == true),
+         OrderBy<Person>(.ascending(\.lastName))
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(sectionIn: self.people) { section in
+                 
+                Section(header: Text(section.sectionID)) {
+
+                    ForEach(objectIn: section) { person in
+
+                        ProfileView(person)
+                    }
+                }
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     */
     public init(
         _ from: From<Object>,
         _ sectionBy: SectionBy<Object>,
@@ -82,6 +262,42 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
         self.init(from, sectionBy, fetchClauses, in: dataStack)
     }
     
+    /**
+     Creates an instance that observes the specified `From`, `SectionBy`, and `FetchClause`s and exposes a sectioned `ListSnapshot` value.
+     ```
+     @LiveList(
+         From<Person>(),
+         SectionBy(\.age),
+         [
+             Where<Person>(\.isMember == true),
+             OrderBy<Person>(.ascending(\.lastName))
+         ]
+     )
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+     
+            ForEach(sectionIn: self.people) { section in
+                 
+                Section(header: Text(section.sectionID)) {
+
+                    ForEach(objectIn: section) { person in
+
+                        ProfileView(person)
+                    }
+                }
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     */
     public init(
         _ from: From<Object>,
         _ sectionBy: SectionBy<Object>,
@@ -92,18 +308,10 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
         self.init(dataStack.publishList(from, sectionBy, fetchClauses))
     }
     
-    public init<B: SectionMonitorBuilderType>(
-        _ clauseChain: B,
-        in dataStack: DataStack
-    ) where B.ObjectType == Object {
-        
-        self.init(dataStack.publishList(clauseChain))
-    }
-    
     
     // MARK: @propertyWrapper
     
-    public var wrappedValue: Items {
+    public var wrappedValue: ListSnapshot<Object> {
         
         return self.observer.items
     }
@@ -133,7 +341,7 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     private final class Observer: ObservableObject {
         
         @Published
-        var items: Items
+        var items: ListSnapshot<Object>
         
         let listPublisher: ListPublisher<Object>
         

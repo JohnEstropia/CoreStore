@@ -15,10 +15,10 @@ extension Modern.ColorsDemo.SwiftUI {
     struct DetailView: View {
         
         /**
-         ⭐️ Sample 1: Setting an `ObjectPublisher` declared as an `@ObservedObject`
+         ⭐️ Sample 1: Using a `LiveObject` to observe object changes. Note that the `ObjectSnapshot` is always `Optional`
          */
         @LiveObject
-        private var palette: LiveObject<Modern.ColorsDemo.Palette>.Item?
+        private var palette: ObjectSnapshot<Modern.ColorsDemo.Palette>?
         
         /**
          ⭐️ Sample 2: Setting properties that can be binded to controls (`Slider` in this case) by creating custom `@Binding` instances that updates the store when the values change.

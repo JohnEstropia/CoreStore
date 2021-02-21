@@ -31,14 +31,38 @@ import SwiftUI
 
 // MARK: - LiveObject
 
+/**
+ A property wrapper type that can read `ObjectPublisher` changes.
+ */
 @propertyWrapper
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct LiveObject<O: DynamicObject>: DynamicProperty {
     
     // MARK: Public
     
-    public typealias Item = ObjectSnapshot<O>
-    
+    /**
+     Creates an instance that observes `ObjectPublisher` changes and exposes an `Optional<ObjectSnapshot<O>>` value.
+     ```
+     @LiveObject
+     var person: ObjectSnapshot<Person>?
+     
+     init(objectPublisher: ObjectPublisher<Person>) {
+     
+        self._person = .init(objectPublisher)
+     }
+     
+     var body: some View {
+     
+        HStack {
+     
+            AsyncImage(self.person?.$avatarURL)
+            Text(self.person?.$fullName ?? "")
+        }
+     }
+     ```
+     
+     - parameter objectPublisher: The `ObjectPublisher` that the `LiveObject` will observe changes for
+     */
     public init(_ objectPublisher: ObjectPublisher<O>?) {
         
         self.observer = .init(objectPublisher: objectPublisher)
@@ -47,7 +71,7 @@ public struct LiveObject<O: DynamicObject>: DynamicProperty {
     
     // MARK: @propertyWrapper
     
-    public var wrappedValue: Item? {
+    public var wrappedValue: ObjectSnapshot<O>? {
         
         return self.observer.item
     }
@@ -72,7 +96,7 @@ public struct LiveObject<O: DynamicObject>: DynamicProperty {
     private final class Observer: ObservableObject {
         
         @Published
-        var item: Item?
+        var item: ObjectSnapshot<O>?
         
         let objectPublisher: ObjectPublisher<O>?
         

@@ -31,24 +31,40 @@ import SwiftUI
 
 // MARK: - ObjectReader
 
+/**
+ A container view that reads changes to an `ObjectPublisher`
+ */
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
     
     // MARK: Internal
     
+    /**
+     Creates an instance that creates views for `ObjectPublisher` changes.
+     
+     - parameter objectPublisher: The `ObjectPublisher` that the `ObjectReader` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `Optional<ObjectSnapshot<O>>` instance and creates views dynamically.
+     */
     public init(
         _ objectPublisher: ObjectPublisher<Object>?,
-        @ViewBuilder content: @escaping (Value) -> Content
-    ) where Value == LiveObject<Object>.Item {
+        @ViewBuilder content: @escaping (ObjectSnapshot<Object>) -> Content
+    ) where Value == ObjectSnapshot<Object> {
         
         self._object = .init(objectPublisher)
         self.content = content
         self.keyPath = \.self
     }
     
+    /**
+     Creates an instance that creates views for `ObjectPublisher` changes.
+     
+     - parameter objectPublisher: The `ObjectPublisher` that the `ObjectReader` instance uses to create views dynamically
+     - parameter keyPath: A `KeyPath` for a property in the `ObjectSnapshot` whose value will be sent to the views
+     - parameter content: The view builder that receives the value from the property `KeyPath` and creates views dynamically.
+     */
     public init(
         _ objectPublisher: ObjectPublisher<Object>?,
-        keyPath: KeyPath<LiveObject<Object>.Item, Value>,
+        keyPath: KeyPath<ObjectSnapshot<Object>, Value>,
         @ViewBuilder content: @escaping (Value) -> Content
     ) {
         
@@ -72,10 +88,10 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
     // MARK: Private
     
     @LiveObject
-    private var object: LiveObject<Object>.Item?
+    private var object: ObjectSnapshot<Object>?
     
     private let content: (Value) -> Content
-    private let keyPath: KeyPath<LiveObject<Object>.Item, Value>
+    private let keyPath: KeyPath<ObjectSnapshot<Object>, Value>
 }
 
 #endif

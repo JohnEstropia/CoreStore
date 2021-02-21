@@ -57,6 +57,60 @@ extension DataStack {
     }
     
     /**
+     Creates a `ListPublisher` that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let listPublisher = dataStack.listPublisher(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     Multiple objects may then register themselves to be notified when changes are made to the fetched results.
+     ```
+     listPublisher.addObserver(self) { (listPublisher) in
+         // handle changes
+     }
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: a `ListPublisher` that broadcasts changes to the fetched results
+     */
+    public func publishList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
+
+        return self.publishList(
+            clauseChain.from,
+            clauseChain.fetchClauses
+        )
+    }
+    
+    /**
+     Creates a `ListPublisher` for a sectioned list that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let listPublisher = dataStack.listPublisher(
+         From<MyPersonEntity>()
+             .sectionBy(\.age, { "\($0!) years old" })
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     Multiple objects may then register themselves to be notified when changes are made to the fetched results.
+     ```
+     listPublisher.addObserver(self) { (listPublisher) in
+         // handle changes
+     }
+     ```
+     - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
+     - returns: a `ListPublisher` that broadcasts changes to the fetched results
+     */
+    public func publishList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
+
+        return self.publishList(
+            clauseChain.from,
+            clauseChain.sectionBy,
+            clauseChain.fetchClauses
+        )
+    }
+    
+    /**
      Creates a `ListPublisher` for the specified `From` and `FetchClause`s. Multiple objects may then register themselves to be notified when changes are made to the fetched results.
      
      - parameter from: a `From` clause indicating the entity type
@@ -90,32 +144,6 @@ extension DataStack {
                     "An \(Internals.typeName(ListPublisher<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
-        )
-    }
-    
-    /**
-     Creates a `ListPublisher` that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
-     ```
-     let listPublisher = dataStack.listPublisher(
-         From<MyPersonEntity>()
-             .where(\.age > 18)
-             .orderBy(.ascending(\.age))
-     )
-     ```
-     Multiple objects may then register themselves to be notified when changes are made to the fetched results.
-     ```
-     listPublisher.addObserver(self) { (listPublisher) in
-         // handle changes
-     }
-     ```
-     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
-     - returns: a `ListPublisher` that broadcasts changes to the fetched results
-     */
-    public func publishList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
-
-        return self.publishList(
-            clauseChain.from,
-            clauseChain.fetchClauses
         )
     }
     
@@ -161,37 +189,9 @@ extension DataStack {
             }
         )
     }
-    
-    /**
-     Creates a `ListPublisher` for a sectioned list that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
-     ```
-     let listPublisher = dataStack.listPublisher(
-         From<MyPersonEntity>()
-             .sectionBy(\.age, { "\($0!) years old" })
-             .where(\.age > 18)
-             .orderBy(.ascending(\.age))
-     )
-     ```
-     Multiple objects may then register themselves to be notified when changes are made to the fetched results.
-     ```
-     listPublisher.addObserver(self) { (listPublisher) in
-         // handle changes
-     }
-     ```
-     - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
-     - returns: a `ListPublisher` that broadcasts changes to the fetched results
-     */
-    public func publishList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
-
-        return self.publishList(
-            clauseChain.from,
-            clauseChain.sectionBy,
-            clauseChain.fetchClauses
-        )
-    }
 
 
-    // MARK: - Deprecated
+    // MARK: Deprecated
 
     @available(*, deprecated, renamed: "publishObject(_:)")
     public func objectPublisher<O: DynamicObject>(_ object: O) -> ObjectPublisher<O> {

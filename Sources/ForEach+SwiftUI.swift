@@ -36,20 +36,136 @@ extension ForEach where Content: View {
     
     // MARK: Public
 
+    /**
+     Creates an instance that creates views for each object in a `ListSnapshot`.
+     ```
+     @LiveList
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+            
+             ForEach(objectIn: self.people) { person in
+
+                 ProfileView(person)
+             }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter listSnapshot: The `ListSnapshot` that the `ForEach` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `ObjectPublisher` instance and creates views dynamically.
+     */
     public init<O: DynamicObject>(
-        _ listSnapshot: Data,
+        objectIn listSnapshot: Data,
         @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
-    ) where Data == LiveList<O>.Items, ID == O.ObjectID {
+    ) where Data == ListSnapshot<O>, ID == O.ObjectID {
         
         self.init(listSnapshot, id: \.cs_objectID, content: content)
     }
     
+    /**
+     Creates an instance that creates views for each object in a collection of `ObjectPublisher`s.
+     ```
+     let people: [ObjectPublisher<Person>]
+     
+     var body: some View {
+     
+        List {
+            
+            ForEach(objectIn: self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter objectPublishers: The collection of `ObjectPublisher`s that the `ForEach` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `ObjectPublisher` instance and creates views dynamically.
+     */
     public init<O: DynamicObject>(
-        _ objectPublishers: Data,
+        objectIn objectPublishers: Data,
         @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
     ) where Data.Element == ObjectPublisher<O>, ID == O.ObjectID {
         
         self.init(objectPublishers, id: \.cs_objectID, content: content)
+    }
+    
+    /**
+     Creates an instance that creates views for `ListSnapshot` sections.
+     ```
+     @LiveList
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+            
+            ForEach(sectionIn: self.people) { section in
+                
+                Section(header: Text(section.sectionID)) {
+
+                    ForEach(objectIn: section) { person in
+
+                        ProfileView(person)
+                    }
+                }
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter listSnapshot: The `ListSnapshot` that the `ForEach` instance uses to create views dynamically
+     - parameter content: The view builder that receives a `ListSnapshot.SectionInfo` instance and creates views dynamically.
+     */
+    public init<O: DynamicObject>(
+        sectionIn listSnapshot: ListSnapshot<O>,
+        @ViewBuilder content: @escaping (ListSnapshot<O>.SectionInfo) -> Content
+    ) where Data == [ListSnapshot<O>.SectionInfo], ID == ListSnapshot<O>.SectionID {
+        
+        let sections = listSnapshot.sections()
+        self.init(sections, id: \.sectionID, content: content)
+    }
+    
+    /**
+     Creates an instance that creates views for each object in a `ListSnapshot.SectionInfo`.
+     ```
+     @LiveList
+     var people: ListSnapshot<Person>
+     
+     var body: some View {
+     
+        List {
+            
+            ForEach(sectionIn: self.people) { section in
+                
+                Section(header: Text(section.sectionID)) {
+
+                    ForEach(objectIn: section) { person in
+
+                        ProfileView(person)
+                    }
+                }
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter sectionInfo: The `ListSnapshot.SectionInfo` that the `ForEach` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `ObjectPublisher` instance and creates views dynamically.
+     */
+    public init<O: DynamicObject>(
+        objectIn sectionInfo: Data,
+        @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
+    ) where Data == ListSnapshot<O>.SectionInfo, ID == O.ObjectID {
+        
+        self.init(sectionInfo, id: \.cs_objectID, content: content)
     }
 }
 

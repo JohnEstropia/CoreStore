@@ -14,22 +14,35 @@ extension Modern.ColorsDemo.SwiftUI {
     struct ListView: View {
         
         /**
-         ⭐️ Sample 1: Setting a sectioned `ListPublisher` declared as an `@ObservedObject`
+         ⭐️ Sample 1: Using a `LiveList` to observe list changes
          */
         @LiveList
-        private var palettes: LiveList<Modern.ColorsDemo.Palette>.Items
+        private var palettes: ListSnapshot<Modern.ColorsDemo.Palette>
         
         /**
-         ⭐️ Sample 2: Assigning sections and items of the `ListPublisher` to corresponding `View`s
+         ⭐️ Sample 2: Initializing a `LiveList` from an existing `ListPublisher`
          */
-         var body: some View {
-            return List {
+        init(
+            listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,
+            onPaletteTapped: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> Void
+        ) {
+            
+            self._palettes = .init(listPublisher)
+            self.onPaletteTapped = onPaletteTapped
+        }
+        
+        /**
+         ⭐️ Sample 3: Assigning sections and items of the `ListSnapshot` to corresponding `View`s by using the correct `ForEach` overloads.
+         */
+        var body: some View {
+            
+            List {
                 
-                ForEachSection(in: self.palettes) { sectionID, palettes in
+                ForEach(sectionIn: self.palettes) { section in
                     
-                    Section(header: Text(sectionID)) {
+                    Section(header: Text(section.sectionID)) {
                         
-                        ForEach(palettes) { palette in
+                        ForEach(objectIn: section) { palette in
                             
                             Button(
                                 action: {
@@ -45,7 +58,7 @@ extension Modern.ColorsDemo.SwiftUI {
                         }
                         .onDelete { itemIndices in
                             
-                            self.deleteColors(at: itemIndices, in: sectionID)
+                            self.deleteColors(at: itemIndices, in: section.sectionID)
                         }
                     }
                 }
@@ -53,18 +66,6 @@ extension Modern.ColorsDemo.SwiftUI {
             .animation(.default)
             .listStyle(PlainListStyle())
             .edgesIgnoringSafeArea([])
-         }
-        
-        
-        // MARK: Internal
-        
-        init(
-            listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,
-            onPaletteTapped: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> Void
-        ) {
-            
-            self._palettes = .init(listPublisher)
-            self.onPaletteTapped = onPaletteTapped
         }
         
         

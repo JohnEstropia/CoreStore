@@ -209,6 +209,25 @@ extension DiffableDataSource {
 
             return self.dispatcher.indexPath(for: itemID)
         }
+        
+        /**
+         Returns the section index title for the specified `section` if the `SectionBy` for this list has provided a `sectionIndexTransformer`
+         
+         - parameter section: the section index to search for
+         - returns: the section index title for the specified `section`, or `nil` if not found
+         */
+        public func sectionIndexTitle(for section: Int) -> String? {
+            
+            return self.dispatcher.sectionIndexTitle(for: section)
+        }
+        
+        /**
+         Returns the section index titles for all sections if the `SectionBy` for this list has provided a `sectionIndexTransformer`
+         */
+        public func sectionIndexTitlesForAllSections() -> [String?] {
+            
+            return self.dispatcher.sectionIndexTitlesForAllSections()
+        }
 
 
         // MARK: Internal

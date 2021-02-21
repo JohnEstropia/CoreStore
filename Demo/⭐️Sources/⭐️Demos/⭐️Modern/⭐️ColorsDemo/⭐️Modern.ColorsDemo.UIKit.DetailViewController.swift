@@ -40,6 +40,15 @@ extension Modern.ColorsDemo.UIKit {
         /**
          ⭐️ Sample 3: We can end monitoring updates anytime. `removeObserver()` was called here for illustration purposes only. `ObjectMonitor`s safely remove deallocated observers automatically.
          */
+        var palette: ObjectMonitor<Modern.ColorsDemo.Palette> {
+            
+            didSet {
+                
+                oldValue.removeObserver(self)
+                self.startMonitoringObject()
+            }
+        }
+        
         deinit {
             
             self.palette.removeObserver(self)
@@ -183,9 +192,8 @@ extension Modern.ColorsDemo.UIKit {
                             equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                             constant: 10
                         ),
-                        containerView.bottomAnchor.constraint(
-                            equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                            constant: -10
+                        containerView.centerYAnchor.constraint(
+                            equalTo: view.safeAreaLayoutGuide.centerYAnchor
                         ),
                         containerView.trailingAnchor.constraint(
                             equalTo: view.safeAreaLayoutGuide.trailingAnchor,
@@ -222,8 +230,6 @@ extension Modern.ColorsDemo.UIKit {
         
         
         // MARK: Private
-        
-        private let palette: ObjectMonitor<Modern.ColorsDemo.Palette>
         
         @available(*, unavailable)
         required init?(coder: NSCoder) {

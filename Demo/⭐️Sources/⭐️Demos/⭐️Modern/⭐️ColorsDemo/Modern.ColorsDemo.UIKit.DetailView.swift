@@ -30,14 +30,19 @@ extension Modern.ColorsDemo.UIKit {
             return UIViewControllerType(self.palette)
         }
 
-        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Self.Context) {}
+        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Self.Context) {
+            
+            uiViewController.palette = Modern.ColorsDemo.dataStack.monitorObject(
+                self.palette.object!
+            )
+        }
 
         static func dismantleUIViewController(_ uiViewController: UIViewControllerType, coordinator: Void) {}
         
         
         // MARK: Private
         
-        private let palette: ObjectPublisher<Modern.ColorsDemo.Palette>
+        private var palette: ObjectPublisher<Modern.ColorsDemo.Palette>
     }
 }
 

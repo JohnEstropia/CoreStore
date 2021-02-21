@@ -283,6 +283,29 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         return self.diffableSnapshot.sectionIdentifier(containingItem: itemID)
     }
+    
+    /**
+     Returns an array of `SectionInfo` instances that contains a collection of `ObjectPublisher<O>` items for each section.
+     */
+    public func sections() -> [SectionInfo] {
+        
+        return self
+            .sectionIDs
+            .compactMap({ SectionInfo(sectionID: $0, listSnapshot: self) })
+    }
+    
+    /**
+     Returns the `SectionInfo` that the specified `ItemID` belongs to, or `nil` if it is not in the list.
+
+     - parameter itemID: the `ItemID`
+     - returns: the `SectionInfo` that the specified `ItemID` belongs to, or `nil` if it is not in the list
+     */
+    public func section(containingItemWithID itemID: ItemID) -> SectionInfo? {
+
+        return self
+            .sectionID(containingItemWithID: itemID)
+            .flatMap({ SectionInfo(sectionID: $0, listSnapshot: self) })
+    }
 
     /**
      All object identifiers in the `ListSnapshot`
@@ -688,6 +711,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     
     // MARK: Internal
     
+    internal let context: NSManagedObjectContext?
     internal private(set) var diffableSnapshot: Internals.DiffableDataSourceSnapshot
     
     internal init() {
@@ -696,7 +720,10 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         self.context = nil
     }
     
-    internal init(diffableSnapshot: Internals.DiffableDataSourceSnapshot, context: NSManagedObjectContext) {
+    internal init(
+        diffableSnapshot: Internals.DiffableDataSourceSnapshot,
+        context: NSManagedObjectContext
+    ) {
 
         self.diffableSnapshot = diffableSnapshot
         self.context = context
@@ -706,6 +733,5 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     // MARK: Private
     
     private let id: UUID = .init()
-    private let context: NSManagedObjectContext?
 
 }

@@ -220,7 +220,7 @@ extension DiffableDataSource {
 }
 
 
-// MARK: - Deprecated
+// MARK: Deprecated
 
 extension DiffableDataSource {
 

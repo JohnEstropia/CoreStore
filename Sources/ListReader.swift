@@ -31,24 +31,69 @@ import SwiftUI
 
 // MARK: - ListReader
 
+/**
+ A container view that reads list changes in a `ListPublisher`
+ */
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
     
     // MARK: Internal
     
+    /**
+     Creates an instance that creates views for `ListPublisher` changes.
+     ```
+     let people: ListPublisher<Person>
+     
+     var body: some View {
+     
+        List {
+            
+            ListReader(self.people) { listSnapshot in
+     
+                ForEach(objectIn: listSnapshot) { person in
+
+                    ProfileView(person)
+                }
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter listPublisher: The `ListPublisher` that the `ListReader` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `ListSnapshot` instance and creates views dynamically.
+     */
     public init(
         _ listPublisher: ListPublisher<Object>,
-        @ViewBuilder content: @escaping (Value) -> Content
-    ) where Value == LiveList<Object>.Items {
+        @ViewBuilder content: @escaping (ListSnapshot<Object>) -> Content
+    ) where Value == ListSnapshot<Object> {
         
         self._list = .init(listPublisher)
         self.content = content
         self.keyPath = \.self
     }
     
+    /**
+     Creates an instance that creates views for `ListPublisher` changes.
+     ```
+     let people: ListPublisher<Person>
+     
+     var body: some View {
+     
+         ListReader(self.people, keyPath: \.count) { count in
+
+             Text("Number of members: \(count)")
+         }
+     }
+     ```
+     
+     - parameter listPublisher: The `ListPublisher` that the `ListReader` instance uses to create views dynamically
+     - parameter keyPath: A `KeyPath` for a property in the `ListSnapshot` whose value will be sent to the views
+     - parameter content: The view builder that receives the value from the property `KeyPath` and creates views dynamically.
+     */
     public init(
         _ listPublisher: ListPublisher<Object>,
-        keyPath: KeyPath<LiveList<Object>.Items, Value>,
+        keyPath: KeyPath<ListSnapshot<Object>, Value>,
         @ViewBuilder content: @escaping (Value) -> Content
     ) {
         
@@ -69,10 +114,10 @@ public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
     // MARK: Private
     
     @LiveList
-    private var list: LiveList<Object>.Items
+    private var list: ListSnapshot<Object>
     
     private let content: (Value) -> Content
-    private let keyPath: KeyPath<LiveList<Object>.Items, Value>
+    private let keyPath: KeyPath<ListSnapshot<Object>, Value>
 }
 
 #endif
