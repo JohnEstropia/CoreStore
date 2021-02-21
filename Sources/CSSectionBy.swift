@@ -60,7 +60,12 @@ public final class CSSectionBy: NSObject {
     @objc
     public static func keyPath(_ sectionKeyPath: KeyPathString, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
         
-        return self.init(SectionBy<NSManagedObject>(sectionKeyPath, sectionIndexTransformer))
+        return self.init(
+            SectionBy<NSManagedObject>(
+                sectionKeyPath,
+                sectionIndexTransformer: sectionIndexTransformer
+            )
+        )
     }
     
     
@@ -101,6 +106,9 @@ extension SectionBy {
     
     fileprivate func downcast() -> SectionBy<NSManagedObject> {
         
-        return SectionBy<NSManagedObject>(self.sectionKeyPath, self.sectionIndexTransformer)
+        return SectionBy<NSManagedObject>(
+            self.sectionKeyPath,
+            sectionIndexTransformer: self.sectionIndexTransformer
+        )
     }
 }

@@ -259,7 +259,10 @@ extension From {
         
         return .init(
             from: self,
-            sectionBy: .init(sectionKeyPath, sectionIndexTransformer),
+            sectionBy: .init(
+                sectionKeyPath,
+                sectionIndexTransformer: sectionIndexTransformer
+            ),
             fetchClauses: []
         )
     }
