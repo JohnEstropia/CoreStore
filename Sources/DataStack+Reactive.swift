@@ -31,10 +31,47 @@ import Combine
 // MARK: - DataStack
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-extension DataStack: PublisherCompatible {}
+extension DataStack {
+    
+    // MARK: Public
+    
+    /**
+     Combine utilities for the `DataStack` are exposed through this namespace
+     */
+    public var reactive: DataStack.ReactiveNamespace {
+        
+        return .init(self)
+    }
+    
+    // MARK: - ReactiveNamespace
+    
+    /**
+     Combine utilities for the `DataStack` are exposed through this namespace. Extend this type if you need to add other Combine Publisher utilities for `DataStack`.
+     */
+    public struct ReactiveNamespace {
+        
+        // MARK: Public
+        
+        /**
+         The `DataStack` instance
+         */
+        public let base: DataStack
+        
+        
+        // MARK: Internal
+        
+        internal init(_ base: DataStack) {
+            
+            self.base = base
+        }
+    }
+}
+
+
+// MARK: - DataStack.ReactiveNamespace
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-extension PublisherProvider where Base == DataStack {
+extension DataStack.ReactiveNamespace {
     
     // MARK: Public
     

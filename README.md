@@ -19,10 +19,10 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 5.3:** iOS 10+ / macOS 10.12+ / watchOS 3.0+ / tvOS 10.0+
-* Previously supported Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4)
+* **Swift 5.4:** iOS 11+ / macOS 10.13+ / watchOS 4.0+ / tvOS 11.0+
+* Previously supported Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1)
 
-Upgrading from CoreStore 6.x (swift 5.0) to 7.x (Swift 5.1)? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
+Upgrading from previous CoreStore versions? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
 CoreStore is now part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
 
@@ -33,6 +33,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 ### Features
 
+- **SwiftUI and Combine API utilities.** 
 - **Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
 - **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*

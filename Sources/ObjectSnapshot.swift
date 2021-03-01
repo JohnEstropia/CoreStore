@@ -174,21 +174,6 @@ extension ObjectSnapshot where O: NSManagedObject {
             self.values[key] = newValue
         }
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, message: "Accessing the property directly now works")
-    public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
-
-        return self[dynamicMember: keyPath]
-    }
-
-    @available(*, deprecated, message: "Mutating the property directly now works")
-    public mutating func setValue<V: AllowedObjectiveCKeyPathValue>(_ value: V!, forKeyPath keyPath: KeyPath<O, V>) {
-
-        self[dynamicMember: keyPath]  = value
-    }
 }
 
 
