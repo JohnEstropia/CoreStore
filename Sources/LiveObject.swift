@@ -101,16 +101,17 @@ public struct LiveObject<O: DynamicObject>: DynamicProperty {
         let objectPublisher: ObjectPublisher<O>?
         
         init(objectPublisher: ObjectPublisher<O>?) {
-            
+
             guard
                 let dataStack = objectPublisher?.cs_dataStack(),
                 let objectPublisher = objectPublisher?.asPublisher(in: dataStack)
             else {
-                
-                self.objectPublisher = objectPublisher
+
+                self.objectPublisher = nil
                 self.item = nil
                 return
             }
+            
             self.objectPublisher = objectPublisher
             self.item = objectPublisher.snapshot
             
