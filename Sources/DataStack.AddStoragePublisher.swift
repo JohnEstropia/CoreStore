@@ -50,7 +50,7 @@ extension DataStack {
         
         // MARK: Publisher
         
-        public typealias Output = Progress
+        public typealias Output = MigrationProgress
         public typealias Failure = CoreStoreError
         
         public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
@@ -64,19 +64,19 @@ extension DataStack {
             )
         }
         
-        // MARK: - Progress
+        // MARK: - MigrationProgress
         
         /**
-         A `Progress` contains info on a `LocalStorage`'s setup progress.
+         A `MigrationProgress` contains info on a `LocalStorage`'s setup progress.
          
          - SeeAlso: DataStack.reactive.addStorage(_:)
          */
-        public enum Progress {
+        public enum MigrationProgress {
             
             /**
              The `LocalStorage` is currently being migrated
              */
-            case migrating(storage: Storage, progressObject: Foundation.Progress)
+            case migrating(storage: Storage, progressObject: Progress)
             
             /**
              The `LocalStorage` has been added to the `DataStack` and is ready for reading and writing
@@ -143,7 +143,7 @@ extension DataStack {
             
             // MARK: FilePrivate
             
-            init(
+            fileprivate init(
                 dataStack: DataStack,
                 storage: Storage,
                 subscriber: S
@@ -163,10 +163,12 @@ extension DataStack {
                     
                     return
                 }
-                var progress: Foundation.Progress?
+                var progress: Progress? = nil
                 progress = self.dataStack.addStorage(
                     self.storage,
                     completion: { [weak self] result in
+                        
+                        progress?.setProgressHandler(nil)
                         
                         guard
                             let self = self,
@@ -195,25 +197,24 @@ extension DataStack {
                         }
                     }
                 )
-                guard let progress = progress else {
+                if let progress = progress {
                     
-                    return
-                }
-                progress.cs_setProgressHandler { [weak self] progress in
-                    
-                    guard
-                        let self = self,
-                        let subscriber = self.subscriber
-                    else {
+                    progress.cs_setProgressHandler { [weak self] progress in
                         
-                        return
-                    }
-                    _ = subscriber.receive(
-                        .migrating(
-                            storage: self.storage,
-                            progressObject: progress
+                        guard
+                            let self = self,
+                            let subscriber = self.subscriber
+                        else {
+                            
+                            return
+                        }
+                        _ = subscriber.receive(
+                            .migrating(
+                                storage: self.storage,
+                                progressObject: progress
+                            )
                         )
-                    )
+                    }
                 }
             }
             
