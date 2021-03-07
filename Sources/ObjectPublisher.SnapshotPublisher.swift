@@ -37,6 +37,8 @@ extension ObjectPublisher {
     
     /**
      A `Publisher` that emits an `ObjectSnapshot?` whenever changes occur in the `ObjectPublisher`. The event emits `nil` if the object has been deletd.
+     
+     - SeeAlso: ObjectPublisher.reactive.snapshot(emitInitialValue:)
      */
     public struct SnapshotPublisher: Publisher {
         

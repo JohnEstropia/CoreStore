@@ -76,6 +76,78 @@ extension DataStack.ReactiveNamespace {
     // MARK: Public
     
     /**
+     Reactive extension for `CoreStore.DataStack`'s `addStorage(...)` API. Asynchronously adds a `StorageInterface` to the stack.
+     ```
+     dataStack.reactive
+         .addStorage(
+             InMemoryStore(configuration: "Config1")
+         )
+         .sink(
+             receiveCompletion: { result in
+                 // ...
+             },
+             receiveValue: { storage in
+                 // ...
+             }
+         )
+         .store(in: &cancellables)
+     ```
+     - parameter storage: the storage
+     - returns: A `Future` that emits a `StorageInterface` instance added to the `DataStack`. Note that the `StorageInterface` event value may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
+     */
+    public func addStorage<T: StorageInterface>(_ storage: T) -> Future<T, CoreStoreError> {
+        
+        return .init { (promise) in
+            
+            self.base.addStorage(
+                storage,
+                completion: { (result) in
+                    
+                    switch result {
+                    
+                    case .success(let storage):
+                        promise(.success(storage))
+                        
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
+                }
+            )
+        }
+    }
+    
+    /**
+     Reactive extension for `CoreStore.DataStack`'s `addStorage(...)` API. Asynchronously adds a `LocalStorage` to the stack. Migrations are also initiated by default. The event emits `DataStack.AddStoragePublisher.Progress` `enum` values.
+     ```
+     dataStack.reactive
+         .addStorage(
+             SQLiteStore(
+                 fileName: "core_data.sqlite",
+                 configuration: "Config1"
+             )
+         )
+         .sink(
+             receiveCompletion: { result in
+                 // ...
+             },
+             receiveValue: { (progress) in
+                 print("\(round(progress.fractionCompleted * 100)) %") // 0.0 ~ 1.0
+             }
+         )
+         .store(in: &cancellables)
+     ```
+     - parameter storage: the local storage
+     - returns: A `DataStack.AddStoragePublisher` that emits a `DataStack.AddStoragePublisher.Progress` value with metadata for migration progress. Note that the `LocalStorage` event value may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     */
+    public func addStorage<T: LocalStorage>(_ storage: T) -> DataStack.AddStoragePublisher<T> {
+        
+        return .init(
+            dataStack: self.base,
+            storage: storage
+        )
+    }
+    
+    /**
      Reactive extension for `CoreStore.DataStack`'s `importObject(...)` API. Creates an `ImportableObject` by importing from the specified import source. The event value will be the object instance correctly associated for the `DataStack`.
      ```
      dataStack.reactive
