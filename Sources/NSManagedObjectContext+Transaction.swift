@@ -230,14 +230,7 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func refreshAndMergeAllObjects() {
         
-        if #available(iOS 8.3, macOS 10.11, *) {
-            
-            self.refreshAllObjects()
-        }
-        else {
-            
-            self.registeredObjects.forEach { self.refresh($0, mergeChanges: true) }
-        }
+        self.refreshAllObjects()
     }
     
     

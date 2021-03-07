@@ -38,7 +38,6 @@ import CoreData
  
  - SeeAlso: `ObjectObserver`
  */
-@available(macOS 10.12, *)
 @objc
 public protocol CSObjectObserver: AnyObject {
     

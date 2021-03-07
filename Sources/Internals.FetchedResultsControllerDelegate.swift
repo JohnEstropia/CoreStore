@@ -29,7 +29,6 @@ import CoreData
 
 // MARK: - FetchedResultsControllerHandler
 
-@available(macOS 10.12, *)
 internal protocol FetchedResultsControllerHandler: AnyObject {
     
     var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? { get }
@@ -50,7 +49,6 @@ extension Internals {
 
     // MARK: - FetchedResultsControllerDelegate
 
-    @available(macOS 10.12, *)
     internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
 
         // MARK: Internal
@@ -90,14 +88,6 @@ extension Internals {
 
                 return
             }
-
-            if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {}
-            else {
-
-                self.deletedSections = []
-                self.insertedSections = []
-            }
-
             self.handler?.controllerWillChangeContent(controller)
         }
 
@@ -123,102 +113,11 @@ extension Internals {
 
                 return
             }
-
-            if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {
-
-                self.handler?.controller(
-                    controller,
-                    didChangeObject: anObject,
-                    atIndexPath: indexPath,
-                    forChangeType: type,
-                    newIndexPath: newIndexPath
-                )
-                return
-            }
-
-            guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
-
-                // This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
-                // Swift will then always execute the first case of the switch causing strange behaviour.
-                // https://forums.developer.apple.com/thread/12184#31850
-                return
-            }
-
-            // This whole dance is a workaround for a nasty bug introduced in XCode 7 targeted at iOS 8 devices
-            // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
-            // https://forums.developer.apple.com/message/9998#9998
-            // https://forums.developer.apple.com/message/31849#31849
-
-            if case .update = actualType,
-                indexPath != nil,
-                newIndexPath != nil {
-
-                actualType = .move
-            }
-
-            switch actualType {
-
-            case .update:
-                guard let section = indexPath?[0] else {
-
-                    return
-                }
-                if self.deletedSections.contains(section)
-                    || self.insertedSections.contains(section) {
-
-                    return
-                }
-
-            case .move:
-                guard let indexPath = indexPath, let newIndexPath = newIndexPath else {
-
-                    return
-                }
-                guard indexPath == newIndexPath else {
-
-                    break
-                }
-                if self.insertedSections.contains(indexPath[0]) {
-
-                    // Observers that handle the .Move change are advised to delete then reinsert the object instead of just moving. This is especially true when indexPath and newIndexPath are equal. For example, calling tableView.moveRowAtIndexPath(_:toIndexPath) when both indexPaths are the same will crash the tableView.
-                    self.handler?.controller(
-                        controller,
-                        didChangeObject: anObject,
-                        atIndexPath: indexPath,
-                        forChangeType: .move,
-                        newIndexPath: newIndexPath
-                    )
-                    return
-                }
-                if self.deletedSections.contains(indexPath[0]) {
-
-                    self.handler?.controller(
-                        controller,
-                        didChangeObject: anObject,
-                        atIndexPath: nil,
-                        forChangeType: .insert,
-                        newIndexPath: indexPath
-                    )
-                    return
-                }
-                self.handler?.controller(
-                    controller,
-                    didChangeObject: anObject,
-                    atIndexPath: indexPath,
-                    forChangeType: .update,
-                    newIndexPath: nil
-                )
-                return
-
-            default:
-                break
-            }
-
             self.handler?.controller(
                 controller,
                 didChangeObject: anObject,
                 atIndexPath: indexPath,
-                forChangeType: actualType,
+                forChangeType: type,
                 newIndexPath: newIndexPath
             )
         }
@@ -230,18 +129,6 @@ extension Internals {
 
                 return
             }
-
-            if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {}
-            else {
-
-                switch type {
-
-                case .delete:   self.deletedSections.insert(sectionIndex)
-                case .insert:   self.insertedSections.insert(sectionIndex)
-                default: break
-                }
-            }
-
             self.handler?.controller(
                 controller,
                 didChangeSection: sectionInfo,
@@ -255,14 +142,5 @@ extension Internals {
 
             return self.handler?.sectionIndexTransformer(sectionName)
         }
-
-
-        // MARK: Private
-
-        @nonobjc
-        private var deletedSections = Set<Int>()
-
-        @nonobjc
-        private var insertedSections = Set<Int>()
     }
 }

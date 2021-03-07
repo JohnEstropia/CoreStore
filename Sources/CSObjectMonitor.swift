@@ -34,7 +34,6 @@ import CoreData
  
  - SeeAlso: `ObjectMonitor`
  */
-@available(macOS 10.12, *)
 @objc
 public final class CSObjectMonitor: NSObject {
     
@@ -139,7 +138,6 @@ public final class CSObjectMonitor: NSObject {
 
 // MARK: - ObjectMonitor
 
-@available(macOS 10.12, *)
 extension ObjectMonitor where ObjectMonitor.ObjectType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType

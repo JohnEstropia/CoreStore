@@ -247,16 +247,7 @@ extension DiffableDataSource {
 
                 return
             }
-            if #available(iOS 11.0, tvOS 11.0, *) {
-
-                base.performBatchUpdates(updates)
-            }
-            else {
-
-                base.beginUpdates()
-                updates()
-                base.endUpdates()
-            }
+            base.performBatchUpdates(updates)
         }
 
         public func reloadData() {

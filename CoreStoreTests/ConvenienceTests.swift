@@ -29,7 +29,6 @@ import CoreStore
 
 // MARK: - ConvenienceTests
 
-@available(macOS 10.12, *)
 class ConvenienceTests: BaseTestCase {
     
     @objc

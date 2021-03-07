@@ -34,7 +34,6 @@ import CoreData
  
  - SeeAlso: `SectionBy`
  */
-@available(macOS 10.12, *)
 @objc
 public final class CSSectionBy: NSObject {
     
@@ -91,7 +90,6 @@ public final class CSSectionBy: NSObject {
 
 // MARK: - SectionBy
 
-@available(macOS 10.12, *)
 extension SectionBy {
     
     // MARK: CoreStoreSwiftType

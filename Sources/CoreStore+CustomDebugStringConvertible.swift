@@ -359,7 +359,6 @@ extension UnsafeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStr
 
 // MARK: - ListMonitor
 
-@available(macOS 10.12, *)
 fileprivate struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -404,7 +403,6 @@ fileprivate struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConve
     private let numberOfObjects: Int
 }
 
-@available(macOS 10.12, *)
 extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -431,7 +429,6 @@ extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvert
 
 // MARK: - ListPublisher
 
-@available(macOS 10.12, *)
 extension ListPublisher: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 
     // MARK: CustomDebugStringConvertible
@@ -614,7 +611,6 @@ extension MigrationType: CoreStoreDebugStringConvertible {
 
 // MARK: - ObjectMonitor
 
-@available(macOS 10.12, *)
 extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -738,7 +734,6 @@ extension PartialObject: CustomDebugStringConvertible, CoreStoreDebugStringConve
 
 // MARK: - SectionBy
 
-@available(macOS 10.12, *)
 extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -1259,33 +1254,20 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
-        var info: DumpInfo = [
+        return createFormattedString(
+            "(", ")",
             ("managedObjectClassName", self.managedObjectClassName!),
             ("name", self.name as Any),
+            ("indexes", self.indexes),
             ("isAbstract", self.isAbstract),
             ("superentity?.name", self.superentity?.name as Any),
             ("subentities", self.subentities.map({ $0.name })),
             ("properties", self.properties),
+            ("uniquenessConstraints", self.uniquenessConstraints),
             ("userInfo", self.userInfo as Any),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier as Any),
             ("renamingIdentifier", self.renamingIdentifier as Any)
-        ]
-        if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
-            
-            info.append(("indexes", self.indexes))
-        }
-        else {
-            
-            info.append(("compoundIndexes", self.compoundIndexes))
-        }
-        if #available(macOS 10.11, iOS 9.0, *) {
-            
-            info.append(("uniquenessConstraints", self.uniquenessConstraints))
-        }
-        return createFormattedString(
-            "(", ")",
-            info
         )
     }
 }

@@ -47,17 +47,10 @@ extension FieldCoders {
 
                 return nil
             }
-            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
-
-                return try! NSKeyedArchiver.archivedData(
-                    withRootObject: fieldValue,
-                    requiringSecureCoding: self.requiresSecureCoding
-                )
-            }
-            else {
-
-                return NSKeyedArchiver.archivedData(withRootObject: fieldValue)
-            }
+            return try! NSKeyedArchiver.archivedData(
+                withRootObject: fieldValue,
+                requiringSecureCoding: self.requiresSecureCoding
+            )
         }
 
         public static func decodeFromStoredData(_ data: Data?) -> FieldStoredValue? {
@@ -66,14 +59,10 @@ extension FieldCoders {
 
                 return nil
             }
-            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
-
-                return try! NSKeyedUnarchiver.unarchivedObject(ofClass: FieldStoredValue.self, from: data)
-            }
-            else {
-
-                return NSKeyedUnarchiver.unarchiveObject(with: data) as! FieldStoredValue?
-            }
+            return try! NSKeyedUnarchiver.unarchivedObject(
+                ofClass: FieldStoredValue.self,
+                from: data
+            )
         }
 
 

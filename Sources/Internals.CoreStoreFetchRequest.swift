@@ -68,22 +68,8 @@ extension Internals {
             }
             set {
 
-                if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
-
-                    self.copiedAffectedStores = (newValue as NSArray?)?.copy() as! NSArray?
-                    super.affectedStores = newValue
-                    return
-                }
-                // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
-                // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-                if let releaseArray = self.releaseArray {
-
-                    releaseArray.release()
-                    self.releaseArray = nil
-                }
                 self.copiedAffectedStores = (newValue as NSArray?)?.copy() as! NSArray?
                 super.affectedStores = newValue
-                self.releaseArray = (super.affectedStores as NSArray?).map(Unmanaged<NSArray>.passRetained(_:))
             }
         }
 

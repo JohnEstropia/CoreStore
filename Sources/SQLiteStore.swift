@@ -150,15 +150,10 @@ public final class SQLiteStore: LocalStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [AnyHashable: Any]? = autoreleasepool {
-        
-        var storeOptions: [AnyHashable: Any] = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-        if #available(iOS 11.0, macOS 10.13, tvOSApplicationExtension 11.0, watchOSApplicationExtension 4.0, *) {
-
-            storeOptions[NSBinaryStoreInsecureDecodingCompatibilityOption] = true
-        }
-        return storeOptions
-    }
+    public let storeOptions: [AnyHashable: Any]? = [
+        NSSQLitePragmasOption: ["journal_mode": "WAL"],
+        NSBinaryStoreInsecureDecodingCompatibilityOption: true
+    ]
     
     /**
      Do not call directly. Used by the `DataStack` internally.

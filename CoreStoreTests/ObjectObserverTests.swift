@@ -31,7 +31,6 @@ import CoreStore
 
 // MARK: - ObjectObserverTests
 
-@available(macOS 10.12, *)
 class ObjectObserverTests: BaseTestDataTestCase {
     
     @objc
@@ -203,7 +202,6 @@ class ObjectObserverTests: BaseTestDataTestCase {
 
 // MARK: TestObjectObserver
 
-@available(macOS 10.12, *)
 class TestObjectObserver: ObjectObserver {
     
     typealias ObjectEntityType = TestEntity1

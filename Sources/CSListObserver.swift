@@ -40,7 +40,6 @@ import CoreData
  
  - SeeAlso: `ListObserver`
  */
-@available(macOS 10.12, *)
 @objc
 public protocol CSListObserver: AnyObject {
     
@@ -91,7 +90,6 @@ public protocol CSListObserver: AnyObject {
  
  - SeeAlso: `ListObjectObserver`
  */
-@available(macOS 10.12, *)
 @objc
 public protocol CSListObjectObserver: CSListObserver {
     
@@ -152,7 +150,6 @@ public protocol CSListObjectObserver: CSListObserver {
  
  - SeeAlso: `ListSectionObserver`
  */
-@available(macOS 10.12, *)
 @objc
 public protocol CSListSectionObserver: CSListObjectObserver {
     

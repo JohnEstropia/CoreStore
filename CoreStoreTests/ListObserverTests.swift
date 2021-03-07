@@ -31,7 +31,6 @@ import CoreStore
 
 // MARK: - ListObserverTests
 
-@available(macOS 10.12, *)
 class ListObserverTests: BaseTestDataTestCase {
     
     @objc
@@ -551,7 +550,6 @@ class ListObserverTests: BaseTestDataTestCase {
 
 // MARK: TestListObserver
 
-@available(macOS 10.12, *)
 class TestListObserver: ListSectionObserver {
     
     // MARK: ListObserver

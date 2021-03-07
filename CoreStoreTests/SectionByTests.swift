@@ -31,7 +31,6 @@ import CoreStore
 
 //MARK: - SectionByTests
 
-@available(macOS 10.12, *)
 final class SectionByTests: XCTestCase {
     
     @objc

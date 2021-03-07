@@ -39,7 +39,6 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-@available(macOS 10.12, *)
 public protocol ListObserver: AnyObject {
     
     /**
@@ -82,7 +81,6 @@ public protocol ListObserver: AnyObject {
 
 // MARK: - ListObserver (Default Implementations)
 
-@available(macOS 10.12, *)
 extension ListObserver {
     
     public func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
@@ -103,7 +101,6 @@ extension ListObserver {
  monitor.addObserver(self)
  ```
  */
-@available(macOS 10.12, *)
 public protocol ListObjectObserver: ListObserver {
     
     /**
@@ -151,7 +148,6 @@ public protocol ListObjectObserver: ListObserver {
 
 // MARK: - ListObjectObserver (Default Implementations)
 
-@available(macOS 10.12, *)
 extension ListObjectObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) { }
@@ -177,7 +173,6 @@ extension ListObjectObserver {
  monitor.addObserver(self)
  ```
  */
-@available(macOS 10.12, *)
 public protocol ListSectionObserver: ListObjectObserver {
     
     /**
@@ -204,7 +199,6 @@ public protocol ListSectionObserver: ListObjectObserver {
 
 // MARK: - ListSectionObserver (Default Implementations)
 
-@available(macOS 10.12, *)
 extension ListSectionObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }

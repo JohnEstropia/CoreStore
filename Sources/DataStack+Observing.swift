@@ -29,7 +29,6 @@ import CoreData
 
 // MARK: - DataStack
 
-@available(macOS 10.12, *)
 extension DataStack {
     
     /**

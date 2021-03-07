@@ -221,7 +221,6 @@ extension From {
      - parameter clause: the `SectionBy` to be used by the `ListMonitor`
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy(_ clause: SectionBy<O>) -> SectionMonitorChainBuilder<O> {
         
         return .init(
@@ -237,7 +236,6 @@ extension From {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy(_ sectionKeyPath: KeyPathString) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(sectionKeyPath, sectionIndexTransformer: { _ in nil })
@@ -251,7 +249,6 @@ extension From {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy(
         _ sectionKeyPath: KeyPathString,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -284,7 +281,6 @@ extension From {
     // MARK: Deprecated
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy(
         _ sectionKeyPath: KeyPathString,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -319,7 +315,6 @@ extension From where O: NSManagedObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, T>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -336,7 +331,6 @@ extension From where O: NSManagedObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, T>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -352,7 +346,6 @@ extension From where O: NSManagedObject {
     // MARK: Deprecated
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, T>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -431,7 +424,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -446,7 +438,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -461,7 +452,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionBy(
@@ -476,7 +466,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -491,7 +480,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -506,7 +494,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -521,7 +508,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -538,7 +524,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -558,7 +543,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -578,7 +562,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -598,7 +581,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -618,7 +600,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -638,7 +619,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -658,7 +638,6 @@ extension From where O: CoreStoreObject {
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
         sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -674,7 +653,6 @@ extension From where O: CoreStoreObject {
     // MARK: Deprecated
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -687,7 +665,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -700,7 +677,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -713,7 +689,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -726,7 +701,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -739,7 +713,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -752,7 +725,6 @@ extension From where O: CoreStoreObject {
     }
     
     @available(*, deprecated, renamed: "sectionBy(_:sectionIndexTransformer:)")
-    @available(macOS 10.12, *)
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
         _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
@@ -1224,7 +1196,6 @@ extension QueryChainBuilder where O: CoreStoreObject {
 
 // MARK: - SectionMonitorChainBuilder
 
-@available(macOS 10.12, *)
 extension SectionMonitorChainBuilder {
     
     /**
@@ -1376,7 +1347,6 @@ extension SectionMonitorChainBuilder {
 
 // MARK: - SectionMonitorChainBuilder where O: CoreStoreObject
 
-@available(macOS 10.12, *)
 extension SectionMonitorChainBuilder where O: CoreStoreObject {
     
     /**
