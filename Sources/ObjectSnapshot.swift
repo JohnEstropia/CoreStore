@@ -127,6 +127,11 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
         self.values = values
         self.generation = .init()
     }
+    
+    internal var cs_objectID: O.ObjectID {
+        
+        return self.objectID()
+    }
 
 
     // MARK: FilePrivate

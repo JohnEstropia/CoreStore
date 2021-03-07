@@ -35,6 +35,35 @@ import SwiftUI
 extension ForEach where Content: View {
     
     // MARK: Public
+    
+    /**
+     Creates an instance that creates views for each object in a collection of `ObjectSnapshot`s. The objects' `NSManagedObjectID` are used as the identifier
+     ```
+     let people: [ObjectSnapshot<Person>]
+     
+     var body: some View {
+     
+        List {
+            
+            ForEach(self.people) { person in
+
+                ProfileView(person)
+            }
+        }
+        .animation(.default)
+     }
+     ```
+     
+     - parameter objectSnapshots: The collection of `ObjectSnapshot`s that the `ForEach` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `ObjectPublisher` instance and creates views dynamically.
+     */
+    public init<O: DynamicObject>(
+        _ objectSnapshots: Data,
+        @ViewBuilder content: @escaping (ObjectSnapshot<O>) -> Content
+    ) where Data.Element == ObjectSnapshot<O>, ID == O.ObjectID {
+        
+        self.init(objectSnapshots, id: \.cs_objectID, content: content)
+    }
 
     /**
      Creates an instance that creates views for each object in a `ListSnapshot`.
