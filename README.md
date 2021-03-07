@@ -33,7 +33,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 ### Features
 
-- **SwiftUI and Combine API utilities.** 
+- **🆕SwiftUI and Combine API utilities.** `ListPublisher`s and `ObjectPublisher`s now have their `@LiveList` and `@LiveObject` SwiftUI property wrappers. Combine `Publisher` s are also available through the `ListPublisher.reactive`, `ObjectPublisher.reactive`, and `DataStack.reactive` namespaces.
 - **Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
 - **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*

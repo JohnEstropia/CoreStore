@@ -25,7 +25,7 @@ extension Modern.PlacemarksDemo {
             Modern.PlacemarksDemo.dataStack.perform(
                 asynchronous: { (transaction) in
                     
-                    let place = self.place.asEditable(in: transaction)
+                    let place = self.$place?.asEditable(in: transaction)
                     place?.annotation = .init(coordinate: coordinate)
                 },
                 completion: { _ in }
@@ -42,7 +42,7 @@ extension Modern.PlacemarksDemo {
             _ = try? Modern.PlacemarksDemo.dataStack.perform(
                 synchronous: {  (transaction) in
                     
-                    let place = self.place.asEditable(in: transaction)
+                    let place = self.$place?.asEditable(in: transaction)
                     place?.setRandomLocation()
                 }
             )
@@ -71,22 +71,25 @@ extension Modern.PlacemarksDemo {
 
         // MARK: Internal
 
-        @ObservedObject
-        var place: ObjectPublisher<Modern.PlacemarksDemo.Place>
+        @LiveObject(Modern.PlacemarksDemo.placePublisher)
+        var place: ObjectSnapshot<Modern.PlacemarksDemo.Place>?
         
         init() {
             
-            self.place = Modern.PlacemarksDemo.placePublisher
-            self.sinkCancellable = self.place.sink(
+            self.sinkCancellable = self.$place?.reactive.snapshot().sink(
                 receiveCompletion: { _ in
                     
                     // Deleted, do nothing
                 },
                 receiveValue: { [self] (snapshot) in
                     
+                    guard let snapshot = snapshot else {
+                        
+                        return
+                    }
                     self.geocoder.geocode(place: snapshot) { (title, subtitle) in
                         
-                        guard self.place.snapshot == snapshot else {
+                        guard self.place == snapshot else {
                             
                             return
                         }
@@ -104,22 +107,29 @@ extension Modern.PlacemarksDemo {
         // MARK: View
         
         var body: some View {
-            Modern.PlacemarksDemo.MapView(
-                place: self.place.snapshot,
-                onTap: { coordinate in
+            
+            Group {
+                
+                if let place = self.place {
                     
-                    self.demoAsynchronousTransaction(coordinate: coordinate)
+                    Modern.PlacemarksDemo.MapView(
+                        place: place,
+                        onTap: { coordinate in
+                            
+                            self.demoAsynchronousTransaction(coordinate: coordinate)
+                        }
+                    )
+                    .overlay(
+                        InstructionsView(
+                            ("Random", "Sets random coordinate"),
+                            ("Tap", "Sets to tapped coordinate")
+                        )
+                        .padding(.leading, 10)
+                        .padding(.bottom, 40),
+                        alignment: .bottomLeading
+                    )
                 }
-            )
-            .overlay(
-                InstructionsView(
-                    ("Random", "Sets random coordinate"),
-                    ("Tap", "Sets to tapped coordinate")
-                )
-                .padding(.leading, 10)
-                .padding(.bottom, 40),
-                alignment: .bottomLeading
-            )
+            }
             .navigationBarTitle("Placemarks")
             .navigationBarItems(
                 trailing: Button("Random") {
@@ -132,7 +142,7 @@ extension Modern.PlacemarksDemo {
         
         // MARK: Private
         
-        private var sinkCancellable: AnyCancellable? = nil
+        private var sinkCancellable: AnyCancellable?
         private let geocoder = Modern.PlacemarksDemo.Geocoder()
     }
 }

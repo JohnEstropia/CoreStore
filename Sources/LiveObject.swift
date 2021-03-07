@@ -76,6 +76,11 @@ public struct LiveObject<O: DynamicObject>: DynamicProperty {
         return self.observer.item
     }
     
+    public var projectedValue: ObjectPublisher<O>? {
+        
+        return self.observer.objectPublisher
+    }
+    
     
     // MARK: DynamicProperty
     
