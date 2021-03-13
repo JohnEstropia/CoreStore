@@ -35,7 +35,7 @@ import SwiftUI
  A container view that reads changes to an `ObjectPublisher`
  */
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
+public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: View, Value>: View {
     
     // MARK: Internal
     
@@ -48,10 +48,30 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
     public init(
         _ objectPublisher: ObjectPublisher<Object>?,
         @ViewBuilder content: @escaping (ObjectSnapshot<Object>) -> Content
+    ) where Value == ObjectSnapshot<Object>, Placeholder == EmptyView {
+        
+        self._object = .init(objectPublisher)
+        self.content = content
+        self.placeholder = EmptyView.init
+        self.keyPath = \.self
+    }
+    
+    /**
+     Creates an instance that creates views for `ObjectPublisher` changes.
+     
+     - parameter objectPublisher: The `ObjectPublisher` that the `ObjectReader` instance uses to create views dynamically
+     - parameter content: The view builder that receives an `Optional<ObjectSnapshot<O>>` instance and creates views dynamically.
+     - parameter placeholder: The view builder that creates a view for `nil` objects.
+     */
+    public init(
+        _ objectPublisher: ObjectPublisher<Object>?,
+        @ViewBuilder content: @escaping (ObjectSnapshot<Object>) -> Content,
+        @ViewBuilder placeholder: @escaping () -> Placeholder
     ) where Value == ObjectSnapshot<Object> {
         
         self._object = .init(objectPublisher)
         self.content = content
+        self.placeholder = placeholder
         self.keyPath = \.self
     }
     
@@ -66,10 +86,32 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
         _ objectPublisher: ObjectPublisher<Object>?,
         keyPath: KeyPath<ObjectSnapshot<Object>, Value>,
         @ViewBuilder content: @escaping (Value) -> Content
-    ) {
+    ) where Placeholder == EmptyView {
         
         self._object = .init(objectPublisher)
         self.content = content
+        self.placeholder = EmptyView.init
+        self.keyPath = keyPath
+    }
+    
+    /**
+     Creates an instance that creates views for `ObjectPublisher` changes.
+     
+     - parameter objectPublisher: The `ObjectPublisher` that the `ObjectReader` instance uses to create views dynamically
+     - parameter keyPath: A `KeyPath` for a property in the `ObjectSnapshot` whose value will be sent to the views
+     - parameter content: The view builder that receives the value from the property `KeyPath` and creates views dynamically.
+     - parameter placeholder: The view builder that creates a view for `nil` objects.
+     */
+    public init(
+        _ objectPublisher: ObjectPublisher<Object>?,
+        keyPath: KeyPath<ObjectSnapshot<Object>, Value>,
+        @ViewBuilder content: @escaping (Value) -> Content,
+        @ViewBuilder placeholder: @escaping () -> Placeholder
+    ) where Placeholder == EmptyView {
+        
+        self._object = .init(objectPublisher)
+        self.content = content
+        self.placeholder = placeholder
         self.keyPath = keyPath
     }
     
@@ -82,6 +124,10 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
             
             self.content(object[keyPath: self.keyPath])
         }
+        else {
+            
+            self.placeholder()
+        }
     }
     
     
@@ -91,6 +137,7 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Value>: View {
     private var object: ObjectSnapshot<Object>?
     
     private let content: (Value) -> Content
+    private let placeholder: () -> Placeholder
     private let keyPath: KeyPath<ObjectSnapshot<Object>, Value>
 }
 
