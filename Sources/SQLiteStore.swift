@@ -43,12 +43,19 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.none`.
      */
-    public init(fileURL: URL, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
-        
-        self.fileURL = fileURL
-        self.configuration = configuration
-        self.migrationMappingProviders = migrationMappingProviders
-        self.localStorageOptions = localStorageOptions
+    public convenience init(
+        fileURL: URL,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
+        self.init(
+            container: .custom(fileURL: fileURL),
+            configuration: configuration,
+            migrationMappingProviders: migrationMappingProviders,
+            localStorageOptions: localStorageOptions
+        )
     }
     
     /**
@@ -60,13 +67,51 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
-        
-        self.fileURL = SQLiteStore.defaultRootDirectory
-            .appendingPathComponent(fileName, isDirectory: false)
-        self.configuration = configuration
-        self.migrationMappingProviders = migrationMappingProviders
-        self.localStorageOptions = localStorageOptions
+    public convenience init(
+        fileName: String,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
+        self.init(
+            container: .default(fileName: fileName),
+            configuration: configuration,
+            migrationMappingProviders: migrationMappingProviders,
+            localStorageOptions: localStorageOptions
+        )
+    }
+
+    /**
+     Initializes an SQLite store interface with a device-wide shared persistent store using a registered App Group Identifier. This store does not use remote persistent history tracking, and should be used only in the context of App-Extension shared stores.
+
+     - Important: The app will be force-terminated if the `appGroupIdentifier` is not registered for the app.
+     - parameter appGroupIdentifier: the App Group identifier registered for this application. The app will be force-terminated if this identifier is not registered for the app.
+     - parameter subdirectory: an optional containing directory, or directories separated by the path separator `/`, where the persistent store file will be initialized.
+     - parameter fileName: the local filename for the SQLite persistent store.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
+     - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
+     */
+    public convenience init(
+        appGroupIdentifier: String,
+        subdirectory: String?,
+        fileName: String,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
+        self.init(
+            container: .appGroup(
+                appGroupIdentifier: appGroupIdentifier,
+                subdirectory: subdirectory,
+                fileName: fileName
+            ),
+            configuration: configuration,
+            migrationMappingProviders: migrationMappingProviders,
+            localStorageOptions: localStorageOptions
+        )
     }
     
     /**
@@ -74,12 +119,16 @@ public final class SQLiteStore: LocalStorage {
      
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      */
-    public init() {
-        
-        self.fileURL = SQLiteStore.defaultFileURL
-        self.configuration = nil
-        self.migrationMappingProviders = []
-        self.localStorageOptions = nil
+    public convenience init() {
+
+        self.init(
+            container: .default(
+                fileName: "\((Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData").sqlite"
+            ),
+            configuration: nil,
+            migrationMappingProviders: [],
+            localStorageOptions: nil
+        )
     }
     
     /**
@@ -91,11 +140,15 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public static func legacy(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) -> SQLiteStore {
-        
-        return SQLiteStore(
-            fileURL: SQLiteStore.legacyDefaultRootDirectory
-                .appendingPathComponent(fileName, isDirectory: false),
+    public static func legacy(
+        fileName: String,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) -> SQLiteStore {
+
+        return self.init(
+            container: .legacy(fileName: fileName),
             configuration: configuration,
             migrationMappingProviders: migrationMappingProviders,
             localStorageOptions: localStorageOptions
@@ -108,9 +161,11 @@ public final class SQLiteStore: LocalStorage {
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      */
     public static func legacy() -> SQLiteStore {
-        
-        return SQLiteStore(
-            fileURL: SQLiteStore.legacyDefaultFileURL,
+
+        return self.init(
+            container: .legacy(
+                fileName: "\(DataStack.applicationName).sqlite"
+            ),
             configuration: nil,
             migrationMappingProviders: [],
             localStorageOptions: nil
@@ -182,7 +237,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      The `NSURL` that points to the SQLite file
      */
-    public let fileURL: URL
+    public private(set) lazy var fileURL: URL = self.container.fileURL
     
     /**
      An array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations.
@@ -321,13 +376,6 @@ public final class SQLiteStore: LocalStorage {
         )
     }
     
-    internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
-        .appendingPathComponent(
-            (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData",
-            isDirectory: false
-        )
-        .appendingPathExtension("sqlite")
-    
     internal static let legacyDefaultRootDirectory: URL = Internals.with {
         
         #if os(tvOS)
@@ -340,7 +388,16 @@ public final class SQLiteStore: LocalStorage {
             for: systemDirectorySearchPath,
             in: .userDomainMask).first!
     }
-    
+
+    @available(*, deprecated, message: "Used only in Unit Tests")
+    internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
+        .appendingPathComponent(
+            (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData",
+            isDirectory: false
+        )
+        .appendingPathExtension("sqlite")
+
+    @available(*, deprecated, message: "Used only in Unit Tests")
     internal static let legacyDefaultFileURL = Internals.with {
         
         return SQLiteStore.legacyDefaultRootDirectory
@@ -352,4 +409,86 @@ public final class SQLiteStore: LocalStorage {
     // MARK: Private
     
     private weak var dataStack: DataStack?
+    private let container: Container
+
+    private init(
+        container: Container,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
+        self.container = container
+        self.configuration = configuration
+        self.migrationMappingProviders = migrationMappingProviders
+        self.localStorageOptions = localStorageOptions
+    }
+
+
+    // MARK: - Container
+
+    internal enum Container: Equatable {
+
+        // MARK: Internal
+
+        /**
+         A container for device-wide shared persistent store using a registered Application Group Identifier.
+
+         - Important: The app will be force-terminated if the `appGroupIdentifier` is not registered for the app.
+         */
+        case appGroup(
+                appGroupIdentifier: String,
+                subdirectory: String?,
+                fileName: String
+             )
+
+        /**
+         A local filename for the SQLite persistent store saved into the "Application Support/<bundle id>" directory (or on tvOS, the "Caches/<bundle id>" directory). Use this only for apps that used CoreStore's default directories prior to CoreStore v8.0.0 and after CoreStore v2.0.0. For apps with no bundle identifiers (ex: command line tools), the "<bundle id>" will be `com.CoreStore.DataStack`
+         */
+        case `default`(fileName: String)
+
+        /**
+         A local filename for the SQLite persistent store saved into the "Application Support" directory (or on tvOS, the "Caches" directory). Use this only for apps that used CoreStore's default directories prior to CoreStore v2.0.0.
+         */
+        case legacy(fileName: String)
+
+        /**
+         A custom location specifying the URL of the SQLite persistent store file itself
+         */
+        case custom(fileURL: URL)
+
+
+        var fileURL: URL {
+
+            switch self {
+
+            case .appGroup(let appGroupIdentifier, let subdirectory, let fileName):
+                let containerURL = FileManager.default.containerURL(
+                    forSecurityApplicationGroupIdentifier: appGroupIdentifier
+                )!
+                if let subdirectory = subdirectory {
+
+                    return containerURL
+                        .appendingPathComponent(subdirectory, isDirectory: true)
+                        .appendingPathComponent(fileName, isDirectory: false)
+                }
+                else {
+
+                    return containerURL
+                        .appendingPathComponent(fileName, isDirectory: false)
+                }
+
+            case .default(let fileName):
+                return SQLiteStore.defaultRootDirectory
+                    .appendingPathComponent(fileName, isDirectory: false)
+
+            case .legacy(let fileName):
+                return SQLiteStore.legacyDefaultRootDirectory
+                    .appendingPathComponent(fileName, isDirectory: false)
+
+            case .custom(let fileURL):
+                return fileURL
+            }
+        }
+    }
 }

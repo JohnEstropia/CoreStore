@@ -50,7 +50,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.configuration, "config1")
         XCTAssertNil(store.storeOptions)
     }
-    
+
+    @available(*, deprecated)
     @objc
     dynamic func test_ThatSQLiteStoreDefaultDirectories_AreCorrect() {
         
@@ -76,7 +77,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(SQLiteStore.defaultRootDirectory, defaultRootDirectory)
         XCTAssertEqual(SQLiteStore.defaultFileURL, defaultFileURL)
     }
-    
+
+    @available(*, deprecated)
     @objc
     dynamic func test_ThatDefaultSQLiteStores_ConfigureCorrectly() {
         
@@ -181,7 +183,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.migrationMappingProviders as! [XcodeSchemaMappingProvider], [mappingProvider])
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
     }
-    
+
+    @available(*, deprecated)
     @objc
     dynamic func test_ThatLegacySQLiteStoreDefaultDirectories_AreCorrect() {
         
@@ -202,7 +205,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(SQLiteStore.legacyDefaultRootDirectory, legacyDefaultRootDirectory)
         XCTAssertEqual(SQLiteStore.legacyDefaultFileURL, legacyDefaultFileURL)
     }
-    
+
+    @available(*, deprecated)
     @objc
     dynamic func test_ThatDefaultLegacySQLiteStores_ConfigureCorrectly() {
         

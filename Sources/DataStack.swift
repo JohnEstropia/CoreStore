@@ -237,7 +237,7 @@ public final class DataStack: Equatable {
      */
     @discardableResult
     public func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
-        
+
         do {
             
             return try self.coordinator.performSynchronously {
@@ -276,7 +276,7 @@ public final class DataStack: Equatable {
      */
     @discardableResult
     public func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
-        
+
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
