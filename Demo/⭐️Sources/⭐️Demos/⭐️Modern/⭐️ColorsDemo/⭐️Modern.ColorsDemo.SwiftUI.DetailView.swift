@@ -15,9 +15,9 @@ extension Modern.ColorsDemo.SwiftUI {
     struct DetailView: View {
         
         /**
-         ⭐️ Sample 1: Using a `LiveObject` to observe object changes. Note that the `ObjectSnapshot` is always `Optional`
+         ⭐️ Sample 1: Using a `ObjectState` to observe object changes. Note that the `ObjectSnapshot` is always `Optional`
          */
-        @LiveObject
+        @ObjectState
         private var palette: ObjectSnapshot<Modern.ColorsDemo.Palette>?
         
         /**

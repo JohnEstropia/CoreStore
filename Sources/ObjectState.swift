@@ -1,5 +1,5 @@
 //
-//  LiveObject.swift
+//  ObjectState.swift
 //  CoreStore
 //
 //  Copyright © 2021 John Rommel Estropia
@@ -29,21 +29,21 @@ import Combine
 import SwiftUI
 
 
-// MARK: - LiveObject
+// MARK: - ObjectState
 
 /**
  A property wrapper type that can read `ObjectPublisher` changes.
  */
 @propertyWrapper
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct LiveObject<O: DynamicObject>: DynamicProperty {
+public struct ObjectState<O: DynamicObject>: DynamicProperty {
     
     // MARK: Public
     
     /**
      Creates an instance that observes `ObjectPublisher` changes and exposes an `Optional<ObjectSnapshot<O>>` value.
      ```
-     @LiveObject
+     @ObjectState
      var person: ObjectSnapshot<Person>?
      
      init(objectPublisher: ObjectPublisher<Person>) {
@@ -61,7 +61,7 @@ public struct LiveObject<O: DynamicObject>: DynamicProperty {
      }
      ```
      
-     - parameter objectPublisher: The `ObjectPublisher` that the `LiveObject` will observe changes for
+     - parameter objectPublisher: The `ObjectPublisher` that the `ObjectState` will observe changes for
      */
     public init(_ objectPublisher: ObjectPublisher<O>?) {
         

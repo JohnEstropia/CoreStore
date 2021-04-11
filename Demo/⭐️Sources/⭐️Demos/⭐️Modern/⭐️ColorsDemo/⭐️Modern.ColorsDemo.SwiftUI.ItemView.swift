@@ -14,13 +14,13 @@ extension Modern.ColorsDemo.SwiftUI {
     struct ItemView: View {
         
         /**
-         ⭐️ Sample 1: Using a `LiveObject` to observe object changes. Note that the `ObjectSnapshot` is always `Optional`
+         ⭐️ Sample 1: Using a `ObjectState` to observe object changes. Note that the `ObjectSnapshot` is always `Optional`
          */
-        @LiveObject
+        @ObjectState
         private var palette: ObjectSnapshot<Modern.ColorsDemo.Palette>?
         
         /**
-         ⭐️ Sample 2: Initializing a `LiveObject` from an existing `ObjectPublisher`
+         ⭐️ Sample 2: Initializing a `ObjectState` from an existing `ObjectPublisher`
          */
         internal init(_ palette: ObjectPublisher<Modern.ColorsDemo.Palette>) {
             

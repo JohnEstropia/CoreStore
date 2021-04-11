@@ -68,7 +68,7 @@ extension ForEach where Content: View {
     /**
      Creates an instance that creates views for each object in a `ListSnapshot`.
      ```
-     @LiveList
+     @ListState
      var people: ListSnapshot<Person>
      
      var body: some View {
@@ -127,7 +127,7 @@ extension ForEach where Content: View {
     /**
      Creates an instance that creates views for `ListSnapshot` sections.
      ```
-     @LiveList
+     @ListState
      var people: ListSnapshot<Person>
      
      var body: some View {
@@ -164,7 +164,7 @@ extension ForEach where Content: View {
     /**
      Creates an instance that creates views for each object in a `ListSnapshot.SectionInfo`.
      ```
-     @LiveList
+     @ListState
      var people: ListSnapshot<Person>
      
      var body: some View {

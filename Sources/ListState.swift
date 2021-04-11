@@ -1,5 +1,5 @@
 //
-//  LiveList.swift
+//  ListState.swift
 //  CoreStore
 //
 //  Copyright © 2021 John Rommel Estropia
@@ -29,21 +29,21 @@ import Combine
 import SwiftUI
 
 
-// MARK: - LiveList
+// MARK: - ListState
 
 /**
  A property wrapper type that can read `ListPublisher` changes.
  */
 @propertyWrapper
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct LiveList<Object: DynamicObject>: DynamicProperty {
+public struct ListState<Object: DynamicObject>: DynamicProperty {
     
     // MARK: Public
     
     /**
      Creates an instance that observes `ListPublisher` changes and exposes a `ListSnapshot` value.
      ```
-     @LiveList
+     @ListState
      var people: ListSnapshot<Person>
      
      init(listPublisher: ListPublisher<Person>) {
@@ -64,7 +64,7 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
      }
      ```
      
-     - parameter listPublisher: The `ListPublisher` that the `LiveList` will observe changes for
+     - parameter listPublisher: The `ListPublisher` that the `ListState` will observe changes for
      */
     public init(
         _ listPublisher: ListPublisher<Object>
@@ -76,10 +76,11 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `FetchChainableBuilderType` and exposes a `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>()
              .where(\.isMember == true)
-             .orderBy(.ascending(\.lastName))
+             .orderBy(.ascending(\.lastName)),
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      
@@ -109,11 +110,12 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `SectionMonitorBuilderType` and exposes a `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>()
              .sectionBy(\.age)
              .where(\.isMember == true)
-             .orderBy(.ascending(\.lastName))
+             .orderBy(.ascending(\.lastName)),
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      
@@ -149,10 +151,11 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `From` and `FetchClause`s and exposes a `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>(),
          Where<Person>(\.isMember == true),
-         OrderBy<Person>(.ascending(\.lastName))
+         OrderBy<Person>(.ascending(\.lastName)),
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      
@@ -184,12 +187,13 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `From` and `FetchClause`s and exposes a `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>(),
          [
              Where<Person>(\.isMember == true),
              OrderBy<Person>(.ascending(\.lastName))
-         ]
+         ],
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      
@@ -221,11 +225,12 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `From`, `SectionBy`, and `FetchClause`s and exposes a sectioned `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>(),
          SectionBy(\.age),
          Where<Person>(\.isMember == true),
-         OrderBy<Person>(.ascending(\.lastName))
+         OrderBy<Person>(.ascending(\.lastName)),
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      
@@ -265,13 +270,14 @@ public struct LiveList<Object: DynamicObject>: DynamicProperty {
     /**
      Creates an instance that observes the specified `From`, `SectionBy`, and `FetchClause`s and exposes a sectioned `ListSnapshot` value.
      ```
-     @LiveList(
+     @ListState(
          From<Person>(),
          SectionBy(\.age),
          [
              Where<Person>(\.isMember == true),
              OrderBy<Person>(.ascending(\.lastName))
-         ]
+         ],
+         in: Globals.dataStack
      )
      var people: ListSnapshot<Person>
      

@@ -71,7 +71,7 @@ extension Modern.PlacemarksDemo {
 
         // MARK: Internal
 
-        @LiveObject(Modern.PlacemarksDemo.placePublisher)
+        @ObjectState(Modern.PlacemarksDemo.placePublisher)
         var place: ObjectSnapshot<Modern.PlacemarksDemo.Place>?
         
         init() {

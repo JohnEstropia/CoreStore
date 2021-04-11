@@ -71,7 +71,7 @@ extension Modern.ColorsDemo {
         
         // MARK: Private
         
-        @LiveList(Modern.ColorsDemo.palettesPublisher)
+        @ListState(Modern.ColorsDemo.palettesPublisher)
         private var palettes: ListSnapshot
         
         private let listView: (

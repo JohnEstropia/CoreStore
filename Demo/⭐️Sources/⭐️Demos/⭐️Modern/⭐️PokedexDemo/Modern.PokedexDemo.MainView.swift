@@ -62,7 +62,7 @@ extension Modern.PokedexDemo {
 
         // MARK: Private
         
-        @LiveList(
+        @ListState(
             From<Modern.PokedexDemo.PokedexEntry>()
                 .orderBy(.ascending(\.$index)),
             in: Modern.PokedexDemo.dataStack

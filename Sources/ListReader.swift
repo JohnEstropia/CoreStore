@@ -70,7 +70,6 @@ public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
         
         self._list = .init(listPublisher)
         self.content = content
-        self.keyPath = \.self
     }
     
     /**
@@ -98,8 +97,10 @@ public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
     ) {
         
         self._list = .init(listPublisher)
-        self.content = content
-        self.keyPath = keyPath
+        self.content = {
+            
+            content($0[keyPath: keyPath])
+        }
     }
     
     
@@ -107,17 +108,16 @@ public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
     
     public var body: some View {
         
-        self.content(self.list[keyPath: self.keyPath])
+        self.content(self.list)
     }
     
     
     // MARK: Private
     
-    @LiveList
+    @ListState
     private var list: ListSnapshot<Object>
     
-    private let content: (Value) -> Content
-    private let keyPath: KeyPath<ListSnapshot<Object>, Value>
+    private let content: (ListSnapshot<Object>) -> Content
 }
 
 #endif

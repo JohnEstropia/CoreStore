@@ -53,7 +53,6 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
         self._object = .init(objectPublisher)
         self.content = content
         self.placeholder = EmptyView.init
-        self.keyPath = \.self
     }
     
     /**
@@ -72,7 +71,6 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
         self._object = .init(objectPublisher)
         self.content = content
         self.placeholder = placeholder
-        self.keyPath = \.self
     }
     
     /**
@@ -89,9 +87,11 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
     ) where Placeholder == EmptyView {
         
         self._object = .init(objectPublisher)
-        self.content = content
+        self.content = {
+            
+            content($0[keyPath: keyPath])
+        }
         self.placeholder = EmptyView.init
-        self.keyPath = keyPath
     }
     
     /**
@@ -110,9 +110,11 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
     ) where Placeholder == EmptyView {
         
         self._object = .init(objectPublisher)
-        self.content = content
+        self.content = {
+            
+            content($0[keyPath: keyPath])
+        }
         self.placeholder = placeholder
-        self.keyPath = keyPath
     }
     
     
@@ -122,7 +124,7 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
         
         if let object = self.object {
             
-            self.content(object[keyPath: self.keyPath])
+            self.content(object)
         }
         else {
             
@@ -133,12 +135,11 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
     
     // MARK: Private
     
-    @LiveObject
+    @ObjectState
     private var object: ObjectSnapshot<Object>?
     
-    private let content: (Value) -> Content
+    private let content: (ObjectSnapshot<Object>) -> Content
     private let placeholder: () -> Placeholder
-    private let keyPath: KeyPath<ObjectSnapshot<Object>, Value>
 }
 
 #endif
