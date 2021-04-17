@@ -40,7 +40,7 @@ let package = Package(
             name: "CoreStore",
             dependencies: [],
             path: "Sources",
-            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m", "ObjectPublisher+Rective.swift"]
+            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m", "ObjectPublisher+Reactive.swift"]
         ),
         .testTarget(
             name: "CoreStoreTests",
