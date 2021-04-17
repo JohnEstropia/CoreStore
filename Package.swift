@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
 //
 //  Package.swift
 //  CoreStore
@@ -40,7 +40,7 @@ let package = Package(
             name: "CoreStore",
             dependencies: [],
             path: "Sources",
-            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m"]
+            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m", "ObjectPublisher+Rective.swift"]
         ),
         .testTarget(
             name: "CoreStoreTests",
