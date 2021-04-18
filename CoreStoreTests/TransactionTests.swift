@@ -383,8 +383,6 @@ final class TransactionTests: BaseTestCase {
         }
     }
     
-    
-    @available(macOS 10.12, *)
     @objc
     dynamic func test_ThatSynchronousTransactions_CanCommitWithoutWaitingForMerges() {
         

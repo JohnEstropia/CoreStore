@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="CoreStore" src="https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png" width=614 />
+<img alt="CoreStore" src="https://github.com/JohnEstropia/CoreStore/raw/develop/CoreStore.png" width=614 />
 <br />
 <br />
 Unleashing the real power of Core Data with the elegance and safety of Swift
@@ -24,38 +24,12 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 Upgrading from previous CoreStore versions? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
-CoreStore is now part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
-
-
-## Why use CoreStore?
-
-CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices.
-
-### Features
-
-- **SwiftUI and Combine API utilities.** 
-- **Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
-- **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
-- **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
-- **🔍Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (`min`, `max`, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
-- **🔭Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, list and object observable types all support multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
-- **📥Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
-- **🗑Say goodbye to *.xcdatamodeld* files!** While CoreStore supports `NSManagedObject`s, it offers `CoreStoreObject` whose subclasses can declare type-safe properties all in Swift code without the need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
-- **🔗Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
-- **Easier custom migrations.** Say goodbye to *.xcmappingmodel* files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
-- **📝Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **⛓Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
-- **🎯Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign independent names for the entities and their class names.
-- **📙Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-- **ℹ️Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **🎗Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
-- **🛡More extensive Unit Tests.** Extending CoreStore is safe without having to worry about breaking old behavior.
-
-*Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
+CoreStore is part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
 
 ## Contents
 
 - [TL;DR (a.k.a. sample codes)](#tldr-aka-sample-codes)
+- [Why use CoreStore?](#why-use-corestore)
 - [Architecture](#architecture)
 - CoreStore Tutorials (All of these have demos in the **Demo** app project!)
     - [Setting up](#setting-up)
@@ -95,13 +69,28 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Observe detailed list changes](#observe-detailed-list-changes)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
-        - 🆕[New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
-            - 🆕[`@Field.Stored` ](#fieldstored)
-            - 🆕[`@Field.Virtual` ](#fieldvirtual)
-            - 🆕[`@Field.Coded` ](#fieldcoded)
-            - 🆕[`@Field.Relationship` ](#fieldrelationship)
-            - 🆕[`@Field` usage notes](#field-usage-notes)
+        - [New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
+            - [`@Field.Stored` ](#fieldstored)
+            - [`@Field.Virtual` ](#fieldvirtual)
+            - [`@Field.Coded` ](#fieldcoded)
+            - [`@Field.Relationship` ](#fieldrelationship)
+            - [`@Field` usage notes](#field-usage-notes)
         - [`VersionLock`s](#versionlocks)
+    - [Reactive Programming](#reactive-programming)
+        - [RxSwift](#rxswift)
+        - 🆕[Combine](#combine)
+            - 🆕[`DataStack.reactive`](#datastackreactive)
+            - 🆕[`ListPublisher.reactive`](#listpublisherreactive)
+            - 🆕[`ObjectPublisher.reactive`](#objectpublisherreactive)
+    - 🆕[SwiftUI Utilities](#swiftui-utilities)
+        - 🆕[SwiftUI Views`](#swiftui-views)
+            - 🆕[`ListReader`](#listreader)
+            - 🆕[`ObjectReader`](#objectreader)
+        - 🆕[SwiftUI Property Wrappers](#swiftui-property-wrappers)
+            - 🆕[`ListState`](#liststate)
+            - 🆕[`ObjectState`](#objectstate)
+        - 🆕[SwiftUI Extensions](#swiftui-extensions)
+            - 🆕[`ForEach`](#foreach)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
@@ -112,6 +101,18 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 
 ## TL;DR (a.k.a. sample codes)
+
+Pure-Swift models:
+```swift
+class Person: CoreStoreObject {
+    @Field.Stored("name")
+    var name: String = ""
+    
+    @Field.Relationship("pets", inverse: \Dog.$master)
+    var pets: Set<Dog>
+}
+```
+(Classic `NSManagedObject`s also supported)
 
 Setting-up with progressive migration support:
 ```swift
@@ -135,7 +136,7 @@ Starting transactions:
 ```swift
 dataStack.perform(
     asynchronous: { (transaction) -> Void in
-        let person = transaction.create(Into<MyPersonEntity>())
+        let person = transaction.create(Into<Person>())
         person.name = "John Smith"
         person.age = 42
     },
@@ -150,13 +151,13 @@ dataStack.perform(
 
 Fetching objects (simple):
 ```swift
-let people = try dataStack.fetchAll(From<MyPersonEntity>())
+let people = try dataStack.fetchAll(From<Person>())
 ```
 
 Fetching objects (complex):
 ```swift
 let people = try dataStack.fetchAll(
-    From<MyPersonEntity>()
+    From<Person>()
         .where(\.age > 30),
         .orderBy(.ascending(\.name), .descending(.\age)),
         .tweak({ $0.includesPendingChanges = false })
@@ -166,7 +167,7 @@ let people = try dataStack.fetchAll(
 Querying values:
 ```swift
 let maxAge = try dataStack.queryValue(
-    From<MyPersonEntity>()
+    From<Person>()
         .select(Int.self, .maximum(\.age))
 )
 ```
@@ -174,6 +175,33 @@ let maxAge = try dataStack.queryValue(
 But really, there's a reason I wrote this huge *README*. Read up on the details!
 
 Check out the **Demo** app project for sample codes as well!
+
+
+## Why use CoreStore?
+
+CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices.
+
+### Features
+
+- **🆕[SwiftUI](#swiftui-utilities) and [Combine](#combine) API utilities.** `ListPublisher`s and `ObjectPublisher`s now have their `@ListState` and `@ObjectState` SwiftUI property wrappers. Combine `Publisher` s are also available through the `ListPublisher.reactive`, `ObjectPublisher.reactive`, and `DataStack.reactive` namespaces.
+- **Backwards-portable [DiffableDataSources implementation](#observe-a-diffable-list)!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
+- **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
+- **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
+- **🔍Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (`min`, `max`, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
+- **🔭Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, list and object observable types all support multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
+- **📥Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
+- **🗑Say goodbye to *.xcdatamodeld* files!** While CoreStore supports `NSManagedObject`s, it offers `CoreStoreObject` whose subclasses can declare type-safe properties all in Swift code without the need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
+- **🔗Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
+- **Easier custom migrations.** Say goodbye to *.xcmappingmodel* files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
+- **📝Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **⛓Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
+- **🎯Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign independent names for the entities and their class names.
+- **📙Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
+- **ℹ️Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **🎗Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
+- **🛡More extensive Unit Tests.** Extending CoreStore is safe without having to worry about breaking old behavior.
+
+*Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
 
 
 
@@ -271,6 +299,19 @@ try dataStack.addStorageAndWait(
     )
 )
 ```
+Asynchronous variant:
+```swift
+try dataStack.addStorage(
+    InMemoryStore(
+        configuration: "Config2
+    ),
+    completion: { storage in
+        // ...
+    }
+)
+```
+
+(A reactive-programming variant of this method is explained in detail in the section on [`DataStack` Combine publishers](#datastackreactive))
 
 ### Local Store
 The most common `StorageInterface` you will probably use is the `SQLiteStore`, which saves data in a local SQLite file.
@@ -292,7 +333,9 @@ CoreStore can decide the default values for these properties, so `SQLiteStore`s 
 try dataStack.addStorageAndWait(SQLiteStore())
 ```
 
-The file-related properties above are actually requirements of another protocol that `SQLiteStore` implements, the `LocalStorage` protocol:
+(The asynchronous variant of this method is explained further in the next section on [Migrations](#starting-migrations), and a reactive-programming variant in the section on [`DataStack` Combine publishers](#datastackreactive))
+
+The file-related properties of `SQLiteStore` are actually requirements of another protocol that it implements, the `LocalStorage` protocol:
 ```swift
 public protocol LocalStorage: StorageInterface {
     var fileURL: NSURL { get }
@@ -462,6 +505,8 @@ let migrationProgress: Progress? = try dataStack.addStorage(
 )
 ```
 The `completion` block reports a `SetupResult` that indicates success or failure.
+
+(A reactive-programming variant of this method is explained further in the section on [`DataStack` Combine publishers](#datastackreactive))
 
 Notice that this method also returns an optional `Progress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *Progress+Convenience.swift*:
 ```swift
@@ -1460,6 +1505,8 @@ Note that the owner instance will not be retained. You may call `ObjectPublisher
 
 The `ObjectSnapshot` returned from the `ObjectPublisher.snapshot` property returns a full-copy `struct` of all properties of the object. This is ideal for managing states as they are thread-safe and are not affected by further changes to the actual object.  `ObjectPublisher` automatically updates its `snapshot` value to the latest state of the object. 
 
+(A reactive-programming variant of this method is explained in detail in the section on [`ObjectPublisher` Combine publishers](#objectpublisherreactive))
+
 
 ### Observe a single object's per-property updates
 
@@ -1512,6 +1559,8 @@ listPublisher.addObserver(self) { [weak self] (listPublisher) in
 Note that the owner instance will not be retained. You may call `ListPublisher.removeObserver(...)` explicitly to stop receiving notifications, but the `ListPublisher` also discontinues sending events to deallocated observers.
 
 The `ListSnapshot` returned from the `ListPublisher.snapshot` property returns a full-copy `struct` of all sections and `NSManagedObject` items in the list. This is ideal for managing states as they are thread-safe and are not affected by further changes to the result set.  `ListPublisher` automatically updates its `snapshot` value to the latest state of the fetch. 
+
+(A reactive-programming variant of this method is explained in detail in the section on [`ListPublisher` Combine publishers](#listpublisherreactive))
 
 Unlike  `ListMonitor`s (See [`ListMonitor` examples](#observe-detailed-list-changes) below), a `ListPublisher` does not track detailed inserts, deletes, and moves. In return, a `ListPublisher` is a lot more lightweight and are designed to work well with `DiffableDataSource.TableViewAdapter`s and `DiffableDataSource.CollectionViewAdapter`s:
 ```swift
@@ -1815,13 +1864,13 @@ Starting CoreStore 7.1.0, `CoreStoreObject` properties may be converted to `@Fie
 The `@Field.Stored` property wrapper is used for persisted value types. This is the replacement for "non-transient" `Value.Required` and `Value.Optional` properties.
 
 <table>
-<tr><th>Before</th><th>`@Field.Stored`</th></tr>
+<tr><th>Before</th><th><pre lang=swift>@Field.Stored</pre></th></tr>
 <tr>
 <td><pre lang=swift>
 class Person: CoreStoreObject {
     <br />
-    let title = Value.Required<String>("title", initial: "Mr.")
-    let nickname = Value.Optional<String>("nickname")
+    let title = Value.Required&lt;String&gt;("title", initial: "Mr.")
+    let nickname = Value.Optional&lt;String&gt;("nickname")
 }
 </pre></td>
 <td><pre lang=swift>
@@ -1846,20 +1895,20 @@ class Person: CoreStoreObject {
 The `@Field.Virtual` property wrapper is used for unsaved, computed value types. This is the replacement for "transient" `Value.Required` and `Value.Optional` properties.
 
 <table>
-<tr><th>Before</th><th>`@Field.Virtual`</th></tr>
+<tr><th>Before</th><th><pre lang=swift>@Field.Virtual</pre></th></tr>
 <tr>
 <td><pre lang=swift>
 class Animal: CoreStoreObject {
     <br />
-    let speciesPlural = Value.Required<String>(
+    let speciesPlural = Value.Required&lt;String&gt;(
         "speciesPlural",
         transient: true,
         customGetter: Animal.getSpeciesPlural(_:)
     )
     <br />
-    let species = Value.Required<String>("species", initial: "")
+    let species = Value.Required&lt;String&gt;("species", initial: "")
     <br />
-    static func getSpeciesPlural(_ partialObject: PartialObject<Animal>) -> String? {
+    static func getSpeciesPlural(_ partialObject: PartialObject&lt;Animal&gt;) -> String? {
         let species = partialObject.value(for: { $0.species })
         return species + "s"
     }
@@ -1894,12 +1943,12 @@ The `@Field.Coded` property wrapper is used for binary-codable values. This is t
 > ‼️ The current `Transformable.Required` and `Transformable.Optional` mechanism have no safe one-to-one conversion to `@Field.Coded`. Please use `@Field.Coded` only for newly added attributes.
 
 <table>
-<tr><th>Before</th><th>`@Field.Coded`</th></tr>
+<tr><th>Before</th><th><pre lang=swift>@Field.Coded</pre></th></tr>
 <tr>
 <td><pre lang=swift>
 class Vehicle: CoreStoreObject {
     <br />
-    let color = Transformable.Optional<UIColor>("color", initial: .white)
+    let color = Transformable.Optional&lt;UIColor&gt;("color", initial: .white)
 }
 </pre></td>
 <td><pre lang=swift>
@@ -1947,16 +1996,16 @@ The type of relationship is determined by the `@Field.Relationship`  generic typ
 - `Set<T>` : To-many unordered relationship
 
 <table>
-<tr><th>Before</th><th>`@Field.Stored`</th></tr>
+<tr><th>Before</th><th><pre lang=swift>@Field.Stored</pre></th></tr>
 <tr>
 <td><pre lang=swift>
 class Pet: CoreStoreObject {
     <br />
-    let master = Relationship.ToOne<Person>("master")
+    let master = Relationship.ToOne&lt;Person&gt;("master")
 }
 class Person: CoreStoreObject {
     <br />
-    let pets: Relationship.ToManyUnordered<Pet>("pets", inverse: \.$master)
+    let pets: Relationship.ToManyUnordered&lt;Pet&gt;("pets", inverse: \.$master)
 }
 </pre></td>
 <td><pre lang=swift>
@@ -1968,7 +2017,7 @@ class Pet: CoreStoreObject {
 class Person: CoreStoreObject {
     <br />
     @Field.Relationship("pets", inverse: \.$master)
-    var pets: Set<Pet>
+    var pets: Set&lt;Pet&gt;
 }
 </pre></td>
 </tr>
@@ -2060,6 +2109,438 @@ Once the version lock is set, any changes in the properties or to the model will
 
 <img width="700" alt="VersionLock failure" src="https://cloud.githubusercontent.com/assets/3029684/26525666/92f46f0c-4399-11e7-9395-4379f6f20876.png" />
 
+## Reactive Programming
+### RxSwift
+RxSwift utilities are available through the [RxCoreStore](https://github.com/JohnEstropia/RxCoreStore) external module.
+
+### Combine
+
+Combine publishers are available from the `DataStack`, `ListPublisher`, and `ObjectPublisher`'s `.reactive` namespace property.
+
+#### `DataStack.reactive`
+
+Adding a storage through `DataStack.reactive.addStorage(_:)` returns a publisher that reports a `MigrationProgress` `enum` value. The `.migrating` value is only emitted if the storage goes through a migration. Refer to the [Setting up](#setting-up) section for details on the storage setup process itself.
+
+```swift
+dataStack.reactive
+    .addStorage(
+        SQLiteStore(fileName: "core_data.sqlite")
+    )
+    .sink(
+        receiveCompletion: { result in
+            // ...
+        },
+        receiveValue: { (progress) in
+            print("\(round(progress.fractionCompleted * 100)) %") // 0.0 ~ 1.0
+            switch progress {
+            case .migrating(let storage, let nsProgress):
+                // ...
+            case .finished(let storage, let migrationRequired):
+                // ...
+            }
+        }
+    )
+    .store(in: &cancellables)
+```
+
+[Transactions](#saving-and-processing-transactions) are also available as publishers through `DataStack.reactive.perform(_:)`, which returns a Combine `Future` that emits any type returned from the closure parameter:
+```swift
+dataStack.reactive
+    .perform(
+        asynchronous: { (transaction) -> (inserted: Set<NSManagedObject>, deleted: Set<NSManagedObject>) in
+
+            // ...
+            return (
+                transaction.insertedObjects(),
+                transaction.deletedObjects()
+            )
+        }
+    )
+    .sink(
+        receiveCompletion: { result in
+            // ...
+        },
+        receiveValue: { value in
+            let inserted = dataStack.fetchExisting(value0.inserted)
+            let deleted = dataStack.fetchExisting(value0.deleted)
+            // ...
+        }
+    )
+    .store(in: &cancellables)
+```
+
+For importing convenience, `ImportableObject` and `ImportableUniqueObjects` can be imported directly through `DataStack.reactive.import[Unique]Object(_:source:)` and `DataStack.reactive.import[Unique]Objects(_:sourceArray:)` without having to create a transaction block. In this case the publisher emits objects that are already usable directly from the main queue:
+```swift
+dataStack.reactive
+    .importUniqueObjects(
+        Into<Person>(),
+        sourceArray: [
+            ["name": "John"],
+            ["name": "Bob"],
+            ["name": "Joe"]
+        ]
+    )
+    .sink(
+        receiveCompletion: { result in
+            // ...
+        },
+        receiveValue: { (people) in
+            XCTAssertEqual(people?.count, 3)
+            // ...
+        }
+    )
+    .store(in: &cancellables)
+```
+
+#### `ListPublisher.reactive`
+
+`ListPublisher`s can be used to emit `ListSnapshot`s through Combine using `ListPublisher.reactive.snapshot(emitInitialValue:)`. The snapshot values are emitted in the main queue:
+```swift
+listPublisher.reactive
+    .snapshot(emitInitialValue: true)
+    .sink(
+        receiveCompletion: { result in
+            // ...
+        },
+        receiveValue: { (listSnapshot) in
+            dataSource.apply(
+                listSnapshot,
+                animatingDifferences: true
+            )
+        }
+    )
+    .store(in: &cancellables)
+```
+
+#### `ObjectPublisher.reactive`
+
+`ObjectPublisher`s can be used to emit `ObjectSnapshot`s through Combine using `ObjectPublisher.reactive.snapshot(emitInitialValue:)`. The snapshot values are emitted in the main queue:
+```swift
+objectPublisher.reactive
+    .snapshot(emitInitialValue: true)
+    .sink(
+        receiveCompletion: { result in
+            // ...
+        },
+        receiveValue: { (objectSnapshot) in
+            tableViewCell.setObject(objectSnapshot)
+        }
+    )
+    .store(in: &tableViewCell.cancellables)
+```
+
+
+## SwiftUI Utilities
+
+Observing list and object changes in SwiftUI can be done through a couple of approaches. One is by creating [views that autoupdates their contents](#swiftui-views), or by declaring [property wrappers that trigger view updates](#swiftui-property-wrappers). Both approaches are implemented almost the same internally, but this lets you be flexible depending on the structure of your custom `View`s.
+
+### SwiftUI Views
+
+CoreStore provides `View` containers that automatically update their contents when data changes.
+
+#### `ListReader`
+
+A `ListReader` observes changes to a `ListPublisher` and creates its content views dynamically. The builder closure receives a `ListSnapshot` value that can be used to create the contents:
+```swift
+let people: ListPublisher<Person>
+
+var body: some View {
+   List {
+       ListReader(self.people) { listSnapshot in
+           ForEach(objectIn: listSnapshot) { person in
+               // ...
+           }
+       }
+   }
+   .animation(.default)
+}
+```
+As shown above, a typical use case is to use it together with CoreStore's [`ForEach` extensions](#foreach).
+
+A `KeyPath` can also be optionally provided to extract specific properties of the `ListSnapshot`:
+```swift
+let people: ListPublisher<Person>
+
+var body: some View {
+    ListReader(self.people, keyPath: \.count) { count in
+        Text("Number of members: \(count)")
+    }
+}
+```
+
+#### `ObjectReader`
+
+An `ObjectReader` observes changes to an `ObjectPublisher` and creates its content views dynamically. The builder closure receives an `ObjectSnapshot` value that can be used to create the contents:
+```swift
+let person: ObjectPublisher<Person>
+
+var body: some View {
+   ObjectReader(self.person) { objectSnapshot in
+       // ...
+   }
+   .animation(.default)
+}
+```
+
+A `KeyPath` can also be optionally provided to extract specific properties of the `ObjectSnapshot`:
+```swift
+let person: ObjectPublisher<Person>
+
+var body: some View {
+    ObjectReader(self.person, keyPath: \.fullName) { fullName in
+        Text("Name: \(fullName)")
+    }
+}
+```
+
+By default, an `ObjectReader` does not create its views wheen the object observed is deleted from the store. In those cases, the `placeholder:` argument can be used to provide a custom `View` to display when the object is deleted:
+```swift
+let person: ObjectPublisher<Person>
+
+var body: some View {
+   ObjectReader(
+       self.person,
+       content: { objectSnapshot in
+           // ...
+       },
+       placeholder: { Text("Record not found") }
+   )
+}
+```
+
+### SwiftUI Property Wrappers
+
+As an alternative to `ListReader` and `ObjectReader`, CoreStore also provides property wrappers that trigger view updates when the data changes.
+
+#### `ListState`
+
+A `@ListState` property exposes a `ListSnapshot` value that automatically updates to the latest changes.
+```swift
+@ListState
+var people: ListSnapshot<Person>
+
+init(listPublisher: ListPublisher<Person>) {
+   self._people = .init(listPublisher)
+}
+
+var body: some View {
+   List {
+       ForEach(objectIn: self.people) { objectSnapshot in
+           // ...
+       }
+   }
+   .animation(.default)
+}
+```
+As shown above, a typical use case is to use it together with CoreStore's [`ForEach` extensions](#foreach).
+
+If a `ListPublisher` instance is not available yet, the fetch can be done inline by providing the fetch clauses and the `DataStack` instance. By doing so the property can be declared without an initial value:
+```swift
+@ListState(
+    From<Person>()
+        .sectionBy(\.age)
+        .where(\.isMember == true)
+        .orderBy(.ascending(\.lastName))
+)
+var people: ListSnapshot<Person>
+
+var body: some View {
+    List {
+        ForEach(sectionIn: self.people) { section in
+            Section(header: Text(section.sectionID)) {
+                ForEach(objectIn: section) { person in
+                    // ...
+                }
+            }
+        }
+    }
+    .animation(.default)
+}
+```
+
+For other initialization variants, refer to the *ListState.swift*  source documentations.
+
+
+#### `ObjectState`
+
+An `@ObjectState` property exposes an optional `ObjectSnapshot` value that automatically updates to the latest changes.
+```swift
+@ObjectState
+var person: ObjectSnapshot<Person>?
+
+init(objectPublisher: ObjectPublisher<Person>) {
+   self._person = .init(objectPublisher)
+}
+
+var body: some View {
+   HStack {
+       if let person = self.person {
+           AsyncImage(person.$avatarURL)
+           Text(person.$fullName)
+       }
+       else {
+           Text("Record removed")
+       }
+   }
+}
+```
+As shown above, the property's value will be `nil` if the object has been deleted, so this can be used to display placeholders if needed.
+
+### SwiftUI Extensions
+
+For convenience, CoreStore provides extensions to the standard SwiftUI types.
+
+#### `ForEach`
+
+Several `ForEach` initializer overloads are available. Choose depending on your input data and the expected closure data. Refer to the table below (Take note of the argument labels as they are important):
+
+<table>
+<tr><th>Data</th><th>Example</th></tr>
+<tr>
+<td>
+Signature: 
+<pre lang=swift>
+ForEach(_: [ObjectSnapshot&lt;O&gt;])
+</pre>
+Closure: 
+<pre lang=swift>
+ObjectSnapshot&lt;O&gt;
+</pre>
+</td>
+<td><pre lang=swift>
+let array: [ObjectSnapshot&lt;Person&gt;]
+<br />
+var body: some View {
+    <br />
+    List {
+        <br />
+        ForEach(self.array) { objectSnapshot in
+            <br />
+            // ...
+        }
+    }
+}
+</pre></td>
+</tr>
+<tr>
+<td>
+Signature: 
+<pre lang=swift>
+ForEach(objectIn: ListSnapshot&lt;O&gt;)
+</pre>
+Closure: 
+<pre lang=swift>
+ObjectPublisher&lt;O&gt;
+</pre>
+</td>
+<td><pre lang=swift>
+let listSnapshot: ListSnapshot&lt;Person&gt;
+<br />
+var body: some View {
+    <br />
+    List {
+        <br />
+        ForEach(objectIn: self.listSnapshot) { objectPublisher in
+            <br />
+            // ...
+        }
+    }
+}
+</pre></td>
+</tr>
+<tr>
+<td>
+Signature: 
+<pre lang=swift>
+ForEach(objectIn: [ObjectSnapshot&lt;O&gt;])
+</pre>
+Closure: 
+<pre lang=swift>
+ObjectPublisher&lt;O&gt;
+</pre>
+</td>
+<td><pre lang=swift>
+let array: [ObjectSnapshot&lt;Person&gt;]
+<br />
+var body: some View {
+    <br />
+    List {
+        <br />
+        ForEach(objectIn: self.array) { objectPublisher in
+            <br />
+            // ...
+        }
+    }
+}
+</pre></td>
+</tr>
+<tr>
+<td>
+Signature: 
+<pre lang=swift>
+ForEach(sectionIn: ListSnapshot&lt;O&gt;)
+</pre>
+Closure: 
+<pre lang=swift>
+[ListSnapshot&lt;O&gt;.SectionInfo]
+</pre>
+</td>
+<td><pre lang=swift>
+let listSnapshot: ListSnapshot&lt;Person&gt;
+<br />
+var body: some View {
+    <br />
+    List {
+        <br />
+        ForEach(sectionIn: self.listSnapshot) { sectionInfo in
+            <br />
+            // ...
+        }
+    }
+}
+</pre></td>
+</tr>
+<tr>
+<td>
+Signature: 
+<pre lang=swift>
+ForEach(objectIn: ListSnapshot&lt;O&gt;.SectionInfo)
+</pre>
+Closure: 
+<pre lang=swift>
+ObjectPublisher&lt;O&gt;
+</pre>
+</td>
+<td><pre lang=swift>
+let listSnapshot: ListSnapshot&lt;Person&gt;
+<br />
+var body: some View {
+    <br />
+    List {
+        <br />
+        ForEach(sectionIn: self.listSnapshot) { sectionInfo in
+            <br />
+            ForEach(objectIn: sectionInfo) { objectPublisher in
+               <br />
+                // ...
+            }
+        }
+    }
+}
+</pre></td>
+</tr>
+</table>
+
+
+# Roadmap
+
+### Prototyping stage
+- [ ] Widget/Extensions storage-sharing support
+- [ ] CloudKit support
+
+### Under consideration
+- [ ] Derived attributes
+- [ ] Cross-storage relationships (via Fetched Attributes)
 
 # Installation
 - Requires:
@@ -2074,7 +2555,7 @@ Once the version lock is set, any changes in the properties or to the model will
 ### Install with CocoaPods
 In your `Podfile`, add
 ```
-pod 'CoreStore', '~> 7.2'
+pod 'CoreStore', '~> 8.0'
 ```
 and run 
 ```
@@ -2085,7 +2566,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 7.3.0
+github "JohnEstropia/CoreStore" >= 8.0.0
 ```
 and run 
 ```
@@ -2096,7 +2577,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "7.3.1"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "8.0.0"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.

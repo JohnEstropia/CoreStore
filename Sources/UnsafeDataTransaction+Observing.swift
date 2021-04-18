@@ -29,7 +29,6 @@ import CoreData
 
 // MARK: - UnsafeDataTransaction
 
-@available(macOS 10.12, *)
 extension UnsafeDataTransaction {
     
     /**

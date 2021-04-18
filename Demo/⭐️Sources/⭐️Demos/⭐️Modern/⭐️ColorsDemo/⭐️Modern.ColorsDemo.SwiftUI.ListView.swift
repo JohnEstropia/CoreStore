@@ -14,13 +14,13 @@ extension Modern.ColorsDemo.SwiftUI {
     struct ListView: View {
         
         /**
-         ⭐️ Sample 1: Using a `LiveList` to observe list changes
+         ⭐️ Sample 1: Using a `ListState` to observe list changes
          */
-        @LiveList
+        @ListState
         private var palettes: ListSnapshot<Modern.ColorsDemo.Palette>
         
         /**
-         ⭐️ Sample 2: Initializing a `LiveList` from an existing `ListPublisher`
+         ⭐️ Sample 2: Initializing a `ListState` from an existing `ListPublisher`
          */
         init(
             listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,

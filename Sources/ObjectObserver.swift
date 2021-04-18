@@ -36,7 +36,6 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-@available(macOS 10.12, *)
 public protocol ObjectObserver: AnyObject {
     
     /**
@@ -76,7 +75,6 @@ public protocol ObjectObserver: AnyObject {
 
 // MARK: - ObjectObserver (Default Implementations)
 
-@available(macOS 10.12, *)
 extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }

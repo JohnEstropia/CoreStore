@@ -70,7 +70,6 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain `KeyPath`s to properties of the entity.
      - parameter uniqueConstraints: sets uniqueness constraints for the entity. A uniqueness constraint is a set of one or more `KeyPath`s whose value must be unique over the set of instances of that entity. This value forms part of the entity's version hash. Uniqueness constraint violations can be computationally expensive to handle. It is highly suggested that there be only one uniqueness constraint per entity hierarchy. Uniqueness constraints must be defined at the highest level possible, and CoreStore will raise an assertion failure if unique constraints are added to a sub entity.
      */
-    @available(macOS 10.11, *)
     public convenience init(_ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = [], uniqueConstraints: [[PartialKeyPath<O>]]) {
         
         self.init(
@@ -116,7 +115,6 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain KeyPath's to properties of the entity.
      - parameter uniqueConstraints: sets uniqueness constraints for the entity. A uniqueness constraint is a set of one or more `KeyPath`s whose value must be unique over the set of instances of that entity. This value forms part of the entity's version hash. Uniqueness constraint violations can be computationally expensive to handle. It is highly suggested that there be only one uniqueness constraint per entity hierarchy. Uniqueness constraints must be defined at the highest level possible, and CoreStore will raise an assertion failure if unique constraints are added to a sub entity.
      */
-    @available(macOS 10.11, *)
     public init(_ type: O.Type, _ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = [], uniqueConstraints: [[PartialKeyPath<O>]]) {
         
         let meta = O.meta

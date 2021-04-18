@@ -39,7 +39,6 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-@available(macOS 10.12, *)
 public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation {
     
     /**
@@ -376,7 +375,6 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
 
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
-@available(macOS 10.12, *)
 extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -426,7 +424,6 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     
 // MARK: - Notification.Name
 
-@available(macOS 10.12, *)
 extension Notification.Name {
     
     fileprivate static let objectMonitorWillChangeObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")

@@ -30,7 +30,6 @@ import CoreData
 // MARK: - CSDataStack
 
 @available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-@available(macOS 10.12, *)
 extension CSDataStack {
     
     /**

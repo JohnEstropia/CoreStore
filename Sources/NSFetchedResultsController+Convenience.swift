@@ -29,7 +29,6 @@ import CoreData
 
 // MARK: - DataStack
 
-@available(macOS 10.12, *)
 extension DataStack {
     
     /**
@@ -114,7 +113,6 @@ extension DataStack {
 
 // MARK: - UnsafeDataTransaction
 
-@available(macOS 10.12, *)
 extension UnsafeDataTransaction {
     
     /**
@@ -204,7 +202,6 @@ extension Internals {
 
     // MARK: FilePrivate
 
-    @available(macOS 10.12, *)
     fileprivate static func createFRC<O: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<O>, sectionBy: SectionBy<O>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<O> {
 
         let controller = Internals.CoreStoreFetchedResultsController(

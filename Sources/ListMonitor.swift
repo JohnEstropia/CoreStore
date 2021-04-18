@@ -66,7 +66,6 @@ import CoreData
  ```
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
-@available(macOS 10.12, *)
 public final class ListMonitor<O: DynamicObject>: Hashable {
     
     // MARK: Public (Accessors)
@@ -1178,7 +1177,6 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     
 // MARK: - ListMonitor where O: NSManagedObject
 
-@available(macOS 10.12, *)
 extension ListMonitor where O: NSManagedObject {
     
     /**
@@ -1236,7 +1234,6 @@ extension ListMonitor where O: NSManagedObject {
 
 // MARK: - ListMonitor where O: CoreStoreObject
 
-@available(macOS 10.12, *)
 extension ListMonitor where O: CoreStoreObject {
     
     /**
@@ -1288,7 +1285,6 @@ extension ListMonitor where O: CoreStoreObject {
 
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
-@available(macOS 10.12, *)
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -1402,7 +1398,6 @@ extension ListMonitor: FetchedResultsControllerHandler {
 
 // MARK: - Notification Keys
 
-@available(macOS 10.12, *)
 extension Notification.Name {
     
     fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")

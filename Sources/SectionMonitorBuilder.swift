@@ -40,7 +40,6 @@ import CoreData
  )
  ```
  */
-@available(macOS 10.12, *)
 public struct SectionMonitorChainBuilder<O: DynamicObject>: SectionMonitorBuilderType {
     
     // MARK: SectionMonitorBuilderType
@@ -62,7 +61,6 @@ public struct SectionMonitorChainBuilder<O: DynamicObject>: SectionMonitorBuilde
 /**
  Utility protocol for `SectionMonitorChainBuilder`. Used in methods that support chained fetch builders.
  */
-@available(macOS 10.12, *)
 public protocol SectionMonitorBuilderType {
     
     /**

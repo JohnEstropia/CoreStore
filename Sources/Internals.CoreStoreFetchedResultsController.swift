@@ -33,7 +33,6 @@ extension Internals {
     
     // MARK: - CoreStoreFetchedResultsController
     
-    @available(macOS 10.12, *)
     internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject> {
         
         // MARK: Internal

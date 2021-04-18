@@ -31,7 +31,6 @@ import CoreStore
 
 // MARK: - ObjectPublisherTests
 
-@available(macOS 10.12, *)
 class ObjectPublisherTests: BaseTestDataTestCase {
 
     @objc

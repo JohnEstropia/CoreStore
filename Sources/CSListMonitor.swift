@@ -34,7 +34,6 @@ import CoreData
  
  - SeeAlso: `ListMonitor`
  */
-@available(macOS 10.12, *)
 @objc
 public final class CSListMonitor: NSObject {
     
@@ -546,7 +545,6 @@ public final class CSListMonitor: NSObject {
 
 // MARK: - ListMonitor
 
-@available(macOS 10.12, *)
 extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType

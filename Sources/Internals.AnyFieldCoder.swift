@@ -77,27 +77,42 @@ extension Internals {
             let transformerName = self.transformerName
             if #available(iOS 12.0, tvOS 12.0, watchOS 5.0, macOS 10.14, *) {
 
-                if transformerName == .secureUnarchiveFromDataTransformerName {
+                switch transformerName {
 
+                case .secureUnarchiveFromDataTransformerName,
+                     .isNotNilTransformerName,
+                     .isNilTransformerName,
+                     .negateBooleanTransformerName:
                     return
+
+                case let transformerName:
+                    Self.cachedCoders[transformerName] = self
+
+                    Foundation.ValueTransformer.setValueTransformer(
+                        self.transformer,
+                        forName: transformerName
+                    )
                 }
             }
-            switch transformerName {
+            else {
+                
+                switch transformerName {
 
-            case .keyedUnarchiveFromDataTransformerName,
-                 .unarchiveFromDataTransformerName,
-                 .isNotNilTransformerName,
-                 .isNilTransformerName,
-                 .negateBooleanTransformerName:
-                return
+                case .keyedUnarchiveFromDataTransformerName,
+                     .unarchiveFromDataTransformerName,
+                     .isNotNilTransformerName,
+                     .isNilTransformerName,
+                     .negateBooleanTransformerName:
+                    return
 
-            case let transformerName:
-                Self.cachedCoders[transformerName] = self
+                case let transformerName:
+                    Self.cachedCoders[transformerName] = self
 
-                Foundation.ValueTransformer.setValueTransformer(
-                    self.transformer,
-                    forName: transformerName
-                )
+                    Foundation.ValueTransformer.setValueTransformer(
+                        self.transformer,
+                        forName: transformerName
+                    )
+                }
             }
         }
 

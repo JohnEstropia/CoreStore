@@ -37,6 +37,8 @@ extension ListPublisher {
     
     /**
      A `Publisher` that emits a `ListSnapshot` whenever changes occur in the `ListPublisher`.
+     
+     - SeeAlso: ListPublisher.reactive.snapshot(emitInitialValue:)   
      */
     public struct SnapshotPublisher: Publisher {
         

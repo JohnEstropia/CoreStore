@@ -39,7 +39,6 @@ import CoreData
  )
  ```
  */
-@available(macOS 10.12, *)
 public struct SectionBy<O: DynamicObject> {
     
     /**
@@ -99,7 +98,6 @@ public struct SectionBy<O: DynamicObject> {
 
 // MARK: - SectionBy where O: NSManagedObject
 
-@available(macOS 10.12, *)
 extension SectionBy where O: NSManagedObject {
     
     /**
@@ -152,7 +150,6 @@ extension SectionBy where O: NSManagedObject {
 
 // MARK: - SectionBy where O: CoreStoreObject
 
-@available(macOS 10.12, *)
 extension SectionBy where O: CoreStoreObject {
 
     /**

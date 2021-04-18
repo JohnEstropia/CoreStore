@@ -564,18 +564,14 @@ public final class CoreStoreSchema: DynamicSchema {
             )
         }
         for (entity, entityDescription) in entityDescriptionsByEntity {
+            
+            if entity.uniqueConstraints.contains(where: { !$0.isEmpty }) {
 
-            if #available(macOS 10.11, iOS 9.0, *) {
-                
-                let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
-                if !uniqueConstraints.isEmpty {
-
-                    Internals.assert(
-                        entityDescription.superentity == nil,
-                        "Uniqueness constraints must be defined at the highest level possible."
-                    )
-                    entityDescription.uniquenessConstraints = entity.uniqueConstraints.map { $0.map { $0 as NSString } }
-                }
+                Internals.assert(
+                    entityDescription.superentity == nil,
+                    "Uniqueness constraints must be defined at the highest level possible."
+                )
+                entityDescription.uniquenessConstraints = entity.uniqueConstraints.map { $0.map { $0 as NSString } }
             }
             guard !entity.indexes.isEmpty else {
                 
@@ -586,31 +582,18 @@ public final class CoreStoreSchema: DynamicSchema {
                 entityDescription.coreStoreEntity = entity // reserialize
             }
             let attributesByName = entityDescription.attributesByName
-            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
+            entityDescription.indexes = entity.indexes.map { (compoundIndexes) in
                 
-                entityDescription.indexes = entity.indexes.map { (compoundIndexes) in
-                    
-                    return NSFetchIndexDescription.init(
-                        name: "_CoreStoreSchema_indexes_\(entityDescription.name!)_\(compoundIndexes.joined(separator: "-"))",
-                        elements: compoundIndexes.map { (keyPath) in
-                            
-                            return NSFetchIndexElementDescription(
-                                property: attributesByName[keyPath]!,
-                                collationType: .binary
-                            )
-                        }
-                    )
-                }
-            }
-            else {
-                
-                entityDescription.compoundIndexes = entity.indexes.map { (compoundIndexes) in
-                    
-                    return compoundIndexes.map { (keyPath) in
+                return NSFetchIndexDescription.init(
+                    name: "_CoreStoreSchema_indexes_\(entityDescription.name!)_\(compoundIndexes.joined(separator: "-"))",
+                    elements: compoundIndexes.map { (keyPath) in
                         
-                        return attributesByName[keyPath]!
+                        return NSFetchIndexElementDescription(
+                            property: attributesByName[keyPath]!,
+                            collationType: .binary
+                        )
                     }
-                }
+                )
             }
         }
     }
