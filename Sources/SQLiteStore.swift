@@ -247,7 +247,7 @@ public final class SQLiteStore: LocalStorage {
             do {
                 
                 let trashURL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
-                    .appendingPathComponent(BundlstoreOptionse.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
+                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
                     .appendingPathComponent("trash", isDirectory: true)
                 try fileManager.createDirectory(
                     at: trashURL,
