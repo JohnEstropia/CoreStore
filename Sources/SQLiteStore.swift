@@ -74,12 +74,13 @@ public final class SQLiteStore: LocalStorage {
      
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      */
-    public init() {
+    public init(secure: Bool = false) {
         
         self.fileURL = SQLiteStore.defaultFileURL
         self.configuration = nil
         self.migrationMappingProviders = []
         self.localStorageOptions = nil
+        self.secure = secure
     }
     
     /**
@@ -133,7 +134,8 @@ public final class SQLiteStore: LocalStorage {
     
     
     // MARK: StorageInterface
-    
+    private let secure: Bool = false  
+ 
     /**
      The string identifier for the `NSPersistentStore`'s `type` property. For `SQLiteStore`s, this is always set to `NSSQLiteStoreType`.
      */
@@ -217,6 +219,9 @@ public final class SQLiteStore: LocalStorage {
             
             var storeOptions = self.storeOptions ?? [:]
             storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
+            if secure {
+               storeOptions[NSPersistentStoreFileProtectionKey] = FileProtectionType.complete
+            }
             try coordinator.addPersistentStore(
                 ofType: Self.storeType,
                 configurationName: self.configuration,
@@ -242,7 +247,7 @@ public final class SQLiteStore: LocalStorage {
             do {
                 
                 let trashURL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
-                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
+                    .appendingPathComponent(BundlstoreOptionse.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
                     .appendingPathComponent("trash", isDirectory: true)
                 try fileManager.createDirectory(
                     at: trashURL,
