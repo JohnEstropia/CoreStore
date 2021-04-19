@@ -134,7 +134,7 @@ public final class SQLiteStore: LocalStorage {
     
     
     // MARK: StorageInterface
-    private let secure: Bool = false  
+    private var secure: Bool = false  
  
     /**
      The string identifier for the `NSPersistentStore`'s `type` property. For `SQLiteStore`s, this is always set to `NSSQLiteStoreType`.
