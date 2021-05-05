@@ -48,6 +48,9 @@ import Foundation
 
 private enum Static {
     
-    static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue", qos: .userInteractive)
+    static let queue = DispatchQueue.concurrent(
+        Internals.libReverseDomain("CoreStoreManagerObject.barrierQueue"),
+        qos: .userInteractive
+    )
     static var cache: [ObjectIdentifier: [KeyPathString: Set<KeyPathString>]] = [:]
 }

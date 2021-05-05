@@ -440,15 +440,24 @@ public final class DataStack: Equatable {
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     internal let schemaHistory: SchemaHistory
-    internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue", qos: .utility)
-    internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue", qos: .userInteractive)
+    internal let childTransactionQueue = DispatchQueue.serial(
+        Internals.libReverseDomain("DataStack.childTransactionQueue"),
+        qos: .utility
+    )
+    internal let storeMetadataUpdateQueue = DispatchQueue.concurrent(
+        Internals.libReverseDomain("DataStack.persistentStoreBarrierQueue"),
+        qos: .userInteractive
+    )
     internal let migrationQueue: OperationQueue = Internals.with {
         
         let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
-        migrationQueue.name = "com.coreStore.migrationOperationQueue"
+        migrationQueue.name = Internals.libReverseDomain("DataStack.migrationOperationQueue")
         migrationQueue.qualityOfService = .utility
-        migrationQueue.underlyingQueue = DispatchQueue.serial("com.coreStore.migrationQueue", qos: .userInitiated)
+        migrationQueue.underlyingQueue = DispatchQueue.serial(
+            Internals.libReverseDomain("DataStack.migrationQueue"),
+            qos: .userInitiated
+        )
         return migrationQueue
     }
     
@@ -530,7 +539,7 @@ public final class DataStack: Equatable {
                 self.finalConfigurationsByEntityIdentifier[entityIdentifier]?.insert(configurationName)
             }
         }
-        storage.cs_didAddToDataStack(self)
+        try storage.cs_didAddToDataStack(self)
         return persistentStore
     }
     

@@ -54,12 +54,12 @@ public protocol StorageInterface: AnyObject {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    func cs_didAddToDataStack(_ dataStack: DataStack)
+    func cs_didAddToDataStack(_ dataStack: DataStack) throws
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    func cs_didRemoveFromDataStack(_ dataStack: DataStack)
+    func cs_didRemoveFromDataStack(_ dataStack: DataStack) throws
 }
 
 

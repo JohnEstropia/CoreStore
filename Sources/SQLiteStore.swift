@@ -83,7 +83,7 @@ public final class SQLiteStore: LocalStorage {
     }
 
     /**
-     Initializes an SQLite store interface with a device-wide shared persistent store using a registered App Group Identifier. This store does not use remote persistent history tracking, and should be used only in the context of App-Extension shared stores.
+     Initializes an SQLite store interface with a device-wide shared persistent store using a registered App Group Identifier. This store does not use remote persistent history tracking, and should be used only in the context of App Groups and App Extensions.
 
      - Important: The app will be force-terminated if the `appGroupIdentifier` is not registered for the app.
      - parameter appGroupIdentifier: the App Group identifier registered for this application. The app will be force-terminated if this identifier is not registered for the app.
@@ -200,20 +200,51 @@ public final class SQLiteStore: LocalStorage {
     public let configuration: ModelConfiguration
     
     /**
-     The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to 
-     ```
-     [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-     ```
+     The options dictionary for the `NSPersistentStore`.
      */
-    public let storeOptions: [AnyHashable: Any]? = [
-        NSSQLitePragmasOption: ["journal_mode": "WAL"],
-        NSBinaryStoreInsecureDecodingCompatibilityOption: true
-    ]
+    public var storeOptions: [AnyHashable: Any]? {
+        
+        var options: [AnyHashable: Any] = [
+            NSSQLitePragmasOption: ["journal_mode": "WAL"],
+            NSBinaryStoreInsecureDecodingCompatibilityOption: true
+        ]
+        switch self.container {
+        
+        case .appGroup:
+            options[NSPersistentHistoryTrackingKey] = true
+            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
+                
+                options[NSPersistentStoreRemoteChangeNotificationPostOptionKey] = true
+            }
+            #warning("TODO: handle remote changes for iOS 11 & 12")
+            
+        case .custom,
+             .default,
+             .legacy:
+            break
+        }
+        return options
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func cs_didAddToDataStack(_ dataStack: DataStack) {
+    public func cs_didAddToDataStack(_ dataStack: DataStack) throws {
+        
+        switch self.container {
+        
+        case .appGroup(let appGroupIdentifier, let subdirectory, let fileName):
+            try Internals.AppGroupsManager.register(
+                appGroupIdentifier: appGroupIdentifier,
+                subdirectory: subdirectory,
+                fileName: fileName
+            )
+            
+        case .custom,
+             .default,
+             .legacy:
+            break
+        }
         
         self.dataStack = dataStack
     }
@@ -297,7 +328,7 @@ public final class SQLiteStore: LocalStorage {
             do {
                 
                 let trashURL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
-                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
+                    .appendingPathComponent(Internals.bundleTag(), isDirectory: true)
                     .appendingPathComponent("trash", isDirectory: true)
                 try fileManager.createDirectory(
                     at: trashURL,
@@ -353,6 +384,8 @@ public final class SQLiteStore: LocalStorage {
     
     // MARK: Internal
     
+    internal let container: Container
+    
     internal static let defaultRootDirectory: URL = Internals.with {
         
         #if os(tvOS)
@@ -366,7 +399,7 @@ public final class SQLiteStore: LocalStorage {
                 in: .userDomainMask).first!
         
         return defaultSystemDirectory.appendingPathComponent(
-            Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack",
+            Internals.bundleTag(),
             isDirectory: true
         )
     }
@@ -404,7 +437,6 @@ public final class SQLiteStore: LocalStorage {
     // MARK: Private
     
     private weak var dataStack: DataStack?
-    private let container: Container
 
     private init(
         container: Container,

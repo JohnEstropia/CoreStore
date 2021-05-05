@@ -67,7 +67,7 @@ extension NSManagedObjectContext {
         context.persistentStoreCoordinator = coordinator
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         context.undoManager = nil
-        context.setupForCoreStoreWithContextName("com.corestore.rootcontext")
+        context.setupForCoreStoreWithContextName(Internals.libReverseDomain("rootContext"))
         
         #if os(iOS) || os(macOS)
             
@@ -102,7 +102,7 @@ extension NSManagedObjectContext {
         context.parent = rootContext
         context.mergePolicy = NSRollbackMergePolicy
         context.undoManager = nil
-        context.setupForCoreStoreWithContextName("com.corestore.maincontext")
+        context.setupForCoreStoreWithContextName(Internals.libReverseDomain("mainContext"))
         context.observerForDidSaveNotification = Internals.NotificationObserver(
             notificationName: NSNotification.Name.NSManagedObjectContextDidSave,
             object: rootContext,

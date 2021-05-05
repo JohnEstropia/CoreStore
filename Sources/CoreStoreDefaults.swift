@@ -69,7 +69,10 @@ public enum CoreStoreDefaults {
 
     // MARK: Private
 
-    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue", qos: .userInteractive)
+    private static let defaultStackBarrierQueue = DispatchQueue.concurrent(
+        Internals.libReverseDomain("CoreStoreDefaults.defaultStackBarrierQueue"),
+        qos: .userInteractive
+    )
 
     private static var defaultStackInstance: DataStack?
 }

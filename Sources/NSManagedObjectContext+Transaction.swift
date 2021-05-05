@@ -132,7 +132,7 @@ extension NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: concurrencyType)
         context.parent = self
         context.parentStack = self.parentStack
-        context.setupForCoreStoreWithContextName("com.corestore.temporarycontext")
+        context.setupForCoreStoreWithContextName(Internals.libReverseDomain("temporaryContext"))
         context.shouldCascadeSavesToParent = (self.parentStack?.rootSavingContext == self)
         context.retainsRegisteredObjects = true
         

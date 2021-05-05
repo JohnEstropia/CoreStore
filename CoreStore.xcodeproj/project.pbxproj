@@ -586,6 +586,10 @@
 		B56E4EE523CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
 		B56E4EE623CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
 		B56E4EE723CEDF0900E1708C /* Field.Virtual.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */; };
+		B56ED34C263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
+		B56ED34D263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
+		B56ED34E263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
+		B56ED34F263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
 		B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27BF1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27C01D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
@@ -1129,6 +1133,7 @@
 		B56E4ED823CEB8E700E1708C /* FieldStorableType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStorableType.swift; sourceTree = "<group>"; };
 		B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOptionalType.swift; sourceTree = "<group>"; };
 		B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Virtual.swift; sourceTree = "<group>"; };
+		B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.AppGroupsManager.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
 		B57E6FA123D302FA000FD031 /* Field.Relationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Relationship.swift; sourceTree = "<group>"; };
@@ -1973,6 +1978,7 @@
 				B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */,
 				B5DE522A230BD7CC00A22534 /* Internals.swift */,
 				B50C3F0223D1B01C00B29880 /* Internals.AnyFieldCoder.swift */,
+				B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */,
 				B5C976E61C6E3A5900B1AF90 /* Internals.CoreStoreFetchedResultsController.swift */,
 				B5474D142227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift */,
 				B5BF7FAC234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift */,
@@ -2391,6 +2397,7 @@
 				B56923F01EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B5635D142356C39500B80E6B /* DiffableDataSource.CollectionViewAdapter-UIKit.swift in Sources */,
+				B56ED34C263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
@@ -2644,6 +2651,7 @@
 				B546F9741C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				B5831F4022126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A31EF1EF1600E0F440 /* PartialObject.swift in Sources */,
+				B56ED34D263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */,
 				82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5831F432212700400D8604C /* Where.Expression.swift in Sources */,
 				B51260941E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
@@ -2897,6 +2905,7 @@
 				B5E1B5AC1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B52DD1961BE1F92500949AFE /* DataStack.swift in Sources */,
 				B5ECDBFD1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B56ED34F263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */,
 				B52DD1BD1BE1F94300949AFE /* NSManagedObject+Convenience.swift in Sources */,
 				B5831F4222126FED00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A51EF1EF1600E0F440 /* PartialObject.swift in Sources */,
@@ -3150,6 +3159,7 @@
 				B5831F4122126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A41EF1EF1600E0F440 /* PartialObject.swift in Sources */,
 				B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
+				B56ED34E263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */,
 				B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B5831F442212700500D8604C /* Where.Expression.swift in Sources */,
 				B50C3F0023D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,

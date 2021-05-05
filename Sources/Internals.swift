@@ -29,11 +29,31 @@ import Foundation
 
 @usableFromInline
 internal enum Internals {
+    
+    // MARK: Namespacing
+    
+    @inline(__always)
+    internal static func libReverseDomain() -> String {
+        
+        return "com.johnestropia.corestore"
+    }
+    
+    @inline(__always)
+    internal static func libReverseDomain(_ suffix: String) -> String {
+        
+        return "com.johnestropia.corestore.\(suffix)"
+    }
+    
+    @inline(__always)
+    internal static func bundleTag() -> String {
+        
+        return Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack"
+    }
 
     // MARK: Associated Objects
-
-    @inline(__always)
+    
     /// type(of:) doesn't return the dynamic type anymore, use this to guarantee correct dispatch of class methods
+    @inline(__always)
     internal static func dynamicObjectType<T: AnyObject>(of instance: T) -> T.Type {
 
         return object_getClass(instance) as! T.Type

@@ -270,7 +270,7 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
  The `NSError` error domain string for `CSError`.
  */
 @nonobjc
-public let CoreStoreErrorDomain = "com.corestore.error"
+public let CoreStoreErrorDomain = Internals.libReverseDomain("error")
 
 
 // MARK: - CoreStoreErrorCode

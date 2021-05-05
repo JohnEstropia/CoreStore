@@ -115,6 +115,24 @@ extension DataStack {
         
         return self.coordinator.performSynchronously {
             
+            do {
+                
+                try storage.cs_willBeAdded(toDataStack: self)
+            }
+            catch {
+                
+                let storeError = CoreStoreError(error)
+                Internals.log(
+                    storeError,
+                    "Failed to preparing to add \(Internals.typeName(storage)) at \"\(fileURL)\"."
+                )
+                DispatchQueue.main.async {
+                    
+                    completion(.failure(storeError))
+                }
+                return nil
+            }
+            
             if let _ = self.persistentStoreForStorage(storage) {
                 
                 DispatchQueue.main.async {
@@ -562,7 +580,7 @@ extension DataStack {
             do {
 
                 let timerQueue = DispatchQueue(
-                    label: "DataStack.lightweightMigration.timerQueue",
+                    label: Internals.libReverseDomain("DataStack.lightweightMigration.timerQueue"),
                     qos: .utility,
                     attributes: []
                 )
@@ -614,7 +632,7 @@ extension DataStack {
         }
         let fileManager = FileManager.default
         let temporaryDirectoryURL = fileManager.temporaryDirectory
-            .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack")
+            .appendingPathComponent(Internals.bundleTag())
             .appendingPathComponent(ProcessInfo().globallyUniqueString)
 
         try! fileManager.createDirectory(

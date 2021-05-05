@@ -148,7 +148,10 @@ extension DataStack {
         
         return UnsafeDataTransaction(
             mainContext: self.rootSavingContext,
-            queue: DispatchQueue.serial("com.coreStore.dataStack.unsafeTransactionQueue", qos: .userInitiated),
+            queue: DispatchQueue.serial(
+                Internals.libReverseDomain("UnsafeDataTransaction.queue"),
+                qos: .userInitiated
+            ),
             supportsUndo: supportsUndo
         )
     }
