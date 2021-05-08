@@ -427,6 +427,14 @@
 		B549F6751E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */; };
 		B549F6761E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */; };
 		B54A6A551BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54A6A541BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift */; };
+		B54CAFCD264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */; };
+		B54CAFCE264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */; };
+		B54CAFCF264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */; };
+		B54CAFD0264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */; };
+		B54CAFD22643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */; };
+		B54CAFD32643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */; };
+		B54CAFD42643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */; };
+		B54CAFD52643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */; };
 		B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */; };
 		B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */; };
 		B5519A421CA1B17B002BEF78 /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */; };
@@ -1092,6 +1100,8 @@
 		B549F65D1E569C7400FBAB2D /* QueryableAttributeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryableAttributeType.swift; sourceTree = "<group>"; };
 		B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataNativeType.swift; sourceTree = "<group>"; };
 		B54A6A541BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Internals.FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
+		B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.PersistentHistoryObserver.swift; sourceTree = "<group>"; };
+		B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.PersistentHistoryFetcher.swift; sourceTree = "<group>"; };
 		B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
 		B5519A491CA1F4FB002BEF78 /* CSError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSError.swift; sourceTree = "<group>"; };
 		B5519A581CA2008C002BEF78 /* CSBaseDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSBaseDataTransaction.swift; sourceTree = "<group>"; };
@@ -1992,6 +2002,8 @@
 				B5BF7FCA234D80910070E741 /* Internals.LazyNonmutating.swift */,
 				B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */,
 				B5E84F2B1AFF849C0064E85B /* Internals.NotificationObserver.swift */,
+				B54CAFD12643FE460055485D /* Internals.PersistentHistoryFetcher.swift */,
+				B54CAFCC264381AE0055485D /* Internals.PersistentHistoryObserver.swift */,
 				B5277676234F265F0056BE9F /* Internals.SharedNotificationObserver.swift */,
 				B50E17602351FA66004F033C /* Internals.Closure.swift */,
 				B5E84F2D1AFF849C0064E85B /* Internals.WeakObject.swift */,
@@ -2487,10 +2499,12 @@
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B50C3EF923D1987D00B29880 /* FieldCoders.Json.swift in Sources */,
 				B56923C91EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
+				B54CAFD22643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
 				B50C3EDA23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				B56923E41EB827F5007C4DC9 /* CustomSchemaMappingProvider.swift in Sources */,
 				B58D0C631EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift in Sources */,
 				B533C4DB1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
+				B54CAFCD264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */,
 				B559CD491CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B5E84F311AFF849C0064E85B /* Internals.WeakObject.swift in Sources */,
 				B52FEC742596DBE100368BFB /* ObjectReader.swift in Sources */,
@@ -2741,10 +2755,12 @@
 				B50C3EDB23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
 				82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */,
+				B54CAFD32643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
 				B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B5BF7FAE234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
 				B538BA781D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
 				B52FEC752596DBE100368BFB /* ObjectReader.swift in Sources */,
+				B54CAFCE264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */,
 				B51260801E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */,
 				82BA18D31C4BBD7100A0916E /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				82BA18AD1C4BBD3100A0916E /* UnsafeDataTransaction.swift in Sources */,
@@ -2995,10 +3011,12 @@
 				B5220E141D130614009BC71E /* DataStack+Observing.swift in Sources */,
 				B50C3EFC23D1987D00B29880 /* FieldCoders.Json.swift in Sources */,
 				B50C3EDD23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
+				B54CAFD52643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
 				B5DE522E230BD7D600A22534 /* Internals.swift in Sources */,
 				B5E2222E1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B5220E191D130761009BC71E /* ListMonitor.swift in Sources */,
 				B5220E181D130711009BC71E /* ObjectObserver.swift in Sources */,
+				B54CAFD0264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */,
 				B5220E251D13088E009BC71E /* ListObserver.swift in Sources */,
 				B538BA7A1D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
 				B52FEC772596DBE100368BFB /* ObjectReader.swift in Sources */,
@@ -3249,10 +3267,12 @@
 				B50C3EFB23D1987D00B29880 /* FieldCoders.Json.swift in Sources */,
 				B50C3EDC23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				B5DE522D230BD7D600A22534 /* Internals.swift in Sources */,
+				B54CAFD42643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
 				B501FDE01CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B5BF7FAF234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
+				B54CAFCF264381AE0055485D /* Internals.PersistentHistoryObserver.swift in Sources */,
 				B538BA791D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
 				B52FEC762596DBE100368BFB /* ObjectReader.swift in Sources */,
 				B51260811E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */,

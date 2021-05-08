@@ -232,6 +232,22 @@ extension NSManagedObjectContext {
         
         self.refreshAllObjects()
     }
+
+    @nonobjc
+    internal func merge(fromPersistentHistory transactions: [NSPersistentHistoryTransaction]) {
+
+        for transaction in transactions {
+
+            guard let userInfo = transaction.objectIDNotification().userInfo else {
+
+                continue
+            }
+            NSManagedObjectContext.mergeChanges(
+                fromRemoteContextSave: userInfo,
+                into: [self]
+            )
+        }
+    }
     
     
     // MARK: Private

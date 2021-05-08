@@ -35,17 +35,19 @@ extension Internals {
     internal enum AppGroupsManager {
 
         // MARK: Internal
-        
+
+        internal typealias AppGroupID = String
+
         internal typealias BundleID = String
         
-        internal typealias StoreID = UUID
+        internal typealias StorageID = UUID
         
         @discardableResult
         internal static func register(
-            appGroupIdentifier: String,
+            appGroupIdentifier: AppGroupID,
             subdirectory: String?,
             fileName: String
-        ) throws -> StoreID {
+        ) throws -> StorageID {
             
             let bundleID = self.bundleID()
             let indexMetadataURL = self.indexMetadataURL(
@@ -56,7 +58,7 @@ extension Internals {
                 initializer: IndexMetadata.init,
                 { metadata in
                     
-                    return metadata.fetchOrCreateStoreID(
+                    return metadata.fetchOrCreateStorageID(
                         bundleID: bundleID,
                         subdirectory: subdirectory,
                         fileName: fileName
@@ -64,10 +66,30 @@ extension Internals {
                 }
             )
         }
+
+        internal static func existingToken(
+            appGroupIdentifier: AppGroupID,
+            bundleID: BundleID,
+            storageID: StorageID
+        ) throws -> NSPersistentHistoryToken? {
+
+            let storageMetadataURL = self.storageMetadataURL(
+                appGroupIdentifier: appGroupIdentifier,
+                bundleID: bundleID,
+                storageID: storageID
+            )
+            return try self.metadata(
+                forReadingAt: storageMetadataURL,
+                { (metadata: StorageMetadata) in
+
+                    return metadata.persistentHistoryToken
+                }
+            )
+        }
         
         internal static func existingToken(
-            appGroupIdentifier: String,
-            subdirectory: String,
+            appGroupIdentifier: AppGroupID,
+            subdirectory: String?,
             fileName: String
         ) throws -> NSPersistentHistoryToken? {
             
@@ -76,11 +98,11 @@ extension Internals {
                 appGroupIdentifier: appGroupIdentifier
             )
             guard
-                let storeID = try self.metadata(
+                let storageID = try self.metadata(
                     forReadingAt: indexMetadataURL,
                     { (metadata: IndexMetadata) in
                         
-                        return metadata.fetchStoreID(
+                        return metadata.fetchStorageID(
                             bundleID: bundleID,
                             subdirectory: subdirectory,
                             fileName: fileName
@@ -91,24 +113,39 @@ extension Internals {
                 
                 return nil
             }
+            return try self.existingToken(
+                appGroupIdentifier: appGroupIdentifier,
+                bundleID: bundleID,
+                storageID: storageID
+            )
+        }
+
+        internal static func setExistingToken(
+            _ newToken: NSPersistentHistoryToken,
+            appGroupIdentifier: AppGroupID,
+            bundleID: BundleID,
+            storageID: StorageID
+        ) throws {
+
             let storageMetadataURL = self.storageMetadataURL(
                 appGroupIdentifier: appGroupIdentifier,
                 bundleID: bundleID,
-                storeID: storeID
+                storageID: storageID
             )
-            return try self.metadata(
-                forReadingAt: storageMetadataURL,
-                { (metadata: StorageMetadata) in
-                    
-                    return metadata.persistentHistoryToken
+            try self.metadata(
+                forWritingAt: storageMetadataURL,
+                initializer: StorageMetadata.init,
+                { metadata in
+
+                    metadata.persistentHistoryToken = newToken
                 }
             )
         }
         
         internal static func setExistingToken(
             _ newToken: NSPersistentHistoryToken,
-            appGroupIdentifier: String,
-            subdirectory: String,
+            appGroupIdentifier: AppGroupID,
+            subdirectory: String?,
             fileName: String
         ) throws {
             
@@ -117,11 +154,11 @@ extension Internals {
                 appGroupIdentifier: appGroupIdentifier
             )
             guard
-                let storeID = try self.metadata(
+                let storageID = try self.metadata(
                     forReadingAt: indexMetadataURL,
                     { (metadata: IndexMetadata) in
                         
-                        return metadata.fetchStoreID(
+                        return metadata.fetchStorageID(
                             bundleID: bundleID,
                             subdirectory: subdirectory,
                             fileName: fileName
@@ -132,18 +169,11 @@ extension Internals {
                 
                 return
             }
-            let storageMetadataURL = self.storageMetadataURL(
+            try self.setExistingToken(
+                newToken,
                 appGroupIdentifier: appGroupIdentifier,
                 bundleID: bundleID,
-                storeID: storeID
-            )
-            try self.metadata(
-                forWritingAt: storageMetadataURL,
-                initializer: StorageMetadata.init,
-                { metadata in
-                    
-                    metadata.persistentHistoryToken = newToken
-                }
+                storageID: storageID
             )
         }
         
@@ -151,7 +181,7 @@ extension Internals {
         // MARK: Private
         
         private static func appGroupContainerURL(
-            appGroupIdentifier: String
+            appGroupIdentifier: AppGroupID
         ) -> URL {
             
             guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
@@ -163,7 +193,7 @@ extension Internals {
         }
         
         private static func indexMetadataURL(
-            appGroupIdentifier: String
+            appGroupIdentifier: AppGroupID
         ) -> URL {
             
             return self.appGroupContainerURL(appGroupIdentifier: appGroupIdentifier)
@@ -171,15 +201,15 @@ extension Internals {
         }
         
         private static func storageMetadataURL(
-            appGroupIdentifier: String,
+            appGroupIdentifier: AppGroupID,
             bundleID: BundleID,
-            storeID: StoreID
+            storageID: StorageID
         ) -> URL {
             
             return self
                 .appGroupContainerURL(appGroupIdentifier: appGroupIdentifier)
                 .appendingPathComponent(bundleID, isDirectory: true)
-                .appendingPathComponent(storeID.uuidString, isDirectory: false)
+                .appendingPathComponent(storageID.uuidString, isDirectory: false)
                 .appendingPathExtension("meta")
         }
         
@@ -314,23 +344,29 @@ extension Internals {
             
             // MARK: FilePrivate
             
-            fileprivate func fetchStoreID(
+            fileprivate func fetchStorageID(
                 bundleID: BundleID,
                 subdirectory: String?,
                 fileName: String
-            ) -> StoreID? {
+            ) -> StorageID? {
                 
-                let fileTag = Self.createFileTag(subdirectory: subdirectory, fileName: fileName)
+                let fileTag = Self.createFileTag(
+                    subdirectory: subdirectory,
+                    fileName: fileName
+                )
                 return self.contents[bundleID, default: [:]][fileTag]
             }
             
-            fileprivate mutating func fetchOrCreateStoreID(
+            fileprivate mutating func fetchOrCreateStorageID(
                 bundleID: BundleID,
                 subdirectory: String?,
                 fileName: String
-            ) -> StoreID {
-                
-                let fileTag = Self.createFileTag(subdirectory: subdirectory, fileName: fileName)
+            ) -> StorageID {
+
+                let fileTag = Self.createFileTag(
+                    subdirectory: subdirectory,
+                    fileName: fileName
+                )
                 return self.contents[bundleID, default: [:]][fileTag, default: UUID()]
             }
             
