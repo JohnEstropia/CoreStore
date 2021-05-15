@@ -26,6 +26,7 @@
 #if canImport(Combine)
 
 import Combine
+import CoreData
 
 
 // MARK: - ObjectPublisher
