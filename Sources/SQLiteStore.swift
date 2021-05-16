@@ -239,7 +239,7 @@ public final class SQLiteStore: LocalStorage {
                 subdirectory: subdirectory,
                 fileName: fileName
             )
-            
+
         case .custom,
              .default,
              .legacy:

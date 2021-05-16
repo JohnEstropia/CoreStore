@@ -598,6 +598,10 @@
 		B56ED34D263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
 		B56ED34E263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
 		B56ED34F263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */; };
+		B56ED35F26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */; };
+		B56ED36026462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */; };
+		B56ED36126462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */; };
+		B56ED36226462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */; };
 		B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27BF1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
 		B57D27C01D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
@@ -1144,6 +1148,7 @@
 		B56E4EDE23CEBCF000E1708C /* FieldOptionalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOptionalType.swift; sourceTree = "<group>"; };
 		B56E4EE323CEDF0900E1708C /* Field.Virtual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Virtual.swift; sourceTree = "<group>"; };
 		B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.AppGroupsManager.swift; sourceTree = "<group>"; };
+		B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.AppGroupStorageKey.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
 		B57E6FA123D302FA000FD031 /* Field.Relationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.Relationship.swift; sourceTree = "<group>"; };
@@ -1988,6 +1993,7 @@
 				B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */,
 				B5DE522A230BD7CC00A22534 /* Internals.swift */,
 				B50C3F0223D1B01C00B29880 /* Internals.AnyFieldCoder.swift */,
+				B56ED35E26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift */,
 				B56ED34B263FF64B00ACCCB8 /* Internals.AppGroupsManager.swift */,
 				B5C976E61C6E3A5900B1AF90 /* Internals.CoreStoreFetchedResultsController.swift */,
 				B5474D142227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift */,
@@ -2500,6 +2506,7 @@
 				B50C3EF923D1987D00B29880 /* FieldCoders.Json.swift in Sources */,
 				B56923C91EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
 				B54CAFD22643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
+				B56ED35F26462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */,
 				B50C3EDA23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				B56923E41EB827F5007C4DC9 /* CustomSchemaMappingProvider.swift in Sources */,
 				B58D0C631EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift in Sources */,
@@ -2756,6 +2763,7 @@
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
 				82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */,
 				B54CAFD32643FE460055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
+				B56ED36026462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */,
 				B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B5BF7FAE234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
 				B538BA781D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
@@ -3012,6 +3020,7 @@
 				B50C3EFC23D1987D00B29880 /* FieldCoders.Json.swift in Sources */,
 				B50C3EDD23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				B54CAFD52643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
+				B56ED36226462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */,
 				B5DE522E230BD7D600A22534 /* Internals.swift in Sources */,
 				B5E2222E1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B5220E191D130761009BC71E /* ListMonitor.swift in Sources */,
@@ -3268,6 +3277,7 @@
 				B50C3EDC23D0545800B29880 /* FieldAttributeProtocol.swift in Sources */,
 				B5DE522D230BD7D600A22534 /* Internals.swift in Sources */,
 				B54CAFD42643FE470055485D /* Internals.PersistentHistoryFetcher.swift in Sources */,
+				B56ED36126462D8900ACCCB8 /* Internals.AppGroupStorageKey.swift in Sources */,
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
 				B501FDE01CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
