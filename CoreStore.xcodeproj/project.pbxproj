@@ -960,6 +960,10 @@
 		B5FEC18F1C9166E600532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
 		B5FEC1901C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
 		B5FEC1911C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
+		E0192B402655593700041818 /* DataStackDropStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0192B3F2655593700041818 /* DataStackDropStore.swift */; };
+		E0192B412655593700041818 /* DataStackDropStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0192B3F2655593700041818 /* DataStackDropStore.swift */; };
+		E0192B422655593700041818 /* DataStackDropStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0192B3F2655593700041818 /* DataStackDropStore.swift */; };
+		E0192B432655593700041818 /* DataStackDropStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0192B3F2655593700041818 /* DataStackDropStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1268,6 +1272,7 @@
 		B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
 		B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteStore.swift; sourceTree = "<group>"; };
 		B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStore+Setup.swift"; sourceTree = "<group>"; };
+		E0192B3F2655593700041818 /* DataStackDropStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStackDropStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1703,6 +1708,7 @@
 		B5A5F26B1CAFF8D0004AB9AF /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				E0192B3F2655593700041818 /* DataStackDropStore.swift */,
 				B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */,
 				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
 				B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */,
@@ -2383,6 +2389,7 @@
 				B549F6731E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F41E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5B866E025E9048000335476 /* ObjectPublisher.SnapshotPublisher.swift in Sources */,
+				E0192B402655593700041818 /* DataStackDropStore.swift in Sources */,
 				B5E84F0E1AFF847B0064E85B /* Tweak.swift in Sources */,
 				B5E1B5931CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B5277677234F265F0056BE9F /* Internals.SharedNotificationObserver.swift in Sources */,
@@ -2636,6 +2643,7 @@
 				B5E1B5951CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B509D7CA23C8491C00F42824 /* Relationship.ToManyOrdered.swift in Sources */,
 				B5B866E125E9048000335476 /* ObjectPublisher.SnapshotPublisher.swift in Sources */,
+				E0192B412655593700041818 /* DataStackDropStore.swift in Sources */,
 				18166887232B9ED60097C275 /* String+KeyPaths.swift in Sources */,
 				B5ECDC2B1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B56923F11EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
@@ -2889,6 +2897,7 @@
 				B509D7CC23C8491C00F42824 /* Relationship.ToManyOrdered.swift in Sources */,
 				B55BB4D823503B9500C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5B866E325E9048000335476 /* ObjectPublisher.SnapshotPublisher.swift in Sources */,
+				E0192B432655593700041818 /* DataStackDropStore.swift in Sources */,
 				18166889232B9ED80097C275 /* String+KeyPaths.swift in Sources */,
 				B52DD1A61BE1F92F00949AFE /* BaseDataTransaction+Importing.swift in Sources */,
 				B56923F31EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
@@ -3142,6 +3151,7 @@
 				18166888232B9ED70097C275 /* String+KeyPaths.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
 				B5B866E225E9048000335476 /* ObjectPublisher.SnapshotPublisher.swift in Sources */,
+				E0192B422655593700041818 /* DataStackDropStore.swift in Sources */,
 				B56923F21EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
 				B56321811BD65216006C9394 /* DataStack.swift in Sources */,
 				B56321A81BD65219006C9394 /* NSManagedObject+Convenience.swift in Sources */,
