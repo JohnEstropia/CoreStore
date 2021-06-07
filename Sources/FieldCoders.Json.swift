@@ -57,7 +57,7 @@ extension FieldCoders {
 
                 return nil
             }
-            return try! JSONDecoder().decode([FieldStoredValue].self, from: data).first
+            return try? JSONDecoder().decode([FieldStoredValue].self, from: data).first
         }
     }
 }
