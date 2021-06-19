@@ -573,7 +573,7 @@ extension Internals {
                 
                 let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[indexPath.section].elements
-                    .insert(contentsOf: items, at: indexPath.row)
+                    .insert(contentsOf: items, at: indexPath.item)
             }
 
             mutating func remove<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
