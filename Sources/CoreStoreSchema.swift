@@ -585,7 +585,7 @@ public final class CoreStoreSchema: DynamicSchema {
             entityDescription.indexes = entity.indexes.map { (compoundIndexes) in
                 
                 return NSFetchIndexDescription.init(
-                    name: "_CoreStoreSchema_indexes_\(entityDescription.name!)_\(compoundIndexes.joined(separator: "-"))",
+                    name: "_CoreStoreSchema_indexes_\(entityDescription.name!)_\(compoundIndexes.joined(separator: "_"))",
                     elements: compoundIndexes.map { (keyPath) in
                         
                         return NSFetchIndexElementDescription(
