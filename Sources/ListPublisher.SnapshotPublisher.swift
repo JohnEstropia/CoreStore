@@ -135,8 +135,19 @@ extension ListPublisher {
             
             func cancel() {
                 
-                self.publisher.removeObserver(self)
                 self.subscriber = nil
+                
+                if Thread.isMainThread {
+                    
+                    self.publisher.removeObserver(self)
+                }
+                else {
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.publisher.removeObserver(self)
+                    }
+                }
             }
             
             

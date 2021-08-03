@@ -23,6 +23,9 @@
 //  SOFTWARE.
 //
 
+import CoreData
+import XCTest
+
 @testable
 import CoreStore
 

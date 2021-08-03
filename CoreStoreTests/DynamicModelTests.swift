@@ -197,7 +197,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 modelVersion: "V1",
                 entities: [
                     Entity<Animal>("Animal"),
-                    Entity<Dog>("Dog"),
+                    Entity<Dog>("Dog", indexes: [[\Dog.$nickname, \Dog.$age]]),
                     Entity<Person>("Person")
                 ],
                 versionLock: [

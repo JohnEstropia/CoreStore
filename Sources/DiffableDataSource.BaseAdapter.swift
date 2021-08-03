@@ -154,6 +154,17 @@ extension DiffableDataSource {
                 completion: completion
             )
         }
+        
+        /**
+         Creates a new empty `ListSnapshot` suitable for building custom lists inside subclass implementations of `apply(_:animatingDifferences:completion:)`.
+         */
+        public func makeEmptySnapshot() -> ListSnapshot<O> {
+            
+            return .init(
+                diffableSnapshot: .init(),
+                context: self.dataStack.unsafeContext()
+            )
+        }
 
         /**
          Returns the number of sections

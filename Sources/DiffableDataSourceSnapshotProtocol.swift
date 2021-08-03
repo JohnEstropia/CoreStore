@@ -44,19 +44,30 @@ internal protocol DiffableDataSourceSnapshotProtocol {
     func indexOfItem(_ identifier: NSManagedObjectID) -> Int?
     func indexOfSection(_ identifier: String) -> Int?
 
-    mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?)
-    mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID)
-    mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID)
-    mutating func deleteItems(_ identifiers: [NSManagedObjectID])
+    mutating func appendItems<C: Collection>(_ identifiers: C, toSection sectionIdentifier: String?) where C.Element == NSManagedObjectID
+    mutating func insertItems<C: Collection>(_ identifiers: C, beforeItem beforeIdentifier: NSManagedObjectID) where C.Element == NSManagedObjectID
+    mutating func insertItems<C: Collection>(_ identifiers: C, afterItem afterIdentifier: NSManagedObjectID) where C.Element == NSManagedObjectID
+    mutating func deleteItems<C: Collection>(_ identifiers: C) where C.Element == NSManagedObjectID
     mutating func deleteAllItems()
     mutating func moveItem(_ identifier: NSManagedObjectID, beforeItem toIdentifier: NSManagedObjectID)
     mutating func moveItem(_ identifier: NSManagedObjectID, afterItem toIdentifier: NSManagedObjectID)
-    mutating func reloadItems(_ identifiers: [NSManagedObjectID])
-    mutating func appendSections(_ identifiers: [String])
-    mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String)
-    mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String)
-    mutating func deleteSections(_ identifiers: [String])
+    mutating func reloadItems<C: Collection>(_ identifiers: C) where C.Element == NSManagedObjectID
+    mutating func appendSections<C: Collection>(_ identifiers: C) where C.Element == String
+    mutating func insertSections<C: Collection>(_ identifiers: C, beforeSection toIdentifier: String) where C.Element == String
+    mutating func insertSections<C: Collection>(_ identifiers: C, afterSection toIdentifier: String) where C.Element == String
+    mutating func deleteSections<C: Collection>(_ identifiers: C) where C.Element == String
     mutating func moveSection(_ identifier: String, beforeSection toIdentifier: String)
     mutating func moveSection(_ identifier: String, afterSection toIdentifier: String)
-    mutating func reloadSections(_ identifiers: [String])
+    mutating func reloadSections<C: Collection>(_ identifiers: C) where C.Element == String
+    
+    mutating func unsafeAppendItems<C: Collection>(_ identifiers: C, toSectionAt sectionIndex: Int) where C.Element == NSManagedObjectID
+    mutating func unsafeInsertItems<C: Collection>(_ identifiers: C, at indexPath: IndexPath) where C.Element == NSManagedObjectID
+    mutating func unsafeDeleteItems<C: Collection>(at indexPaths: C) where C.Element == IndexPath
+    mutating func unsafeMoveItem(at indexPath: IndexPath, to newIndexPath: IndexPath)
+    mutating func unsafeReloadItems<C: Collection>(at indexPaths: C) where C.Element == IndexPath
+    mutating func unsafeInsertSections<C: Collection>(_ identifiers: C, at sectionIndex: Int) where C.Element == String
+    mutating func unsafeDeleteSections<C: Collection>(at sectionIndices: C) where C.Element == Int
+    mutating func unsafeMoveSection(at sectionIndex: Int, to newSectionIndex: Int)
+    mutating func unsafeReloadSections<C: Collection>(at sectionIndices: C) where C.Element == Int
+    
 }

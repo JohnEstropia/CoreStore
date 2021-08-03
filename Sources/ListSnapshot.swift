@@ -472,6 +472,17 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
     
     /**
+     Appends extra items to the specified section index
+
+     - parameter itemIDs: the object identifiers for the objects to append
+     - parameter sectionIndex: the section index to append the items to. Specifying an invalid value will raise an exception.
+     */
+    public mutating func appendItems<C: Collection>(with itemIDs: C, toSectionAt sectionIndex: Int) where C.Element == ItemID {
+        
+        self.diffableSnapshot.unsafeAppendItems(itemIDs, toSectionAt: sectionIndex)
+    }
+    
+    /**
      Inserts extra items before a specified item
 
      - parameter itemIDs: the object identifiers for the objects to insert
@@ -494,13 +505,34 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
     
     /**
+     Inserts extra items at a specified index path
+
+     - parameter itemIDs: the object identifiers for the objects to insert
+     - parameter indexPath: an indexPath to insert the items into. Specifying an invalid value will raise an exception.
+     */
+    public mutating func insertItems<C: Collection>(withIDs itemIDs: C, at indexPath: IndexPath) where C.Element == ItemID {
+
+        self.diffableSnapshot.unsafeInsertItems(itemIDs, at: indexPath)
+    }
+    
+    /**
      Deletes the specified items
 
      - parameter itemIDs: the object identifiers for the objects to delete
      */
-    public mutating func deleteItems<S: Sequence>(withIDs itemIDs: S) where S.Element == ItemID {
+    public mutating func deleteItems<C: Collection>(withIDs itemIDs: C) where C.Element == ItemID {
 
         self.diffableSnapshot.deleteItems(itemIDs)
+    }
+    
+    /**
+     Deletes the items at the specified index paths
+
+     - parameter itemIndexPaths: the index paths for the objects to delete. Specifying an invalid value will raise an exception.
+     */
+    public mutating func deleteItems<C: Collection>(at itemIndexPaths: C) where C.Element == IndexPath {
+        
+        self.diffableSnapshot.unsafeDeleteItems(at: itemIndexPaths)
     }
     
     /**
@@ -534,13 +566,34 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
     
     /**
+     Moves an item at an index path to a new index path
+
+     - parameter itemIndexPath: an index path in the list to move. Specifying an invalid value will raise an exception.
+     - parameter newIndexPath: the new index path to move the item into. Specifying an invalid value will raise an exception.
+     */
+    public mutating func moveItem(at itemIndexPath: IndexPath, to newIndexPath: IndexPath) {
+        
+        self.diffableSnapshot.unsafeMoveItem(at: itemIndexPath, to: newIndexPath)
+    }
+    
+    /**
      Marks the specified items as reloaded
 
      - parameter itemIDs: the object identifiers to reload
      */
-    public mutating func reloadItems<S: Sequence>(withIDs itemIDs: S) where S.Element == ItemID {
+    public mutating func reloadItems<C: Collection>(withIDs itemIDs: C) where C.Element == ItemID {
 
         self.diffableSnapshot.reloadItems(itemIDs)
+    }
+    
+    /**
+     Marks the specified index paths as reloaded
+
+     - parameter itemIndexPaths: the index paths to reload. Specifying an invalid value will raise an exception.
+     */
+    public mutating func reloadItems<C: Collection>(at itemIndexPaths: C) where C.Element == IndexPath {
+        
+        self.diffableSnapshot.unsafeReloadItems(at: itemIndexPaths)
     }
     
     /**
@@ -576,13 +629,34 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
     
     /**
+     Inserts new sections into an existing section index
+
+     - parameter sectionIDs: the section identifiers for the sections to insert
+     - parameter sectionIndex: an existing section index to insert items into. Specifying an invalid value will raise an exception.
+     */
+    public mutating func insertSections<C: Collection>(_ sectionIDs: C, at sectionIndex: Int) where C.Element == String {
+        
+        self.diffableSnapshot.unsafeInsertSections(sectionIDs, at: sectionIndex)
+    }
+    
+    /**
      Deletes the specified sections
 
      - parameter sectionIDs: the section identifiers for the sections to delete
      */
-    public mutating func deleteSections<S: Sequence>(withIDs sectionIDs: S) where S.Element == SectionID {
+    public mutating func deleteSections<C: Collection>(withIDs sectionIDs: C) where C.Element == SectionID {
 
         self.diffableSnapshot.deleteSections(sectionIDs)
+    }
+    
+    /**
+     Deletes the specified section indices
+
+     - parameter sectionIndices: the section indices to delete. Specifying an invalid value will raise an exception.
+     */
+    public mutating func deleteSections<C: Collection>(at sectionIndices: C) where C.Element == Int {
+        
+        self.diffableSnapshot.unsafeDeleteSections(at: sectionIndices)
     }
     
     /**
@@ -608,13 +682,34 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
     
     /**
+     Moves a section at a specified index to a new index
+
+     - parameter sectionIndex: a section index in the list to move. Specifying an invalid value will raise an exception.
+     - parameter newSectionIndex: the new section index to move into. Specifying an invalid value will raise an exception.
+     */
+    public mutating func moveSection(at sectionIndex: Int, to newSectionIndex: Int) {
+        
+        self.diffableSnapshot.unsafeMoveSection(at: sectionIndex, to: newSectionIndex)
+    }
+    
+    /**
      Marks the specified sections as reloaded
 
      - parameter sectionIDs: the section identifiers to reload
      */
-    public mutating func reloadSections<S: Sequence>(withIDs sectionIDs: S) where S.Element == SectionID {
+    public mutating func reloadSections<C: Collection>(withIDs sectionIDs: C) where C.Element == SectionID {
 
         self.diffableSnapshot.reloadSections(sectionIDs)
+    }
+    
+    /**
+     Marks the specified section indices as reloaded
+
+     - parameter sectionIndices: the section indices to reload. Specifying an invalid value will raise an exception.
+     */
+    public mutating func reloadSections<C: Collection>(at sectionIndices: C) where C.Element == Int {
+        
+        self.diffableSnapshot.unsafeReloadSections(at: sectionIndices)
     }
 
 

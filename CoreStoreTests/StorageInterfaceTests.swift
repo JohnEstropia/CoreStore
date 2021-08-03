@@ -23,6 +23,7 @@
 //  SOFTWARE.
 //
 
+import CoreData
 import XCTest
 
 @testable

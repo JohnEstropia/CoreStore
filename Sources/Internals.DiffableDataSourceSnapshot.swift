@@ -200,7 +200,7 @@ extension Internals {
             self.structure.insert(itemIDs: identifiers, after: afterIdentifier)
         }
 
-        mutating func deleteItems<S: Sequence>(_ identifiers: S) where S.Element == NSManagedObjectID {
+        mutating func deleteItems<C: Collection>(_ identifiers: C) where C.Element == NSManagedObjectID {
 
             self.structure.remove(itemIDs: identifiers)
         }
@@ -220,7 +220,7 @@ extension Internals {
             self.structure.move(itemID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadItems<S: Sequence>(_ identifiers: S) where S.Element == NSManagedObjectID {
+        mutating func reloadItems<C: Collection>(_ identifiers: C) where C.Element == NSManagedObjectID {
 
             self.structure.update(itemIDs: identifiers)
         }
@@ -240,7 +240,7 @@ extension Internals {
             self.structure.insert(sectionIDs: identifiers, after: toIdentifier)
         }
 
-        mutating func deleteSections<S: Sequence>(_ identifiers: S) where S.Element == String {
+        mutating func deleteSections<C: Collection>(_ identifiers: C) where C.Element == String {
 
             self.structure.remove(sectionIDs: identifiers)
         }
@@ -255,9 +255,54 @@ extension Internals {
             self.structure.move(sectionID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadSections<S: Sequence>(_ identifiers: S) where S.Element == String {
+        mutating func reloadSections<C: Collection>(_ identifiers: C) where C.Element == String {
 
             self.structure.update(sectionIDs: identifiers)
+        }
+        
+        mutating func unsafeAppendItems<C: Collection>(_ identifiers: C, toSectionAt sectionIndex: Int) where C.Element == NSManagedObjectID {
+            
+            self.structure.unsafeAppend(identifiers, toSectionAt: sectionIndex)
+        }
+        
+        mutating func unsafeInsertItems<C: Collection>(_ identifiers: C, at indexPath: IndexPath) where C.Element == NSManagedObjectID {
+            
+            self.structure.unsafeInsert(itemIDs: identifiers, at: indexPath)
+        }
+        
+        mutating func unsafeDeleteItems<C: Collection>(at indexPaths: C) where C.Element == IndexPath {
+            
+            self.structure.unsafeRemove(itemsAt: indexPaths)
+        }
+        
+        mutating func unsafeMoveItem(at indexPath: IndexPath, to newIndexPath: IndexPath) {
+            
+            self.structure.unsafeMove(itemAt: indexPath, to: newIndexPath)
+        }
+        
+        mutating func unsafeReloadItems<C: Collection>(at indexPaths: C) where C.Element == IndexPath {
+            
+            self.structure.unsafeUpdate(itemsAt: indexPaths)
+        }
+        
+        mutating func unsafeInsertSections<C: Collection>(_ identifiers: C, at sectionIndex: Int) where C.Element == String {
+            
+            self.structure.unsafeInsert(identifiers, at: sectionIndex)
+        }
+        
+        mutating func unsafeDeleteSections<C: Collection>(at sectionIndices: C) where C.Element == Int {
+            
+            self.structure.unsafeRemove(sectionsAt: sectionIndices)
+        }
+        
+        mutating func unsafeMoveSection(at sectionIndex: Int, to newSectionIndex: Int) {
+            
+            self.structure.unsafeMove(sectionAt: sectionIndex, to: newSectionIndex)
+        }
+        
+        mutating func unsafeReloadSections<C: Collection>(at sectionIndices: C) where C.Element == Int {
+            
+            self.structure.unsafeUpdate(sectionsAt: sectionIndices)
         }
 
 
@@ -432,13 +477,23 @@ extension Internals {
                 }
                 return self.sections[sectionIndex].elements.map({ $0.differenceIdentifier })
             }
+            
+            func unsafeItem(at indexPath: IndexPath) -> NSManagedObjectID {
+                
+                return self.sections[indexPath.section]
+                    .elements[indexPath.item]
+                    .differenceIdentifier
+            }
 
             func section(containing itemID: NSManagedObjectID) -> String? {
 
                 return self.itemPositionMap(itemID)?.section.differenceIdentifier
             }
 
-            mutating func append<C: Collection>(itemIDs: C, to sectionID: String?) where C.Element == NSManagedObjectID {
+            mutating func append<C: Collection>(
+                itemIDs: C,
+                to sectionID: String?
+            ) where C.Element == NSManagedObjectID {
 
                 let index: Array<Section>.Index
                 if let sectionID = sectionID {
@@ -461,8 +516,30 @@ extension Internals {
                 let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[index].elements.append(contentsOf: items)
             }
+            
+            mutating func unsafeAppend<C: Collection>(
+                _ itemIDs: C,
+                toSectionAt sectionIndex: Int?
+            ) where C.Element == NSManagedObjectID  {
+                
+                let index: Array<Section>.Index
+                if let sectionIndex = sectionIndex {
 
-            mutating func insert<C: Collection>(itemIDs: C, before beforeItemID: NSManagedObjectID) where C.Element == NSManagedObjectID {
+                    index = sectionIndex
+                }
+                else {
+                    
+                    let section = self.sections
+                    index = section.index(before: section.endIndex)
+                }
+                let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
+                self.sections[index].elements.append(contentsOf: items)
+            }
+
+            mutating func insert<C: Collection>(
+                itemIDs: C,
+                before beforeItemID: NSManagedObjectID
+            ) where C.Element == NSManagedObjectID {
 
                 guard let itemPosition = self.itemPositionMap(beforeItemID) else {
 
@@ -473,7 +550,10 @@ extension Internals {
                     .insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
             }
 
-            mutating func insert<C: Collection>(itemIDs: C, after afterItemID: NSManagedObjectID) where C.Element == NSManagedObjectID {
+            mutating func insert<C: Collection>(
+                itemIDs: C,
+                after afterItemID: NSManagedObjectID
+            ) where C.Element == NSManagedObjectID {
 
                 guard let itemPosition = self.itemPositionMap(afterItemID) else {
 
@@ -484,6 +564,16 @@ extension Internals {
                 let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemIndex)
+            }
+            
+            mutating func unsafeInsert<C: Collection>(
+                itemIDs: C,
+                at indexPath: IndexPath
+            ) where C.Element == NSManagedObjectID {
+                
+                let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
+                self.sections[indexPath.section].elements
+                    .insert(contentsOf: items, at: indexPath.item)
             }
 
             mutating func remove<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
@@ -508,6 +598,23 @@ extension Internals {
                     }
                 }
             }
+            
+            mutating func unsafeRemove<S: Sequence>(itemsAt indexPaths: S) where S.Element == IndexPath {
+                
+                var removeIndexSetMap: [Int: IndexSet] = [:]
+                for indexPath in indexPaths {
+                    
+                    removeIndexSetMap[indexPath.section, default: []]
+                        .insert(indexPath.item)
+                }
+                for (sectionIndex, removeIndexSet) in removeIndexSetMap {
+
+                    for range in removeIndexSet.rangeView.reversed() {
+                        
+                        self.sections[sectionIndex].elements.removeSubrange(range)
+                    }
+                }
+            }
 
             mutating func removeAllItems() {
 
@@ -522,7 +629,10 @@ extension Internals {
                 self.sections.removeAll(where: { $0.elements.isEmpty })
             }
 
-            mutating func move(itemID: NSManagedObjectID, before beforeItemID: NSManagedObjectID) {
+            mutating func move(
+                itemID: NSManagedObjectID,
+                before beforeItemID: NSManagedObjectID
+            ) {
 
                 guard let removed = self.remove(itemID: itemID) else {
 
@@ -536,7 +646,10 @@ extension Internals {
                     .insert(removed, at: itemPosition.itemRelativeIndex)
             }
 
-            mutating func move(itemID: NSManagedObjectID, after afterItemID: NSManagedObjectID) {
+            mutating func move(
+                itemID: NSManagedObjectID,
+                after afterItemID: NSManagedObjectID
+            ) {
 
                 guard let removed = self.remove(itemID: itemID) else {
 
@@ -550,6 +663,17 @@ extension Internals {
                     .index(after: itemPosition.itemRelativeIndex)
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(removed, at: itemIndex)
+            }
+            
+            mutating func unsafeMove(
+                itemAt indexPath: IndexPath,
+                to newIndexPath: IndexPath
+            ) {
+                
+                let itemID = self.sections[indexPath.section].elements
+                    .remove(at: indexPath.item)
+                self.sections[newIndexPath.section].elements
+                    .insert(itemID, at: newIndexPath.item)
             }
 
             mutating func update<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
@@ -568,6 +692,18 @@ extension Internals {
                 }
                 self.reloadedItems.formUnion(newItemIDs)
             }
+            
+            mutating func unsafeUpdate<S: Sequence>(itemsAt indexPaths: S) where S.Element == IndexPath {
+                
+                var newItemIDs: Set<NSManagedObjectID> = []
+                for indexPath in indexPaths {
+
+                    self.sections[indexPath.section]
+                        .elements[indexPath.item].isReloaded = true
+                    newItemIDs.insert(self.unsafeItem(at: indexPath))
+                }
+                self.reloadedItems.formUnion(newItemIDs)
+            }
 
             mutating func append<C: Collection>(sectionIDs: C) where C.Element == String {
 
@@ -582,7 +718,10 @@ extension Internals {
                 self.sections.append(contentsOf: newSections)
             }
 
-            mutating func insert<C: Collection>(sectionIDs: C, before beforeSectionID: String) where C.Element == String {
+            mutating func insert<C: Collection>(
+                sectionIDs: C,
+                before beforeSectionID: String
+            ) where C.Element == String {
 
                 guard let sectionIndex = self.sectionIndex(of: beforeSectionID) else {
 
@@ -599,7 +738,10 @@ extension Internals {
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func insert<C: Collection>(sectionIDs: C, after afterSectionID: String) where C.Element == String {
+            mutating func insert<C: Collection>(
+                sectionIDs: C,
+                after afterSectionID: String
+            ) where C.Element == String {
 
                 guard let beforeIndex = self.sectionIndex(of: afterSectionID) else {
 
@@ -616,12 +758,38 @@ extension Internals {
                 }
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
+            
+            mutating func unsafeInsert<C: Collection>(
+                _ sectionIDs: C,
+                at sectionIndex: Int
+            ) where C.Element == String {
+                
+                let sectionIndexTransformer = self.sectionIndexTransformer
+                let newSections = sectionIDs.lazy.map {
+                    
+                    return Section(
+                        differenceIdentifier: $0,
+                        indexTitle: sectionIndexTransformer($0)
+                    )
+                }
+                self.sections.insert(contentsOf: newSections, at: sectionIndex)
+            }
 
             mutating func remove<S: Sequence>(sectionIDs: S) where S.Element == String {
 
                 for sectionID in sectionIDs {
 
                     self.remove(sectionID: sectionID)
+                }
+            }
+            
+            mutating func unsafeRemove<S: Sequence>(
+                sectionsAt sectionIndices: S
+            ) where S.Element == Int {
+                
+                for sectionIndex in sectionIndices.sorted(by: >) {
+                    
+                    self.sections.remove(at: sectionIndex)
                 }
             }
 
@@ -651,8 +819,21 @@ extension Internals {
                 let sectionIndex = self.sections.index(after: beforeIndex)
                 self.sections.insert(removed, at: sectionIndex)
             }
+            
+            mutating func unsafeMove(
+                sectionAt sectionIndex: Int,
+                to newSectionIndex: Int
+            ) {
+                
+                self.sections.move(
+                    fromOffsets: .init(integer: sectionIndex),
+                    toOffset: newSectionIndex
+                )
+            }
 
-            mutating func update<S: Sequence>(sectionIDs: S) where S.Element == String {
+            mutating func update<S: Sequence>(
+                sectionIDs: S
+            ) where S.Element == String {
 
                 for sectionID in sectionIDs {
 
@@ -660,6 +841,16 @@ extension Internals {
 
                         continue
                     }
+                    self.sections[sectionIndex].isReloaded = true
+                }
+            }
+            
+            mutating func unsafeUpdate<S: Sequence>(
+                sectionsAt sectionIndices: S
+            ) where S.Element == Int {
+                
+                for sectionIndex in sectionIndices {
+
                     self.sections[sectionIndex].isReloaded = true
                 }
             }
