@@ -59,16 +59,14 @@ extension Internals {
                 Target,
                 StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
                 @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
-            ) -> Void,
-            completion: @escaping () -> Void
+            ) -> Void
         ) {
 
             self.apply(
                 .init(),
                 target: target,
                 animatingDifferences: animatingDifferences,
-                performUpdates: performUpdates,
-                completion: completion
+                performUpdates: performUpdates
             )
         }
         
@@ -80,8 +78,7 @@ extension Internals {
                 Target,
                 StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
                 @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
-            ) -> Void,
-            completion: @escaping () -> Void
+            ) -> Void
         ) {
             
             self.dispatcher.dispatch { [weak self] in
@@ -112,7 +109,6 @@ extension Internals {
                 #if canImport(QuartzCore)
 
                 CATransaction.begin()
-                CATransaction.setCompletionBlock(completion)
 
                 if !animatingDifferences {
 
@@ -122,11 +118,9 @@ extension Internals {
 
                 CATransaction.commit()
 
-
                 #else
 
                 performDiffingUpdates()
-                completion()
 
 
                 #endif

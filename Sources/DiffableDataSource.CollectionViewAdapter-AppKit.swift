@@ -207,9 +207,9 @@ extension DiffableDataSource {
             self.base?.moveItem(at: indexPath, to: newIndexPath)
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
 
-            self.base?.animator().performBatchUpdates(updates, completionHandler: nil)
+            self.base?.animator().performBatchUpdates(updates, completionHandler: { _ in completion() })
         }
 
         public func reloadData() {

@@ -241,13 +241,13 @@ extension DiffableDataSource {
             self.base?.moveRow(at: indexPath, to: newIndexPath)
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
 
             guard let base = self.base else {
 
                 return
             }
-            base.performBatchUpdates(updates)
+            base.performBatchUpdates(updates, completion: { _ in completion() })
         }
 
         public func reloadData() {
