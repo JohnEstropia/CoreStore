@@ -393,19 +393,31 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             observer,
             willChange: { (observer, monitor) in
                 
-                observer.listMonitorWillChange(monitor)
+                observer.listMonitorWillChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didChange: { (observer, monitor) in
                 
-                observer.listMonitorDidChange(monitor)
+                observer.listMonitorDidChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             willRefetch: { (observer, monitor) in
                 
-                observer.listMonitorWillRefetch(monitor)
+                observer.listMonitorWillRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didRefetch: { (observer, monitor) in
                 
-                observer.listMonitorDidRefetch(monitor)
+                observer.listMonitorDidRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
     }
@@ -428,38 +440,71 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             observer,
             willChange: { (observer, monitor) in
                 
-                observer.listMonitorWillChange(monitor)
+                observer.listMonitorWillChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didChange: { (observer, monitor) in
                 
-                observer.listMonitorDidChange(monitor)
+                observer.listMonitorDidChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             willRefetch: { (observer, monitor) in
                 
-                observer.listMonitorWillRefetch(monitor)
+                observer.listMonitorWillRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didRefetch: { (observer, monitor) in
                 
-                observer.listMonitorDidRefetch(monitor)
+                observer.listMonitorDidRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
         self.registerObserver(
             observer,
             didInsertObject: { (observer, monitor, object, toIndexPath) in
                 
-                observer.listMonitor(monitor, didInsertObject: object, toIndexPath: toIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didInsertObject: object,
+                    toIndexPath: toIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didDeleteObject: { (observer, monitor, object, fromIndexPath) in
                 
-                observer.listMonitor(monitor, didDeleteObject: object, fromIndexPath: fromIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didDeleteObject: object,
+                    fromIndexPath: fromIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didUpdateObject: { (observer, monitor, object, atIndexPath) in
                 
-                observer.listMonitor(monitor, didUpdateObject: object, atIndexPath: atIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didUpdateObject: object,
+                    atIndexPath: atIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
                 
-                observer.listMonitor(monitor, didMoveObject: object, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didMoveObject: object,
+                    fromIndexPath: fromIndexPath,
+                    toIndexPath: toIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
     }
@@ -482,49 +527,92 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             observer,
             willChange: { (observer, monitor) in
                 
-                observer.listMonitorWillChange(monitor)
+                observer.listMonitorWillChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didChange: { (observer, monitor) in
                 
-                observer.listMonitorDidChange(monitor)
+                observer.listMonitorDidChange(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             willRefetch: { (observer, monitor) in
                 
-                observer.listMonitorWillRefetch(monitor)
+                observer.listMonitorWillRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didRefetch: { (observer, monitor) in
                 
-                observer.listMonitorDidRefetch(monitor)
+                observer.listMonitorDidRefetch(
+                    monitor,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
         self.registerObserver(
             observer,
             didInsertObject: { (observer, monitor, object, toIndexPath) in
                 
-                observer.listMonitor(monitor, didInsertObject: object, toIndexPath: toIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didInsertObject: object,
+                    toIndexPath: toIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didDeleteObject: { (observer, monitor, object, fromIndexPath) in
                 
-                observer.listMonitor(monitor, didDeleteObject: object, fromIndexPath: fromIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didDeleteObject: object,
+                    fromIndexPath: fromIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didUpdateObject: { (observer, monitor, object, atIndexPath) in
                 
-                observer.listMonitor(monitor, didUpdateObject: object, atIndexPath: atIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didUpdateObject: object,
+                    atIndexPath: atIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
                 
-                observer.listMonitor(monitor, didMoveObject: object, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath)
+                observer.listMonitor(
+                    monitor,
+                    didMoveObject: object,
+                    fromIndexPath: fromIndexPath,
+                    toIndexPath: toIndexPath,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
         self.registerObserver(
             observer,
             didInsertSection: { (observer, monitor, sectionInfo, toIndex) in
                 
-                observer.listMonitor(monitor, didInsertSection: sectionInfo, toSectionIndex: toIndex)
+                observer.listMonitor(
+                    monitor,
+                    didInsertSection: sectionInfo,
+                    toSectionIndex: toIndex,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             },
             didDeleteSection: { (observer, monitor, sectionInfo, fromIndex) in
                 
-               observer.listMonitor(monitor, didDeleteSection: sectionInfo, fromSectionIndex: fromIndex)
+                observer.listMonitor(
+                    monitor,
+                    didDeleteSection: sectionInfo,
+                    fromSectionIndex: fromIndex,
+                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                )
             }
         )
     }
@@ -555,11 +643,18 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
-    public func refetch(_ fetchClauses: FetchClause...) {
+    public func refetch(
+        _ fetchClauses: FetchClause...,
+        sourceIdentifier: Any?
+    ) {
         
-        self.refetch(fetchClauses)
+        self.refetch(
+            fetchClauses,
+            sourceIdentifier: sourceIdentifier
+        )
     }
     
     /**
@@ -568,14 +663,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
-    public func refetch(_ fetchClauses: [FetchClause]) {
+    public func refetch(
+        _ fetchClauses: [FetchClause],
+        sourceIdentifier: Any?
+    ) {
         
-        self.refetch { (fetchRequest) in
-            
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        }
+        self.refetch(
+            { (fetchRequest) in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            },
+            sourceIdentifier: sourceIdentifier
+        )
     }
     
     
@@ -1023,7 +1125,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         Internals.setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
     }
     
-    internal func refetch(_ applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal func refetch(
+        _ applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        sourceIdentifier: Any?
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -1088,10 +1193,15 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     
                     self.isPendingRefetch = false
                     
+                    newFetchedResultsController.managedObjectContext.saveMetadata = .init(
+                        isSavingSynchronously: false,
+                        sourceIdentifier: sourceIdentifier
+                    )
                     NotificationCenter.default.post(
                         name: Notification.Name.listMonitorDidRefetchList,
                         object: self
                     )
+                    newFetchedResultsController.managedObjectContext.saveMetadata = nil
                 }
             }
         }
@@ -1152,7 +1262,15 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         }
     }
     
-    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedResultsControllerDelegate) {
+    private static func recreateFetchedResultsController(
+        context: NSManagedObjectContext,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) -> (
+        controller: Internals.CoreStoreFetchedResultsController,
+        delegate: Internals.FetchedResultsControllerDelegate
+    ) {
         
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.fetchLimit = 0
@@ -1232,7 +1350,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                         
                         return
                 }
-                self.refetch(self.applyFetchClauses)
+                self.refetch(self.applyFetchClauses, sourceIdentifier: nil)
             }
         )
         
@@ -1256,7 +1374,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     
                     if previousStores != currentStores {
                         
-                        self.refetch(self.applyFetchClauses)
+                        self.refetch(self.applyFetchClauses, sourceIdentifier: nil)
                     }
                 }
                 

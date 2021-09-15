@@ -47,7 +47,8 @@ extension Modern.ColorsDemo.UIKit {
                      .clear:
                     dataSource.apply(listPublisher.snapshot, animatingDifferences: true)
                     
-                case nil:
+                case nil,
+                     .refetch:
                     dataSource.apply(listPublisher.snapshot, animatingDifferences: false)
                 }
             }

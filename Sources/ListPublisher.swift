@@ -181,8 +181,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      )
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      */
-    public func refetch<B: FetchChainableBuilderType>(_ clauseChain: B) throws where B.ObjectType == O {
+    public func refetch<B: FetchChainableBuilderType>(
+        _ clauseChain: B,
+        sourceIdentifier: Any? = nil
+    ) throws where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -190,7 +194,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             applyFetchClauses: { (fetchRequest) in
 
                 clauseChain.fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-            }
+            },
+            sourceIdentifier: sourceIdentifier
         )
     }
 
@@ -205,8 +210,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      )
      ```
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
+     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      */
-    public func refetch<B: SectionMonitorBuilderType>(_ clauseChain: B) throws where B.ObjectType == O {
+    public func refetch<B: SectionMonitorBuilderType>(
+        _ clauseChain: B,
+        sourceIdentifier: Any? = nil
+    ) throws where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -214,7 +223,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             applyFetchClauses: { (fetchRequest) in
 
                 clauseChain.fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-            }
+            },
+            sourceIdentifier: sourceIdentifier
         )
     }
     
@@ -262,7 +272,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     
     internal private(set) lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
 
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(
+        dataStack: DataStack,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) {
 
         self.init(
             context: dataStack.mainContext,
@@ -273,7 +288,13 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         )
     }
 
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListPublisher<ObjectType>) -> Void) {
+    internal convenience init(
+        dataStack: DataStack,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: @escaping (ListPublisher<ObjectType>) -> Void
+    ) {
 
         self.init(
             context: dataStack.mainContext,
@@ -284,7 +305,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         )
     }
 
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(
+        unsafeTransaction: UnsafeDataTransaction,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) {
 
         self.init(
             context: unsafeTransaction.context,
@@ -295,7 +321,13 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         )
     }
 
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListPublisher<ObjectType>) -> Void) {
+    internal convenience init(
+        unsafeTransaction: UnsafeDataTransaction,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: @escaping (ListPublisher<ObjectType>) -> Void
+    ) {
 
         self.init(
             context: unsafeTransaction.context,
@@ -306,7 +338,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         )
     }
 
-    internal func refetch(from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) throws {
+    internal func refetch(
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        sourceIdentifier: Any?
+    ) throws {
 
         let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
             context: self.fetchedResultsController.managedObjectContext,
@@ -323,7 +360,13 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
 
         newFetchedResultsControllerDelegate.handler = self
+        
+        newFetchedResultsController.managedObjectContext.saveMetadata = .init(
+            isSavingSynchronously: true,
+            sourceIdentifier: sourceIdentifier
+        )
         try newFetchedResultsController.performFetchFromSpecifiedStores()
+        newFetchedResultsController.managedObjectContext.saveMetadata = nil
     }
 
     deinit {
@@ -363,7 +406,15 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 
     private lazy var observers: NSMapTable<AnyObject, ObserverClosureType> = .weakToStrongObjects()
 
-    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedDiffableDataSourceSnapshotDelegate) {
+    private static func recreateFetchedResultsController(
+        context: NSManagedObjectContext,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) -> (
+        controller: Internals.CoreStoreFetchedResultsController,
+        delegate: Internals.FetchedDiffableDataSourceSnapshotDelegate
+    ) {
 
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.fetchLimit = 0
@@ -385,7 +436,13 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         return (fetchedResultsController, fetchedResultsControllerDelegate)
     }
 
-    private init(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListPublisher<ObjectType>) -> Void)?) {
+    private init(
+        context: NSManagedObjectContext,
+        from: From<ObjectType>,
+        sectionBy: SectionBy<ObjectType>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: ((ListPublisher<ObjectType>) -> Void)?
+    ) {
 
         self.query = (
             from: from,

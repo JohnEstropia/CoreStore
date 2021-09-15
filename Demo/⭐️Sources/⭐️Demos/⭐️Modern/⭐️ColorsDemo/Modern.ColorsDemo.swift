@@ -65,7 +65,8 @@ extension Modern {
                             sectionIndexTransformer: { $0?.first?.uppercased() }
                         )
                         .where(self.filter.whereClause())
-                        .orderBy(.ascending(\.$hue))
+                        .orderBy(.ascending(\.$hue)),
+                    sourceIdentifier: TransactionSource.refetch
                 )
             }
         }
@@ -79,6 +80,7 @@ extension Modern {
             case delete
             case shuffle
             case clear
+            case refetch
         }
     }
 }
