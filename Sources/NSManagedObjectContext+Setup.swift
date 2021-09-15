@@ -113,6 +113,10 @@ extension NSManagedObjectContext {
                         
                         return
                 }
+                
+                let saveMetadata = rootContext.saveMetadata
+                context.saveMetadata = saveMetadata
+                
                 let mergeChanges = { () -> Void in
                     
                     if let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) {
@@ -123,8 +127,9 @@ extension NSManagedObjectContext {
                         }
                     }
                     context.mergeChanges(fromContextDidSave: note)
+                    context.saveMetadata = nil
                 }
-                if rootContext.isSavingSynchronously == true {
+                if case true? = saveMetadata?.isSavingSynchronously {
                     
                     context.performAndWait(mergeChanges)
                 }

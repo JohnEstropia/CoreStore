@@ -627,7 +627,12 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(
+        dataStack: DataStack,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) {
         
         self.init(
             context: dataStack.mainContext,
@@ -639,7 +644,13 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<O>) -> Void) {
+    internal convenience init(
+        dataStack: DataStack,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+    ) {
         
         self.init(
             context: dataStack.mainContext,
@@ -651,7 +662,12 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(
+        unsafeTransaction: UnsafeDataTransaction,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    ) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -663,7 +679,13 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<O>) -> Void) {
+    internal convenience init(
+        unsafeTransaction: UnsafeDataTransaction,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+    ) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -675,7 +697,12 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>) -> Void) {
+    internal func registerChangeNotification(
+        _ notificationKey: UnsafeRawPointer,
+        name: Notification.Name,
+        toObserver observer: AnyObject,
+        callback: @escaping (_ monitor: ListMonitor<O>) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -695,7 +722,16 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>, _ object: O, _ indexPath: IndexPath?, _ newIndexPath: IndexPath?) -> Void) {
+    internal func registerObjectNotification(
+        _ notificationKey: UnsafeRawPointer,
+        name: Notification.Name,
+        toObserver observer: AnyObject,
+        callback: @escaping (
+            _ monitor: ListMonitor<O>,
+            _ object: O,
+            _ indexPath: IndexPath?,
+            _ newIndexPath: IndexPath?
+        ) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -722,7 +758,16 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerSectionNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ sectionIndex: Int) -> Void) {
+    internal func registerSectionNotification(
+        _ notificationKey: UnsafeRawPointer,
+        name: Notification.Name,
+        toObserver observer: AnyObject,
+        callback: @escaping (
+            _ monitor: ListMonitor<O>,
+            _ sectionInfo: NSFetchedResultsSectionInfo,
+            _ sectionIndex: Int
+        ) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -745,7 +790,24 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, willChange: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, didChange: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, willRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, didRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void) {
+    internal func registerObserver<U: AnyObject>(
+        _ observer: U,
+        willChange: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>
+        ) -> Void,
+        didChange: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>
+        ) -> Void,
+        willRefetch: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>
+        ) -> Void,
+        didRefetch: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>
+        ) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -805,7 +867,33 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ toIndexPath: IndexPath) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ fromIndexPath: IndexPath) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ atIndexPath: IndexPath) -> Void, didMoveObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ fromIndexPath: IndexPath, _ toIndexPath: IndexPath) -> Void) {
+    internal func registerObserver<U: AnyObject>(
+        _ observer: U,
+        didInsertObject: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ object: O, 
+            _ toIndexPath: IndexPath
+        ) -> Void,
+        didDeleteObject: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ object: O,
+            _ fromIndexPath: IndexPath
+        ) -> Void,
+        didUpdateObject: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ object: O,
+            _ atIndexPath: IndexPath
+        ) -> Void,
+        didMoveObject: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ object: O,
+            _ fromIndexPath: IndexPath,
+            _ toIndexPath: IndexPath
+        ) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -866,7 +954,20 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertSection: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ toIndex: Int) -> Void, didDeleteSection: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ fromIndex: Int) -> Void) {
+    internal func registerObserver<U: AnyObject>(
+        _ observer: U,
+        didInsertSection: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ sectionInfo: NSFetchedResultsSectionInfo,
+            _ toIndex: Int
+        ) -> Void,
+        didDeleteSection: @escaping (
+            _ observer: U,
+            _ monitor: ListMonitor<O>,
+            _ sectionInfo: NSFetchedResultsSectionInfo,
+            _ fromIndex: Int
+        ) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -1077,7 +1178,14 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     private let from: From<O>
     private let sectionBy: SectionBy<O>?
     
-    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<O>) -> Void)?) {
+    private init(
+        context: NSManagedObjectContext,
+        transactionQueue: DispatchQueue,
+        from: From<O>,
+        sectionBy: SectionBy<O>?,
+        applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
+        createAsynchronously: ((ListMonitor<O>) -> Void)?
+    ) {
         
         self.isSectioned = (sectionBy != nil)
         self.from = from
@@ -1294,7 +1402,13 @@ extension ListMonitor: FetchedResultsControllerHandler {
         return self.sectionByIndexTransformer
     }
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    internal func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeObject anObject: Any,
+        atIndexPath indexPath: IndexPath?,
+        forChangeType type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
         
         switch type {
             
@@ -1344,7 +1458,12 @@ extension ListMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    internal func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+        atIndex sectionIndex: Int,
+        forChangeType type: NSFetchedResultsChangeType
+    ) {
         
         switch type {
             
@@ -1373,7 +1492,9 @@ extension ListMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    internal func controllerWillChangeContent(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>
+    ) {
         
         self.taskGroup.enter()
         NotificationCenter.default.post(
@@ -1382,7 +1503,9 @@ extension ListMonitor: FetchedResultsControllerHandler {
         )
     }
     
-   internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+   internal func controllerDidChangeContent(
+    _ controller: NSFetchedResultsController<NSFetchRequestResult>
+   ) {
     
         defer {
             

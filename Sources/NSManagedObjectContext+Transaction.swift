@@ -54,21 +54,21 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal var isSavingSynchronously: Bool? {
+    internal var saveMetadata: SaveMetadata? {
         
         get {
             
-            let value: NSNumber? = Internals.getAssociatedObjectForKey(
-                &PropertyKeys.isSavingSynchronously,
+            let value: SaveMetadata? = Internals.getAssociatedObjectForKey(
+                &PropertyKeys.saveMetadata,
                 inObject: self
             )
-            return value?.boolValue
+            return value
         }
         set {
             
-            Internals.setAssociatedWeakObject(
-                newValue.flatMap { NSNumber(value: $0) },
-                forKey: &PropertyKeys.isSavingSynchronously,
+            Internals.setAssociatedRetainedObject(
+                newValue,
+                forKey: &PropertyKeys.saveMetadata,
                 inObject: self
             )
         }
@@ -140,7 +140,10 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveSynchronously(waitForMerge: Bool) -> (hasChanges: Bool, error: CoreStoreError?) {
+    internal func saveSynchronously(
+        waitForMerge: Bool,
+        sourceIdentifier: Any?
+    ) -> (hasChanges: Bool, error: CoreStoreError?) {
       
         var result: (hasChanges: Bool, error: CoreStoreError?) = (false, nil)
         self.performAndWait {
@@ -151,9 +154,12 @@ extension NSManagedObjectContext {
             }
             do {
                 
-                self.isSavingSynchronously = waitForMerge
+                self.saveMetadata = .init(
+                    isSavingSynchronously: waitForMerge,
+                    sourceIdentifier: sourceIdentifier
+                )
                 try self.save()
-                self.isSavingSynchronously = nil
+                self.saveMetadata = nil
             }
             catch {
                 
@@ -167,7 +173,10 @@ extension NSManagedObjectContext {
             }
             if let parentContext = self.parent, self.shouldCascadeSavesToParent {
                 
-                let (_, error) = parentContext.saveSynchronously(waitForMerge: waitForMerge)
+                let (_, error) = parentContext.saveSynchronously(
+                    waitForMerge: waitForMerge,
+                    sourceIdentifier: sourceIdentifier
+                )
                 result = (true, error)
             }
             else {
@@ -179,7 +188,10 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }) {
+    internal func saveAsynchronously(
+        sourceIdentifier: Any?,
+        completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }
+    ) {
         
         self.perform {
             
@@ -193,9 +205,12 @@ extension NSManagedObjectContext {
             }
             do {
                 
-                self.isSavingSynchronously = false
+                self.saveMetadata = .init(
+                    isSavingSynchronously: false,
+                    sourceIdentifier: sourceIdentifier
+                )
                 try self.save()
-                self.isSavingSynchronously = nil
+                self.saveMetadata = nil
             }
             catch {
                 
@@ -212,10 +227,13 @@ extension NSManagedObjectContext {
             }
             if self.shouldCascadeSavesToParent, let parentContext = self.parent {
                 
-                parentContext.saveAsynchronouslyWithCompletion { (_, error) in
-                    
-                    completion(true, error)
-                }
+                parentContext.saveAsynchronously(
+                    sourceIdentifier: sourceIdentifier,
+                    completion: { (_, error) in
+                        
+                        completion(true, error)
+                    }
+                )
             }
             else {
                 
@@ -234,12 +252,32 @@ extension NSManagedObjectContext {
     }
     
     
+    // MARK: - SaveMetadata
+    
+    internal final class SaveMetadata {
+        
+        // MARK: Internal
+        
+        internal let isSavingSynchronously: Bool
+        internal let sourceIdentifier: Any?
+        
+        internal init(
+            isSavingSynchronously: Bool,
+            sourceIdentifier: Any?
+        ) {
+            
+            self.isSavingSynchronously = isSavingSynchronously
+            self.sourceIdentifier = sourceIdentifier
+        }
+    }
+    
+    
     // MARK: Private
     
     private struct PropertyKeys {
         
         static var parentTransaction: Void?
-        static var isSavingSynchronously: Void?
+        static var saveMetadata: Void?
         static var isTransactionContext: Void?
         static var isDataStackContext: Void?
     }

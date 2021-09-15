@@ -34,7 +34,10 @@ extension Internals {
     
     internal final class Closure<T, U> {
         
-        // MARK: FilePrivate
+        // MARK: Internal
+        
+        internal typealias Arguments = T
+        internal typealias Result = U
         
         internal init(_ closure: @escaping (T) -> U) {
             

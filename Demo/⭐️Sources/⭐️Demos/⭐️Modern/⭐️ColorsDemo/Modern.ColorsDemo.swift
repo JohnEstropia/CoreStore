@@ -69,5 +69,16 @@ extension Modern {
                 )
             }
         }
+        
+        
+        // MARK: - TransactionSource
+        
+        enum TransactionSource {
+            
+            case add
+            case delete
+            case shuffle
+            case clear
+        }
     }
 }

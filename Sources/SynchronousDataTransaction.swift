@@ -147,15 +147,28 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue) {
+    internal init(
+        mainContext: NSManagedObjectContext,
+        queue: DispatchQueue,
+        sourceIdentifier: Any?
+    ) {
         
-        super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
+        super.init(
+            mainContext: mainContext,
+            queue: queue,
+            supportsUndo: false,
+            bypassesQueueing: false,
+            sourceIdentifier: sourceIdentifier
+        )
     }
     
     internal func autoCommit(waitForMerge: Bool) -> (hasChanges: Bool, error: CoreStoreError?) {
         
         self.isCommitted = true
-        let result = self.context.saveSynchronously(waitForMerge: waitForMerge)
+        let result = self.context.saveSynchronously(
+            waitForMerge: waitForMerge,
+            sourceIdentifier: self.sourceIdentifier
+        )
         self.result = result
         defer {
             

@@ -43,11 +43,14 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func commit(_ completion: @escaping (_ error: CoreStoreError?) -> Void) {
         
-        self.context.saveAsynchronouslyWithCompletion { (_, error) in
-            
-            completion(error)
-            withExtendedLifetime(self, {})
-        }
+        self.context.saveAsynchronously(
+            sourceIdentifier: self.sourceIdentifier,
+            completion: { (_, error) in
+                
+                completion(error)
+                withExtendedLifetime(self, {})
+            }
+        )
     }
     
     /**
@@ -57,7 +60,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func commitAndWait() throws {
         
-        if case (_, let error?) = self.context.saveSynchronously(waitForMerge: true) {
+        if case (_, let error?) = self.context.saveSynchronously(
+            waitForMerge: true,
+            sourceIdentifier: self.sourceIdentifier
+        ) {
             
             throw error
         }
@@ -126,23 +132,39 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     /**
      Begins a child transaction where `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
-     - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
+     - parameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
+     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.     
      - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
-    public func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
+    public func beginUnsafe(
+        supportsUndo: Bool = false,
+        sourceIdentifier: Any? = nil
+    ) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.context,
             queue: self.transactionQueue,
-            supportsUndo: supportsUndo
+            supportsUndo: supportsUndo,
+            sourceIdentifier: sourceIdentifier
         )
     }
     
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool) {
+    internal init(
+        mainContext: NSManagedObjectContext,
+        queue: DispatchQueue,
+        supportsUndo: Bool,
+        sourceIdentifier: Any?
+    ) {
         
-        super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
+        super.init(
+            mainContext: mainContext,
+            queue: queue,
+            supportsUndo: supportsUndo,
+            bypassesQueueing: true,
+            sourceIdentifier: sourceIdentifier
+        )
     }
 }

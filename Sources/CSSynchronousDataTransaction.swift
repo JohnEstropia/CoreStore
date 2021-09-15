@@ -49,7 +49,11 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction, CoreStor
         
         return bridge(error) {
             
-            if case (_, let error?) = self.bridgeToSwift.context.saveSynchronously(waitForMerge: true) {
+            let transaction = self.bridgeToSwift
+            if case (_, let error?) = transaction.context.saveSynchronously(
+                waitForMerge: true,
+                sourceIdentifier: transaction.sourceIdentifier
+            ) {
                 
                 throw error
             }

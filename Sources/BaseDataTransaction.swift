@@ -413,6 +413,11 @@ public /*abstract*/ class BaseDataTransaction {
     // MARK: 3rd Party Utilities
     
     /**
+     An arbitrary value that identifies the source of this transaction. Callers of the transaction can provide this value through the `DataStack.perform(...)` methods.
+     */
+    public let sourceIdentifier: Any?
+    
+    /**
      Allow external libraries to store custom data in the transaction. App code should rarely have a need for this.
      ```
      enum Static {
@@ -435,7 +440,13 @@ public /*abstract*/ class BaseDataTransaction {
     internal var isCommitted = false
     internal var result: (hasChanges: Bool, error: CoreStoreError?)?
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
+    internal init(
+        mainContext: NSManagedObjectContext,
+        queue: DispatchQueue,
+        supportsUndo: Bool,
+        bypassesQueueing: Bool,
+        sourceIdentifier: Any?
+    ) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
             queue == .main
@@ -446,6 +457,7 @@ public /*abstract*/ class BaseDataTransaction {
         self.context = context
         self.supportsUndo = supportsUndo
         self.bypassesQueueing = bypassesQueueing
+        self.sourceIdentifier = sourceIdentifier
         
         context.parentTransaction = self
         context.isTransactionContext = true
