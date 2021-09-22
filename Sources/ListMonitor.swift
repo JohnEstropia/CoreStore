@@ -648,7 +648,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      */
     public func refetch(
         _ fetchClauses: FetchClause...,
-        sourceIdentifier: Any?
+        sourceIdentifier: Any? = nil
     ) {
         
         self.refetch(
@@ -668,7 +668,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      */
     public func refetch(
         _ fetchClauses: [FetchClause],
-        sourceIdentifier: Any?
+        sourceIdentifier: Any? = nil
     ) {
         
         self.refetch(

@@ -41,12 +41,6 @@
 		B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */; };
 		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; };
 		B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B5A3916D24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916824E698F900E7E8BD /* CoreStore.framework */; };
-		B5A3916E24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916824E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B5A3916F24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916924E698F900E7E8BD /* CoreStore.framework */; };
-		B5A3917024E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916924E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B5A3917124E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916A24E698F900E7E8BD /* CoreStore.framework */; };
-		B5A3917224E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916A24E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917424E6990200E7E8BD /* MapKit.framework */; };
 		B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917624E6990700E7E8BD /* CoreLocation.framework */; };
 		B5A3917924E6991600E7E8BD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917824E6991600E7E8BD /* SwiftUI.framework */; };
@@ -116,9 +110,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
-				B5A3917224E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
-				B5A3917024E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
-				B5A3916E24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,11 +225,8 @@
 			files = (
 				B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */,
 				B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
-				B5A3917124E698F900E7E8BD /* CoreStore.framework in Frameworks */,
 				B5A3917924E6991600E7E8BD /* SwiftUI.framework in Frameworks */,
 				B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */,
-				B5A3916F24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
-				B5A3916D24E698F900E7E8BD /* CoreStore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,7 +621,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1300;
 				TargetAttributes = {
 					B5A3911824E5429200E7E8BD = {
 						CreatedOnToolsVersion = 11.6;
@@ -809,6 +797,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
