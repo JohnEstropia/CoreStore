@@ -37,9 +37,7 @@ extension CSDataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
     @objc
-    public func beginAsynchronous(
-        _ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void
-    ) {
+    public func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
         
         self.bridgeToSwift.perform(
             asynchronous: { (transaction) in
@@ -55,37 +53,6 @@ extension CSDataStack {
                 }
                 try transaction.cancel()
             },
-            completion: { _ in }
-        )
-    }
-    
-    /**
-     Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
-     */
-    @objc
-    public func beginAsynchronous(
-        _ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void,
-        _ sourceIdentifier: Any?
-    ) {
-        
-        self.bridgeToSwift.perform(
-            asynchronous: { (transaction) in
-                
-                let csTransaction = transaction.bridgeToObjectiveC
-                closure(csTransaction)
-                if !transaction.isCommitted && transaction.hasChanges {
-                    
-                    Internals.log(
-                        .warning,
-                        message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
-                    )
-                }
-                try transaction.cancel()
-            },
-            sourceIdentifier: sourceIdentifier,
             completion: { _ in }
         )
     }
@@ -98,9 +65,7 @@ extension CSDataStack {
      - returns: `YES` if the commit succeeded, `NO` if the commit failed. If `NO`, the `error` argument will hold error information.
      */
     @objc
-    public func beginSynchronous(
-        _ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void,
-        error: NSErrorPointer) -> Bool {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void, error: NSErrorPointer) -> Bool {
         
         return bridge(error) {
             
@@ -130,49 +95,6 @@ extension CSDataStack {
     }
     
     /**
-     Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
-     - parameter error: the `CSError` pointer that indicates the reason in case of an failure
-     - returns: `YES` if the commit succeeded, `NO` if the commit failed. If `NO`, the `error` argument will hold error information.
-     */
-    @objc
-    public func beginSynchronous(
-        _ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void,
-        sourceIdentifier: Any?,
-        error: NSErrorPointer
-    ) -> Bool {
-        
-        return bridge(error) {
-            
-            do {
-                
-                try self.bridgeToSwift.perform(
-                    synchronous: { (transaction) in
-                        
-                        let csTransaction = transaction.bridgeToObjectiveC
-                        closure(csTransaction)
-                        if !transaction.isCommitted && transaction.hasChanges {
-                            
-                            Internals.log(
-                                .warning,
-                                message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
-                            )
-                        }
-                        try transaction.cancel()
-                    },
-                    sourceIdentifier: sourceIdentifier
-                )
-            }
-            catch CoreStoreError.userCancelled {
-                
-                return
-            }
-        }
-    }
-    
-    /**
      Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
      To support "undo" methods such as `-undo`, `-redo`, and `-rollback`, use the `-beginSafeWithSupportsUndo:` method passing `YES` to the argument. Without "undo" support, calling those methods will raise an exception.
@@ -190,61 +112,15 @@ extension CSDataStack {
     /**
      Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
-     To support "undo" methods such as `-undo`, `-redo`, and `-rollback`, use the `-beginSafeWithSupportsUndo:` method passing `YES` to the argument. Without "undo" support, calling those methods will raise an exception.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
+     - prameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    public func beginUnsafeWithSourceIdentifier(
-        _ sourceIdentifier: Any?
-    ) -> CSUnsafeDataTransaction {
+    public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             
-            self.bridgeToSwift.beginUnsafe(
-                sourceIdentifier: sourceIdentifier
-            )
-        }
-    }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     - parameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
-    @objc
-    public func beginUnsafeWithSupportsUndo(
-        _ supportsUndo: Bool
-    ) -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe(
-                supportsUndo: supportsUndo
-            )
-        }
-    }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     - parameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
-    @objc
-    public func beginUnsafeWithSupportsUndo(
-        _ supportsUndo: Bool,
-        sourceIdentifier: Any?
-    ) -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe(
-                supportsUndo: supportsUndo,
-                sourceIdentifier: sourceIdentifier
-            )
+            self.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
         }
     }
     

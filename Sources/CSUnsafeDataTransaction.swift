@@ -46,21 +46,20 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObje
     @objc
     public func commitWithSuccess(_ success: (() -> Void)?, _ failure: ((CSError) -> Void)?) {
         
-        let transaction = self.bridgeToSwift
-        transaction.context.saveAsynchronously(
-            sourceIdentifier: transaction.sourceIdentifier,
+        self.bridgeToSwift.context.saveAsynchronously(
+            sourceIdentifier: nil,
             completion: { (_, error) in
-                
+
                 defer {
-                    
+
                     withExtendedLifetime(self, {})
                 }
                 if let error = error {
-                    
+
                     failure?(error.bridgeToObjectiveC)
                 }
                 else {
-                    
+
                     success?()
                 }
             }
@@ -75,13 +74,12 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObje
      */
     @objc
     public func commitAndWait(error: NSErrorPointer) -> Bool {
-        
+
         return bridge(error) {
             
-            let transaction = self.bridgeToSwift
-            if case (_, let error?) = transaction.context.saveSynchronously(
+            if case (_, let error?) = self.bridgeToSwift.context.saveSynchronously(
                 waitForMerge: true,
-                sourceIdentifier: transaction.sourceIdentifier
+                sourceIdentifier: nil
             ) {
                 
                 throw error
@@ -160,61 +158,15 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObje
     /**
      Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
-     To support "undo" methods such as `-undo`, `-redo`, and `-rollback`, use the `-beginSafeWithSupportsUndo:` method passing `YES` to the argument. Without "undo" support, calling those methods will raise an exception.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
+     - prameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    public func beginUnsafeWithSourceIdentifier(
-        _ sourceIdentifier: Any?
-    ) -> CSUnsafeDataTransaction {
+    public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             
-            self.bridgeToSwift.beginUnsafe(
-                sourceIdentifier: sourceIdentifier
-            )
-        }
-    }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     - parameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
-    @objc
-    public func beginUnsafeWithSupportsUndo(
-        _ supportsUndo: Bool
-    ) -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe(
-                supportsUndo: supportsUndo
-            )
-        }
-    }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     - parameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
-    @objc
-    public func beginUnsafeWithSupportsUndo(
-        _ supportsUndo: Bool,
-        sourceIdentifier: Any?
-    ) -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe(
-                supportsUndo: supportsUndo,
-                sourceIdentifier: sourceIdentifier
-            )
+            self.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
         }
     }
     
