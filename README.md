@@ -16,11 +16,12 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br /><br />Contact<br />
 <a href="http://swift-corestore-slack.herokuapp.com/"><img alt="Join us on Slack!" src="http://swift-corestore-slack.herokuapp.com/badge.svg?logo=slack" /></a>
 <a href="https://twitter.com/JohnEstropia"><img alt="Reach me on Twitter!" src="https://img.shields.io/badge/twitter-%40JohnEstropia-3498db.svg?logo=twitter" /></a>
+<a href="https://github.com/sponsors/JohnEstropia"><img alt="Sponsor" src="https://img.shields.io/badge/%E2%9D%A4-Sponsor-ff69bf"></a>
 <br />
 </p>
 
-* **Swift 5.4:** iOS 11+ / macOS 10.13+ / watchOS 4.0+ / tvOS 11.0+
-* Previously supported Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1)
+* **Swift 5.5:** iOS 11+ / macOS 10.13+ / watchOS 4.0+ / tvOS 11.0+
+* Previously supported Swift versions: [Swift 5.4](https://github.com/JohnEstropia/CoreStore/tree/8.0.1), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
 
 Upgrading from previous CoreStore versions? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
@@ -67,7 +68,6 @@ CoreStore is part of the [Swift Source Compatibility projects](https://swift.org
         - [Observe a single object's per-property updates](#observe-a-single-objects-per-property-updates)
         - [Observe a diffable list](#observe-a-diffable-list)
         - [Observe detailed list changes](#observe-detailed-list-changes)
-    - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
         - [New `@Field` Property Wrapper syntax](#new-field-property-wrapper-syntax)
             - [`@Field.Stored` ](#fieldstored)
@@ -198,7 +198,6 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - **🎯Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign independent names for the entities and their class names.
 - **📙Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
 - **ℹ️Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **🎗Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
 - **🛡More extensive Unit Tests.** Extending CoreStore is safe without having to worry about breaking old behavior.
 
 *Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
@@ -1676,111 +1675,6 @@ let person2 = self.monitor[1, 2]
 // person1 and person2 are the same object
 ```
 
-## Objective-C support
-> ⚠️Objective-C support is planned to be deprecated in a future CoreStore version.
-
-All CoreStore types are still written in pure Swift, but most core types have Objective-C "bridging classes" that are visible to Objective-C code. To show a couple of usage examples:
-
-<table>
-<tr><th>Swift</th><th>Objective-C</th></tr>
-<tr>
-<td><pre lang=swift>
-try dataStack.addStorageAndWait(SQLiteStore.self)
-</pre></td>
-<td><pre lang=objc>
-NSError *error
-[CSCoreStore addSQLiteStorageAndWait:[CSSQLiteStore new] error:&error]
-</pre></td>
-</tr>
-<tr>
-<td><pre lang=swift>
-dataStack.perform(
-    asynchronous: { (transaction) in
-        // ...
-    },
-    completion: { (result) in
-        switch result {
-        case .success: print("Done")
-        case .failure(let error): print(error)
-        }
-    }
-)
-</pre></td>
-<td><pre lang=objc>
-[CSCoreStore beginAsynchronous:^(CSAsynchronousDataTransaction *transaction) {
-    // ...
-    [transaction 
-     commitWithSuccess:^{
-        NSLog(@"Done");
-     }
-     failure: ^(CSError *error) {
-        NSLog(@"error: %@", result.error);
-     }];
-}];
-</pre></td>
-</tr>
-</table>
-
-All of these `CS`-prefixed bridging classes have very similar usage to the existing CoreStore APIs, and ironically *none of them are written in Objective-C*. This is very different to the common approach where apps and libraries write Objective-C APIs just to support both Objective-C and Swift. The advantage with CoreStore's approach is that your Swift codebase can already use the purely-Swift API without further changes in the future, but your "hybrid" codebase can still bridge instances back and forth from Objective-C to Swift.
-
-For example, you may have a new, modern Swift class that holds a `ListMonitor`:
-```swift
-class MyViewController: UIViewController {
-    let monitor = dataStack.monitorList(From<MyEntity>(), ...)
-    // ...
-}
-```
-Now let's say you have a legacy Objective-C class that previously uses `NSFetchedResultsController`. It's easy to switch from `NSFetchedResultsController` to `CSListMonitor`, but converting the rest of this huge class is impractical. You end up with 
-```objc
-@interface MYOldViewController: UIViewController 
-@property (nonatomic, readonly, strong) CSListMonitor* monitor;
-- (instancetype)initWithMonitor:(CSListMonitor *)monitor;
-@end
-```
-When you need to instantiate this class from Swift, you just call `bridgeToObjectiveC`:
-```swift
-class MyViewController: UIViewController {
-    let monitor = dataStack.monitorList(From<MyEntity>(), ...)
-    func showOldController() {
-        let controller = MYOldViewController(monitor: self.monitor.bridgeToObjectiveC)
-        self.presentViewController(controller, animated: true, completion: nil)
-    }
-}
-```
-Note that the `CSListMonitor` holds the exact same `ListMonitor` instance, which means that no copies and no extra fetching occur.
-
-### Objective-C syntax sugars
-Objective-C tends to be verbose, so some method calls are long and unreadable. For example, fetching looks like this:
-```objc
-NSArray<MYPerson *> *objects = 
-[CSCoreStore
- fetchAllFrom:[[CSFrom alloc] initWithEntityClass:[MYPerson class]]
- fetchClauses:@[[[CSWhere alloc] initWithFormat:@"%K == %@", @"isHidden", @NO],
-                [[CSOrderBy alloc] initWithSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES],
-                                                             [NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]]]];
-```
-Although it works, it looks terrible. For this, CoreStore provides *CoreStoreBridge.h* where these Objective-C calls are wrapped in readable, convenient macros and global functions. The call above becomes
-```objc
-NSArray<MYPerson *> *objects = 
-[CSCoreStore
- fetchAllFrom:CSFromClass([MYPerson class])
- fetchClauses:@[CSWhereFormat(@"%K == %@", @"isHidden", @NO),
-                CSOrderByKeys(CSSortAscending(@"lastName"),
-                              CSSortAscending(@"firstName"), nil)]];
-```
-That's much shorter now. But we can still do better. Notice that we have strings being used as key paths. The `CSKeyPath(...)` macro gives us compile-time checking so keys that don't exist in a class will generate errors. Our key-safe code now looks like this:
-```objc
-NSArray<MYPerson *> *objects = 
-[CSCoreStore
- fetchAllFrom:CSFromClass([MYPerson class])
- fetchClauses:@[CSWhereFormat(@"%K == %@", CSKeyPath(MYPerson, isHidden), @NO),
-                CSOrderByKeys(CSSortAscending(CSKeyPath(MYPerson, lastName)),
-                              CSSortAscending(CSKeyPath(MYPerson, firstName)), nil)]];
-```
-
-To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files.
-
-
 ## Type-safe `CoreStoreObject`s
 Starting CoreStore 4.0, we can now create persisted objects without depending on *.xcdatamodeld* Core Data files. The new `CoreStoreObject` subclass replaces `NSManagedObject`, and specially-typed properties declared on these classes will be synthesized as Core Data attributes.
 ```swift
@@ -2593,12 +2487,8 @@ From the **File** - **Swift Packages** - **Add Package Dependency…** menu, sea
 ```
 CoreStore
 ```
-where `JohnEstropia` is the *Owner* (forks may appear as well). Then add to your project.
+where `JohnEstropia` is the *Owner* (forks may appear as well). Then add to your project
 
-
-### Objective-C support
-
-To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
 
 # Changesets
 
