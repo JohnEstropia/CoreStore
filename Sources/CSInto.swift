@@ -29,82 +29,50 @@ import CoreData
 
 // MARK: - CSInto
 
-/**
- The `CSInto` serves as the Objective-C bridging type for `Into<T>`.
- 
- - SeeAlso: `Into`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSInto: NSObject {
-    
-    /**
-     The associated `NSManagedObject` entity class
-     */
+
     @objc
     public var entityClass: NSManagedObject.Type {
-        
-        return self.bridgeToSwift.entityClass
+
+        fatalError()
     }
-    
-    /**
-     The `NSPersistentStore` configuration name to associate objects from.
-     May contain a `String` to pertain to a named configuration, or `nil` to pertain to the default configuration
-     */
+
     @objc
     public var configuration: ModelConfiguration {
-        
-        return self.bridgeToSwift.configuration
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSInto` clause with the specified entity class.
-     ```
-     MyPersonEntity *person = [transaction createInto:
-        CSIntoClass([MyPersonEntity class])];
-     ```
-     - parameter entityClass: the `NSManagedObject` class type to be created
-     */
+
     @objc
     public convenience init(entityClass: NSManagedObject.Type) {
-        
-        self.init(Into(entityClass))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSInto` clause with the specified configuration.
-     ```
-     MyPersonEntity *person = [transaction createInto:
-        CSIntoClass([MyPersonEntity class])];
-     ```
-     - parameter entityClass: the `NSManagedObject` class type to be created
-     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-     */
+
     @objc
     public convenience init(entityClass: NSManagedObject.Type, configuration: ModelConfiguration) {
-        
-        self.init(Into(entityClass, configuration))
+
+        fatalError()
     }
     
 
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSInto else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -113,9 +81,8 @@ public final class CSInto: NSObject {
     public let bridgeToSwift: Into<NSManagedObject>
     
     public required init<O: NSManagedObject>(_ swiftValue: Into<O>) {
-        
-        self.bridgeToSwift = swiftValue.downcast()
-        super.init()
+
+        fatalError()
     }
 }
 
@@ -125,21 +92,10 @@ public final class CSInto: NSObject {
 extension Into where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
-    
+
+    @available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
     public var bridgeToObjectiveC: CSInto {
-        
-        return CSInto(self)
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate func downcast() -> Into<NSManagedObject> {
-        
-        return Into<NSManagedObject>(
-            entityClass: self.entityClass,
-            configuration: self.configuration,
-            inferStoreIfPossible: self.inferStoreIfPossible
-        )
+
+        fatalError()
     }
 }

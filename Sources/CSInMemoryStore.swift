@@ -29,82 +29,56 @@ import CoreData
 
 // MARK: - CSInMemoryStore
 
-/**
- The `CSInMemoryStore` serves as the Objective-C bridging type for `InMemoryStore`.
- 
- - SeeAlso: `InMemoryStore`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjectiveCType {
-    
-    /**
-     Initializes a `CSInMemoryStore` for the specified configuration
-     
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
-     */
+
     @objc
     public convenience init(configuration: ModelConfiguration) {
-        
-        self.init(InMemoryStore(configuration: configuration))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSInMemoryStore` with the "Default" configuration
-     */
+
     @objc
     public convenience override init() {
-        
-        self.init(InMemoryStore())
+
+        fatalError()
     }
     
     
     // MARK: StorageInterface
-    
-    /**
-     The string identifier for the `NSPersistentStore`'s `type` property. For `CSInMemoryStore`s, this is always set to `NSInMemoryStoreType`.
-     */
+
     @objc
     public static let storeType = NSInMemoryStoreType
-    
-    /**
-     The configuration name in the model file
-     */
+
     @objc
     public var configuration: ModelConfiguration {
-        
-        return self.bridgeToSwift.configuration
+
+        fatalError()
     }
     
-    /**
-     The options dictionary for the `NSPersistentStore`. For `CSInMemoryStore`s, this is always set to `nil`.
-     */
     @objc
     public var storeOptions: [AnyHashable: Any]? {
-        
-        return self.bridgeToSwift.storeOptions
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return ObjectIdentifier(self.bridgeToSwift).hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSInMemoryStore else {
-            
-            return false
-        }
-        return self.bridgeToSwift === object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -113,22 +87,21 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
     public let bridgeToSwift: InMemoryStore
     
     public required init(_ swiftValue: InMemoryStore) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - InMemoryStore
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension InMemoryStore: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSInMemoryStore {
-        
-        return CSInMemoryStore(self)
+
+        fatalError()
     }
 }

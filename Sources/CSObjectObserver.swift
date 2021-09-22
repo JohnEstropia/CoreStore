@@ -29,43 +29,16 @@ import CoreData
 
 // MARK: - CSObjectObserver
 
-/**
- Implement the `CSObjectObserver` protocol to observe changes  to a single `NSManagedObject` instance. `CSObjectObserver`s may register themselves to a `CSObjectMonitor`'s `-addObjectObserver:` method:
- ```
- CSObjectMonitor *monitor = [CSCoreStore monitorObject:myObject];
- [monitor addObjectObserver:self];
- ```
- 
- - SeeAlso: `ObjectObserver`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public protocol CSObjectObserver: AnyObject {
     
-    /**
-     Handles processing just before a change to the observed `object` occurs
-     
-     - parameter monitor: the `CSObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
-     */
     @objc
     optional func objectMonitor(_ monitor: CSObjectMonitor, willUpdateObject object: Any)
-    
-    /**
-     Handles processing right after a change to the observed `object` occurs
-     
-     - parameter monitor: the `CSObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
-     - parameter changedPersistentKeys: an `NSSet` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
-     */
+
     @objc
     optional func objectMonitor(_ monitor: CSObjectMonitor, didUpdateObject object: Any, changedPersistentKeys: Set<String>)
-    
-    /**
-     Handles processing right after `object` is deleted
-     
-     - parameter monitor: the `CSObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
-     */
+
     @objc
     optional func objectMonitor(_ monitor: CSObjectMonitor, didDeleteObject object: Any)
 }

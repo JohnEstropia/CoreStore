@@ -29,80 +29,56 @@ import CoreData
 
 // MARK: - CSMigrationType
 
-/**
- The `CSMigrationType` serves as the Objective-C bridging type for `MigrationType`.
- 
- - SeeAlso: `MigrationType`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
-    
-    /**
-     Returns `YES` if the `CSMigrationType`'s `sourceVersion` and `destinationVersion` do not match. Returns `NO` otherwise.
-     */
+
     @objc
     public var needsMigration: Bool {
-        
-        return self.bridgeToSwift.hasMigration
+
+        fatalError()
     }
-    
-    /**
-     Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
-     */
+
     @objc
     public var sourceVersion: String {
-        
-        return self.bridgeToSwift.sourceVersion
+
+        fatalError()
     }
-    
-    /**
-     Returns the destination model version for the migration type. If no migration is required, `destinationVersion` will be equal to the `sourceVersion`.
-     */
+
     @objc
     public var destinationVersion: String {
-        
-        return self.bridgeToSwift.destinationVersion
+
+        fatalError()
     }
-    
-    /**
-     Returns `YES` if the `CSMigrationType` is a lightweight migration. Used as syntactic sugar.
-     */
+
     @objc
     public var isLightweightMigration: Bool {
-        
-        return self.bridgeToSwift.isLightweightMigration
+
+        fatalError()
     }
-    
-    /**
-     Returns `YES` if the `CSMigrationType` is a heavyweight migration. Used as syntactic sugar.
-     */
+
     @objc
     public var isHeavyweightMigration: Bool {
-        
-        return self.bridgeToSwift.isHeavyweightMigration
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSMigrationType else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -111,22 +87,21 @@ public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
     public let bridgeToSwift: MigrationType
     
     public required init(_ swiftValue: MigrationType) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - MigrationType
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension MigrationType: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSMigrationType {
-        
-        return CSMigrationType(self)
+
+        fatalError()
     }
 }

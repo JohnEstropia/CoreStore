@@ -29,73 +29,44 @@ import CoreData
 
 // MARK: - CSOrderBy
 
-/**
- The `CSOrderBy` serves as the Objective-C bridging type for `OrderBy`.
- 
- - SeeAlso: `OrderBy`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause {
     
-    /**
-     The list of sort descriptors
-     */
     @objc
     public var sortDescriptors: [NSSortDescriptor] {
-        
-        return self.bridgeToSwift.sortDescriptors
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSOrderBy` clause with a single sort descriptor
-     ```
-     MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromClass([MyPersonEntity class])
-        fetchClauses:@[CSOrderByKey(CSSortAscending(@"fullname"))]]];
-     ```
-     - parameter sortDescriptor: a `NSSortDescriptor`
-     */
+
     @objc
     public convenience init(sortDescriptor: NSSortDescriptor) {
-        
-        self.init(OrderBy(sortDescriptor))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSOrderBy` clause with a list of sort descriptors
-     ```
-     MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromClass([MyPersonEntity class])
-        fetchClauses:@[CSOrderByKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
-     ```
-     - parameter sortDescriptors: an array of `NSSortDescriptor`s
-     */
+
     @objc
     public convenience init(sortDescriptors: [NSSortDescriptor]) {
-        
-        self.init(OrderBy(sortDescriptors))
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSOrderBy else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -103,8 +74,8 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     
     @objc
     public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
-        
-        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
+
+        fatalError()
     }
     
     
@@ -113,29 +84,21 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     public let bridgeToSwift: OrderBy<NSManagedObject>
     
     public init<O: NSManagedObject>(_ swiftValue: OrderBy<O>) {
-        
-        self.bridgeToSwift = swiftValue.downcast()
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - OrderBy
 
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension OrderBy where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSOrderBy {
-        
-        return CSOrderBy(self)
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate func downcast() -> OrderBy<NSManagedObject> {
-        
-        return OrderBy<NSManagedObject>(self.sortDescriptors)
+
+        fatalError()
     }
 }

@@ -216,7 +216,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          */
         public subscript(attribute: KeyPathString) -> Any? {
             
-            return self.rawObject.cs_accessValueForKVCKey(attribute)
+            return self.rawObject.getValue(forKvcKey: attribute)
         }
         
         /**
@@ -224,7 +224,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          */
         public subscript(attribute: NSAttributeDescription) -> Any? {
             
-            return self.rawObject.cs_accessValueForKVCKey(attribute.name)
+            return self.rawObject.getValue(forKvcKey: attribute.name)
         }
         
         /**
@@ -273,8 +273,8 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          */
         public subscript(attribute: KeyPathString) -> Any? {
             
-            get { return self.rawObject.cs_accessValueForKVCKey(attribute) }
-            set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute) }
+            get { return self.rawObject.getValue(forKvcKey: attribute) }
+            set { self.rawObject.setValue(newValue, forKvcKey: attribute) }
         }
         
         /**
@@ -282,8 +282,8 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          */
         public subscript(attribute: NSAttributeDescription) -> Any? {
             
-            get { return self.rawObject.cs_accessValueForKVCKey(attribute.name) }
-            set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute.name) }
+            get { return self.rawObject.getValue(forKvcKey: attribute.name) }
+            set { self.rawObject.setValue(newValue, forKvcKey: attribute.name) }
         }
         
         /**

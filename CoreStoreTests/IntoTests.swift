@@ -126,15 +126,4 @@ final class IntoTests: XCTestCase {
             XCTAssertNotEqual(into, Into<TestEntity1>("Config2"))
         }
     }
-    
-    @objc
-    dynamic func test_ThatIntoClauses_BridgeCorrectly() {
-        
-        do {
-            
-            let into = Into<NSManagedObject>()
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertEqual(into, objcInto.bridgeToSwift)
-        }
-    }
 }

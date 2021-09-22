@@ -29,42 +29,28 @@ import CoreData
 
 // MARK: - CSTweak
 
-/**
- The `CSTweak` serves as the Objective-C bridging type for `Tweak`.
- 
- - SeeAlso: `Tweak`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
-    /**
-     The block to customize the `NSFetchRequest`
-     */
     @objc
     public var block: (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void {
-        
-        return self.bridgeToSwift.closure
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSTweak` clause with a closure where the `NSFetchRequest` may be configured.
-     
-     - Important: `CSTweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `CSListMonitor`s) may keep `CSFetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
-     - parameter block: the block to customize the `NSFetchRequest`
-     */
+
     @objc
     public convenience init(block: @escaping (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
-        
-        self.init(Tweak(block))
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -72,8 +58,8 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     
     @objc
     public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
-        
-        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
+
+        fatalError()
     }
     
     
@@ -82,22 +68,21 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     public let bridgeToSwift: Tweak
     
     public init(_ swiftValue: Tweak) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - Tweak
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension Tweak: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSTweak {
-        
-        return CSTweak(self)
+
+        fatalError()
     }
 }

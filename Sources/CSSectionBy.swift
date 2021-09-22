@@ -29,50 +29,28 @@ import CoreData
 
 // MARK: - CSSectionBy
 
-/**
- The `CSSectionBy` serves as the Objective-C bridging type for `SectionBy`.
- 
- - SeeAlso: `SectionBy`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSSectionBy: NSObject {
-    
-    /**
-     Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
-     
-     - parameter sectionKeyPath: the key path to use to group the objects into sections
-     - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
-     */
+
     @objc
     public static func keyPath(_ sectionKeyPath: KeyPathString) -> CSSectionBy {
-        
-        return self.init(SectionBy<NSManagedObject>(sectionKeyPath))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section index title
-     
-     - parameter sectionKeyPath: the key path to use to group the objects into sections
-     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section index title
-     - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
-     */
+
     @objc
     public static func keyPath(_ sectionKeyPath: KeyPathString, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
-        
-        return self.init(
-            SectionBy<NSManagedObject>(
-                sectionKeyPath,
-                sectionIndexTransformer: sectionIndexTransformer
-            )
-        )
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -81,32 +59,21 @@ public final class CSSectionBy: NSObject {
     public let bridgeToSwift: SectionBy<NSManagedObject>
     
     public init<O>(_ swiftValue: SectionBy<O>) {
-        
-        self.bridgeToSwift = swiftValue.downcast()
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - SectionBy
 
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension SectionBy {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSSectionBy {
-        
-        return CSSectionBy(self)
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate func downcast() -> SectionBy<NSManagedObject> {
-        
-        return SectionBy<NSManagedObject>(
-            self.sectionKeyPath,
-            sectionIndexTransformer: self.sectionIndexTransformer
-        )
+
+        fatalError()
     }
 }

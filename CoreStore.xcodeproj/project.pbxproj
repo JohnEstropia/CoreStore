@@ -819,9 +819,6 @@
 		B5DBE2D31C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
 		B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
 		B5DBE2D51C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
-		B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
-		B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
-		B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
 		B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
 		B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
 		B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
@@ -908,10 +905,6 @@
 		B5ECDBEE1CA6BF2000C7F112 /* CSFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */; };
 		B5ECDBEF1CA6BF2000C7F112 /* CSFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */; };
 		B5ECDBF01CA6BF2000C7F112 /* CSFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */; };
-		B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */; };
-		B5ECDBFB1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */; };
-		B5ECDBFC1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */; };
-		B5ECDBFD1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */; };
 		B5ECDBFF1CA80CBA00C7F112 /* CSWhere.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBFE1CA80CBA00C7F112 /* CSWhere.swift */; };
 		B5ECDC011CA80CBA00C7F112 /* CSWhere.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBFE1CA80CBA00C7F112 /* CSWhere.swift */; };
 		B5ECDC021CA80CBA00C7F112 /* CSWhere.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBFE1CA80CBA00C7F112 /* CSWhere.swift */; };
@@ -1200,9 +1193,6 @@
 		B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPathGenericBindings.swift; sourceTree = "<group>"; };
 		B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSCoreStore.swift; sourceTree = "<group>"; };
 		B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSDataStack.swift; sourceTree = "<group>"; };
-		B5DBE2DA1C9939E100B5CEFA /* CoreStoreTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreStoreTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingTests.h; sourceTree = "<group>"; };
-		B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgingTests.m; sourceTree = "<group>"; };
 		B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationChainTests.swift; sourceTree = "<group>"; };
 		B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageInterfaceTests.swift; sourceTree = "<group>"; };
 		B5DE522A230BD7CC00A22534 /* Internals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.swift; sourceTree = "<group>"; };
@@ -1251,7 +1241,6 @@
 		B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSBaseDataTransaction+Querying.swift"; sourceTree = "<group>"; };
 		B5ECDBE41CA6BEA300C7F112 /* CSClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSClauseTypes.swift; sourceTree = "<group>"; };
 		B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSFrom.swift; sourceTree = "<group>"; };
-		B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+ObjectiveC.swift"; sourceTree = "<group>"; };
 		B5ECDBFE1CA80CBA00C7F112 /* CSWhere.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSWhere.swift; sourceTree = "<group>"; };
 		B5ECDC041CA8138100C7F112 /* CSOrderBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSOrderBy.swift; sourceTree = "<group>"; };
 		B5ECDC0A1CA8161B00C7F112 /* CSGroupBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSGroupBy.swift; sourceTree = "<group>"; };
@@ -1396,8 +1385,6 @@
 			isa = PBXGroup;
 			children = (
 				B5AA37FE235DEBD700FFD4B9 /* BaseTests */,
-				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
-				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
 				B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */,
 				B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */,
 				B52557871D02DE8100E51965 /* FetchTests.swift */,
@@ -1432,7 +1419,6 @@
 			children = (
 				B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */,
 				2F03A53E19C5C6DA005002A5 /* Info.plist */,
-				B5DBE2DA1C9939E100B5CEFA /* CoreStoreTests-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1795,7 +1781,6 @@
 				B501FDDB1CA8D03600BE22EF /* Observing */,
 				B5E1B5A61CAA49CE007FD580 /* Migrating */,
 				B53FBA101CAB607000F0D40A /* Convenience */,
-				B5E222211CA4DE5700BA2E95 /* Internal */,
 			);
 			name = ObjectiveC;
 			sourceTree = "<group>";
@@ -1809,14 +1794,6 @@
 				B53FB9FD1CAB2D2F00F0D40A /* CSMigrationResult.swift */,
 			);
 			name = Migrating;
-			sourceTree = "<group>";
-		};
-		B5E222211CA4DE5700BA2E95 /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */,
-			);
-			name = Internal;
 			sourceTree = "<group>";
 		};
 		B5E2222F1CA5339200BA2E95 /* Fetching and Querying */ = {
@@ -2329,7 +2306,6 @@
 				B56E4ED423CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B509D7C423C848DA00F42824 /* Relationship.ToOne.swift in Sources */,
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
-				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B5CA2B081F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B50E17612351FA66004F033C /* Internals.Closure.swift in Sources */,
 				B50C3EEA23D1601400B29880 /* FieldCoders.swift in Sources */,
@@ -2565,7 +2541,6 @@
 				B580857A1CDF808C004C2EEB /* SetupTests.swift in Sources */,
 				B59A51832256C85E00CEF3C5 /* VersionLockTests.swift in Sources */,
 				B5489F4C1CF5F743008B4978 /* BaseTestCase.swift in Sources */,
-				B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */,
 				B5489F3F1CF5EEBC008B4978 /* TestEntity1.swift in Sources */,
 				B57D27C21D0BC20100539C58 /* QueryTests.swift in Sources */,
@@ -2578,7 +2553,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */,
-				B5ECDBFB1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B5635D152356C39500B80E6B /* DiffableDataSource.CollectionViewAdapter-UIKit.swift in Sources */,
 				B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E81C6E3A5D00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
@@ -2802,7 +2776,6 @@
 				B5D8CA7D2346EC610055D7D1 /* ListPublisherTests.swift in Sources */,
 				B52557751D02791400E51965 /* WhereTests.swift in Sources */,
 				B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
-				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5220E0D1D0D0D19009BC71E /* ImportTests.swift in Sources */,
 				B5D339B51E925C2B00C880DE /* DynamicModelTests.swift in Sources */,
 				B525576D1CFAF18F00E51965 /* IntoTests.swift in Sources */,
@@ -2896,7 +2869,6 @@
 				B5519A4D1CA1F4FB002BEF78 /* CSError.swift in Sources */,
 				B5E1B5AC1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B52DD1961BE1F92500949AFE /* DataStack.swift in Sources */,
-				B5ECDBFD1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B52DD1BD1BE1F94300949AFE /* NSManagedObject+Convenience.swift in Sources */,
 				B5831F4222126FED00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A51EF1EF1600E0F440 /* PartialObject.swift in Sources */,
@@ -3054,7 +3026,6 @@
 				B52557761D02791400E51965 /* WhereTests.swift in Sources */,
 				B5D8CA7E2346EC610055D7D1 /* ListPublisherTests.swift in Sources */,
 				B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
-				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5220E0E1D0D0D19009BC71E /* ImportTests.swift in Sources */,
 				B525576E1CFAF18F00E51965 /* IntoTests.swift in Sources */,
 				B5D339B61E925C2B00C880DE /* DynamicModelTests.swift in Sources */,
@@ -3084,7 +3055,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B56321A91BD65219006C9394 /* Progress+Convenience.swift in Sources */,
-				B5ECDBFC1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B5635D162356C39500B80E6B /* DiffableDataSource.CollectionViewAdapter-UIKit.swift in Sources */,
 				B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E91C6E3A5E00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
@@ -3514,7 +3484,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
@@ -3530,7 +3499,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
 			name = Release;
@@ -3600,7 +3568,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -3619,7 +3586,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -3696,7 +3662,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
@@ -3717,7 +3682,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 			};
 			name = Release;
