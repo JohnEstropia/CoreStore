@@ -238,20 +238,6 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCTo
 /**
  Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
- let owner = dataStack.fetchOne(From<Pet>().where((\.$master ~ \.$name) == "John"))
- ```
- */
-public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ rhs: KeyPath<D.DestinationObjectType, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D.DestinationObjectType {
-
-    return .init(
-        O.meta[keyPath: lhs].cs_keyPathString,
-        D.DestinationObjectType.meta[keyPath: rhs].cs_keyPathString
-    )
-}
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
- ```
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
@@ -288,20 +274,6 @@ public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConver
     return .init(
         lhs.cs_keyPathString,
         D.meta[keyPath: rhs].cs_keyPathString
-    )
-}
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
- ```
- let happyPets = dataStack.fetchAll(From<Pet>().where((\.$master ~ \.$pets).count() > 1))
- ```
- */
-public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ rhs: KeyPath<D.DestinationObjectType, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == D.DestinationObjectType {
-
-    return .init(
-        O.meta[keyPath: lhs].cs_keyPathString,
-        D.DestinationObjectType.meta[keyPath: rhs].cs_keyPathString
     )
 }
 

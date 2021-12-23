@@ -27,33 +27,6 @@ import Foundation
 import CoreData
 
 
-extension DynamicObject where Self: CoreStoreObject {
-
-    public func observe<O, V>(_ keyPath: KeyPath<Self, FieldContainer<O>.Stored<V>>, options: NSKeyValueObservingOptions = [], changeHandler: @escaping (Self, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        let result = _CoreStoreObjectKeyValueObservation(
-            object: self.rawObject!,
-            keyPath: self[keyPath: keyPath].keyPath,
-            callback: { (object, kind, newValue, oldValue, _, isPrior) in
-
-                let notification = CoreStoreObjectValueDiff<V>(
-                    kind: kind,
-                    newNativeValue: newValue as? V.QueryableNativeType,
-                    oldNativeValue: oldValue as? V.QueryableNativeType,
-                    isPrior: isPrior
-                )
-                changeHandler(
-                    Self.cs_fromRaw(object: object),
-                    notification
-                )
-            }
-        )
-        result.start(options)
-        return result
-    }
-}
-
-
 // MARK: CoreStoreObjectKeyValueObservation
 
 /**

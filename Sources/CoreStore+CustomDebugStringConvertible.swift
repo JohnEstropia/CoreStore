@@ -388,91 +388,12 @@ fileprivate struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConve
         self.sectionIndexTitle = sectionInfo.indexTitle
     }
 
-    fileprivate init(_ section: Internals.DiffableDataSourceSnapshot.Section) {
-
-        self.sectionName = section.differenceIdentifier
-        self.numberOfObjects = section.elements.count
-        self.sectionIndexTitle = nil
-    }
-
 
     // MARK: Private
 
     private let sectionName: String
     private let sectionIndexTitle: String?
     private let numberOfObjects: Int
-}
-
-extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        return createFormattedString(
-            "(", ")",
-            ("isPendingRefetch", self.isPendingRefetch),
-            ("numberOfObjects", self.numberOfObjects()),
-            ("sections", self.sections().map(CoreStoreFetchedSectionInfoWrapper.init))
-        )
-    }
-}
-
-
-// MARK: - ListPublisher
-
-extension ListPublisher: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-
-    // MARK: CustomDebugStringConvertible
-
-    public var debugDescription: String {
-
-        return formattedDebugDescription(self)
-    }
-
-
-    // MARK: CoreStoreDebugStringConvertible
-
-    public var coreStoreDumpString: String {
-
-        return createFormattedString(
-            "(", ")",
-            ("snapshot", self.snapshot)
-        )
-    }
-}
-
-
-// MARK: - ListSnapshot
-
-extension ListSnapshot: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-
-    // MARK: CustomDebugStringConvertible
-
-    public var debugDescription: String {
-
-        return formattedDebugDescription(self)
-    }
-
-
-    // MARK: CoreStoreDebugStringConvertible
-
-    public var coreStoreDumpString: String {
-
-        return createFormattedString(
-            "(", ")",
-            ("numberOfObjects", self.numberOfItems),
-            ("sections", self.diffableSnapshot.sections.map(CoreStoreFetchedSectionInfoWrapper.init))
-        )
-    }
 }
 
 
@@ -605,81 +526,6 @@ extension MigrationType: CoreStoreDebugStringConvertible {
         case .heavyweight(let sourceVersion, let destinationVersion):
             return ".heavyweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
         }
-    }
-}
-
-
-// MARK: - ObjectMonitor
-
-extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        return createFormattedString(
-            "(", ")",
-            ("isObjectDeleted", self.isObjectDeleted),
-            ("object", self.object as Any)
-        )
-    }
-}
-
-
-// MARK: - ObjectPublisher
-
-extension ObjectPublisher: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-
-    // MARK: CustomDebugStringConvertible
-
-    public var debugDescription: String {
-
-        return formattedDebugDescription(self)
-    }
-
-
-    // MARK: CoreStoreDebugStringConvertible
-
-    public var coreStoreDumpString: String {
-
-        return createFormattedString(
-            "(", ")",
-            ("objectID", self.objectID()),
-            ("object", self.object as Any)
-        )
-    }
-}
-
-
-// MARK: - ObjectSnapshot
-
-extension ObjectSnapshot: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-
-    // MARK: CustomDebugStringConvertible
-
-    public var debugDescription: String {
-
-        return formattedDebugDescription(self)
-    }
-
-
-    // MARK: CoreStoreDebugStringConvertible
-
-    public var coreStoreDumpString: String {
-
-        return createFormattedString(
-            "(", ")",
-            ("objectID", self.objectID()),
-            ("dictionaryForValues", self.dictionaryForValues())
-        )
     }
 }
 

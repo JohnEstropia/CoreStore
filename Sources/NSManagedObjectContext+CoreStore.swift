@@ -87,25 +87,6 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func objectPublisher<O: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<O> {
-
-        let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<O>> = self.userInfo(for: .objectPublishersCache(O.self)) {
-
-            return .strongToWeakObjects()
-        }
-        return Internals.with {
-
-            if let objectPublisher = cache.object(forKey: objectID) {
-
-                return objectPublisher
-            }
-            let objectPublisher = ObjectPublisher<O>.createUncached(objectID: objectID, context: self)
-            cache.setObject(objectPublisher, forKey: objectID)
-            return objectPublisher
-        }
-    }
-
-    @nonobjc
     internal func objectsDidChangeObserver<U: AnyObject>(for observer: U) -> Internals.SharedNotificationObserver<(updated: Set<NSManagedObjectID>, deleted: Set<NSManagedObjectID>)> {
 
         return self.userInfo(for: .objectsChangeObserver(U.self)) { [unowned self] in

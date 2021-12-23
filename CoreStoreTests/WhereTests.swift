@@ -65,13 +65,6 @@ private func XCTAssertAllEqual<D: Equatable>(_ items: D...) {
 final class WhereTests: XCTestCase {
     
     @objc
-    dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
-        
-        XCTAssertAllEqual(String(keyPath: \TestEntity1.testEntityID), "testEntityID")
-        XCTAssertAllEqual(String(keyPath: \Animal.$color), "color")
-    }
-
-    @objc
     dynamic func test_ThatExpressions_HaveCorrectKeyPaths() {
 
         do {
@@ -94,24 +87,6 @@ final class WhereTests: XCTestCase {
                     String(keyPath: \TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered)
                 )
             }
-            do {
-
-                XCTAssertAllEqual(
-                    "master.pets",
-                    (\Animal.$master ~ \.$pets).description,
-                    String(keyPath: \Animal.$master ~ \.$pets)
-                )
-                XCTAssertAllEqual(
-                    "master.pets.species",
-                    (\Animal.$master ~ \.$pets ~ \.$species).description,
-                    String(keyPath: \Animal.$master ~ \.$pets ~ \.$species)
-                )
-                XCTAssertAllEqual(
-                    "master.pets.master",
-                    (\Animal.$master ~ \.$pets ~ \.$master).description,
-                    String(keyPath: \Animal.$master ~ \.$pets ~ \.$master)
-                )
-            }
         }
         do {
 
@@ -126,14 +101,6 @@ final class WhereTests: XCTestCase {
                     #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered) + ".@count",
                     (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).count().description,
                     String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).count())
-                )
-            }
-            do {
-
-                XCTAssertAllEqual(
-                    "master.pets.@count",
-                    (\Animal.$master ~ \.$pets).count().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets).count())
                 )
             }
         }
@@ -152,19 +119,6 @@ final class WhereTests: XCTestCase {
                     String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).any())
                 )
             }
-            do {
-
-                XCTAssertAllEqual(
-                    "ANY master.pets",
-                    (\Animal.$master ~ \.$pets).any().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets).any())
-                )
-                XCTAssertAllEqual(
-                    "ANY master.pets.species",
-                    (\Animal.$master ~ \.$pets ~ \.$species).any().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets ~ \.$species).any())
-                )
-            }
         }
         do {
 
@@ -179,19 +133,6 @@ final class WhereTests: XCTestCase {
                     "ALL " + #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered),
                     (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).all().description,
                     String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).all())
-                )
-            }
-            do {
-
-                XCTAssertAllEqual(
-                    "ALL master.pets",
-                    (\Animal.$master ~ \.$pets).all().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets).all())
-                )
-                XCTAssertAllEqual(
-                    "ALL master.pets.species",
-                    (\Animal.$master ~ \.$pets ~ \.$species).all().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets ~ \.$species).all())
                 )
             }
         }
@@ -210,19 +151,6 @@ final class WhereTests: XCTestCase {
                     String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).none())
                 )
             }
-            do {
-
-                XCTAssertAllEqual(
-                    "NONE master.pets",
-                    (\Animal.$master ~ \.$pets).none().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets).none())
-                )
-                XCTAssertAllEqual(
-                    "NONE master.pets.species",
-                    (\Animal.$master ~ \.$pets ~ \.$species).none().description,
-                    String(keyPath: (\Animal.$master ~ \.$pets ~ \.$species).none())
-                )
-            }
         }
     }
 
@@ -239,13 +167,6 @@ final class WhereTests: XCTestCase {
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$name) == dummy
-                let predicate = NSPredicate(format: "master.name == %@", dummy)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
         }
         do {
 
@@ -255,13 +176,6 @@ final class WhereTests: XCTestCase {
                 let whereClause: Where<TestEntity1> = (\.testToOne ~ \.testToOne ~ \.testString) == dummy
                 let predicate = NSPredicate(format: "\(#keyPath(TestEntity1.testToOne.testToOne.testString)) == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$spouse ~ \.$name) == dummy
-                let predicate = NSPredicate(format: "master.spouse.name == %@", dummy)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
         }
@@ -275,13 +189,6 @@ final class WhereTests: XCTestCase {
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$pets).count() == count
-                let predicate = NSPredicate(format: "master.pets.@count == %d", count)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
         }
         do {
 
@@ -291,13 +198,6 @@ final class WhereTests: XCTestCase {
                 let whereClause: Where<TestEntity1> = (\.testToOne ~ \.testToManyUnordered ~ \TestEntity1.testString).any() == dummy
                 let predicate = NSPredicate(format: "ANY \(#keyPath(TestEntity1.testToOne.testToManyUnordered)).\(#keyPath(TestEntity1.testString)) == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$pets ~ \.$species).any() == dummy
-                let predicate = NSPredicate(format: "ANY master.pets.species == %@", dummy)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
         }
@@ -311,13 +211,6 @@ final class WhereTests: XCTestCase {
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$pets ~ \.$species).all() == dummy
-                let predicate = NSPredicate(format: "ALL master.pets.species == %@", dummy)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
         }
         do {
 
@@ -327,13 +220,6 @@ final class WhereTests: XCTestCase {
                 let whereClause: Where<TestEntity1> = (\.testToOne ~ \.testToManyUnordered ~ \TestEntity1.testString).none() == dummy
                 let predicate = NSPredicate(format: "NONE \(#keyPath(TestEntity1.testToOne.testToManyUnordered)).\(#keyPath(TestEntity1.testString)) == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<TestEntity1>(predicate))
-                XCTAssertAllEqual(whereClause.predicate, predicate)
-            }
-            do {
-
-                let whereClause: Where<Animal> = (\.$master ~ \.$pets ~ \.$species).none() == dummy
-                let predicate = NSPredicate(format: "NONE master.pets.species == %@", dummy)
-                XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
             }
         }

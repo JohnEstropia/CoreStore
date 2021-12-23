@@ -58,11 +58,6 @@ public protocol ObjectRepresentation: AnyObjectRepresentation {
     associatedtype ObjectType: DynamicObject
     
     /**
-     An instance that may be observed for object changes.
-     */
-    func asPublisher(in dataStack: DataStack) -> ObjectPublisher<ObjectType>
-
-    /**
      A read-only instance in the `DataStack`.
      */
     func asReadOnly(in dataStack: DataStack) -> ObjectType?
@@ -71,16 +66,6 @@ public protocol ObjectRepresentation: AnyObjectRepresentation {
      An instance that may be mutated within a `BaseDataTransaction`.
      */
     func asEditable(in transaction: BaseDataTransaction) -> ObjectType?
-    
-    /**
-     A thread-safe `struct` that is a full-copy of the object's properties
-     */
-    func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<ObjectType>?
-    
-    /**
-     A thread-safe `struct` that is a full-copy of the object's properties
-     */
-    func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
 }
 
 extension NSManagedObject: ObjectRepresentation {}
@@ -88,29 +73,6 @@ extension NSManagedObject: ObjectRepresentation {}
 extension CoreStoreObject: ObjectRepresentation {}
 
 extension DynamicObject where Self: ObjectRepresentation {
-
-    // MARK: Public
-
-    /**
-     An `ObjectPublisher` wrapper for the exact same object
-     */
-    public func asPublisher() -> ObjectPublisher<Self>? {
-
-        return self.cs_toRaw()
-            .managedObjectContext
-            .map({ $0.objectPublisher(objectID: self.cs_id()) })
-    }
-
-    /**
-     A thread-safe `struct` that is a full-copy of the object's properties
-     */
-    public func asSnapshot() -> ObjectSnapshot<Self>? {
-
-        return self.cs_toRaw()
-            .managedObjectContext
-            .flatMap({ ObjectSnapshot<Self>(objectID: self.cs_id(), context: $0) })
-    }
-    
     
     // MARK: AnyObjectRepresentation
     
@@ -126,12 +88,6 @@ extension DynamicObject where Self: ObjectRepresentation {
 
 
     // MARK: ObjectRepresentation
-
-    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<Self> {
-
-        let context = dataStack.unsafeContext()
-        return context.objectPublisher(objectID: self.cs_id())
-    }
 
     public func asReadOnly(in dataStack: DataStack) -> Self? {
 
@@ -151,17 +107,5 @@ extension DynamicObject where Self: ObjectRepresentation {
             return self
         }
         return context.fetchExisting(self.cs_id())
-    }
-
-    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<Self>? {
-
-        let context = dataStack.unsafeContext()
-        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
-    }
-
-    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<Self>? {
-
-        let context = transaction.unsafeContext()
-        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
     }
 }
