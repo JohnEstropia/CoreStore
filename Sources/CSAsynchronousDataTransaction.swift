@@ -29,113 +29,55 @@ import CoreData
 
 // MARK: - CSAsynchronousDataTransaction
 
-/**
- The `CSAsynchronousDataTransaction` serves as the Objective-C bridging type for `AsynchronousDataTransaction`.
- 
- - SeeAlso: `AsynchronousDataTransaction`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
-    
-    /**
-     Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter success: the block executed if the save succeeds.
-     - parameter failure: the block executed if the save fails. A `CSError` is reported as the argument of the block.
-     */
+
     @objc
     public func commitWithSuccess(_ success: (() -> Void)?, failure: ((CSError) -> Void)?) {
-        
-        Internals.assert(
-            self.bridgeToSwift.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(Internals.typeName(self)) outside its designated queue."
-        )
-        Internals.assert(
-            !self.bridgeToSwift.isCommitted,
-            "Attempted to commit a \(Internals.typeName(self)) more than once."
-        )
-        self.bridgeToSwift.autoCommit { (_, error) in
-            
-            if let error = error {
-                
-                failure?(error.bridgeToObjectiveC)
-            }
-            else {
-                
-                success?()
-            }
-        }
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
     // MARK: BaseDataTransaction
-    
-    /**
-     Creates a new `NSManagedObject` with the specified entity type.
-     
-     - parameter into: the `CSInto` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-     - returns: a new `NSManagedObject` instance of the specified entity type.
-     */
+
     @objc
     public override func createInto(_ into: CSInto) -> Any {
-        
-        return self.bridgeToSwift.create(into.bridgeToSwift)
+
+        fatalError()
     }
-    
-    /**
-     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter object: the `NSManagedObject` type to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
-     */
+
     @objc
     public override func editObject(_ object: NSManagedObject?) -> Any? {
-        
-        return self.bridgeToSwift.edit(object)
+
+        fatalError()
     }
-    
-    /**
-     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter into: a `CSInto` clause specifying the entity type
-     - parameter objectID: the `NSManagedObjectID` for the object to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
-     */
+
     @objc
     public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
-        
-        return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
+
+        fatalError()
     }
-    
-    /**
-     Deletes a specified `NSManagedObject`. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter object: the `NSManagedObject` type to be deleted
-     */
+
     @objc
     public override func deleteObject(_ object: NSManagedObject?) {
-        
-        self.bridgeToSwift.delete(object)
+
+        fatalError()
     }
-    
-    /**
-     Deletes the specified `NSManagedObject`s.
-     
-     - parameter objects: the `NSManagedObject`s type to be deleted
-     */
+
     @objc
     public override func deleteObjects(_ objects: [NSManagedObject]) {
-        
-        self.bridgeToSwift.delete(objects)
+
+        fatalError()
     }
     
     
@@ -144,31 +86,26 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreSto
     public typealias SwiftType = AsynchronousDataTransaction
     
     public var bridgeToSwift: AsynchronousDataTransaction {
-        
-        return super.swiftTransaction as! AsynchronousDataTransaction
+
+        fatalError()
     }
     
     public required init(_ swiftValue: AsynchronousDataTransaction) {
-        
-        super.init(swiftValue as BaseDataTransaction)
-    }
-    
-    public required override init(_ swiftValue: BaseDataTransaction) {
-        
-        super.init(swiftValue)
+
+        fatalError()
     }
 }
 
 
 // MARK: - AsynchronousDataTransaction
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension AsynchronousDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSAsynchronousDataTransaction {
-        
-        return CSAsynchronousDataTransaction(self)
+
+        fatalError()
     }
 }

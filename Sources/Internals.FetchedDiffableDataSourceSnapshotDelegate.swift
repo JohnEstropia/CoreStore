@@ -43,7 +43,10 @@ internal protocol FetchedDiffableDataSourceSnapshotHandler: AnyObject {
 
     var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? { get }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot)
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot
+    )
 }
 
 

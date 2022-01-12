@@ -29,65 +29,44 @@ import CoreData
 
 // MARK: - CSGroupBy
 
-/**
- The `CSGroupBy` serves as the Objective-C bridging type for `GroupBy`.
- 
- - SeeAlso: `GroupBy`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSGroupBy: NSObject, CSQueryClause {
     
-    /**
-     The list of key path strings to group results with
-     */
     @objc
     public var keyPaths: [KeyPathString] {
-        
-        return self.bridgeToSwift.keyPaths
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSGroupBy` clause with a key path string
-     
-     - parameter keyPath: a key path string to group results with
-     */
+
     @objc
     public convenience init(keyPath: KeyPathString) {
-        
-        self.init(GroupBy(keyPath))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSGroupBy` clause with a list of key path strings
-     
-     - parameter keyPaths: a list of key path strings to group results with
-     */
+
     @objc
     public convenience init(keyPaths: [KeyPathString]) {
-        
-        self.init(GroupBy(keyPaths))
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSGroupBy else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -95,8 +74,8 @@ public final class CSGroupBy: NSObject, CSQueryClause {
     
     @objc
     public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
-        
-        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
+
+        fatalError()
     }
     
     
@@ -105,29 +84,21 @@ public final class CSGroupBy: NSObject, CSQueryClause {
     public let bridgeToSwift: GroupBy<NSManagedObject>
     
     public init<O: NSManagedObject>(_ swiftValue: GroupBy<O>) {
-        
-        self.bridgeToSwift = swiftValue.downcast()
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - GroupBy
 
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension GroupBy where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSGroupBy {
-        
-        return CSGroupBy(self)
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate func downcast() -> GroupBy<NSManagedObject> {
-        
-        return GroupBy<NSManagedObject>(self.keyPaths)
+
+        fatalError()
     }
 }

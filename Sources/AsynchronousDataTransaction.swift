@@ -158,9 +158,19 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue) {
+    internal init(
+        mainContext: NSManagedObjectContext,
+        queue: DispatchQueue,
+        sourceIdentifier: Any?
+    ) {
         
-        super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
+        super.init(
+            mainContext: mainContext,
+            queue: queue,
+            supportsUndo: false,
+            bypassesQueueing: false,
+            sourceIdentifier: sourceIdentifier
+        )
     }
     
     internal func autoCommit(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void) {
@@ -168,12 +178,15 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.isCommitted = true
         let group = DispatchGroup()
         group.enter()
-        self.context.saveAsynchronouslyWithCompletion { (hasChanges, error) -> Void in
-            
-            completion(hasChanges, error)
-            self.result = (hasChanges, error)
-            group.leave()
-        }
+        self.context.saveAsynchronously(
+            sourceIdentifier: self.sourceIdentifier,
+            completion: { (hasChanges, error) -> Void in
+                
+                completion(hasChanges, error)
+                self.result = (hasChanges, error)
+                group.leave()
+            }
+        )
         group.wait()
         self.context.reset()
     }

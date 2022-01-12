@@ -29,47 +29,30 @@ import CoreData
 
 // MARK: - NSManagedObject
 
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension NSManagedObject {
     
-    /**
-     Provides a convenience wrapper for accessing `-primitiveValueForKey:` with proper calls to `-willAccessValueForKey:` and `-didAccessValueForKey:`. This is useful when implementing accessor methods for transient attributes.
-     
-     - parameter KVCKey: the KVC key
-     - returns: the primitive value for the KVC key
-     */
     @objc
     public func cs_accessValueForKVCKey(_ KVCKey: KeyPathString) -> Any? {
-        
-        return self.getValue(forKvcKey: KVCKey)
+
+        fatalError()
     }
-    
-    /**
-     Provides a convenience wrapper for setting `-setPrimitiveValue:` with proper calls to `-willChangeValueForKey:` and `-didChangeValueForKey:`. This is useful when implementing mutator methods for transient attributes.
-     
-     - parameter value: the value to set the KVC key with
-     - parameter KVCKey: the KVC key
-     */
+
     @objc
     public func cs_setValue(_ value: Any?, forKVCKey KVCKey: KeyPathString) {
-        
-        self.setValue(value, forKvcKey: KVCKey)
+
+        fatalError()
     }
-    
-    /**
-     Re-faults the object to use the latest values from the persistent store
-     */
+
     @objc
     public func cs_refreshAsFault() {
-        
-        self.refreshAsFault()
+
+        fatalError()
     }
-    
-    /**
-     Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
-     */
+
     @nonobjc
     public func cs_refreshAndMerge() {
-        
-        self.refreshAndMerge()
+
+        fatalError()
     }
 }

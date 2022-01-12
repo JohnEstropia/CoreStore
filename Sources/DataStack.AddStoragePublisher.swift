@@ -199,7 +199,7 @@ extension DataStack {
                 )
                 if let progress = progress {
                     
-                    progress.cs_setProgressHandler { [weak self] progress in
+                    progress.setProgressHandler { [weak self] progress in
                         
                         guard
                             let self = self,

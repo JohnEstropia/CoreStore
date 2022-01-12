@@ -116,10 +116,10 @@ extension DiffableDataSource {
                     target.reload(
                         using: changeset,
                         animated: animatingDifferences,
-                        setData: setSections
+                        setData: setSections,
+                        completion: completion
                     )
-                },
-                completion: completion
+                }
             )
         }
 
@@ -148,10 +148,10 @@ extension DiffableDataSource {
                     target.reload(
                         using: changeset,
                         animated: animatingDifferences,
-                        setData: setSections
+                        setData: setSections,
+                        completion: completion
                     )
-                },
-                completion: completion
+                }
             )
         }
         

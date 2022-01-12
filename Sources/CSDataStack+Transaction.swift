@@ -28,108 +28,36 @@ import Foundation
 
 // MARK: - CSDataStack
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension CSDataStack {
-    
-    /**
-     Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     */
+
     @objc
     public func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
-        
-        self.bridgeToSwift.perform(
-            asynchronous: { (transaction) in
-                
-                let csTransaction = transaction.bridgeToObjectiveC
-                closure(csTransaction)
-                if !transaction.isCommitted && transaction.hasChanges {
-                    
-                    Internals.log(
-                        .warning,
-                        message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
-                    )
-                }
-                try transaction.cancel()
-            },
-            completion: { _ in }
-        )
+
+        fatalError()
     }
-    
-    /**
-     Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - parameter error: the `CSError` pointer that indicates the reason in case of an failure
-     - returns: `YES` if the commit succeeded, `NO` if the commit failed. If `NO`, the `error` argument will hold error information.
-     */
+
     @objc
     public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void, error: NSErrorPointer) -> Bool {
-        
-        return bridge(error) {
-            
-            do {
-                
-                try self.bridgeToSwift.perform(
-                    synchronous: { (transaction) in
-                        
-                        let csTransaction = transaction.bridgeToObjectiveC
-                        closure(csTransaction)
-                        if !transaction.isCommitted && transaction.hasChanges {
-                            
-                            Internals.log(
-                                .warning,
-                                message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
-                            )
-                        }
-                        try transaction.cancel()
-                    }
-                )
-            }
-            catch CoreStoreError.userCancelled {
-                
-                return
-            }
-        }
+
+        fatalError()
     }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     To support "undo" methods such as `-undo`, `-redo`, and `-rollback`, use the `-beginSafeWithSupportsUndo:` method passing `YES` to the argument. Without "undo" support, calling those methods will raise an exception.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
+
     @objc
     public func beginUnsafe() -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe()
-        }
+
+        fatalError()
     }
-    
-    /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-     
-     - prameter supportsUndo: `-undo`, `-redo`, and `-rollback` methods are only available when this parameter is `YES`, otherwise those method will raise an exception. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-     */
+
     @objc
     public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
-        }
+
+        fatalError()
     }
-    
-    /**
-     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
-     */
+
     @objc
     public func refreshAndMergeAllObjects() {
-        
-        self.bridgeToSwift.refreshAndMergeAllObjects()
+
+        fatalError()
     }
 }

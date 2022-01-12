@@ -33,81 +33,79 @@
 
 #pragma mark CSFrom
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSFrom alloc] initWithEntityClass:entityClass];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSFrom alloc] initWithEntityClass:entityClass configurations:configurations];
+
+    abort();
 }
 
 
 #pragma mark CSGroupBy
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSGroupBy alloc] initWithKeyPath:keyPath];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CORESTORE_RETURNS_RETAINED {
-    
-    va_list args;
-    va_start(args, keyPath);
-    
-    NSMutableArray *keyPaths = [NSMutableArray new];
-    [keyPaths addObject:keyPath];
-    
-    NSString *next;
-    while ((next = va_arg(args, NSString *)) != nil) {
-        
-        [keyPaths addObject:next];
-    }
-    va_end(args);
-    return [[CSGroupBy alloc] initWithKeyPaths:keyPaths];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSGroupBy alloc] initWithKeyPaths:keyPaths];
+
+    abort();
 }
 
 
 #pragma mark CSInto
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSInto alloc] initWithEntityClass:entityClass];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSInto alloc] initWithEntityClass:entityClass configuration:nil];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSInto alloc] initWithEntityClass:entityClass configuration:configuration];
+
+    abort();
 }
 
 
@@ -115,106 +113,104 @@ CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull conf
 
 @class CSOrderBy;
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) {
-    
-    return [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key) {
-    
-    return [[NSSortDescriptor alloc] initWithKey:key ascending:NO];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSOrderBy *_Nonnull CSOrderByKey(NSSortDescriptor *_Nonnull sortDescriptor) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSOrderBy alloc] initWithSortDescriptor:sortDescriptor];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSOrderBy *_Nonnull CSOrderByKeys(NSSortDescriptor *_Nonnull sortDescriptor, ...) CORESTORE_RETURNS_RETAINED {
-    
-    va_list args;
-    va_start(args, sortDescriptor);
-    
-    NSMutableArray *sortDescriptors = [NSMutableArray new];
-    [sortDescriptors addObject:sortDescriptor];
-    
-    NSSortDescriptor *next;
-    while ((next = va_arg(args, NSSortDescriptor *)) != nil) {
-        
-        [sortDescriptors addObject:next];
-    }
-    va_end(args);
-    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSOrderBy *_Nonnull CSOrderByKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
+
+    abort();
 }
 
 
 #pragma mark CSSelect
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithNumberTerm:selectTerm];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDecimalTerm:selectTerm];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithStringTerm:selectTerm];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDateTerm:selectTerm];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDataTerm:selectTerm];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithObjectIDTerm];
+
+    abort();
 }
 
 
 #pragma mark CSTweak
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CORESTORE_OVERLOADABLE
 CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSTweak alloc] initWithBlock:block];
+
+    abort();
 }
 
 
 #pragma mark CSWhere
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSWhere *_Nonnull CSWhereValue(BOOL value) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSWhere alloc] initWithValue:value];
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CORESTORE_RETURNS_RETAINED {
-    
-    CSWhere *where;
-    va_list args;
-    va_start(args, format);
-    where = [[CSWhere alloc] initWithPredicate:[NSPredicate predicateWithFormat:format arguments:args]];
-    va_end(args);
-    return where;
+
+    abort();
 }
 
+NS_UNAVAILABLE // CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.
 CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RETURNS_RETAINED {
-    
-    return [[CSWhere alloc] initWithPredicate:predicate];
+
+    abort();
 }

@@ -28,157 +28,23 @@ import Foundation
 
 // MARK: - CoreStoreObjectiveCType
 
-/**
- `CoreStoreObjectiveCType`s are Objective-C accessible classes that represent CoreStore's Swift types.
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 public protocol CoreStoreObjectiveCType: AnyObject {
-    
-    /**
-     The corresponding Swift type
-     */
+
     associatedtype SwiftType
-    
-    /**
-     The bridged Swift instance
-     */
+
     var bridgeToSwift: SwiftType { get }
-    
-    /**
-     Initializes this instance with the Swift instance to bridge from
-     */
+
     init(_ swiftValue: SwiftType)
 }
 
 
 // MARK: - CoreStoreSwiftType
 
-/**
- `CoreStoreSwiftType`s are CoreStore's Swift types that are bridgeable to Objective-C.
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 public protocol CoreStoreSwiftType {
-    
-    /**
-     The corresponding Objective-C type
-     */
+
     associatedtype ObjectiveCType
     
-    /**
-     The bridged Objective-C instance
-     */
     var bridgeToObjectiveC: ObjectiveCType { get }
 }
-
-
-// MARK: - Internal
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T) -> T.ObjectiveCType {
-    
-    return closure().bridgeToObjectiveC
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> [T]) -> [T.ObjectiveCType] {
-    
-    return closure().map { $0.bridgeToObjectiveC }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T?) -> T.ObjectiveCType? {
-    
-    return closure()?.bridgeToObjectiveC
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () throws -> T) throws -> T.ObjectiveCType {
-    
-    do {
-        
-        return try closure().bridgeToObjectiveC
-    }
-    catch {
-        
-        throw error.bridgeToObjectiveC
-    }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge(_ closure: () throws -> Void) throws {
-    
-    do {
-        
-        try closure()
-    }
-    catch {
-        
-        throw error.bridgeToObjectiveC
-    }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, _ closure: () throws -> T) -> T.ObjectiveCType? {
-    
-    do {
-        
-        let result = try closure()
-        error?.pointee = nil
-        return result.bridgeToObjectiveC
-    }
-    catch let swiftError {
-        
-        error?.pointee = swiftError.bridgeToObjectiveC
-        return nil
-    }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge(_ error: NSErrorPointer, _ closure: () throws -> Void) -> Bool {
-    
-    do {
-        
-        try closure()
-        error?.pointee = nil
-        return true
-    }
-    catch let swiftError {
-        
-        error?.pointee = swiftError.bridgeToObjectiveC
-        return false
-    }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T>(_ error: NSErrorPointer, _ closure: () throws -> T?) -> T? {
-    
-    do {
-        
-        let result = try closure()
-        error?.pointee = nil
-        return result
-    }
-    catch let swiftError {
-        
-        error?.pointee = swiftError.bridgeToObjectiveC
-        return nil
-    }
-}
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, _ closure: () throws -> [T]) -> [T.ObjectiveCType]? {
-    
-    do {
-        
-        let result = try closure()
-        error?.pointee = nil
-        return result.map { $0.bridgeToObjectiveC }
-    }
-    catch let swiftError {
-        
-        error?.pointee = swiftError.bridgeToObjectiveC
-        return nil
-    }
-}
-
-

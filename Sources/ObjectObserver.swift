@@ -49,8 +49,41 @@ public protocol ObjectObserver: AnyObject {
      
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
      - parameter object: the `DynamicObject` instance being observed
+     - parameter sourceIdentifier: an optional identifier provided by the transaction source
      */
-    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType)
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        willUpdateObject object: ObjectEntityType,
+        sourceIdentifier: Any?
+    )
+    
+    /**
+     Handles processing just before a change to the observed `object` occurs. (Optional)
+     The default implementation does nothing.
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `DynamicObject` instance being observed
+     */
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        willUpdateObject object: ObjectEntityType
+    )
+    
+    /**
+     Handles processing right after a change to the observed `object` occurs. (Optional)
+     The default implementation does nothing.
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `DynamicObject` instance being observed
+     - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
+     - parameter sourceIdentifier: an optional identifier provided by the transaction source
+     */
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didUpdateObject object: ObjectEntityType,
+        changedPersistentKeys: Set<KeyPathString>,
+        sourceIdentifier: Any?
+    )
     
     /**
      Handles processing right after a change to the observed `object` occurs. (Optional)
@@ -60,7 +93,25 @@ public protocol ObjectObserver: AnyObject {
      - parameter object: the `DynamicObject` instance being observed
      - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
      */
-    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPathString>)
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didUpdateObject object: ObjectEntityType,
+        changedPersistentKeys: Set<KeyPathString>
+    )
+    
+    /**
+     Handles processing right after `object` is deleted. (Optional)
+     The default implementation does nothing.
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `DynamicObject` instance being observed
+     - parameter sourceIdentifier: an optional identifier provided by the transaction source
+     */
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didDeleteObject object: ObjectEntityType,
+        sourceIdentifier: Any?
+    )
     
     /**
      Handles processing right after `object` is deleted. (Optional)
@@ -69,7 +120,10 @@ public protocol ObjectObserver: AnyObject {
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
      - parameter object: the `DynamicObject` instance being observed
      */
-    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType)
+    func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didDeleteObject object: ObjectEntityType
+    )
 }
 
 
@@ -77,9 +131,57 @@ public protocol ObjectObserver: AnyObject {
 
 extension ObjectObserver {
     
-    public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        willUpdateObject object: ObjectEntityType,
+        sourceIdentifier: Any?
+    ) {
+        
+        self.objectMonitor(
+            monitor,
+            willUpdateObject: object
+        )
+    }
     
-    public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPathString>) { }
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        willUpdateObject object: ObjectEntityType
+    ) {}
     
-    public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didUpdateObject object: ObjectEntityType,
+        changedPersistentKeys: Set<KeyPathString>,
+        sourceIdentifier: Any?
+    ) {
+        
+        self.objectMonitor(
+            monitor,
+            didUpdateObject: object,
+            changedPersistentKeys: changedPersistentKeys
+        )
+    }
+    
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didUpdateObject object: ObjectEntityType,
+        changedPersistentKeys: Set<KeyPathString>
+    ) {}
+    
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didDeleteObject object: ObjectEntityType,
+        sourceIdentifier: Any?
+    ) {
+        
+        self.objectMonitor(
+            monitor,
+            didDeleteObject: object
+        )
+    }
+    
+    public func objectMonitor(
+        _ monitor: ObjectMonitor<ObjectEntityType>,
+        didDeleteObject object: ObjectEntityType
+    ) {}
 }

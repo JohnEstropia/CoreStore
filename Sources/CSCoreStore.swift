@@ -28,33 +28,14 @@ import Foundation
 
 // MARK: - CSCoreStore
 
-/**
- The `CSCoreStore` serves as the Objective-C bridging type for `CoreStore`.
- 
- - SeeAlso: `CoreStore`
- */
-@available(*, deprecated, message: "Call methods directly from the CSDataStack instead")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSCoreStore: NSObject {
-    
-    /**
-     The default `CSDataStack` instance to be used. If `defaultStack` is not set before the first time accessed, a default-configured `CSDataStack` will be created.
-     
-     - SeeAlso: `CSDataStack`
-     - Note: Changing the `defaultStack` is thread safe, but it is recommended to setup `CSDataStacks` on a common queue (e.g. the main queue).
-     */
+
     @objc
     public static var defaultStack: CSDataStack {
         
-        get { return CoreStoreDefaults.dataStack.bridgeToObjectiveC }
-        set { CoreStoreDefaults.dataStack = newValue.bridgeToSwift }
-    }
-    
-    
-    // MARK: Private
-    
-    private override init() {
-        
-        fatalError()
+        get { fatalError() }
+        set { fatalError() }
     }
 }

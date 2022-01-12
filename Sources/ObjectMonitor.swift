@@ -78,15 +78,28 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             observer,
             willChangeObject: { (observer, monitor, object) in
                 
-                observer.objectMonitor(monitor, willUpdateObject: object)
+                observer.objectMonitor(
+                    monitor,
+                    willUpdateObject: object,
+                    sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
+                )
             },
             didDeleteObject: { (observer, monitor, object) in
                 
-                observer.objectMonitor(monitor, didDeleteObject: object)
+                observer.objectMonitor(
+                    monitor,
+                    didDeleteObject: object,
+                    sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
+                )
             },
             didUpdateObject: { (observer, monitor, object, changedPersistentKeys) in
                 
-                observer.objectMonitor(monitor, didUpdateObject: object, changedPersistentKeys: changedPersistentKeys)
+                observer.objectMonitor(
+                    monitor,
+                    didUpdateObject: object,
+                    changedPersistentKeys: changedPersistentKeys,
+                    sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
+                )
             }
         )
     }
@@ -197,7 +210,10 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     // MARK: Internal
     
-    internal init(objectID: O.ObjectID, context: NSManagedObjectContext) {
+    internal init(
+        objectID: O.ObjectID,
+        context: NSManagedObjectContext
+    ) {
         
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
@@ -227,7 +243,25 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O, _ changedPersistentKeys: Set<String>) -> Void) {
+    internal func registerObserver<U: AnyObject>(
+        _ observer: U,
+        willChangeObject: @escaping (
+            _ observer: U,
+            _ monitor: ObjectMonitor<O>,
+            _ object: O
+        ) -> Void,
+        didDeleteObject: @escaping (
+            _ observer: U,
+            _ monitor: ObjectMonitor<O>,
+            _ object: O
+        ) -> Void,
+        didUpdateObject: @escaping (
+            _ observer: U,
+            _ monitor: ObjectMonitor<O>,
+            _ object: O,
+            _ changedPersistentKeys: Set<String>
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -323,7 +357,12 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         return self.fetchedResultsController.managedObjectContext
     }
     
-    private func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<O>) -> Void) {
+    private func registerChangeNotification(
+        _ notificationKey: UnsafeRawPointer,
+        name: Notification.Name,
+        toObserver observer: AnyObject,
+        callback: @escaping (_ monitor: ObjectMonitor<O>) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -343,7 +382,12 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         )
     }
     
-    private func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<O>, _ object: O) -> Void) {
+    private func registerObjectNotification(
+        _ notificationKey: UnsafeRawPointer,
+        name: Notification.Name,
+        toObserver observer: AnyObject,
+        callback: @escaping (_ monitor: ObjectMonitor<O>, _ object: O) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -384,7 +428,9 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         return { _ in nil }
     }
     
-    internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    internal func controllerWillChangeContent(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>
+    ) {
         
         NotificationCenter.default.post(
             name: Notification.Name.objectMonitorWillChangeObject,
@@ -392,9 +438,17 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         )
     }
     
-    internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) { }
+    internal func controllerDidChangeContent(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>
+    ) {}
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    internal func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeObject anObject: Any,
+        atIndexPath indexPath: IndexPath?,
+        forChangeType type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
         
         switch type {
             
@@ -418,7 +472,12 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) { }
+    internal func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+        atIndex sectionIndex: Int,
+        forChangeType type: NSFetchedResultsChangeType
+    ) {}
 }
     
     

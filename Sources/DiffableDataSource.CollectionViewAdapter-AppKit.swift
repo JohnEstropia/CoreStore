@@ -83,7 +83,12 @@ extension DiffableDataSource {
          - parameter itemProvider: a closure that configures and returns the `NSCollectionViewItem` for the object
          */
         @nonobjc
-        public init(collectionView: NSCollectionView, dataStack: DataStack, itemProvider: @escaping (NSCollectionView, IndexPath, O) -> NSCollectionViewItem?, supplementaryViewProvider: @escaping (NSCollectionView, String, IndexPath) -> NSView? = { _, _, _ in nil }) {
+        public init(
+            collectionView: NSCollectionView,
+            dataStack: DataStack,
+            itemProvider: @escaping (NSCollectionView, IndexPath, O) -> NSCollectionViewItem?,
+            supplementaryViewProvider: @escaping (NSCollectionView, String, IndexPath) -> NSView? = { _, _, _ in nil }
+        ) {
 
             self.itemProvider = itemProvider
             self.supplementaryViewProvider = supplementaryViewProvider
@@ -97,19 +102,27 @@ extension DiffableDataSource {
         // MARK: - NSCollectionViewDataSource
 
         @objc
-        public dynamic func numberOfSections(in collectionView: NSCollectionView) -> Int {
+        public dynamic func numberOfSections(
+            in collectionView: NSCollectionView
+        ) -> Int {
 
             return self.numberOfSections()
         }
 
         @objc
-        public dynamic func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        public dynamic func collectionView(
+            _ collectionView: NSCollectionView,
+            numberOfItemsInSection section: Int
+        ) -> Int {
 
             return self.numberOfItems(inSection: section) ?? 0
         }
 
         @objc
-        open dynamic func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        open dynamic func collectionView(
+            _ collectionView: NSCollectionView,
+            itemForRepresentedObjectAt indexPath: IndexPath
+        ) -> NSCollectionViewItem {
 
             guard let objectID = self.itemID(for: indexPath) else {
 
@@ -127,7 +140,11 @@ extension DiffableDataSource {
         }
 
         @objc
-        open dynamic func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
+        open dynamic func collectionView(
+            _ collectionView: NSCollectionView,
+            viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind,
+            at indexPath: IndexPath
+        ) -> NSView {
 
             guard let view = self.supplementaryViewProvider(collectionView, kind, indexPath) else {
 
@@ -207,9 +224,9 @@ extension DiffableDataSource {
             self.base?.moveItem(at: indexPath, to: newIndexPath)
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
 
-            self.base?.animator().performBatchUpdates(updates, completionHandler: nil)
+            self.base?.animator().performBatchUpdates(updates, completionHandler: { _ in completion() })
         }
 
         public func reloadData() {

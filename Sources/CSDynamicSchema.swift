@@ -29,23 +29,13 @@ import Foundation
 
 // MARK: - CSDynamicSchema
 
-/**
- The `CSDynamicSchema` serves as the Objective-C bridging type for `DynamicSchema`.
- 
- - SeeAlso: `DynamicSchema`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public protocol CSDynamicSchema {
-    
-    /**
-     The version string for this model schema.
-     */
+
     @objc
     var modelVersion: ModelVersion { get }
     
-    /**
-     Do not call this directly. The `NSManagedObjectModel` for this schema may be created lazily and using this method directly may affect the integrity of the model.
-     */
     @objc
     func rawModel() -> NSManagedObjectModel
 }

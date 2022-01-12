@@ -29,50 +29,32 @@ import Foundation
 
 // MARK: - CSUnsafeDataModelSchema
 
-/**
- The `CSUnsafeDataModelSchema` serves as the Objective-C bridging type for `UnsafeDataModelSchema`.
- 
- - SeeAlso: `UnsafeDataModelSchema`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
-    /**
-     Initializes a `CSUnsafeDataModelSchema` from an `NSManagedObjectModel`.
-     
-     - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
-     - parameter model: the `NSManagedObjectModel`
-     */
     @objc
     public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
-        
-        self.bridgeToSwift = UnsafeDataModelSchema(
-            modelName: modelName,
-            model: model
-        )
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return ObjectIdentifier(self.bridgeToSwift).hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSUnsafeDataModelSchema else {
-            
-            return false
-        }
-        return self.bridgeToSwift === object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -80,14 +62,14 @@ public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStore
     
     @objc
     public var modelVersion: ModelVersion {
-        
-        return self.bridgeToSwift.modelVersion
+
+        fatalError()
     }
     
     @objc
     public func rawModel() -> NSManagedObjectModel {
-        
-        return self.bridgeToSwift.rawModel()
+
+        fatalError()
     }
     
     
@@ -96,22 +78,21 @@ public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStore
     public let bridgeToSwift: UnsafeDataModelSchema
     
     public required init(_ swiftValue: UnsafeDataModelSchema) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - UnsafeDataModelSchema
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension UnsafeDataModelSchema: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSUnsafeDataModelSchema {
-        
-        return CSUnsafeDataModelSchema(self)
+
+        fatalError()
     }
 }

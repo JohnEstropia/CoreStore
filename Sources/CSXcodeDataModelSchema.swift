@@ -29,50 +29,32 @@ import Foundation
 
 // MARK: - CSXcodeDataModelSchema
 
-/**
- The `CSXcodeDataModelSchema` serves as the Objective-C bridging type for `XcodeDataModelSchema`.
- 
- - SeeAlso: `XcodeDataModelSchema`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
 public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
-    /**
-     Initializes an `CSXcodeDataModelSchema` from an *.xcdatamodeld file URL.
-     
-     - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
-     - parameter modelVersionFileURL: the file URL that points to the .xcdatamodeld's "momd" file.
-     */
     @objc
     public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
-        
-        self.bridgeToSwift = XcodeDataModelSchema(
-            modelName: modelName,
-            modelVersionFileURL: modelVersionFileURL
-        )
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return ObjectIdentifier(self.bridgeToSwift).hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSXcodeDataModelSchema else {
-            
-            return false
-        }
-        return self.bridgeToSwift === object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -80,14 +62,14 @@ public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreO
     
     @objc
     public var modelVersion: ModelVersion {
-        
-        return self.bridgeToSwift.modelVersion
+
+        fatalError()
     }
     
     @objc
     public func rawModel() -> NSManagedObjectModel {
-        
-        return self.bridgeToSwift.rawModel()
+
+        fatalError()
     }
     
     
@@ -96,22 +78,21 @@ public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreO
     public let bridgeToSwift: XcodeDataModelSchema
     
     public required init(_ swiftValue: XcodeDataModelSchema) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - XcodeDataModelSchema
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension XcodeDataModelSchema: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSXcodeDataModelSchema {
-        
-        return CSXcodeDataModelSchema(self)
+
+        fatalError()
     }
 }

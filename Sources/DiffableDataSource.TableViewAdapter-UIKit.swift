@@ -82,7 +82,11 @@ extension DiffableDataSource {
          - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
          - parameter cellProvider: a closure that configures and returns the `UITableViewCell` for the object
          */
-        public init(tableView: UITableView, dataStack: DataStack, cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?) {
+        public init(
+            tableView: UITableView,
+            dataStack: DataStack,
+            cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?
+        ) {
 
             self.cellProvider = cellProvider
             super.init(target: .init(tableView), dataStack: dataStack)
@@ -102,31 +106,48 @@ extension DiffableDataSource {
         // MARK: - UITableViewDataSource
 
         @objc
+        @MainActor
         public dynamic func numberOfSections(in tableView: UITableView) -> Int {
             
             return self.numberOfSections()
         }
 
         @objc
-        public dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        @MainActor
+        public dynamic func tableView(
+            _ tableView: UITableView,
+            numberOfRowsInSection section: Int
+        ) -> Int {
             
             return self.numberOfItems(inSection: section) ?? 0
         }
 
         @objc
-        open dynamic func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            titleForHeaderInSection section: Int
+        ) -> String? {
             
             return self.sectionID(for: section)
         }
 
         @objc
-        open dynamic func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            titleForFooterInSection section: Int
+        ) -> String? {
             
             return nil
         }
         
         @objc
-        open dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            cellForRowAt indexPath: IndexPath
+        ) -> UITableViewCell {
             
             guard let objectID = self.itemID(for: indexPath) else {
                 
@@ -144,28 +165,49 @@ extension DiffableDataSource {
         }
 
         @objc
-        open dynamic func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            canEditRowAt indexPath: IndexPath
+        ) -> Bool {
 
             return true
         }
 
         @objc
-        open dynamic func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            editingStyleForRowAt indexPath: IndexPath
+        ) -> UITableViewCell.EditingStyle {
 
             return .delete
         }
 
         @objc
-        open dynamic func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {}
+        @MainActor
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            commit editingStyle: UITableViewCell.EditingStyle,
+            forRowAt indexPath: IndexPath
+        ) {}
         
         @objc
-        open dynamic func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        @MainActor
+        open dynamic func sectionIndexTitles(
+            for tableView: UITableView
+        ) -> [String]? {
             
             return nil
         }
         
         @objc
-        open dynamic func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        @MainActor 
+        open dynamic func tableView(
+            _ tableView: UITableView,
+            sectionForSectionIndexTitle title: String,
+            at index: Int
+        ) -> Int {
             
             return index
         }
@@ -241,13 +283,13 @@ extension DiffableDataSource {
             self.base?.moveRow(at: indexPath, to: newIndexPath)
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
 
             guard let base = self.base else {
 
                 return
             }
-            base.performBatchUpdates(updates)
+            base.performBatchUpdates(updates, completion: { _ in completion() })
         }
 
         public func reloadData() {

@@ -87,7 +87,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
         self.observers.setObject(
-            Internals.Closure(callback),
+            Internals.Closure({ callback($0.objectPublisher) }),
             forKey: observer
         )
         _ = self.lazySnapshot
@@ -95,6 +95,46 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
         if notifyInitial {
             
             callback(self)
+        }
+    }
+    
+    /**
+     Registers an object as an observer to be notified when changes to the `ObjectPublisher`'s snapshot occur.
+
+     To prevent retain-cycles, `ObjectPublisher` only keeps `weak` references to its observers.
+
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+
+     Calling `addObserver(_:_:)` multiple times on the same observer is safe.
+
+     - parameter observer: an object to become owner of the specified `callback`
+     - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
+     - parameter initialSourceIdentifier: an optional value that identifies the initial callback invocation if `notifyInitial` is `true`.
+     - parameter callback: the closure to execute when changes occur
+     */
+    public func addObserver<T: AnyObject>(
+        _ observer: T,
+        notifyInitial: Bool = false,
+        initialSourceIdentifier: Any? = nil,
+        _ callback: @escaping (
+            _ objectPublisher: ObjectPublisher<O>,
+            _ sourceIdentifier: Any?
+        ) -> Void
+    ) {
+
+        Internals.assert(
+            Thread.isMainThread,
+            "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
+        )
+        self.observers.setObject(
+            Internals.Closure(callback),
+            forKey: observer
+        )
+        _ = self.lazySnapshot
+        
+        if notifyInitial {
+            
+            callback(self, initialSourceIdentifier)
         }
     }
 
@@ -215,6 +255,8 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
 
     // MARK: FilePrivate
+    
+    fileprivate typealias ObserverClosureType = Internals.Closure<(objectPublisher: ObjectPublisher<O>, sourceIdentifier: Any?), Void>
 
     fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>?) {
 
@@ -237,12 +279,12 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
                     self.object = nil
 
                     self.$lazySnapshot.reset({ nil })
-                    self.notifyObservers()
+                    self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
                 }
                 else if updatedIDs.contains(objectID) {
 
                     self.$lazySnapshot.reset({ initializer(objectID, context) })
-                    self.notifyObservers()
+                    self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
                 }
             }
             return initializer(objectID, context)
@@ -258,18 +300,21 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     @Internals.LazyNonmutating(uninitialized: ())
     private var lazySnapshot: ObjectSnapshot<O>?
     
-    private lazy var observers: NSMapTable<AnyObject, Internals.Closure<ObjectPublisher<O>, Void>> = .weakToStrongObjects()
+    private lazy var observers: NSMapTable<AnyObject, ObserverClosureType> = .weakToStrongObjects()
 
-    private func notifyObservers() {
+    private func notifyObservers(sourceIdentifier: Any?) {
 
         guard let enumerator = self.observers.objectEnumerator() else {
 
             return
         }
+        let arguments: ObserverClosureType.Arguments = (
+            objectPublisher: self,
+            sourceIdentifier: sourceIdentifier
+        )
         for closure in enumerator {
 
-            (closure as! Internals.Closure<ObjectPublisher
-                <O>, Void>).invoke(with: self)
+            (closure as! ObserverClosureType).invoke(with: arguments)
         }
     }
 }

@@ -102,6 +102,7 @@ extension Modern.ColorsDemo {
 
                     try transaction.deleteAll(From<Modern.ColorsDemo.Palette>())
                 },
+                sourceIdentifier: TransactionSource.clear,
                 completion: { _ in }
             )
         }
@@ -113,6 +114,7 @@ extension Modern.ColorsDemo {
 
                     _ = transaction.create(Into<Modern.ColorsDemo.Palette>())
                 },
+                sourceIdentifier: TransactionSource.add,
                 completion: { _ in }
             )
         }
@@ -127,6 +129,7 @@ extension Modern.ColorsDemo {
                         palette.setRandomHue()
                     }
                 },
+                sourceIdentifier: TransactionSource.shuffle,
                 completion: { _ in }
             )
         }

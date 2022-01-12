@@ -29,170 +29,84 @@ import CoreData
 
 // MARK: - CSDataStack
 
-/**
- The `CSDataStack` serves as the Objective-C bridging type for `DataStack`.
- 
- - SeeAlso: `DataStack`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
-    
-    /**
-     Initializes a `CSDataStack` with default settings. CoreStore searches for <CFBundleName>.xcdatamodeld from the main `NSBundle` and loads an `NSManagedObjectModel` from it. An assertion is raised if the model could not be found.
-     */
+
     @objc
     public convenience override init() {
         
-        self.init(DataStack())
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSDataStack` from the model with the specified `modelName` in the specified `bundle`.
-     
-     - parameter xcodeModelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
-     - parameter bundle: an optional bundle to load .xcdatamodeld models from. If not specified, the main bundle will be used.
-     - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
+
     @objc
     public convenience init(xcodeModelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
-        
-        self.init(
-            DataStack(
-                xcodeModelName: xcodeModelName ?? DataStack.applicationName,
-                bundle: bundle ?? Bundle.main,
-                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
+
+        fatalError()
     }
-    
-    /**
-     Returns the stack's model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
-     */
+
     @objc
     public var modelVersion: String {
-        
-        return self.bridgeToSwift.modelVersion
+
+        fatalError()
     }
-    
-    /**
-     Returns the entity name-to-class type mapping from the `CSDataStack`'s model.
-     */
+
     @objc
     public func entityTypesByNameForType(_ type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
-        
-        return self.bridgeToSwift.entityTypesByName(for: type)
+
+        fatalError()
     }
-    
-    /**
-     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from stack's model.
-     */
+
     @objc
     public func entityDescriptionForClass(_ type: NSManagedObject.Type) -> NSEntityDescription? {
-        
-        return self.bridgeToSwift.entityDescription(for: type)
+
+        fatalError()
     }
-    
-    /**
-     Creates an `CSInMemoryStore` with default parameters and adds it to the stack. This method blocks until completion.
-     ```
-     CSSQLiteStore *storage = [dataStack addInMemoryStorageAndWaitAndReturnError:&error];
-     ```
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: the `CSInMemoryStore` added to the stack
-     */
+
     @objc
     @discardableResult
     public func addInMemoryStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSInMemoryStore? {
-        
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorageAndWait(InMemoryStore())
-        }
+
+        fatalError()
     }
-    
-    /**
-     Creates an `CSSQLiteStore` with default parameters and adds it to the stack. This method blocks until completion.
-     ```
-     CSSQLiteStore *storage = [dataStack addSQLiteStorageAndWaitAndReturnError:&error];
-     ```
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: the `CSSQLiteStore` added to the stack
-     */
+
     @objc
     @discardableResult
     public func addSQLiteStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSSQLiteStore? {
-        
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorageAndWait(SQLiteStore())
-        }
+
+        fatalError()
     }
-    
-    /**
-     Adds a `CSInMemoryStore` to the stack and blocks until completion.
-     ```
-     NSError *error;
-     CSInMemoryStore *storage = [dataStack
-         addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
-         error: &error];
-     ```
-     - parameter storage: the `CSInMemoryStore`
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: the `CSInMemoryStore` added to the stack
-     */
+
     @objc
     @discardableResult
     public func addInMemoryStorageAndWait(_ storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
-        
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
-        }
+
+        fatalError()
     }
-    
-    /**
-     Adds a `CSSQLiteStore` to the stack and blocks until completion.
-     ```
-     NSError *error;
-     CSSQLiteStore *storage = [dataStack
-         addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
-         error: &error];
-     ```
-     - parameter storage: the `CSSQLiteStore`
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: the `CSSQLiteStore` added to the stack
-     */
+
     @objc
     @discardableResult
     public func addSQLiteStorageAndWait(_ storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
-        
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
-        }
+
+        fatalError()
     }
 
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return ObjectIdentifier(self.bridgeToSwift).hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSDataStack else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -201,22 +115,21 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     public let bridgeToSwift: DataStack
     
     public init(_ swiftValue: DataStack) {
-        
-        self.bridgeToSwift = swiftValue
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - DataStack
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension DataStack: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSDataStack {
-        
-        return CSDataStack(self)
+
+        fatalError()
     }
 }

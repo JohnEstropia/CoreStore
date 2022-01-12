@@ -91,7 +91,8 @@ extension Modern.ColorsDemo.UIKit {
         func objectMonitor(
             _ monitor: ObjectMonitor<Modern.ColorsDemo.Palette>,
             didUpdateObject object: Modern.ColorsDemo.Palette,
-            changedPersistentKeys: Set<KeyPathString>
+            changedPersistentKeys: Set<KeyPathString>,
+            sourceIdentifier: Any?
         ) {
             
             self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)

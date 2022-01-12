@@ -98,7 +98,7 @@ public protocol DiffableDataSourceTarget {
     /**
      Animates multiple insert, delete, reload, and move operations as a group.
      */
-    func performBatchUpdates(updates: () -> Void, animated: Bool)
+    func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void)
 
     /**
      Reloads all sections and items.
@@ -114,9 +114,15 @@ extension DiffableDataSource.Target {
         using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
         animated: Bool,
         interrupt: ((Internals.DiffableDataUIDispatcher<O>.Changeset<C>) -> Bool)? = nil,
-        setData: (C) -> Void
+        setData: (C) -> Void,
+        completion: @escaping () -> Void
     ) {
 
+        let group = DispatchGroup()
+        defer {
+
+            group.notify(queue: .main, execute: completion)
+        }
         if self.shouldSuspendBatchUpdates, let data = stagedChangeset.last?.data {
 
             setData(data)
@@ -133,6 +139,7 @@ extension DiffableDataSource.Target {
                 self.reloadData()
                 return
             }
+            group.enter()
             self.performBatchUpdates(
                 updates: {
 
@@ -206,7 +213,8 @@ extension DiffableDataSource.Target {
                         )
                     }
                 },
-                animated: animated
+                animated: animated,
+                completion: group.leave
             )
         }
     }

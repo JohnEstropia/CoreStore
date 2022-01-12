@@ -29,281 +29,75 @@ import CoreData
 
 // MARK: - CSError
 
-/**
- All errors thrown from CoreStore are expressed in `CSError`s.
- 
- - SeeAlso: `CoreStoreError`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSError: NSError {
-    
-    /**
-     The `NSError` error domain for `CSError`.
-     
-     - SeeAlso: `CoreStoreErrorErrorDomain`
-     */
+
+    // MARK: Public
+
     @objc
     public static let errorDomain = CoreStoreErrorDomain
 
     public var bridgeToSwift: CoreStoreError {
 
-        if let swift = self.swiftError {
-
-            return swift
-        }
-        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
-        self.swiftError = swift
-        return swift
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        fatalError()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
-        
-        guard let object = object as? CSError else {
-            
-            return false
-        }
-        return self.bridgeToSwift == object.bridgeToSwift
+
+        fatalError()
     }
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
-    
-    /**
-     Do not call directly!
-     */
+
     public init(_ swiftValue: CoreStoreError) {
-        
-        self.swiftError = swiftValue
-        super.init(domain: CoreStoreError.errorDomain, code: swiftValue.errorCode, userInfo: swiftValue.errorUserInfo)
+
+        fatalError()
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        
-        super.init(coder: aDecoder)
-    }
-    
-    
-    // MARK: Private
-    
-    private var swiftError: CoreStoreError?
-}
 
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-extension CSError: CoreStoreObjectiveCType {}
+        fatalError()
+    }
+}
 
 
 // MARK: - CSErrorCode
 
-/**
- The `NSError` error codes for `CSError.Domain`.
- 
- - SeeAlso: `CSError`
- - SeeAlso: `CoreStoreError`
- */
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public enum CSErrorCode: Int {
-    
-    /**
-     A failure occured because of an unknown error.
-     */
+
     case unknownError
-    
-    /**
-     The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
-     */
     case differentStorageExistsAtURL
-    
-    /**
-     An `NSMappingModel` could not be found for a specific source and destination model versions.
-     */
     case mappingModelNotFound
-    
-    /**
-     Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
-     */
     case progressiveMigrationRequired
-    
-    /**
-     An internal SDK call failed with the specified "NSError" userInfo key.
-     */
     case internalError
-    
-    /**
-     The transaction was terminated by a user-thrown error with the specified "Error" userInfo key.
-     */
     case userError
-    
-    /**
-     The transaction was cancelled by the user.
-     */
     case userCancelled
 }
 
 
 // MARK: - CoreStoreError
 
-extension CoreStoreError: _ObjectiveCBridgeableError {
-    
-    // MARK: _ObjectiveCBridgeableError
-    
-    public init?(_bridgedNSError error: NSError) {
-        
-        guard error.domain == CoreStoreErrorDomain else {
-            
-            if error is CSError {
-                
-                self = .internalError(NSError: error)
-                return
-            }
-            return nil
-        }
-        
-        guard let code = CoreStoreErrorCode(rawValue: error.code) else {
-            
-            if error is CSError {
-                
-                self = .unknown
-                return
-            }
-            return nil
-        }
-        
-        let info = error.userInfo
-        switch code {
-            
-        case .unknownError:
-            self = .unknown
-            
-        case .differentStorageExistsAtURL:
-            guard case let existingPersistentStoreURL as URL = info["existingPersistentStoreURL"] else {
-                
-                self = .unknown
-                return
-            }
-            self = .differentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
-            
-        case .mappingModelNotFound:
-            guard let localStoreURL = info["localStoreURL"] as? URL,
-                let targetModel = info["targetModel"] as? NSManagedObjectModel,
-                let targetModelVersion = info["targetModelVersion"] as? String else {
-                    
-                    self = .unknown
-                    return
-            }
-            self = .mappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
-            
-        case .progressiveMigrationRequired:
-            guard let localStoreURL = info["localStoreURL"] as? URL else {
-                
-                self = .unknown
-                return
-            }
-            self = .progressiveMigrationRequired(localStoreURL: localStoreURL)
-
-        case .asynchronousMigrationRequired:
-            guard
-                let localStoreURL = info["localStoreURL"] as? URL,
-                case let nsError as NSError = info["NSError"]
-                else {
-
-                    self = .unknown
-                    return
-            }
-            self = .asynchronousMigrationRequired(localStoreURL: localStoreURL, NSError: nsError)
-            
-        case .internalError:
-            guard case let nsError as NSError = info["NSError"] else {
-                
-                self = .unknown
-                return
-            }
-            self = .internalError(NSError: nsError)
-            
-        case .userError:
-            guard case let error as Error = info["Error"] else {
-                
-                self = .unknown
-                return
-            }
-            self = .userError(error: error)
-            
-        case .userCancelled:
-            self = .userCancelled
-
-        case .persistentStoreNotFound:
-            guard let entity = info["entity"] as? DynamicObject.Type else {
-
-                self = .unknown
-                return
-            }
-            self = .persistentStoreNotFound(entity: entity)
-        }
-    }
-}
-
-
-// MARK: - Error
-
-extension Error {
-
-    // MARK: Internal
-    
-    internal var bridgeToSwift: CoreStoreError {
-        
-        switch self {
-            
-        case let error as CoreStoreError:
-            return error
-            
-        case let error as CSError:
-            return error.bridgeToSwift
-            
-        case let error as NSError where Self.self is NSError.Type:
-            return .internalError(NSError: error)
-            
-        default:
-            return .unknown
-        }
-    }
-
-    @available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
-    internal var bridgeToObjectiveC: NSError {
-        
-        switch self {
-            
-        case let error as CoreStoreError:
-            return error.bridgeToObjectiveC
-            
-        case let error as CSError:
-            return error
-            
-        default:
-            return self as NSError
-        }
-    }
-}
-
-
-// MARK: - CoreStoreError
-
-@available(*, deprecated, message: "CoreStore Objective-C API will be removed soon.")
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension CoreStoreError: CoreStoreSwiftType {
 
     // MARK: CoreStoreSwiftType
 
     public var bridgeToObjectiveC: CSError {
-
-        return CSError(self)
+        
+        fatalError()
     }
 }

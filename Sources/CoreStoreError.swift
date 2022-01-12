@@ -258,8 +258,23 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
     // MARK: Internal
     
     internal init(_ error: Error?) {
-        
-        self = error.flatMap({ $0.bridgeToSwift }) ?? .unknown
+
+        guard let error = error else {
+
+            self = .unknown
+            return
+        }
+        switch error {
+
+        case let error as CoreStoreError:
+            self = error
+
+        case let error as NSError:
+            self = .internalError(NSError: error)
+
+        default:
+            self = .unknown
+        }
     }
 }
 

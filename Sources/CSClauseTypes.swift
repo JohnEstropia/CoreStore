@@ -29,11 +29,7 @@ import CoreData
 
 // MARK: - CSFetchClause
 
-/**
- The `CSFetchClause` implement clauses used to configure `NSFetchRequest`s.
- 
- - SeeAlso: `FetchClause`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public protocol CSFetchClause {
     
@@ -44,11 +40,7 @@ public protocol CSFetchClause {
 
 // MARK: - CSQueryClause
 
-/**
- The `CSQueryClause` implement clauses used to configure `NSFetchRequest`s.
- 
- - SeeAlso: `QueryClause`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public protocol CSQueryClause {
     
@@ -59,11 +51,7 @@ public protocol CSQueryClause {
 
 // MARK: - CSDeleteClause
 
-/**
- The `CSDeleteClause` implement clauses used to configure `NSFetchRequest`s.
- 
- - SeeAlso: `DeleteClause`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public protocol CSDeleteClause {
     

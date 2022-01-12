@@ -7,7 +7,4 @@
    <FileRef
       location = "group:CoreStore.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:LegacyDemo/LegacyDemo.xcodeproj">
-   </FileRef>
 </Workspace>

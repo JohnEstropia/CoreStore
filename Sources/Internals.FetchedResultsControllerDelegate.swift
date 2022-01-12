@@ -33,13 +33,28 @@ internal protocol FetchedResultsControllerHandler: AnyObject {
     
     var sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String? { get }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?)
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeObject anObject: Any,
+        atIndexPath indexPath: IndexPath?,
+        forChangeType type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    )
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType)
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChangeSection sectionInfo: NSFetchedResultsSectionInfo,
+        atIndex sectionIndex: Int,
+        forChangeType type: NSFetchedResultsChangeType
+    )
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
+    func controllerWillChangeContent(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>
+    )
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
+    func controllerDidChangeContent(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>
+    )
 }
 
 
@@ -102,7 +117,6 @@ extension Internals {
 
                 return
             }
-
             self.handler?.controllerDidChangeContent(controller)
         }
 

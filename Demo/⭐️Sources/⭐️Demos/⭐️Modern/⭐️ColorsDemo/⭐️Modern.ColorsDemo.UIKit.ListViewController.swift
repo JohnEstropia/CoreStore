@@ -32,17 +32,26 @@ extension Modern.ColorsDemo.UIKit {
         )
         
         /**
-         ⭐️ Sample 2: Once the views are created, we can start binding `ListPublisher` updates to the `DiffableDataSource`. We typically call this at the end of `viewDidLoad`. Note that the `addObserver`'s closure argument will only be called on the succeeding updates, so to immediately display the current values, we need to call `dataSource.apply()` once.
+         ⭐️ Sample 2: Once the views are created, we can start binding `ListPublisher` updates to the `DiffableDataSource`. We typically call this at the end of `viewDidLoad`. Note that the `addObserver`'s closure argument will only be called on the succeeding updates, so to immediately display the current values, we need to call `dataSource.apply()` once. This example inspects the optional `transactionSource` to determine the source of the update which is helpful for debugging or for fine-tuning animations.
          */
         private func startObservingList() {
             
             let dataSource = self.dataSource
-            self.listPublisher.addObserver(self) { (listPublisher) in
+            self.listPublisher.addObserver(self, notifyInitial: true) { (listPublisher, transactionSource) in
                 
-                dataSource.apply(listPublisher.snapshot, animatingDifferences: true)
+                switch transactionSource as? Modern.ColorsDemo.TransactionSource {
+                    
+                case .add,
+                     .delete,
+                     .shuffle,
+                     .clear:
+                    dataSource.apply(listPublisher.snapshot, animatingDifferences: true)
+                    
+                case nil,
+                     .refetch:
+                    dataSource.apply(listPublisher.snapshot, animatingDifferences: false)
+                }
             }
-            
-            dataSource.apply(self.listPublisher.snapshot, animatingDifferences: false)
         }
         
         /**
@@ -74,6 +83,7 @@ extension Modern.ColorsDemo.UIKit {
 
                             transaction.delete(objectIDs: [itemID])
                         },
+                        sourceIdentifier: Modern.ColorsDemo.TransactionSource.delete,
                         completion: { _ in }
                     )
 

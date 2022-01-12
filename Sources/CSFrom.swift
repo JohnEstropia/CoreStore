@@ -29,115 +29,46 @@ import CoreData
 
 // MARK: - CSFrom
 
-/**
- The `CSFrom` serves as the Objective-C bridging type for `From`.
- 
- - SeeAlso: `From`
- */
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 @objc
 public final class CSFrom: NSObject {
-    
-    /**
-     The associated `NSManagedObject` entity class
-     */
+
     @objc
     public var entityClass: AnyClass {
-        
-        return self.bridgeToSwift.entityClass
+
+        fatalError()
     }
-    
-    /**
-     The `NSPersistentStore` configuration names to associate objects from.
-     May contain `NSString` instances to pertain to named configurations, or `NSNull` to pertain to the default configuration
-     */
+
     @objc
     public var configurations: [Any]? {
-        
-        return self.bridgeToSwift.configurations?.map {
-            
-            switch $0 {
-                
-            case nil: return NSNull()
-            case let string as NSString: return string
-            }
-        }
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSFrom` clause with the specified entity class.
-     ```
-     MyPersonEntity *people = [transaction fetchAllFrom:CSFromClass([MyPersonEntity class])];
-     ```
-     - parameter entityClass: the `NSManagedObject` class type to be created
-     */
+
     @objc
     public convenience init(entityClass: NSManagedObject.Type) {
-        
-        self.init(From(entityClass))
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSFrom` clause with the specified configurations.
-     ```
-     MyPersonEntity *people = [transaction fetchAllFrom:
-        CSFromClass([MyPersonEntity class], @"Config1")];
-     ```
-     - parameter entityClass: the associated `NSManagedObject` entity class
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
-     */
+
     @objc
     public convenience init(entityClass: NSManagedObject.Type, configuration: Any) {
-        
-        switch configuration {
-            
-        case let string as String:
-            self.init(From(entityClass, string))
-            
-        case is NSNull:
-            self.init(From(entityClass, nil))
-            
-        default:
-            Internals.abort("The configuration argument only accepts NSString and NSNull values")
-        }
+
+        fatalError()
     }
-    
-    /**
-     Initializes a `CSFrom` clause with the specified configurations.
-     ```
-     MyPersonEntity *people = [transaction fetchAllFrom:
-        CSFromClass([MyPersonEntity class],
-                     @[[NSNull null], @"Config1"])];
-     ```
-     - parameter entityClass: the associated `NSManagedObject` entity class
-     - parameter configurations: an array of the `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
-     */
+
     @objc
     public convenience init(entityClass: NSManagedObject.Type, configurations: [Any]) {
-        
-        var arguments = [ModelConfiguration]()
-        for configuration in configurations {
-            
-            switch configuration {
-                
-            case let string as String:
-                arguments.append(string)
-                
-            case is NSNull:
-                arguments.append(nil)
-                
-            default:
-                Internals.abort("The configurations argument only accepts NSString and NSNull values")
-            }
-        }
-        self.init(From(entityClass, arguments))
+
+        fatalError()
     }
     
     
     // MARK: NSObject
     
     public override var description: String {
-        
-        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
+
+        fatalError()
     }
     
     
@@ -146,33 +77,21 @@ public final class CSFrom: NSObject {
     public let bridgeToSwift: From<NSManagedObject>
     
     public init<O: NSManagedObject>(_ swiftValue: From<O>) {
-        
-        self.bridgeToSwift = swiftValue.downcast()
-        super.init()
+
+        fatalError()
     }
 }
 
 
 // MARK: - From
 
+@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
 extension From where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSFrom {
-        
-        return CSFrom(self)
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate func downcast() -> From<NSManagedObject> {
-        
-        return From<NSManagedObject>(
-            entityClass: self.entityClass,
-            configurations: self.configurations,
-            findPersistentStores: self.findPersistentStores
-        )
+
+        fatalError()
     }
 }
