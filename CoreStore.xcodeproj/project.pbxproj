@@ -2059,9 +2059,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2F03A54319C5C6DA005002A5 /* Build configuration list for PBXNativeTarget "CoreStore iOS" */;
 			buildPhases = (
+				2F03A52D19C5C6DA005002A5 /* Headers */,
 				2F03A52B19C5C6DA005002A5 /* Sources */,
 				2F03A52C19C5C6DA005002A5 /* Frameworks */,
-				2F03A52D19C5C6DA005002A5 /* Headers */,
 				2F03A52E19C5C6DA005002A5 /* Resources */,
 			);
 			buildRules = (
@@ -2095,9 +2095,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 82BA189E1C4BBCBA00A0916E /* Build configuration list for PBXNativeTarget "CoreStore tvOS" */;
 			buildPhases = (
+				82BA18861C4BBCBA00A0916E /* Headers */,
 				82BA18841C4BBCBA00A0916E /* Sources */,
 				82BA18851C4BBCBA00A0916E /* Frameworks */,
-				82BA18861C4BBCBA00A0916E /* Headers */,
 				82BA18871C4BBCBA00A0916E /* Resources */,
 			);
 			buildRules = (
@@ -2131,9 +2131,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore OSX" */;
 			buildPhases = (
+				B52DD1711BE1F8CC00949AFE /* Headers */,
 				B52DD16F1BE1F8CC00949AFE /* Sources */,
 				B52DD1701BE1F8CC00949AFE /* Frameworks */,
-				B52DD1711BE1F8CC00949AFE /* Headers */,
 				B52DD1721BE1F8CC00949AFE /* Resources */,
 			);
 			buildRules = (
@@ -2167,9 +2167,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B56321741BD65082006C9394 /* Build configuration list for PBXNativeTarget "CoreStore watchOS" */;
 			buildPhases = (
+				B563216C1BD65082006C9394 /* Headers */,
 				B563216A1BD65082006C9394 /* Sources */,
 				B563216B1BD65082006C9394 /* Frameworks */,
-				B563216C1BD65082006C9394 /* Headers */,
 				B563216D1BD65082006C9394 /* Resources */,
 			);
 			buildRules = (
@@ -3435,7 +3435,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3458,7 +3458,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3516,7 +3516,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3543,7 +3543,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3607,7 +3607,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3636,7 +3636,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3700,7 +3700,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,
@@ -3729,7 +3729,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 8.1.0;
+				MARKETING_VERSION = 8.1.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					Combine,

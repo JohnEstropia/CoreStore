@@ -269,7 +269,7 @@ public final class CoreStoreSchema: DynamicSchema {
         initializer: (DynamicEntity, ModelVersion) -> (
             entity: NSEntityDescription,
             customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter],
-            customInitializersByEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
+            customInitializerByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
             fieldCoders: [KeyPathString: Internals.AnyFieldCoder]
         )
     ) -> (

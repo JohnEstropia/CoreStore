@@ -36,9 +36,9 @@ extension NSManagedObjectModel {
 
         return self.entitiesByName.reduce(
             into: [:],
-            { (result, entity: (name: String, description: NSEntityDescription)) in
+            { (result, entity: (key: String, value: NSEntityDescription)) in
 
-                result[entity.name] = (entity.description, entity.description.versionHash)
+                result[entity.key] = (entity.value, entity.value.versionHash)
             }
         )
     }
@@ -48,9 +48,9 @@ extension NSManagedObjectModel {
 
         return self.entitiesByName.reduce(
             into: [:],
-            { (result, entity: (name: String, description: NSEntityDescription)) in
+            { (result, entity: (key: String, value: NSEntityDescription)) in
 
-                result[entity.description.renamingIdentifier ?? entity.name] = (entity.description, entity.description.versionHash)
+                result[entity.value.renamingIdentifier ?? entity.key] = (entity.value, entity.value.versionHash)
             }
         )
     }

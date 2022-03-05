@@ -32,7 +32,7 @@ extension Modern.TimeZonesDemo {
                 self.values = array.map {
                     (
                         title: String(describing: $0),
-                        dsubtitleetail: String(reflecting: type(of: $0))
+                        subtitle: String(reflecting: type(of: $0))
                     )
                 }
                 
