@@ -149,7 +149,8 @@ public struct From<O: DynamicObject> {
             )
             throw CoreStoreError.unknown
         }
-        fetchRequest.entity = parentStack.entityDescription(for: Internals.EntityIdentifier(self.entityClass))!
+        guard let entity = parentStack.entityDescription(for: Internals.EntityIdentifier(self.entityClass)) else { return }
+        fetchRequest.entity = entity
         guard applyAffectedStores else {
             
             return
