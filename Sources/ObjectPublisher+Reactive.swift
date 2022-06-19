@@ -31,7 +31,6 @@ import CoreData
 
 // MARK: - ObjectPublisher
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension ObjectPublisher {
     
     // MARK: Public
@@ -73,7 +72,6 @@ extension ObjectPublisher {
 
 // MARK: - ObjectPublisher.ReactiveNamespace
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension ObjectPublisher.ReactiveNamespace {
 
     // MARK: Public
@@ -108,7 +106,6 @@ extension ObjectPublisher.ReactiveNamespace {
 
 // MARK: - ObjectPublisher.ReactiveNamespace where O: NSManagedObject
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension ObjectPublisher.ReactiveNamespace where O: NSManagedObject {
 
     /**
@@ -125,7 +122,6 @@ extension ObjectPublisher.ReactiveNamespace where O: NSManagedObject {
 
 // MARK: - ObjectPublisher.ReactiveNamespace where O: CoreStoreObject
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension ObjectPublisher.ReactiveNamespace where O: CoreStoreObject {
 
     /**

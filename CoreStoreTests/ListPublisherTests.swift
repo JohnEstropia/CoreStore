@@ -33,7 +33,6 @@ import CoreStore
 
 // MARK: - ListPublisherTests
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 class ListPublisherTests: BaseTestDataTestCase {
 
     @objc

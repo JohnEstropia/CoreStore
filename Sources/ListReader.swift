@@ -34,7 +34,6 @@ import SwiftUI
 /**
  A container view that reads list changes in a `ListPublisher`
  */
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct ListReader<Object: DynamicObject, Content: View, Value>: View {
     
     // MARK: Internal

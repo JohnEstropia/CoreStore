@@ -299,7 +299,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             toObserver: observer,
             callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
-                guard let `self` = self, let observer = observer else {
+                guard let self = self, let observer = observer else {
                     
                     return
                 }
@@ -370,7 +370,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
                 object: self,
                 closure: { [weak self] _ in
                     
-                    guard let `self` = self else {
+                    guard let self = self else {
                         
                         return
                     }
@@ -395,7 +395,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
                 object: self,
                 closure: { [weak self] (note) in
                     
-                    guard let `self` = self,
+                    guard let self = self,
                         let userInfo = note.userInfo,
                         let object = userInfo[String(describing: NSManagedObject.self)] as! NSManagedObject? else {
                             

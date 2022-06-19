@@ -812,7 +812,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let `self` = self else {
+                    guard let self = self else {
                         
                         return
                     }
@@ -841,7 +841,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let `self` = self,
+                    guard let self = self,
                         let userInfo = note.userInfo,
                         let rawObject = userInfo[String(describing: NSManagedObject.self)] as? NSManagedObject else {
                             
@@ -877,7 +877,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let `self` = self,
+                    guard let self = self,
                         let userInfo = note.userInfo,
                         let sectionInfo = userInfo[String(describing: NSFetchedResultsSectionInfo.self)] as? NSFetchedResultsSectionInfo,
                         let sectionIndex = (userInfo[String(describing: NSNumber.self)] as? NSNumber)?.intValue else {
@@ -1148,7 +1148,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         
         self.taskGroup.notify(queue: .main) { [weak self] () -> Void in
             
-            guard let `self` = self else {
+            guard let self = self else {
                 
                 return
             }
@@ -1164,7 +1164,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             
             self.transactionQueue.async { [weak self] in
                 
-                guard let `self` = self else {
+                guard let self = self else {
                     
                     return
                 }
@@ -1183,7 +1183,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 }
                 newFetchedResultsControllerDelegate.taskGroup.notify(queue: .main) { [weak self] () -> Void in
                     
-                    guard let `self` = self else {
+                    guard let self = self else {
                         
                         return
                     }
@@ -1338,7 +1338,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             queue: OperationQueue.main,
             closure: { [weak self] (note) -> Void in
                 
-                guard let `self` = self else {
+                guard let self = self else {
                     
                     return
                 }
@@ -1360,7 +1360,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             queue: OperationQueue.main,
             closure: { [weak self] (note) -> Void in
                 
-                guard let `self` = self else {
+                guard let self = self else {
                     
                     return
                 }

@@ -35,7 +35,6 @@ import SwiftUI
  A property wrapper type that can read `ObjectPublisher` changes.
  */
 @propertyWrapper
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct ObjectState<O: DynamicObject>: DynamicProperty {
     
     // MARK: Public

@@ -425,7 +425,7 @@ extension DataStack {
             operations.append(
                 BlockOperation { [weak self] in
                     
-                    guard let `self` = self, !cancelled else {
+                    guard let self = self, !cancelled else {
                         
                         return
                     }

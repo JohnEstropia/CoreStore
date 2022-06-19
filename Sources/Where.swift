@@ -183,14 +183,37 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      */
     public init<V: FieldStorableType>(_ keyPath: KeyPathString, isEqualTo value: V) {
 
+        var nilPredicate: NSPredicate {
+            
+            return NSPredicate(
+                format: "\(keyPath) == nil"
+            )
+        }
+        var valuePredicate: NSPredicate {
+            
+            return NSPredicate(
+                format: "\(keyPath) == %@",
+                argumentArray: [value.cs_toFieldStoredNativeType() as Any]
+            )
+        }
         switch value {
+            
+        case let optionalValue as any FieldOptionalType:
+            switch optionalValue.cs_wrappedValue {
+                
+            case nil,
+                is NSNull:
+                self.init(nilPredicate)
+                
+            case _?:
+                self.init(valuePredicate)
+            }
 
-        case nil,
-             is NSNull:
-            self.init(NSPredicate(format: "\(keyPath) == nil"))
+        case is NSNull:
+            self.init(nilPredicate)
 
-        case let value:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toFieldStoredNativeType() as Any]))
+        case _:
+            self.init(valuePredicate)
         }
     }
 

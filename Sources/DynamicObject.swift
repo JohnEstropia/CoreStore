@@ -35,6 +35,11 @@ import CoreData
 public protocol DynamicObject: AnyObject {
     
     /**
+     The object ID for this instance
+     */
+    typealias ObjectID = NSManagedObjectID
+    
+    /**
      Used internally by CoreStore. Do not call directly.
      */
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
@@ -68,11 +73,6 @@ public protocol DynamicObject: AnyObject {
 extension DynamicObject {
     
     // MARK: Internal
-
-    /**
-     The object ID for this instance
-     */
-    public typealias ObjectID = NSManagedObjectID
     
     internal func runtimeType() -> Self.Type {
         
