@@ -1,5 +1,5 @@
 //
-//  CSDataStack+Migrating.swift
+//  Module.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -23,36 +23,4 @@
 //  SOFTWARE.
 //
 
-import Foundation
-import CoreData
-
-
-// MARK: - CSDataStack
-
-@available(*, unavailable, message: "CoreStore Objective-C is now obsoleted in preparation for Swift concurrency.")
-extension CSDataStack {
-    
-    @objc
-    public func addInMemoryStorage(_ storage: CSInMemoryStore, completion: @escaping (CSSetupResult) -> Void) {
-
-        fatalError()
-    }
-
-    @objc
-    public func addSQLiteStorage(_ storage: CSSQLiteStore, completion: @escaping (CSSetupResult) -> Void, error: NSErrorPointer) -> Progress? {
-
-        fatalError()
-    }
-
-    @objc
-    public func upgradeStorageIfNeeded(_ storage: CSSQLiteStore, completion: @escaping (CSMigrationResult) -> Void, error: NSErrorPointer) -> Progress? {
-
-        fatalError()
-    }
-
-    @objc
-    public func requiredMigrationsForSQLiteStore(_ storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
-
-        fatalError()
-    }
-}
+@_exported import CoreData
