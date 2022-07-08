@@ -197,7 +197,8 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
             )
         }
         switch value {
-            
+
+#if swift(>=5.7)
         case let optionalValue as any FieldOptionalType:
             switch optionalValue.cs_wrappedValue {
                 
@@ -208,6 +209,12 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
             case _?:
                 self.init(valuePredicate)
             }
+
+#else
+        case nil:
+            self.init(nilPredicate)
+
+#endif
 
         case is NSNull:
             self.init(nilPredicate)
