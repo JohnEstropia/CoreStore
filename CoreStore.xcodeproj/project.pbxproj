@@ -783,6 +783,14 @@
 		B5F8496D234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496F234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
+		B5F9C093287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */; };
+		B5F9C094287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */; };
+		B5F9C095287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */; };
+		B5F9C096287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */; };
+		B5F9C098287850D6007AAD2E /* MigrationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C097287850D6007AAD2E /* MigrationProgress.swift */; };
+		B5F9C099287850D6007AAD2E /* MigrationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C097287850D6007AAD2E /* MigrationProgress.swift */; };
+		B5F9C09A287850D6007AAD2E /* MigrationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C097287850D6007AAD2E /* MigrationProgress.swift */; };
+		B5F9C09B287850D6007AAD2E /* MigrationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F9C097287850D6007AAD2E /* MigrationProgress.swift */; };
 		B5FAD6A91B50A4B400714891 /* Progress+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */; };
 		B5FAD6AC1B51285300714891 /* Internals.MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */; };
 		B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */; };
@@ -1061,6 +1069,8 @@
 		B5F5848628633741001F57ED /* Module.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		B5F8496B234898240029D57B /* ListSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSnapshot.swift; sourceTree = "<group>"; };
 		B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+DataSources.swift"; sourceTree = "<group>"; };
+		B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataStack+Concurrency.swift"; sourceTree = "<group>"; };
+		B5F9C097287850D6007AAD2E /* MigrationProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationProgress.swift; sourceTree = "<group>"; };
 		B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Progress+Convenience.swift"; sourceTree = "<group>"; };
 		B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Internals.MigrationManager.swift; sourceTree = "<group>"; };
 		B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageInterface.swift; sourceTree = "<group>"; };
@@ -1430,6 +1440,7 @@
 				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
 				B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */,
 				B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */,
+				B5F9C091287849CB007AAD2E /* Swift Concurrency */,
 				B5C795BE25D933C200BDACC1 /* Reactive Programming */,
 				B52FEC722596DB6400368BFB /* SwiftUI */,
 				B5E84EDA1AFF84500064E85B /* Setup */,
@@ -1500,6 +1511,7 @@
 				B5B866EC25F4800800335476 /* DataStack.AddStoragePublisher.swift */,
 				B5944EFA25E8E8DA001D1D81 /* ListPublisher.SnapshotPublisher.swift */,
 				B5B866DF25E9048000335476 /* ObjectPublisher.SnapshotPublisher.swift */,
+				B5F9C097287850D6007AAD2E /* MigrationProgress.swift */,
 			);
 			name = "Reactive Programming";
 			sourceTree = "<group>";
@@ -1677,6 +1689,14 @@
 				B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */,
 			);
 			name = Internals;
+			sourceTree = "<group>";
+		};
+		B5F9C091287849CB007AAD2E /* Swift Concurrency */ = {
+			isa = PBXGroup;
+			children = (
+				B5F9C092287849E0007AAD2E /* DataStack+Concurrency.swift */,
+			);
+			name = "Swift Concurrency";
 			sourceTree = "<group>";
 		};
 		B5FE4DA01C84818B00FA6A91 /* StorageInterfaces */ = {
@@ -2052,6 +2072,7 @@
 				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
 				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
 				B5C7958F25D7D18000BDACC1 /* ListState.swift in Sources */,
+				B5F9C098287850D6007AAD2E /* MigrationProgress.swift in Sources */,
 				B5FE4DAC1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				B5E41EC01EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
@@ -2073,6 +2094,7 @@
 				B50E175723517DE4004F033C /* Differentiable.swift in Sources */,
 				B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5E84F231AFF84860064E85B /* ListMonitor.swift in Sources */,
+				B5F9C093287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */,
 				B5BF7FC6234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B5E84EF71AFF846E0064E85B /* UnsafeDataTransaction.swift in Sources */,
 				B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */,
@@ -2266,6 +2288,7 @@
 				B56923C51EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
 				82BA18C91C4BBD5900A0916E /* MigrationType.swift in Sources */,
 				B5D8CA772346EAEE0055D7D1 /* DataStack+DataSources.swift in Sources */,
+				B5F9C099287850D6007AAD2E /* MigrationProgress.swift in Sources */,
 				82BA18D01C4BBD7100A0916E /* Internals.MigrationManager.swift in Sources */,
 				B5DE5231230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B56E4ED523CDB54A00E1708C /* FieldProtocol.swift in Sources */,
@@ -2287,6 +2310,7 @@
 				82BA18BF1C4BBD5300A0916E /* SectionBy.swift in Sources */,
 				B5D339ED1E9495E500C880DE /* CoreStoreObject+Querying.swift in Sources */,
 				B509D7D423C84E1900F42824 /* Transformable.Required.swift in Sources */,
+				B5F9C094287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */,
 				82BA18AC1C4BBD3100A0916E /* SynchronousDataTransaction.swift in Sources */,
 				B50C3EE623D153EA00B29880 /* Field.Coded.swift in Sources */,
 				82BA18C41C4BBD5300A0916E /* ListMonitor.swift in Sources */,
@@ -2480,6 +2504,7 @@
 				B5D8CA792346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				B56E4ED723CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B56923C71EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
+				B5F9C09B287850D6007AAD2E /* MigrationProgress.swift in Sources */,
 				B5944EFE25E8E8DA001D1D81 /* ListPublisher.SnapshotPublisher.swift in Sources */,
 				B5DE5233230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B52DD1A51BE1F92F00949AFE /* ImportableUniqueObject.swift in Sources */,
@@ -2501,6 +2526,7 @@
 				B52F74321E9B50D0005F3DAC /* SchemaHistory.swift in Sources */,
 				B509D7D623C84E1900F42824 /* Transformable.Required.swift in Sources */,
 				B50C3EE823D153EA00B29880 /* Field.Coded.swift in Sources */,
+				B5F9C096287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */,
 				B5D339EF1E9495E500C880DE /* CoreStoreObject+Querying.swift in Sources */,
 				B52DD19F1BE1F92C00949AFE /* SynchronousDataTransaction.swift in Sources */,
 				B52DD1CB1BE1F94600949AFE /* Internals.WeakObject.swift in Sources */,
@@ -2694,6 +2720,7 @@
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,
 				B5D8CA782346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				B56923C61EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
+				B5F9C09A287850D6007AAD2E /* MigrationProgress.swift in Sources */,
 				B56321A71BD65216006C9394 /* MigrationResult.swift in Sources */,
 				B56E4ED623CDB54A00E1708C /* FieldProtocol.swift in Sources */,
 				B5DE5232230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
@@ -2715,6 +2742,7 @@
 				B52F74311E9B50D0005F3DAC /* SchemaHistory.swift in Sources */,
 				B563218F1BD65216006C9394 /* ImportableObject.swift in Sources */,
 				B509D7D523C84E1900F42824 /* Transformable.Required.swift in Sources */,
+				B5F9C095287849E0007AAD2E /* DataStack+Concurrency.swift in Sources */,
 				B56321991BD65216006C9394 /* OrderBy.swift in Sources */,
 				B50C3EE723D153EA00B29880 /* Field.Coded.swift in Sources */,
 				B5D339EE1E9495E500C880DE /* CoreStoreObject+Querying.swift in Sources */,

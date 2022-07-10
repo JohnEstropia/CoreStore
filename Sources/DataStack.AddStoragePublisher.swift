@@ -49,7 +49,7 @@ extension DataStack {
         
         // MARK: Publisher
         
-        public typealias Output = MigrationProgress
+        public typealias Output = CoreStore.MigrationProgress<Storage>
         public typealias Failure = CoreStoreError
         
         public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
@@ -61,56 +61,6 @@ extension DataStack {
                     subscriber: subscriber
                 )
             )
-        }
-        
-        // MARK: - MigrationProgress
-        
-        /**
-         A `MigrationProgress` contains info on a `LocalStorage`'s setup progress.
-         
-         - SeeAlso: DataStack.reactive.addStorage(_:)
-         */
-        public enum MigrationProgress {
-            
-            /**
-             The `LocalStorage` is currently being migrated
-             */
-            case migrating(storage: Storage, progressObject: Progress)
-            
-            /**
-             The `LocalStorage` has been added to the `DataStack` and is ready for reading and writing
-             */
-            case finished(storage: Storage, migrationRequired: Bool)
-            
-            /**
-             The fraction of the overall work completed by the migration. Returns a value between 0.0 and 1.0, inclusive.
-             */
-            public var fractionCompleted: Double {
-                
-                switch self {
-                
-                case .migrating(_, let progressObject):
-                    return progressObject.fractionCompleted
-                    
-                case .finished:
-                    return 1
-                }
-            }
-            
-            /**
-             Returns `true` if the storage was successfully added to the stack, `false` otherwise.
-             */
-            public var isCompleted: Bool {
-                
-                switch self {
-                
-                case .migrating:
-                    return false
-                    
-                case .finished:
-                    return true
-                }
-            }
         }
         
         
@@ -232,6 +182,12 @@ extension DataStack {
             private let storage: Storage
             private var subscriber: S?
         }
+
+
+        // MARK: Deprecated
+
+        @available(*, deprecated, renamed: "MigrationProgress")
+        public typealias MigrationProgress = CoreStore.MigrationProgress<Storage>
     }
 }
 
