@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 //
 //  Package.swift
 //  CoreStore
@@ -45,7 +45,10 @@ let package = Package(
         .testTarget(
             name: "CoreStoreTests",
             dependencies: ["CoreStore"],
-            path: "CoreStoreTests"
+            path: "CoreStoreTests",
+            resources: [
+              .process("Model.xcdatamodeld")
+            ]
         )
     ],
     swiftLanguageVersions: [.v5]
