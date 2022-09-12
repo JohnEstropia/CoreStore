@@ -242,7 +242,9 @@
 				B5A3911A24E5429200E7E8BD /* Products */,
 				B5A3916624E698F900E7E8BD /* Frameworks */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		B5A3911A24E5429200E7E8BD /* Products */ = {
 			isa = PBXGroup;

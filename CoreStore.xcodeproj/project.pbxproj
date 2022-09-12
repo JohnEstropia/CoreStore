@@ -1160,7 +1160,9 @@
 				2F03A53C19C5C6DA005002A5 /* CoreStoreTests */,
 				2F03A53119C5C6DA005002A5 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		2F03A53119C5C6DA005002A5 /* Products */ = {
 			isa = PBXGroup;
