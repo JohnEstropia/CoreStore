@@ -2438,9 +2438,9 @@ var body: some View {
 
 # Installation
 - Requires:
-    - iOS 10 SDK and above
-    - Swift 5.2 (Xcode 11.4+)
-    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4)
+    - iOS 13 SDK and above
+    - Swift 5.7 (Xcode 14.0+)
+    - For previous Swift versions: [Swift 5.5](https://github.com/JohnEstropia/CoreStore/tree/8.1.0), [Swift 5.4](https://github.com/JohnEstropia/CoreStore/tree/8.0.1), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1)
 - Dependencies:
     - *None*
 - Other notes:
