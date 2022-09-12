@@ -20,8 +20,8 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 5.5:** iOS 11+ / macOS 10.13+ / watchOS 4.0+ / tvOS 11.0+
-* Previously supported Swift versions: [Swift 5.4](https://github.com/JohnEstropia/CoreStore/tree/8.0.1), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1), [Swift 5.1](https://github.com/JohnEstropia/CoreStore/tree/7.0.4), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
+* **Swift 5.7:** iOS 13+ / macOS 10.15+ / watchOS 6.0+ / tvOS 13.0+
+* Previously supported Swift versions: [Swift 5.5](https://github.com/JohnEstropia/CoreStore/tree/8.1.0), [Swift 5.4](https://github.com/JohnEstropia/CoreStore/tree/8.0.1), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1)
 
 Upgrading from previous CoreStore versions? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
