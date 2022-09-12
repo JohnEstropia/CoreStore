@@ -23,6 +23,7 @@
 //  SOFTWARE.
 //
 
+import Foundation
 import XCTest
 
 @testable
@@ -428,7 +429,7 @@ final class TransactionTests: BaseTestCase {
                     
                     let indexPath = userInfo?["indexPath"] as? IndexPath
                     XCTAssertEqual(indexPath?.section, 0)
-                    XCTAssertEqual(indexPath?.row, 0)
+                    XCTAssertEqual(indexPath?.item, 0)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.testBoolean, NSNumber(value: true))

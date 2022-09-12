@@ -848,12 +848,12 @@
 			remoteGlobalIDString = 82BA18881C4BBCBA00A0916E;
 			remoteInfo = "CoreStore tvOS";
 		};
-		B5114DA528CEEE5400EEAE78 /* PBXContainerItemProxy */ = {
+		B5114DCB28CF0C2B00EEAE78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2F03A52719C5C6DA005002A5 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82BA18881C4BBCBA00A0916E;
-			remoteInfo = "CoreStore tvOS";
+			remoteGlobalIDString = B563216E1BD65082006C9394;
+			remoteInfo = "CoreStore watchOS";
 		};
 		B52DD17F1BE1F8CD00949AFE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1878,7 +1878,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				B5114DA428CEEE5400EEAE78 /* PBXTargetDependency */,
+				B5114DCC28CF0C2B00EEAE78 /* PBXTargetDependency */,
 			);
 			name = "CoreStoreTests watchOS";
 			productName = "CoreStore tvOSTests";
@@ -2935,10 +2935,10 @@
 			target = 82BA18881C4BBCBA00A0916E /* CoreStore tvOS */;
 			targetProxy = 82BA18941C4BBCBA00A0916E /* PBXContainerItemProxy */;
 		};
-		B5114DA428CEEE5400EEAE78 /* PBXTargetDependency */ = {
+		B5114DCC28CF0C2B00EEAE78 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 82BA18881C4BBCBA00A0916E /* CoreStore tvOS */;
-			targetProxy = B5114DA528CEEE5400EEAE78 /* PBXContainerItemProxy */;
+			target = B563216E1BD65082006C9394 /* CoreStore watchOS */;
+			targetProxy = B5114DCB28CF0C2B00EEAE78 /* PBXContainerItemProxy */;
 		};
 		B52DD1801BE1F8CD00949AFE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

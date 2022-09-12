@@ -11,12 +11,22 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = "13.0"
     s.osx.deployment_target = "10.15"
-    s.watchos.deployment_target = "6.0"
     s.tvos.deployment_target = "13.0"
+    s.watchos.deployment_target = "6.0"
 
-    s.source_files = "Sources", "Sources/**/*.{swift,h,m}"
+    s.source_files = "Sources", "Sources/**/*.swift"
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
     s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS[config=Debug]' => '-D DEBUG', 'OTHER_LDFLAGS' => '-weak_framework Combine -weak_framework SwiftUI' }
+
+    s.test_spec "CoreStoreTests" do |ts|
+        ts.source_files = "CoreStoreTests", "CoreStoreTests/**/*.swift", "CoreStoreTests/**/*.xcdatamodeld", "CoreStoreTests/**/*.xcdatamodel"
+        ts.public_header_files = "CoreStoreTests/**/*.h"
+        ts.resources = [ "CoreStoreTests/**/*.xcdatamodeld", "CoreStoreTests/**/*.xcdatamodel" ]
+        ts.preserve_paths =  "CoreStoreTests/**/*.xcdatamodeld"
+        ts.frameworks = "Foundation", "CoreData"
+        ts.requires_arc = true
+        ts.platforms = { :ios => nil, :osx => nil, :tvos => nil, :watchos => nil }
+    end
 end
