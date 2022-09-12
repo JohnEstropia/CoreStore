@@ -101,9 +101,9 @@ class ListObserverTests: BaseTestDataTestCase {
                         ["indexPath", "object"]
                     )
                     
-                    let indexPath = userInfo?["indexPath"] as? NSIndexPath
-                    XCTAssertEqual(indexPath?.index(atPosition: 0), 0)
-                    XCTAssertEqual(indexPath?.index(atPosition: 1), 0)
+                    let indexPath = userInfo?["indexPath"] as? IndexPath
+                    XCTAssertEqual(indexPath?.section, 0)
+                    XCTAssertEqual(indexPath?.row, 0)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
@@ -213,14 +213,14 @@ class ListObserverTests: BaseTestDataTestCase {
                         ["indexPath", "object"]
                     )
                     
-                    let indexPath = userInfo?["indexPath"] as? NSIndexPath
+                    let indexPath = userInfo?["indexPath"] as? IndexPath
                     let object = userInfo?["object"] as? TestEntity1
                     
                     switch object?.testEntityID {
                         
                     case NSNumber(value: 101)?:
-                        XCTAssertEqual(indexPath?.index(atPosition: 0), 1)
-                        XCTAssertEqual(indexPath?.index(atPosition: 1), 0)
+                        XCTAssertEqual(indexPath?.section, 1)
+                        XCTAssertEqual(indexPath?.row, 0)
                         
                         XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
                         XCTAssertEqual(object?.testNumber, NSNumber(value: 11))
@@ -230,8 +230,8 @@ class ListObserverTests: BaseTestDataTestCase {
                         XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!)
                         
                     case NSNumber(value: 102)?:
-                        XCTAssertEqual(indexPath?.index(atPosition: 0), 0)
-                        XCTAssertEqual(indexPath?.index(atPosition: 1), 0)
+                        XCTAssertEqual(indexPath?.section, 0)
+                        XCTAssertEqual(indexPath?.row, 0)
                         
                         XCTAssertEqual(object?.testBoolean, NSNumber(value: false))
                         XCTAssertEqual(object?.testNumber, NSNumber(value: 22))
@@ -357,13 +357,13 @@ class ListObserverTests: BaseTestDataTestCase {
                         ["fromIndexPath", "toIndexPath", "object"]
                     )
                     
-                    let fromIndexPath = userInfo?["fromIndexPath"] as? NSIndexPath
-                    XCTAssertEqual(fromIndexPath?.index(atPosition: 0), 0)
-                    XCTAssertEqual(fromIndexPath?.index(atPosition: 1), 0)
+                    let fromIndexPath = userInfo?["fromIndexPath"] as? IndexPath
+                    XCTAssertEqual(fromIndexPath?.section, 0)
+                    XCTAssertEqual(fromIndexPath?.row, 0)
                     
-                    let toIndexPath = userInfo?["toIndexPath"] as? NSIndexPath
-                    XCTAssertEqual(toIndexPath?.index(atPosition: 0), 1)
-                    XCTAssertEqual(toIndexPath?.index(atPosition: 1), 1)
+                    let toIndexPath = userInfo?["toIndexPath"] as? IndexPath
+                    XCTAssertEqual(toIndexPath?.section, 1)
+                    XCTAssertEqual(toIndexPath?.row, 1)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.testEntityID, NSNumber(value: 102))
@@ -465,10 +465,10 @@ class ListObserverTests: BaseTestDataTestCase {
                         ["indexPath", "object"]
                     )
                     
-                    let indexPath = userInfo?["indexPath"] as? NSIndexPath
+                    let indexPath = userInfo?["indexPath"] as? IndexPath
                     
                     XCTAssertEqual(indexPath?.section, 0)
-                    XCTAssert(indexPath?.index(atPosition: 1) == 0 || indexPath?.index(atPosition: 1) == 1)
+                    XCTAssert(indexPath?.row == 0 || indexPath?.row == 1)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.isDeleted, true)
