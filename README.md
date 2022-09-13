@@ -20,7 +20,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 5.7:** iOS 13+ / macOS 10.15+ / watchOS 6.0+ / tvOS 13.0+
+* **Swift 5.7:** iOS 13+ / macOS 10.15+ / watchOS 7.4+ / tvOS 13.0+
 * Previously supported Swift versions: [Swift 5.5](https://github.com/JohnEstropia/CoreStore/tree/8.1.0), [Swift 5.4](https://github.com/JohnEstropia/CoreStore/tree/8.0.1), [Swift 5.3](https://github.com/JohnEstropia/CoreStore/tree/7.3.1)
 
 Upgrading from previous CoreStore versions? Check out the [🆕 features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
