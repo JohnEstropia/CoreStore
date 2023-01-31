@@ -306,7 +306,7 @@ extension DataStack.AsyncNamespace {
     public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence>(
         _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }
+        preProcess: @escaping @Sendable (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }
     ) async throws -> [O]
     where S.Iterator.Element == O.ImportSource {
 
@@ -353,7 +353,7 @@ extension DataStack.AsyncNamespace {
      - throws: A `CoreStoreError` value indicating the failure reason
      */
     public func perform<Output>(
-        _ asynchronous: @escaping (AsynchronousDataTransaction) throws -> Output
+        _ asynchronous: @escaping @Sendable (AsynchronousDataTransaction) throws -> Output
     ) async throws -> Output {
 
         return try await withCheckedThrowingContinuation { continuation in
