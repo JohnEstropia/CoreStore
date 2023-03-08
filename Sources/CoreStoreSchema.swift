@@ -179,7 +179,7 @@ public final class CoreStoreSchema: DynamicSchema {
             
             Internals.assert(
                 versionLock == VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName),
-                "A \(Internals.typeName(VersionLock.self)) was provided for the \(Internals.typeName(CoreStoreSchema.self)) with version \"\(modelVersion)\", but the actual hashes do not match. This may result in unwanted migrations or unusable persistent stores.\nExpected lock values: \(versionLock)\nActual lock values: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+                "A \(Internals.typeName(VersionLock.self)) was provided for the \(Internals.typeName(CoreStoreSchema.self)) with version \"\(modelVersion)\", but the actual hashes do not match. This may result in unwanted migrations or unusable persistent stores.\nReceived lock values: \(versionLock)\nActual lock values: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
             )
         }
         else {
