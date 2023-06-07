@@ -1215,6 +1215,7 @@ extension NSAttributeType: CoreStoreDebugStringConvertible {
         case .objectIDAttributeType:        return ".objectIDAttributeType"
         case .UUIDAttributeType:            return ".UUIDAttributeType"
         case .URIAttributeType:             return ".URIAttributeType"
+        case .compositeAttributeType:       return ".compositeAttributeType"
         @unknown default:
             fatalError()
         }

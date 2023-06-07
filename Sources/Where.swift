@@ -250,8 +250,8 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter object: the arguments for the `==` operator
      */
-    public init<O: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: O?) {
-        
+    public init<Other: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: Other?) {
+
         switch object {
             
         case nil:

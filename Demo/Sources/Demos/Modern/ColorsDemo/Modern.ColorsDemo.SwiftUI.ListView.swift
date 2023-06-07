@@ -63,7 +63,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     }
                 }
             }
-            .animation(.default)
+//            .animation(.default) // breaks layout
             .listStyle(PlainListStyle())
             .edgesIgnoringSafeArea([])
         }

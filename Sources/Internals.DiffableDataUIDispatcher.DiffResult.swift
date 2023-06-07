@@ -213,11 +213,11 @@ extension Internals.DiffableDataUIDispatcher {
 
         // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
-        internal struct Trace<Index> {
-            
+        internal struct Trace<I> {
+
             @usableFromInline
-            internal var reference: Index?
-            
+            internal var reference: I?
+
             @usableFromInline
             internal var deleteOffset = 0
             
