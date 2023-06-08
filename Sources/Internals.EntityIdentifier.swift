@@ -74,7 +74,7 @@ extension Internals {
             default:
                 Internals.abort("\(Internals.typeName(DynamicObject.self)) is not meant to be implemented by external types.")
             }
-        }
+        } 
 
         internal init(_ entityDescription: NSEntityDescription) {
 

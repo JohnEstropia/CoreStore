@@ -39,8 +39,7 @@ let package = Package(
         .target(
             name: "CoreStore",
             dependencies: [],
-            path: "Sources",
-            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m"]
+            path: "Sources"
         ),
         .testTarget(
             name: "CoreStoreTests",
