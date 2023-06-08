@@ -30,6 +30,5 @@ Pod::Spec.new do |s|
         ts.ios.deployment_target = "13.0"
         ts.osx.deployment_target = "10.15"
         ts.tvos.deployment_target = "13.0"
-        ts.watchos.deployment_target = "7.4"
     end
 end
