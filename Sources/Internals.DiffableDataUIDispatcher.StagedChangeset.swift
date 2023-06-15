@@ -40,7 +40,7 @@ extension Internals.DiffableDataUIDispatcher {
         @usableFromInline
         var changesets: ContiguousArray<Changeset<C>>
 
-        @inlinable
+        @usableFromInline
         init<S: Sequence>(_ changesets: S) where S.Element == Changeset<C> {
             
             self.changesets = ContiguousArray(changesets)
