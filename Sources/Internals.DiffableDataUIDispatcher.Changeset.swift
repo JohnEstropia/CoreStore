@@ -48,7 +48,7 @@ extension Internals.DiffableDataUIDispatcher {
         var elementUpdated: [ElementPath]
         var elementMoved: [(source: ElementPath, target: ElementPath)]
 
-        @inlinable
+        @usableFromInline
         init(
             data: C,
             sectionDeleted: [Int] = [],
