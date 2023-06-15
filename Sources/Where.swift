@@ -27,10 +27,6 @@ import Foundation
 import CoreData
 
 
-infix operator &&? : LogicalConjunctionPrecedence
-infix operator ||? : LogicalConjunctionPrecedence
-
-
 // MARK: - Where
 
 /**

@@ -27,21 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - ~
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
-```
-let owner = dataStack.fetchOne(
-    From<Pet>().where(
-        (\.master ~ \.name) == "John"
-    )
-)
-```
- */
-infix operator ~ : AdditionPrecedence
-
-
 // MARK: - WhereExpressionTrait
 
 /**
