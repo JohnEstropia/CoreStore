@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "9.0.0"
+    s.version = "9.1.0"
     s.swift_version = "5.7"
     s.license = "MIT"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
@@ -30,6 +30,5 @@ Pod::Spec.new do |s|
         ts.ios.deployment_target = "13.0"
         ts.osx.deployment_target = "10.15"
         ts.tvos.deployment_target = "13.0"
-        ts.watchos.deployment_target = "7.4"
     end
 end

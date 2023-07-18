@@ -252,9 +252,6 @@ extension ValueContainer {
 
 // MARK: - Operations
 
-infix operator .= : AssignmentPrecedence
-infix operator .== : ComparisonPrecedence
-
 extension ValueContainer.Optional {
 
     /**

@@ -254,9 +254,6 @@ extension TransformableContainer {
 
 // MARK: - Operations
 
-infix operator .= : AssignmentPrecedence
-infix operator .== : ComparisonPrecedence
-
 extension TransformableContainer.Required {
 
     /**

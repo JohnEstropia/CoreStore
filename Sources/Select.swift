@@ -503,8 +503,8 @@ public struct Select<O: DynamicObject, T: SelectResultType>: SelectClause, Hasha
     
     // MARK: Equatable
     
-    public static func == <T, U>(lhs: Select<O, T>, rhs: Select<O, U>) -> Bool {
-        
+    public static func == <T1, T2>(lhs: Select<O, T1>, rhs: Select<O, T2>) -> Bool {
+
         return lhs.selectTerms == rhs.selectTerms
     }
     

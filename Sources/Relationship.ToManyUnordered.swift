@@ -364,9 +364,6 @@ extension RelationshipContainer.ToManyUnordered: Sequence {
 
 // MARK: - Operations
 
-infix operator .= : AssignmentPrecedence
-infix operator .== : ComparisonPrecedence
-
 extension RelationshipContainer.ToManyUnordered {
 
     /**

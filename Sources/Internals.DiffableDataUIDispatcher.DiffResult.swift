@@ -190,7 +190,7 @@ extension Internals.DiffableDataUIDispatcher {
         
         // MARK: Private
         
-        @inlinable
+        @usableFromInline
         internal init(
             deleted: [Index] = [],
             inserted: [Index] = [],
@@ -213,18 +213,18 @@ extension Internals.DiffableDataUIDispatcher {
 
         // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
-        internal struct Trace<Index> {
-            
+        internal struct Trace<I> {
+
             @usableFromInline
-            internal var reference: Index?
-            
+            internal var reference: I?
+
             @usableFromInline
             internal var deleteOffset = 0
             
             @usableFromInline
             internal var isTracked = false
             
-            @inlinable
+            @usableFromInline
             init() {}
         }
         
@@ -252,7 +252,7 @@ extension Internals.DiffableDataUIDispatcher {
             @usableFromInline
             internal var position = 0
             
-            @inlinable
+            @usableFromInline
             internal init(_ indices: ContiguousArray<Int>) {
                 
                 self.indices = indices
@@ -292,7 +292,7 @@ extension Internals.DiffableDataUIDispatcher {
             @usableFromInline
             internal let pointer: UnsafePointer<T>
             
-            @inlinable
+            @usableFromInline
             internal init(pointer: UnsafePointer<T>) {
                 
                 self.pointeeHashValue = pointer.pointee.hashValue

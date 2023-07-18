@@ -1215,8 +1215,14 @@ extension NSAttributeType: CoreStoreDebugStringConvertible {
         case .objectIDAttributeType:        return ".objectIDAttributeType"
         case .UUIDAttributeType:            return ".UUIDAttributeType"
         case .URIAttributeType:             return ".URIAttributeType"
+
+#if swift(>=5.9) // Xcode 15 (iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0)
+        case .compositeAttributeType:       return ".compositeAttributeType"
+
+#endif
+
         @unknown default:
-            fatalError()
+          fatalError()
         }
     }
 }

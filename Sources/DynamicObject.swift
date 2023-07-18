@@ -114,9 +114,15 @@ extension NSManagedObject: DynamicObject {
     }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
-        
+
+#if swift(>=5.9)
+        return unsafeDowncast(object, to: self)
+
+#else
         // unsafeDowncast fails debug assertion starting Swift 5.2
         return _unsafeUncheckedDowncast(object, to: self)
+
+#endif
     }
     
     public static func cs_matches(object: NSManagedObject) -> Bool {
