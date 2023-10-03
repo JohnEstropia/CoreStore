@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
         ts.public_header_files = "CoreStoreTests/**/*.h"
         ts.resources = [ "CoreStoreTests/**/*.xcdatamodeld", "CoreStoreTests/**/*.xcdatamodel" ]
         ts.preserve_paths =  "CoreStoreTests/**/*.xcdatamodeld"
+        ts.resource_bundles = { 'CoreStoreTests' => ["CoreStoreTests/**/*.momd"] }
         ts.frameworks = "Foundation", "CoreData"
         ts.requires_arc = true
         ts.ios.deployment_target = "13.0"
