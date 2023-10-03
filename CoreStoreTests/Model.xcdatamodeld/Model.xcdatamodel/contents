@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="22G91" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
-    <entity name="TestEntity1AAA" representedClassName="CoreStoreTests.TestEntity1" syncable="YES">
+    <entity name="TestEntity1AAA" representedClassName=".TestEntity1" syncable="YES">
         <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="testDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -12,7 +12,7 @@
         <relationship name="testToManyUnordered" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TestEntity1AAA" inverseName="testToOne" inverseEntity="TestEntity1AAA" syncable="YES"/>
         <relationship name="testToOne" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestEntity1AAA" inverseName="testToManyUnordered" inverseEntity="TestEntity1AAA" syncable="YES"/>
     </entity>
-    <entity name="TestEntity2" representedClassName="CoreStoreTests.TestEntity2" syncable="YES">
+    <entity name="TestEntity2" representedClassName=".TestEntity2" syncable="YES">
         <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="testDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
