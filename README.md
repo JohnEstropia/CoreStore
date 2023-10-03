@@ -2460,7 +2460,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 9.1.0
+github "JohnEstropia/CoreStore" >= 9.2.0
 ```
 and run 
 ```
@@ -2471,7 +2471,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "9.1.0"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "9.2.0"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.
