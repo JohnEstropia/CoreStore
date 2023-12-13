@@ -159,7 +159,7 @@ Fetching objects (complex):
 let people = try dataStack.fetchAll(
     From<Person>()
         .where(\.age > 30),
-        .orderBy(.ascending(\.name), .descending(.\age)),
+        .orderBy(.ascending(\.name), .descending(\.age)),
         .tweak({ $0.includesPendingChanges = false })
 )
 ```
