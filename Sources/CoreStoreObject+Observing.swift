@@ -70,180 +70,6 @@ public protocol CoreStoreObjectKeyValueObservation: AnyObject {
 }
 
 
-// MARK: - ValueContainer.Required
-
-extension ValueContainer.Required {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        return self.observe(with: options, changeHandler: changeHandler)
-    }
-}
-
-
-// MARK: - ValueContainer.Optional
-
-extension ValueContainer.Optional {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        return self.observe(with: options, changeHandler: changeHandler)
-    }
-}
-
-
-// MARK: - TransformableContainer.Required
-
-extension TransformableContainer.Required {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        return self.observe(with: options, changeHandler: changeHandler)
-    }
-}
-
-
-// MARK: - TransformableContainer.Optional
-
-extension TransformableContainer.Optional {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        return self.observe(with: options, changeHandler: changeHandler)
-    }
-}
-
-
-// MARK: - RelationshipContainer.ToOne
-
-extension RelationshipContainer.ToOne {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectObjectDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        let result = _CoreStoreObjectKeyValueObservation(
-            object: self.rawObject!,
-            keyPath: self.keyPath,
-            callback: { (object, kind, newValue, oldValue, _, isPrior) in
-
-                let notification = CoreStoreObjectObjectDiff<D>(
-                    kind: kind,
-                    newNativeValue: newValue as! CoreStoreManagedObject?,
-                    oldNativeValue: oldValue as! CoreStoreManagedObject?,
-                    isPrior: isPrior
-                )
-                changeHandler(
-                    O.cs_fromRaw(object: object),
-                    notification
-                )
-            }
-        )
-        result.start(options)
-        return result
-    }
-}
-
-
-// MARK: - RelationshipContainer.ToManyUnordered
-
-extension RelationshipContainer.ToManyUnordered {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectUnorderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        let result = _CoreStoreObjectKeyValueObservation(
-            object: self.rawObject!,
-            keyPath: self.keyPath,
-            callback: { (object, kind, newValue, oldValue, _, isPrior) in
-
-                let notification = CoreStoreObjectUnorderedDiff<D>(
-                    kind: kind,
-                    newNativeValue: newValue as! NSOrderedSet?,
-                    oldNativeValue: oldValue as! NSOrderedSet?,
-                    isPrior: isPrior
-                )
-                changeHandler(
-                    O.cs_fromRaw(object: object),
-                    notification
-                )
-            }
-        )
-        result.start(options)
-        return result
-    }
-}
-
-
-// MARK: - RelationshipContainer.ToManyOrdered
-
-extension RelationshipContainer.ToManyOrdered {
-
-    /**
-     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
-
-     - parameter options: The flags indicating which values to include in the change dictionary.
-     - parameter: changeHandler: The closure called when the value is updated.
-     */
-    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectOrderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
-
-        let result = _CoreStoreObjectKeyValueObservation(
-            object: self.rawObject!,
-            keyPath: self.keyPath,
-            callback: { (object, kind, newValue, oldValue, indexes, isPrior) in
-
-                let notification = CoreStoreObjectOrderedDiff<D>(
-                    kind: kind,
-                    newNativeValue: newValue as! NSArray?,
-                    oldNativeValue: oldValue as! NSArray?,
-                    indexes: indexes ?? IndexSet(),
-                    isPrior: isPrior
-                )
-                changeHandler(
-                    O.cs_fromRaw(object: object),
-                    notification
-                )
-            }
-        )
-        result.start(options)
-        return result
-    }
-}
-
-
 // MARK: - CoreStoreObjectValueDiff
 
 /**
@@ -614,5 +440,140 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
             change[NSKeyValueChangeKey.indexesKey.rawValue as NSString] as! IndexSet?,
             change[NSKeyValueChangeKey.notificationIsPriorKey.rawValue as NSString] as! Bool? ?? false
         )
+    }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension ValueContainer.Required {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        return self.observe(with: options, changeHandler: changeHandler)
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension ValueContainer.Optional {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        return self.observe(with: options, changeHandler: changeHandler)
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension TransformableContainer.Required {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        return self.observe(with: options, changeHandler: changeHandler)
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension TransformableContainer.Optional {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        return self.observe(with: options, changeHandler: changeHandler)
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension RelationshipContainer.ToOne {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectObjectDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        let result = _CoreStoreObjectKeyValueObservation(
+            object: self.rawObject!,
+            keyPath: self.keyPath,
+            callback: { (object, kind, newValue, oldValue, _, isPrior) in
+
+                let notification = CoreStoreObjectObjectDiff<D>(
+                    kind: kind,
+                    newNativeValue: newValue as! CoreStoreManagedObject?,
+                    oldNativeValue: oldValue as! CoreStoreManagedObject?,
+                    isPrior: isPrior
+                )
+                changeHandler(
+                    O.cs_fromRaw(object: object),
+                    notification
+                )
+            }
+        )
+        result.start(options)
+        return result
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension RelationshipContainer.ToManyUnordered {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectUnorderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        let result = _CoreStoreObjectKeyValueObservation(
+            object: self.rawObject!,
+            keyPath: self.keyPath,
+            callback: { (object, kind, newValue, oldValue, _, isPrior) in
+
+                let notification = CoreStoreObjectUnorderedDiff<D>(
+                    kind: kind,
+                    newNativeValue: newValue as! NSOrderedSet?,
+                    oldNativeValue: oldValue as! NSOrderedSet?,
+                    isPrior: isPrior
+                )
+                changeHandler(
+                    O.cs_fromRaw(object: object),
+                    notification
+                )
+            }
+        )
+        result.start(options)
+        return result
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension RelationshipContainer.ToManyOrdered {
+
+    public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectOrderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
+
+        let result = _CoreStoreObjectKeyValueObservation(
+            object: self.rawObject!,
+            keyPath: self.keyPath,
+            callback: { (object, kind, newValue, oldValue, indexes, isPrior) in
+
+                let notification = CoreStoreObjectOrderedDiff<D>(
+                    kind: kind,
+                    newNativeValue: newValue as! NSArray?,
+                    oldNativeValue: oldValue as! NSArray?,
+                    indexes: indexes ?? IndexSet(),
+                    isPrior: isPrior
+                )
+                changeHandler(
+                    O.cs_fromRaw(object: object),
+                    notification
+                )
+            }
+        )
+        result.start(options)
+        return result
     }
 }

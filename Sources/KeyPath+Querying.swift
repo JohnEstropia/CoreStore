@@ -588,133 +588,91 @@ public func ~= <O, D: FieldRelationshipToOneType, S: Sequence>(_ sequence: S, _ 
 }
 
 
-// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Equatable>
+// MARK: - Deprecated
 
-/**
- Creates a `Where` clause by comparing if a property is equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
 
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
 }
 
-/**
- Creates a `Where` clause by comparing if a property is not equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.nickname != "John"))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
 }
 
-/**
- Creates a `Where` clause by checking if a sequence contains the value of a property
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>) -> Where<O> where S.Iterator.Element == V {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
 }
 
-
-// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Optional<QueryableAttributeType & Equatable>
-
-/**
- Creates a `Where` clause by comparing if a property is equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
 }
 
-/**
- Creates a `Where` clause by comparing if a property is not equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.nickname != "John"))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
 }
 
-/**
- Creates a `Where` clause by checking if a sequence contains the value of a property
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>) -> Where<O> where S.Iterator.Element == V {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
 }
 
-
-// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Comparable>
-
-/**
- Creates a `Where` clause by comparing if a property is less than a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func < <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
-/**
- Creates a `Where` clause by comparing if a property is greater than a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age > 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func > <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
-/**
- Creates a `Where` clause by comparing if a property is less than or equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
-/**
- Creates a `Where` clause by comparing if a property is greater than or equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age >= 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
     return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
-
-// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Optional<QueryableAttributeType & Comparable>
-
-/**
- Creates a `Where` clause by comparing if a property is less than a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     if let value = value {
@@ -727,12 +685,9 @@ public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
     }
 }
 
-/**
- Creates a `Where` clause by comparing if a property is greater than a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age > 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     if let value = value {
@@ -745,12 +700,9 @@ public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
     }
 }
 
-/**
- Creates a `Where` clause by comparing if a property is less than or equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     if let value = value {
@@ -763,12 +715,9 @@ public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
     }
 }
 
-/**
- Creates a `Where` clause by comparing if a property is greater than or equal to a value
- ```
- let person = dataStack.fetchOne(From<Person>().where(\.age >= 20))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     if let value = value {
@@ -781,59 +730,41 @@ public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
     }
 }
 
-
-// MARK: - KeyPath where Root: CoreStoreObject, Value: RelationshipContainer<Root>.ToOne<CoreStoreObject>
-
-/**
- Creates a `Where` clause by comparing if a property is equal to a value
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
-/**
- Creates a `Where` clause by comparing if a property is equal to a value
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
-/**
- Creates a `Where` clause by comparing if a property is not equal to a value
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
-/**
- Creates a `Where` clause by comparing if a property is not equal to a value
- ```
- let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
-/**
- Creates a `Where` clause by checking if a sequence contains a value of a property
- ```
- let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.master))
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public func ~= <O, D, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> Where<O> where S.Iterator.Element == D {
     
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)

@@ -189,7 +189,9 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>) -> V {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>
+    ) -> V {
 
         get {
 
@@ -206,7 +208,9 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> V {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>
+    ) -> V {
 
         get {
 
@@ -223,7 +227,9 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>) -> V {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>
+    ) -> V {
 
         get {
 
@@ -240,7 +246,9 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>) -> V.PublishedType {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Relationship<V>>
+    ) -> V.PublishedType {
 
         get {
 
@@ -255,45 +263,19 @@ extension ObjectSnapshot where O: CoreStoreObject {
             self.values[key] = V.cs_toSnapshotType(from: newValue)
         }
     }
+}
 
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V {
 
-        get {
+// MARK: - Deprecated
 
-            let key = String(keyPath: member)
-            return self.values[key] as! V
-        }
-        set {
-
-            let key = String(keyPath: member)
-            self.values[key] = newValue
-        }
-    }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>) -> V? {
-
-        get {
-
-            let key = String(keyPath: member)
-            return self.values[key] as? V
-        }
-        set {
-
-            let key = String(keyPath: member)
-            self.values[key] = newValue
-        }
-    }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>) -> V {
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension ObjectSnapshot where O: CoreStoreObject {
+    
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>
+    ) -> V {
 
         get {
 
@@ -307,10 +289,9 @@ extension ObjectSnapshot where O: CoreStoreObject {
         }
     }
 
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>) -> V? {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>
+    ) -> V? {
 
         get {
 
@@ -323,11 +304,42 @@ extension ObjectSnapshot where O: CoreStoreObject {
             self.values[key] = newValue
         }
     }
+    
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>
+    ) -> V {
 
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> ObjectPublisher<D>? {
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+    
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>
+    ) -> V? {
+
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as? V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
+    }
+    
+    public subscript<OBase, D>(
+        dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>
+    ) -> ObjectPublisher<D>? {
 
         get {
 
@@ -344,11 +356,10 @@ extension ObjectSnapshot where O: CoreStoreObject {
             self.values[key] = newValue?.objectID()
         }
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [ObjectPublisher<D>] {
+    
+    public subscript<OBase, D>(
+        dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>
+    ) -> [ObjectPublisher<D>] {
 
         get {
 
@@ -363,11 +374,10 @@ extension ObjectSnapshot where O: CoreStoreObject {
             self.values[key] = newValue.map({ $0.objectID() })
         }
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<ObjectPublisher<D>> {
+    
+    public subscript<OBase, D>(
+        dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>
+    ) -> Set<ObjectPublisher<D>> {
 
         get {
 

@@ -296,12 +296,6 @@ public enum SelectTerm<O: DynamicObject>: ExpressibleByStringLiteral, Hashable {
         case ._identity(let alias, _):          return alias
         }
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 
@@ -611,12 +605,6 @@ public struct Select<O: DynamicObject, T: SelectResultType>: SelectClause, Hasha
         
         fetchRequest.propertiesToFetch = propertiesToFetch
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 extension Select where T: NSManagedObjectID {
@@ -637,48 +625,6 @@ extension Select where O: NSManagedObject {
      - parameter keyPath: the keyPath for the attribute
      */
     public init(_ keyPath: KeyPath<O, T>) {
-        
-        self.init(.attribute(keyPath))
-    }
-}
-
-extension Select where O: CoreStoreObject, T: ImportableAttributeType {
-    
-    /**
-     Initializes a `Select` that queries the value of an attribute pertained by a keyPath
-     - parameter keyPath: the keyPath for the attribute
-     */
-    public init(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
-        
-        self.init(.attribute(keyPath))
-    }
-    
-    /**
-     Initializes a `Select` that queries the value of an attribute pertained by a keyPath
-     - parameter keyPath: the keyPath for the attribute
-     */
-    public init(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
-        
-        self.init(.attribute(keyPath))
-    }
-}
-
-extension Select where O: CoreStoreObject, T: ImportableAttributeType & NSCoding & NSCopying {
-    
-    /**
-     Initializes a `Select` that queries the value of an attribute pertained by a keyPath
-     - parameter keyPath: the keyPath for the attribute
-     */
-    public init(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
-        
-        self.init(.attribute(keyPath))
-    }
-    
-    /**
-     Initializes a `Select` that queries the value of an attribute pertained by a keyPath
-     - parameter keyPath: the keyPath for the attribute
-     */
-    public init(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
         
         self.init(.attribute(keyPath))
     }
@@ -718,5 +664,40 @@ extension NSDictionary: SelectAttributesResultType {
     public static func cs_fromQueryResultsNativeType(_ result: [Any]) -> [[String : Any]] {
         
         return result as! [[String: Any]]
+    }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension Select where O: CoreStoreObject, T: ImportableAttributeType {
+    
+    public init(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
+        
+        self.init(.attribute(keyPath))
+    }
+    
+    public init(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
+        
+        self.init(.attribute(keyPath))
+    }
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension Select where O: CoreStoreObject, T: ImportableAttributeType & NSCoding & NSCopying {
+    
+    public init(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
+        
+        self.init(.attribute(keyPath))
+    }
+    
+    public init(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
+        
+        self.init(.attribute(keyPath))
     }
 }

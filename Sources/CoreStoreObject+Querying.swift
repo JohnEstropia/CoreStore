@@ -108,121 +108,64 @@ extension FieldContainer.Stored {
     }
 }
 
-// MARK: - ValueContainer.Required
+// MARK: - Deprecated
 
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension ValueContainer.Required {
     
-    /**
-     Creates a `Where` clause by comparing if a property is equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.nickname == "John" }))
-     ```
-     */
     public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is not equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.nickname != "John" }))
-     ```
-     */
     public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is less than a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age < 20 }))
-     ```
-     */
     public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K < %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is greater than a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age > 20 }))
-     ```
-     */
     public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K > %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is less than or equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age <= 20 }))
-     ```
-     */
     public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K <= %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is greater than or equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age >= 20 }))
-     ```
-     */
     public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K >= %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
-    /**
-     Creates a `Where` clause by checking if a sequence contains the value of a property
-     ```
-     let dog = dataStack.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
-     ```
-     */
     public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
 }
 
-
-// MARK: - ValueContainer.Optional
-
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension ValueContainer.Optional {
     
-    /**
-     Creates a `Where` clause by comparing if a property is equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.nickname == "John" }))
-     ```
-     */
     public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is not equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.nickname != "John" }))
-     ```
-     */
     public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is less than a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age < 20 }))
-     ```
-     */
     public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
@@ -235,12 +178,6 @@ extension ValueContainer.Optional {
         }
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is greater than a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age > 20 }))
-     ```
-     */
     public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
@@ -253,12 +190,6 @@ extension ValueContainer.Optional {
         }
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is less than or equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age <= 20 }))
-     ```
-     */
     public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
@@ -271,12 +202,6 @@ extension ValueContainer.Optional {
         }
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is greater than or equal to a value
-     ```
-     let person = dataStack.fetchOne(From<Person>().where({ $0.age >= 20 }))
-     ```
-     */
     public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
@@ -289,51 +214,27 @@ extension ValueContainer.Optional {
         }
     }
     
-    /**
-     Creates a `Where` clause by checking if a sequence contains the value of a property
-     ```
-     let dog = dataStack.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
-     ```
-     */
     public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
 }
 
-
-// MARK: - RelationshipContainer.ToOne
-
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension RelationshipContainer.ToOne {
     
-    /**
-     Creates a `Where` clause by comparing if a property is equal to a value
-     ```
-     let dog = dataStack.fetchOne(From<Dog>().where({ $0.master == me }))
-     ```
-     */
     public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return Where(relationship.keyPath, isEqualTo: object)
     }
     
-    /**
-     Creates a `Where` clause by comparing if a property is not equal to a value
-     ```
-     let dog = dataStack.fetchOne(From<Dog>().where({ $0.master != me }))
-     ```
-     */
     public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return !Where(relationship.keyPath, isEqualTo: object)
     }
     
-    /**
-     Creates a `Where` clause by checking if a sequence contains the value of a property
-     ```
-     let dog = dataStack.fetchOne(From<Dog>().where({ [john, joe, bob] ~= $0.master }))
-     ```
-     */
     public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where<O> where S.Iterator.Element == D {
         
         return Where(relationship.keyPath, isMemberOf: sequence)

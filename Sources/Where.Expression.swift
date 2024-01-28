@@ -88,12 +88,6 @@ extension Where {
 
             self.cs_keyPathString = component1 + "." + component2
         }
-        
-        
-        // MARK: Deprecated
-
-        @available(*, deprecated, renamed: "O")
-        public typealias D = O
     }
 
 
@@ -240,20 +234,6 @@ public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: KeyPathStri
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D {
-
-    return .init(
-        O.meta[keyPath: lhs].cs_keyPathString,
-        D.meta[keyPath: rhs].cs_keyPathString
-    )
-}
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
- ```
- let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
- ```
- */
 public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<T, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
@@ -287,20 +267,6 @@ public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: ToManyRelat
     return .init(
         O.meta[keyPath: lhs].cs_keyPathString,
         D.DestinationObjectType.meta[keyPath: rhs].cs_keyPathString
-    )
-}
-
-/**
- Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
- ```
- let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
- ```
- */
-public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == D {
-
-    return .init(
-        O.meta[keyPath: lhs].cs_keyPathString,
-        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -713,4 +679,29 @@ extension Where {
             self.init("\(expression.cs_keyPathString) \(function) nil")
         }
     }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D {
+
+    return .init(
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
+    )
+}
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == D {
+
+    return .init(
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
+    )
 }

@@ -47,12 +47,6 @@ public struct SectionMonitorChainBuilder<O: DynamicObject>: SectionMonitorBuilde
     public var from: From<O>
     public var sectionBy: SectionBy<O>
     public var fetchClauses: [FetchClause] = []
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 

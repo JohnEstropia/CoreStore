@@ -299,13 +299,4 @@ extension DiffableDataSource {
     }
 }
 
-
-// MARK: Deprecated
-
-extension DiffableDataSource {
-
-    @available(*, deprecated, renamed: "TableViewAdapter")
-    public typealias TableView = TableViewAdapter
-}
-
 #endif

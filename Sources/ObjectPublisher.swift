@@ -333,15 +333,6 @@ extension ObjectPublisher where O: NSManagedObject {
 
         return self.snapshot?[dynamicMember: member]
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, message: "Accessing the property directly now works")
-    public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
-
-        return self[dynamicMember: keyPath]
-    }
 }
 
 
@@ -435,64 +426,53 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
+    public subscript<V>(dynamicMember member: KeyPath<O, V>) -> V? {
+
+        return self.object?[keyPath: member]
+    }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension ObjectPublisher where O: CoreStoreObject {
+    
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
+    
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
     public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
     public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> D? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
     public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [D]? {
 
         return self.object?[keyPath: member].value
     }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    
     public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<D>? {
 
         return self.object?[keyPath: member].value
-    }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<V>(dynamicMember member: KeyPath<O, V>) -> V? {
-
-        return self.object?[keyPath: member]
     }
 }

@@ -636,13 +636,6 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             let managedObjectClass: AnyClass = className.withCString {
 
-                // Xcode 10.1+ users: You may find this comment due to a crash while debugging on an iPhone XR device (or any A12 device).
-                // This is a known issue that should not occur in archived builds, as the AppStore strips away arm64e build architectures from the binary. So while it crashes on DEBUG, it shouldn't be an issue for live users.
-                // In the meantime, please submit a bug report to Apple and refer to similar discussions here:
-                // - https://github.com/realm/realm-cocoa/issues/6013
-                // - https://github.com/wordpress-mobile/WordPress-iOS/pull/10400
-                // - https://github.com/JohnEstropia/CoreStore/issues/291
-                // If you wish to debug with A12 devices, please use Xcode 10.0 for now.
                 return objc_allocateClassPair(superClass, $0, 0)!
             }
             defer {

@@ -408,12 +408,6 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             inObject: observer
         )
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 

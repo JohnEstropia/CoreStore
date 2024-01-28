@@ -101,12 +101,6 @@ public struct GroupBy<O: DynamicObject>: GroupByClause, QueryClause, Hashable {
 
         hasher.combine(self.keyPaths)
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 extension GroupBy where O: NSManagedObject {
@@ -153,46 +147,6 @@ extension GroupBy where O: CoreStoreObject {
         
         self.init([O.meta[keyPath: keyPath].keyPath])
     }
-    
-    /**
-     Initializes a `GroupBy` clause with a key path
-     
-     - parameter keyPath: a key path to group results with
-     */
-    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
-        
-        self.init([O.meta[keyPath: keyPath].keyPath])
-    }
-    
-    /**
-     Initializes a `GroupBy` clause with a key path
-     
-     - parameter keyPath: a key path to group results with
-     */
-    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
-        
-        self.init([O.meta[keyPath: keyPath].keyPath])
-    }
-    
-    /**
-     Initializes a `GroupBy` clause with a key path
-     
-     - parameter keyPath: a key path to group results with
-     */
-    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
-        
-        self.init([O.meta[keyPath: keyPath].keyPath])
-    }
-    
-    /**
-     Initializes a `GroupBy` clause with a key path
-     
-     - parameter keyPath: a key path to group results with
-     */
-    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
-        
-        self.init([O.meta[keyPath: keyPath].keyPath])
-    }
 }
 
 
@@ -212,4 +166,33 @@ public protocol GroupByClause {
      The list of key path strings to group results with
      */
     var keyPaths: [KeyPathString] { get }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension GroupBy where O: CoreStoreObject {
+    
+    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
+        
+        self.init([O.meta[keyPath: keyPath].keyPath])
+    }
 }

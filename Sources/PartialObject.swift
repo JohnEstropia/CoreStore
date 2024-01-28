@@ -154,11 +154,24 @@ public struct PartialObject<O: CoreStoreObject> {
     }
     
     
-    // MARK: Value.Required accessors/mutators
+    // MARK: Internal
     
-    /**
-     Returns the value for the property identified by a given key.
-     */
+    internal let rawObject: NSManagedObject
+    
+    internal init(_ rawObject: NSManagedObject) {
+        
+        self.rawObject = rawObject
+    }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension PartialObject {
+    
     public func value<V>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
         
         return V.cs_fromQueryableNativeType(
@@ -166,9 +179,6 @@ public struct PartialObject<O: CoreStoreObject> {
         )!
     }
     
-    /**
-     Sets the property of the receiver specified by a given key to a given value.
-     */
     public func setValue<V>(_ value: V, for property: (O) -> ValueContainer<O>.Required<V>) {
         
         self.rawObject.setValue(
@@ -177,11 +187,6 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    /**
-     Returns the value for the specified property from the managed object’s private internal storage.
-
-     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
-     */
     public func primitiveValue<V>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
         
         return V.cs_fromQueryableNativeType(
@@ -189,11 +194,6 @@ public struct PartialObject<O: CoreStoreObject> {
         )!
     }
     
-    /**
-     Sets in the object's private internal storage the value of a given property.
-     
-     Sets in the receiver’s private internal storage the value of the property specified by key to value.
-     */
     public func setPrimitiveValue<V>(_ value: V, for property: (O) -> ValueContainer<O>.Required<V>) {
         
         self.rawObject.setPrimitiveValue(
@@ -202,21 +202,12 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    
-    // MARK: Value.Optional utilities
-    
-    /**
-     Returns the value for the property identified by a given key.
-     */
     public func value<V>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
         
         return (self.rawObject.value(forKey: property(O.meta).keyPath) as! V.QueryableNativeType?)
             .flatMap(V.cs_fromQueryableNativeType)
     }
     
-    /**
-     Sets the property of the receiver specified by a given key to a given value.
-     */
     public func setValue<V>(_ value: V?, for property: (O) -> ValueContainer<O>.Optional<V>) {
         
         self.rawObject.setValue(
@@ -225,22 +216,12 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    /**
-     Returns the value for the specified property from the managed object’s private internal storage.
-     
-     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
-     */
     public func primitiveValue<V>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
         
         return (self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V.QueryableNativeType?)
             .flatMap(V.cs_fromQueryableNativeType)
     }
     
-    /**
-     Sets in the object's private internal storage the value of a given property.
-     
-     Sets in the receiver’s private internal storage the value of the property specified by key to value.
-     */
     public func setPrimitiveValue<V>(_ value: V?, for property: (O) -> ValueContainer<O>.Optional<V>) {
         
         self.rawObject.setPrimitiveValue(
@@ -249,20 +230,11 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    
-    // MARK: Transformable.Required utilities
-    
-    /**
-     Returns the value for the property identified by a given key.
-     */
     public func value<V>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
         
         return self.rawObject.value(forKey: property(O.meta).keyPath)! as! V
     }
     
-    /**
-     Sets the property of the receiver specified by a given key to a given value.
-     */
     public func setValue<V>(_ value: V, for property: (O) -> TransformableContainer<O>.Required<V>) {
         
         self.rawObject.setValue(
@@ -271,21 +243,11 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    /**
-     Returns the value for the specified property from the managed object’s private internal storage.
-     
-     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
-     */
     public func primitiveValue<V>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
         
         return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V
     }
     
-    /**
-     Sets in the object's private internal storage the value of a given property.
-     
-     Sets in the receiver’s private internal storage the value of the property specified by key to value.
-     */
     public func setPrimitiveValue<V>(_ value: V, for property: (O) -> TransformableContainer<O>.Required<V>) {
         
         self.rawObject.setPrimitiveValue(
@@ -294,20 +256,11 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    
-    // MARK: Transformable.Optional utilities
-    
-    /**
-     Returns the value for the property identified by a given key.
-     */
     public func value<V>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
         
         return self.rawObject.value(forKey: property(O.meta).keyPath) as! V?
     }
     
-    /**
-     Sets the property of the receiver specified by a given key to a given value.
-     */
     public func setValue<V>(_ value: V?, for property: (O) -> TransformableContainer<O>.Optional<V>) {
         
         self.rawObject.setValue(
@@ -316,36 +269,16 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    /**
-     Returns the value for the specified property from the managed object’s private internal storage.
-     
-     This method does not invoke the access notification methods (`willAccessValue(forKey:)` and `didAccessValue(forKey:)`). This method is used primarily by subclasses that implement custom accessor methods that need direct access to the receiver’s private storage.
-     */
     public func primitiveValue<V>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
         
         return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V?
     }
     
-    /**
-     Sets in the object's private internal storage the value of a given property.
-     
-     Sets in the receiver’s private internal storage the value of the property specified by key to value.
-     */
     public func setPrimitiveValue<V>(_ value: V?, for property: (O) -> TransformableContainer<O>.Optional<V>) {
         
         self.rawObject.setPrimitiveValue(
             value,
             forKey: property(O.meta).keyPath
         )
-    }
-    
-    
-    // MARK: Internal
-    
-    internal let rawObject: NSManagedObject
-    
-    internal init(_ rawObject: NSManagedObject) {
-        
-        self.rawObject = rawObject
     }
 }

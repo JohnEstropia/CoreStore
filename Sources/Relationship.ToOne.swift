@@ -27,42 +27,15 @@ import CoreData
 import Foundation
 
 
-// MARK: - RelationshipContainer
+// MARK: - Deprecated
 
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension RelationshipContainer {
 
-    // MARK: - ToOne
-
-    /**
-     The containing type for to-one relationships. Any `CoreStoreObject` subclass can be a destination type. Inverse relationships should be declared from the destination type as well, using the `inverse:` argument for the relationship.
-     ```
-     class Dog: CoreStoreObject {
-         let master = Relationship.ToOne<Person>("master")
-     }
-     class Person: CoreStoreObject {
-         let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-     }
-     ```
-     - Important: `Relationship.ToOne` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
-     */
     public final class ToOne<D: CoreStoreObject>: RelationshipKeyPathStringConvertible, RelationshipProtocol {
 
-        /**
-         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
-         ```
-         class Dog: CoreStoreObject {
-             let master = Relationship.ToOne<Person>("master")
-         }
-         class Person: CoreStoreObject {
-             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-         }
-         ```
-         - parameter keyPath: the permanent name for this relationship.
-         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
-         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
         public convenience init(
             _ keyPath: KeyPathString,
             deleteRule: DeleteRule = .nullify,
@@ -80,23 +53,6 @@ extension RelationshipContainer {
             )
         }
 
-        /**
-         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
-         ```
-         class Dog: CoreStoreObject {
-             let master = Relationship.ToOne<Person>("master")
-         }
-         class Person: CoreStoreObject {
-             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-         }
-         ```
-         - parameter keyPath: the permanent name for this relationship.
-         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
-         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
-         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
         public convenience init(
             _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
@@ -114,24 +70,7 @@ extension RelationshipContainer {
                 affectedByKeyPaths: affectedByKeyPaths()
             )
         }
-
-        /**
-         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
-         ```
-         class Dog: CoreStoreObject {
-             let master = Relationship.ToOne<Person>("master")
-         }
-         class Person: CoreStoreObject {
-             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-         }
-         ```
-         - parameter keyPath: the permanent name for this relationship.
-         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
-         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
-         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
+        
         public convenience init(
             _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
@@ -149,24 +88,7 @@ extension RelationshipContainer {
                 affectedByKeyPaths: affectedByKeyPaths()
             )
         }
-
-        /**
-         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
-         ```
-         class Dog: CoreStoreObject {
-             let master = Relationship.ToOne<Person>("master")
-         }
-         class Person: CoreStoreObject {
-             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-         }
-         ```
-         - parameter keyPath: the permanent name for this relationship.
-         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
-         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
-         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
+        
         public convenience init(
             _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
@@ -184,10 +106,7 @@ extension RelationshipContainer {
                 affectedByKeyPaths: affectedByKeyPaths()
             )
         }
-
-        /**
-         The relationship value
-         */
+        
         public var value: ReturnValueType {
 
             get {
@@ -200,32 +119,17 @@ extension RelationshipContainer {
             }
         }
 
-
-        // MARK: AnyKeyPathStringConvertible
-
         public var cs_keyPathString: String {
 
             return self.keyPath
         }
 
-
-        // MARK: KeyPathStringConvertible
-
         public typealias ObjectType = O
         public typealias DestinationValueType = D
 
-
-        // MARK: RelationshipKeyPathStringConvertible
-
         public typealias ReturnValueType = DestinationValueType?
 
-
-        // MARK: PropertyProtocol
-
         internal let keyPath: KeyPathString
-
-
-        // MARK: RelationshipProtocol
 
         internal let entityDescriptionValues: () -> RelationshipProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
@@ -302,80 +206,31 @@ extension RelationshipContainer {
     }
 }
 
-
-// MARK: - Operations
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension RelationshipContainer.ToOne {
 
-    /**
-     Assigns an object to the relationship. The operation
-     ```
-     dog.master .= person
-     ```
-     is equivalent to
-     ```
-     dog.master.value = person
-     ```
-     */
     public static func .= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ newObject: D?) {
 
         relationship.nativeValue = newObject?.cs_toRaw()
     }
 
-    /**
-     Assigns an object from another relationship. The operation
-     ```
-     dog.master .= anotherDog.master
-     ```
-     is equivalent to
-     ```
-     dog.master.value = anotherDog.master.value
-     ```
-     */
     public static func .= <O2>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
 
         relationship.nativeValue = relationship2.nativeValue
     }
 
-    /**
-     Compares equality between a relationship's object and another object
-     ```
-     if dog.master .== person { ... }
-     ```
-     is equivalent to
-     ```
-     if dog.master.value == person { ... }
-     ```
-     */
     public static func .== (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Bool {
 
         return relationship.nativeValue == object?.cs_toRaw()
     }
-
-    /**
-     Compares equality between an object and a relationship's object
-     ```
-     if dog.master .== person { ... }
-     ```
-     is equivalent to
-     ```
-     if dog.master.value == person { ... }
-     ```
-     */
+    
     public static func .== (_ object: D?, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Bool {
 
         return object?.cs_toRaw() == relationship.nativeValue
     }
-
-    /**
-     Compares equality between a relationship's object and another relationship's object
-     ```
-     if dog.master .== person { ... }
-     ```
-     is equivalent to
-     ```
-     if dog.master.value == person { ... }
-     ```
-     */
+    
     public static func .== <O2>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) -> Bool {
 
         return relationship.nativeValue == relationship2.nativeValue

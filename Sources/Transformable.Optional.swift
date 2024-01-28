@@ -27,62 +27,15 @@ import CoreData
 import Foundation
 
 
-// MARK: - TransformableContainer
+// MARK: - Deprecated
 
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension TransformableContainer {
-
-    // MARK: - Optional
-
-    /**
-     The containing type for optional transformable properties. Any type that conforms to `NSCoding & NSCopying` are supported.
-     ```
-     class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species", initial: "")
-         let nickname = Value.Optional<String>("nickname")
-         let color = Transformable.Optional<UIColor>("color")
-     }
-     ```
-     - Important: `Transformable.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
-     */
+    
     public final class Optional<V: NSCoding & NSCopying>: AttributeKeyPathStringConvertible, AttributeProtocol {
-
-        /**
-         Initializes the metadata for the property.
-         ```
-         class Animal: CoreStoreObject {
-             let species = Value.Required<String>("species", initial: "")
-             let color = Transformable.Optional<UIColor>(
-                 "color",
-                 isTransient: true,
-                 customGetter: Animal.getColor(_:)
-             )
-         }
-
-         private static func getColor(_ partialObject: PartialObject<Animal>) -> UIColor? {
-             if let cachedColor = partialObject.primitiveValue(for: { $0.color }) {
-                 return cachedColor
-             }
-             let color: UIColor?
-             switch partialObject.value(for: { $0.species }) {
-
-             case "Swift": color = UIColor.orange
-             case "Bulbasaur": color = UIColor.green
-             default: return nil
-             }
-             partialObject.setPrimitiveValue(color, for: { $0.color })
-             return color
-         }
-         ```
-         - parameter keyPath: the permanent attribute name for this property.
-         - parameter initial: the initial value for the property that is shared for all instances of this object. Note that this is evaluated during `DataStack` setup, not during object creation. Defaults to the `ImportableAttributeType`'s empty value if not specified.
-         - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter allowsExternalBinaryDataStorage: `true` if the attribute allows external binary storage, otherwise `false`.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
-         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
+        
         public init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V? = nil,
@@ -110,10 +63,7 @@ extension TransformableContainer {
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
-
-        /**
-         The attribute value
-         */
+        
         public var value: ReturnValueType {
 
             get {
@@ -163,27 +113,15 @@ extension TransformableContainer {
             }
         }
 
-
-        // MARK: AnyKeyPathStringConvertible
-
         public var cs_keyPathString: String {
 
             return self.keyPath
         }
 
-
-        // MARK: KeyPathStringConvertible
-
         public typealias ObjectType = O
         public typealias DestinationValueType = V
 
-
-        // MARK: AttributeKeyPathStringConvertible
-
         public typealias ReturnValueType = DestinationValueType?
-
-
-        // MARK: PropertyProtocol
 
         internal let keyPath: KeyPathString
 
@@ -240,59 +178,26 @@ extension TransformableContainer {
             return self.value
         }
 
-
-        // MARK: Private
-
         private let customGetter: ((_ partialObject: PartialObject<O>) -> V?)?
         private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)?
     }
 }
 
-
-// MARK: - Operations
-
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension TransformableContainer.Optional {
 
-    /**
-     Assigns an optional transformable value to the property. The operation
-     ```
-     animal.color .= UIColor.red
-     ```
-     is equivalent to
-     ```
-     animal.color.value = UIColor.red
-     ```
-     */
     public static func .= (_ property: TransformableContainer<O>.Optional<V>, _ newValue: V?) {
 
         property.value = newValue
     }
-
-    /**
-     Assigns an optional transformable value from another property. The operation
-     ```
-     animal.color .= anotherAnimal.color
-     ```
-     is equivalent to
-     ```
-     animal.color.value = anotherAnimal.color.value
-     ```
-     */
+    
     public static func .= <O2>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Optional<V>) {
 
         property.value = property2.value
     }
-
-    /**
-     Assigns a transformable value from another property. The operation
-     ```
-     animal.color .= anotherAnimal.color
-     ```
-     is equivalent to
-     ```
-     animal.color.value = anotherAnimal.color.value
-     ```
-     */
+    
     public static func .= <O2>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Required<V>) {
 
         property.value = property2.value
