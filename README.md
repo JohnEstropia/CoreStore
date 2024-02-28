@@ -2512,4 +2512,4 @@ I'd love to hear about apps using CoreStore. Send me a message and I'll welcome 
 CoreStore is released under an MIT license. See the [LICENSE](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE) file for more information
 
 ---
-[⬆️ Back to top](#top)
+[⬆️ Jump to top](#top)
