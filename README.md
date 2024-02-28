@@ -1,3 +1,4 @@
+<a id="top"></a>
 <p align="center">
 <img alt="CoreStore" src="https://github.com/JohnEstropia/CoreStore/raw/develop/CoreStore.png" width=614 />
 <br />
@@ -2510,3 +2511,5 @@ I'd love to hear about apps using CoreStore. Send me a message and I'll welcome 
 # License
 CoreStore is released under an MIT license. See the [LICENSE](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE) file for more information
 
+---
+[⬆️ Back to top](#top)
