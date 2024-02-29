@@ -182,12 +182,6 @@ extension DataStack {
             private let storage: Storage
             private var subscriber: S?
         }
-
-
-        // MARK: Deprecated
-
-        @available(*, deprecated, renamed: "MigrationProgress")
-        public typealias MigrationProgress = CoreStore.MigrationProgress<Storage>
     }
 }
 

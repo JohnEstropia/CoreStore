@@ -189,51 +189,6 @@ extension DataStack {
             }
         )
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "publishObject(_:)")
-    public func objectPublisher<O: DynamicObject>(_ object: O) -> ObjectPublisher<O> {
-
-        return self.publishObject(object)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:_:)")
-    public func listPublisher<O>(_ from: From<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
-
-        return self.publishList(from, fetchClauses)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:_:)")
-    public func listPublisher<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
-
-        return self.publishList(from, fetchClauses)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:)")
-    public func listPublisher<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
-
-        return self.publishList(clauseChain)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:_:_:)")
-    public func listPublisher<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
-
-        return self.publishList(from, sectionBy, fetchClauses)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:_:_:)")
-    public func listPublisher<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
-
-        return self.publishList(from, sectionBy, fetchClauses)
-    }
-
-    @available(*, deprecated, renamed: "publishList(_:)")
-    public func listPublisher<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
-
-        return self.publishList(clauseChain)
-    }
 }
 
 #endif

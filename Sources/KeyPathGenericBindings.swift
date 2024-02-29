@@ -317,9 +317,3 @@ extension NSSet: AllowedObjectiveCToManyRelationshipKeyPathValue {}
 extension NSOrderedSet: AllowedObjectiveCToManyRelationshipKeyPathValue {}
 
 extension Optional: AllowedObjectiveCToManyRelationshipKeyPathValue where Wrapped: AllowedObjectiveCToManyRelationshipKeyPathValue, Wrapped: AllowedObjectiveCRelationshipKeyPathValue {}
-
-
-// MARK: - Deprecated
-
-@available(*, deprecated, renamed: "AllowedObjectiveCToManyRelationshipKeyPathValue")
-public typealias AllowedCoreStoreObjectCollectionKeyPathValue = AllowedObjectiveCToManyRelationshipKeyPathValue

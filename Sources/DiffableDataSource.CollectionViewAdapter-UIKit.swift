@@ -240,13 +240,4 @@ extension DiffableDataSource {
     }
 }
 
-
-// MARK: Deprecated
-
-extension DiffableDataSource {
-
-    @available(*, deprecated, renamed: "CollectionViewAdapter")
-    public typealias CollectionView = CollectionViewAdapter
-}
-
 #endif

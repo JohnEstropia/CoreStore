@@ -1440,21 +1440,6 @@ extension ListMonitor where O: NSManagedObject {
         
         return self.sectionInfo(safelyAt: section)?.objects as! [O]?
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "objects(in:)")
-    public func objectsInSection(_ section: Int) -> [O] {
-
-        return self.objects(in: section)
-    }
-
-    @available(*, deprecated, renamed: "objects(safelyIn:)")
-    public func objectsInSection(safeSectionIndex section: Int) -> [O]? {
-
-        return self.objects(safelyIn: section)
-    }
 }
 
 
@@ -1500,12 +1485,6 @@ extension ListMonitor where O: CoreStoreObject {
         return (self.sectionInfo(safelyAt: section)?.objects)?
             .map({ O.cs_fromRaw(object: $0 as! NSManagedObject) })
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 

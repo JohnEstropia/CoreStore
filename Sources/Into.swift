@@ -131,10 +131,4 @@ public struct Into<O: DynamicObject>: Hashable {
         self.configuration = configuration
         self.inferStoreIfPossible = inferStoreIfPossible
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }

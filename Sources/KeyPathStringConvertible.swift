@@ -92,12 +92,3 @@ public protocol RelationshipKeyPathStringConvertible: KeyPathStringConvertible {
  */
 public protocol ToManyRelationshipKeyPathStringConvertible: RelationshipKeyPathStringConvertible where ReturnValueType: Sequence {}
 
-
-// MARK: - Deprecated
-
-@available(*, deprecated, renamed: "AnyKeyPathStringConvertible")
-public typealias AnyDynamicKeyPath = AnyKeyPathStringConvertible
-
-@available(*, deprecated, renamed: "KeyPathStringConvertible")
-public typealias DynamicKeyPath = KeyPathStringConvertible
-

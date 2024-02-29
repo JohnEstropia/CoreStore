@@ -49,12 +49,6 @@ public struct QueryChainBuilder<O: DynamicObject, R: SelectResultType>: QueryCha
     public var from: From<O>
     public var select: Select<O, R>
     public var queryClauses: [QueryClause] = []
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 

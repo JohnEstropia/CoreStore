@@ -27,63 +27,15 @@ import CoreData
 import Foundation
 
 
-// MARK: - ValueContainer
+// MARK: - Deprecated
 
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension ValueContainer {
-
-    // MARK: - Optional
-
-    /**
-     The containing type for optional value properties. Any type that conforms to `ImportableAttributeType` are supported.
-     ```
-     class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species", initial: "")
-         let nickname = Value.Optional<String>("nickname")
-         let color = Transformable.Optional<UIColor>("color")
-     }
-     ```
-     - Important: `Value.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
-     */
+    
     public final class Optional<V: ImportableAttributeType>: AttributeKeyPathStringConvertible, AttributeProtocol {
-
-        /**
-         Initializes the metadata for the property.
-         ```
-         class Person: CoreStoreObject {
-             let title = Value.Optional<String>("title", initial: "Mr.")
-             let name = Value.Optional<String>("name")
-             let displayName = Value.Optional<String>(
-                 "displayName",
-                 isTransient: true,
-                 customGetter: Person.getName(_:)
-             )
-
-             private static func getName(_ partialObject: PartialObject<Person>) -> String? {
-                 if let cachedDisplayName = partialObject.primitiveValue(for: { $0.displayName }) {
-                    return cachedDisplayName
-                 }
-                 let title = partialObject.value(for: { $0.title })
-                 let name = partialObject.value(for: { $0.name })
-                 let displayName = "\(title) \(name)"
-                 partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
-                 return displayName
-             }
-         }
-         ```
-         - parameter keyPath: the permanent attribute name for this property.
-         - parameter initial: the initial value for the property that is shared for all instances of this object. Note that this is evaluated during `DataStack` setup, not during object creation. Defaults to `nil` if not specified.
-         - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
-         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
-         - parameter self: the `CoreStoreObject`
-         - parameter getValue: the original getter for the property
-         - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
-         - parameter setValue: the original setter for the property
-         - parameter finalNewValue: the transformed new value
-         - parameter originalNewValue: the original new value
-         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
-         */
+        
         public init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V? = nil,
@@ -110,10 +62,7 @@ extension ValueContainer {
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
-
-        /**
-         The attribute value
-         */
+        
         public var value: ReturnValueType {
 
             get {
@@ -164,32 +113,17 @@ extension ValueContainer {
             }
         }
 
-
-        // MARK: AnyKeyPathStringConvertible
-
         public var cs_keyPathString: String {
 
             return self.keyPath
         }
 
-
-        // MARK: KeyPathStringConvertible
-
         public typealias ObjectType = O
         public typealias DestinationValueType = V
 
-
-        // MARK: AttributeKeyPathStringConvertible
-
         public typealias ReturnValueType = DestinationValueType?
 
-
-        // MARK: PropertyProtocol
-
         internal let keyPath: KeyPathString
-
-
-        // MARK: AttributeProtocol
 
         internal let entityDescriptionValues: () -> AttributeProtocol.EntityDescriptionValues
         internal var rawObject: CoreStoreManagedObject?
@@ -241,119 +175,46 @@ extension ValueContainer {
             return self.value
         }
 
-
-        // MARK: Private
-
         private let customGetter: ((_ partialObject: PartialObject<O>) -> V?)?
         private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)?
     }
 }
 
-
-// MARK: - Operations
-
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 extension ValueContainer.Optional {
 
-    /**
-     Assigns an optional value to the property. The operation
-     ```
-     animal.nickname .= "Taylor"
-     ```
-     is equivalent to
-     ```
-     animal.nickname.value = "Taylor"
-     ```
-     */
     public static func .= (_ property: ValueContainer<O>.Optional<V>, _ newValue: V?) {
 
         property.value = newValue
     }
-
-    /**
-     Assigns an optional value from another property. The operation
-     ```
-     animal.nickname .= anotherAnimal.nickname
-     ```
-     is equivalent to
-     ```
-     animal.nickname.value = anotherAnimal.nickname.value
-     ```
-     */
+    
     public static func .= <O2>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Optional<V>) {
 
         property.value = property2.value
     }
-
-    /**
-     Assigns a value from another property. The operation
-     ```
-     animal.nickname .= anotherAnimal.species
-     ```
-     is equivalent to
-     ```
-     animal.nickname.value = anotherAnimal.species.value
-     ```
-     */
+    
     public static func .= <O2>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Required<V>) {
 
         property.value = property2.value
     }
-
-    /**
-     Compares equality between a property's value and another value
-     ```
-     if animal.species .== "Swift" { ... }
-     ```
-     is equivalent to
-     ```
-     if animal.species.value == "Swift" { ... }
-     ```
-     */
+    
     public static func .== (_ property: ValueContainer<O>.Optional<V>, _ value: V?) -> Bool {
 
         return property.value == value
     }
-
-    /**
-     Compares equality between a property's value and another property's value
-     ```
-     if "Swift" .== animal.species { ... }
-     ```
-     is equivalent to
-     ```
-     if "Swift" == animal.species.value { ... }
-     ```
-     */
+    
     public static func .== (_ value: V?, _ property: ValueContainer<O>.Optional<V>) -> Bool {
 
         return value == property.value
     }
-
-    /**
-     Compares equality between a property's value and another property's value
-     ```
-     if animal.species .== anotherAnimal.species { ... }
-     ```
-     is equivalent to
-     ```
-     if animal.species.value == anotherAnimal.species.value { ... }
-     ```
-     */
+    
     public static func .== (_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O>.Optional<V>) -> Bool {
 
         return property.value == property2.value
     }
-
-    /**
-     Compares equality between a property's value and another property's value
-     ```
-     if animal.species .== anotherAnimal.species { ... }
-     ```
-     is equivalent to
-     ```
-     if animal.species.value == anotherAnimal.species.value { ... }
-     ```
-     */
+    
     public static func .== (_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O>.Required<V>) -> Bool {
 
         return property.value == property2.value

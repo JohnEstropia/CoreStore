@@ -27,35 +27,17 @@ import CoreData
 import Foundation
 
 
-// MARK: - DynamicObject
+// MARK: - Deprecated
 
 extension DynamicObject where Self: CoreStoreObject {
     
-    /**
-     The containing type for value propertiess. `Value` properties support any type that conforms to `ImportableAttributeType`.
-     ```
-     class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species", initial: "")
-         let nickname = Value.Optional<String>("nickname")
-         let color = Transformable.Optional<UIColor>("color")
-     }
-     ```
-     - Important: `Value` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
-     */
+    @available(*, deprecated, message: """
+    Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+    """)
     public typealias Value = ValueContainer<Self>
 }
 
-
-// MARK: - ValueContainer
-
-/**
- The containing type for value properties. Use the `DynamicObject.Value` typealias instead for shorter syntax.
- ```
- class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species", initial: "")
-     let nickname = Value.Optional<String>("nickname")
-     let color = Transformable.Optional<UIColor>("color")
- }
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public enum ValueContainer<O: CoreStoreObject> {}

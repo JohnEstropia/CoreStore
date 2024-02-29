@@ -27,46 +27,21 @@ import CoreData
 import Foundation
 
 
-// MARK: - DynamicObject
+// MARK: - Deprecated
 
 extension DynamicObject where Self: CoreStoreObject {
     
-    /**
-     The containing type for relationships. `Relationship`s can be any `CoreStoreObject` subclass.
-     ```
-     class Dog: CoreStoreObject {
-         let master = Relationship.ToOne<Person>("master")
-     }
-     class Person: CoreStoreObject {
-         let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
-     }
-     ```
-     - Important: `Relationship` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
-     */
+    @available(*, deprecated, message: """
+    Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+    """)
     public typealias Relationship = RelationshipContainer<Self>
 }
 
-
-// MARK: - RelationshipContainer
-
-/**
- The containing type for relationships. Use the `DynamicObject.Relationship` typealias instead for shorter syntax.
- ```
- class Dog: CoreStoreObject {
-     let master = Relationship.ToOne<Person>("master")
- }
- class Person: CoreStoreObject {
-     let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
- }
- ```
- */
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
 public enum RelationshipContainer<O: CoreStoreObject> {
     
-    // MARK: - DeleteRule
-
-    /**
-     These constants define what happens to relationships when an object is deleted.
-     */
     public enum DeleteRule {
 
         // MARK: Public

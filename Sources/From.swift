@@ -211,10 +211,4 @@ public struct From<O: DynamicObject> {
             }
         }
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }

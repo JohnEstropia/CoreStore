@@ -47,12 +47,6 @@ public struct FetchChainBuilder<O: DynamicObject>: FetchChainableBuilderType {
     
     public var from: From<O>
     public var fetchClauses: [FetchClause] = []
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 

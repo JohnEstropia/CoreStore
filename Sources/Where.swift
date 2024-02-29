@@ -360,12 +360,6 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
 
         hasher.combine(self.predicate)
     }
-    
-    
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "O")
-    public typealias D = O
 }
 
 
@@ -545,116 +539,6 @@ extension Where where O: CoreStoreObject {
     }
     
     /**
-     Initializes a `Where` clause that compares equality
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter value: the arguments for the `==` operator
-     */
-    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, isEqualTo value: V?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter value: the arguments for the `==` operator
-     */
-    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo value: V?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality to `nil`
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter null: the arguments for the `==` operator
-     */
-    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo null: Void?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality to `nil`
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter null: the arguments for the `==` operator
-     */
-    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo null: Void?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter value: the arguments for the `==` operator
-     */
-    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo value: D?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter objectID: the arguments for the `==` operator
-     */
-    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo objectID: NSManagedObjectID) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: objectID)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the sequence to check membership of
-     */
-    public init<V, S: Sequence>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, isMemberOf list: S) where S.Iterator.Element == V {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the sequence to check membership of
-     */
-    public init<V, S: Sequence>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isMemberOf list: S) where S.Iterator.Element == V {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the sequence to check membership of
-     */
-    public init<D, S: Sequence>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isMemberOf list: S) where S.Iterator.Element == D {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the sequence to check membership of
-     */
-    public init<D, S: Sequence>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
-    }
-    
-    /**
      Initializes a `Where` clause from a closure
      
      - parameter condition: closure that returns the `Where` clause
@@ -684,5 +568,64 @@ extension Sequence where Iterator.Element: WhereClauseType {
     public func combinedByOr() -> Where<Iterator.Element.ObjectType> {
         
         return Where(NSCompoundPredicate(type: .or, subpredicates: self.map({ $0.predicate })))
+    }
+}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, message: """
+Legacy `Value.*`, `Transformable.*`, and `Relationship.*` declarations will soon be obsoleted. Please migrate your models and stores to new models that use `@Field.*` property wrappers. See: https://github.com/JohnEstropia/CoreStore?tab=readme-ov-file#new-field-property-wrapper-syntax
+""")
+extension Where where O: CoreStoreObject {
+    
+    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, isEqualTo value: V?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
+    
+    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo value: V?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
+    
+    public init<V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isEqualTo null: Void?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    }
+    
+    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo null: Void?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    }
+    
+    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo value: D?) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+    }
+    
+    public init<D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isEqualTo objectID: NSManagedObjectID) {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: objectID)
+    }
+    
+    public init<V, S: Sequence>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, isMemberOf list: S) where S.Iterator.Element == V {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    }
+    
+    public init<V, S: Sequence>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, isMemberOf list: S) where S.Iterator.Element == V {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    }
+    
+    public init<D, S: Sequence>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isMemberOf list: S) where S.Iterator.Element == D {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    }
+    
+    public init<D, S: Sequence>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
+        
+        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
     }
 }
