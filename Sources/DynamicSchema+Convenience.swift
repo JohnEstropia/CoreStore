@@ -184,6 +184,14 @@ extension DynamicSchema {
                             valueTypeString += "?"
                             defaultString = " = nil"
                         }
+                    case .URIAttributeType:
+                        valueTypeString = String(describing: URL.self)
+                        if let defaultValue = (attribute.defaultValue as! URL.QueryableNativeType?).flatMap(URL.cs_fromQueryableNativeType) {
+                            defaultString = " = \"\(defaultValue.absoluteString)\""
+                        } else if attribute.isOptional {
+                            valueTypeString += "?"
+                            defaultString = " = nil"
+                        }
                     case .binaryDataAttributeType:
                         valueTypeString = String(describing: Data.self)
                         if let defaultValue = (attribute.defaultValue as! Data.QueryableNativeType?).flatMap(Data.cs_fromQueryableNativeType) {
