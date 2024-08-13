@@ -107,17 +107,17 @@ extension Internals {
                 }
 
                 #if canImport(QuartzCore)
-
-                CATransaction.begin()
-
-                if !animatingDifferences {
-
-                    CATransaction.setDisableActions(true)
-                }
-                performDiffingUpdates()
-
-                CATransaction.commit()
-
+//
+//                CATransaction.begin()
+//
+//                if !animatingDifferences {
+//
+//                    CATransaction.setDisableActions(true)
+//                }
+//                performDiffingUpdates()
+//
+//                CATransaction.commit()
+//
                 #else
 
                 performDiffingUpdates()
