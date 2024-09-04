@@ -106,18 +106,18 @@ extension Internals {
                     }
                 }
 
-                #if canImport(QuartzCore)
-//
-//                CATransaction.begin()
-//
-//                if !animatingDifferences {
-//
-//                    CATransaction.setDisableActions(true)
-//                }
-//                performDiffingUpdates()
-//
-//                CATransaction.commit()
-//
+                #if os(iOS)
+                
+                CATransaction.begin()
+
+                if !animatingDifferences {
+
+                    CATransaction.setDisableActions(true)
+                }
+                performDiffingUpdates()
+
+                CATransaction.commit()
+
                 #else
 
                 performDiffingUpdates()
