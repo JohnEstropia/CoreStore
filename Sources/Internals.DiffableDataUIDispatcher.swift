@@ -106,21 +106,21 @@ extension Internals {
                     }
                 }
 
-                #if os(iOS)
+                #if os(watchOS)
                 
-                CATransaction.begin()
-
-                if !animatingDifferences {
-
-                    CATransaction.setDisableActions(true)
-                }
                 performDiffingUpdates()
-
-                CATransaction.commit()
 
                 #else
 
+                CATransaction.begin()
+                
+                if !animatingDifferences {
+                    
+                    CATransaction.setDisableActions(true)
+                }
                 performDiffingUpdates()
+                
+                CATransaction.commit()
 
 
                 #endif
