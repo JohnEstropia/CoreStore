@@ -106,21 +106,21 @@ extension Internals {
                     }
                 }
 
-                #if canImport(QuartzCore)
-
-                CATransaction.begin()
-
-                if !animatingDifferences {
-
-                    CATransaction.setDisableActions(true)
-                }
+                #if os(watchOS)
+                
                 performDiffingUpdates()
-
-                CATransaction.commit()
 
                 #else
 
+                CATransaction.begin()
+                
+                if !animatingDifferences {
+                    
+                    CATransaction.setDisableActions(true)
+                }
                 performDiffingUpdates()
+                
+                CATransaction.commit()
 
 
                 #endif
