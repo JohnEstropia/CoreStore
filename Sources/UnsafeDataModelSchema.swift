@@ -44,8 +44,11 @@ public final class UnsafeDataModelSchema: DynamicSchema {
      - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
      - parameter model: the `NSManagedObjectModel`
      */
-    public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
-        
+    public required init(
+        modelName: ModelVersion,
+        model: NSManagedObjectModel
+    ) {
+
         self.modelVersion = modelName
         self.model = model
     }

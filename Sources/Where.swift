@@ -37,33 +37,59 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
     /**
      Combines two `Where` predicates together using `AND` operator
      */
-    public static func && (left: Where<O>, right: Where<O>) -> Where<O> {
-        
-        return Where<O>(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
+    public static func && (
+        left: Where<O>,
+        right: Where<O>
+    ) -> Where<O> {
+
+        return Where<O>(
+            NSCompoundPredicate(
+                type: .and,
+                subpredicates: [left.predicate, right.predicate]
+            )
+        )
     }
 
     /**
      Combines two `Where` predicates together using `OR` operator
      */
-    public static func || (left: Where<O>, right: Where<O>) -> Where<O> {
-        
-        return Where<O>(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+    public static func || (
+        left: Where<O>,
+        right: Where<O>
+    ) -> Where<O> {
+
+        return Where<O>(
+            NSCompoundPredicate(
+                type: .or,
+                subpredicates: [left.predicate, right.predicate]
+            )
+        )
     }
     
     /**
      Inverts the predicate of a `Where` clause using `NOT` operator
      */
-    public static prefix func ! (clause: Where<O>) -> Where<O> {
-        
-        return Where<O>(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
+    public static prefix func ! (
+        clause: Where<O>
+    ) -> Where<O> {
+
+        return Where<O>(
+            NSCompoundPredicate(
+                type: .not,
+                subpredicates: [clause.predicate]
+            )
+        )
     }
         
     /**
      Combines two `Where` predicates together using `AND` operator.
      - returns: `left` if `right` is `nil`, otherwise equivalent to `(left && right)`
      */
-    public static func &&? (left: Where<O>, right: Where<O>?) -> Where<O> {
-        
+    public static func &&? (
+        left: Where<O>,
+        right: Where<O>?
+    ) -> Where<O> {
+
         if let right = right {
             
             return left && right
@@ -75,8 +101,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      Combines two `Where` predicates together using `AND` operator.
      - returns: `right` if `left` is `nil`, otherwise equivalent to `(left && right)`
      */
-    public static func &&? (left: Where<O>?, right: Where<O>) -> Where<O> {
-        
+    public static func &&? (
+        left: Where<O>?,
+        right: Where<O>
+    ) -> Where<O> {
+
         if let left = left {
             
             return left && right
@@ -88,8 +117,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      Combines two `Where` predicates together using `OR` operator.
      - returns: `left` if `right` is `nil`, otherwise equivalent to `(left || right)`
      */
-    public static func ||? (left: Where<O>, right: Where<O>?) -> Where<O> {
-        
+    public static func ||? (
+        left: Where<O>,
+        right: Where<O>?
+    ) -> Where<O> {
+
         if let right = right {
             
             return left || right
@@ -101,8 +133,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      Combines two `Where` predicates together using `OR` operator.
      - returns: `right` if `left` is `nil`, otherwise equivalent to `(left || right)`
      */
-    public static func ||? (left: Where<O>?, right: Where<O>) -> Where<O> {
-        
+    public static func ||? (
+        left: Where<O>?,
+        right: Where<O>
+    ) -> Where<O> {
+
         if let left = left {
             
             return left || right
@@ -123,7 +158,9 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
 
      - parameter clause: the existing `Where` clause.
      */
-    public init(_ clause: Where<O>) {
+    public init(
+        _ clause: Where<O>
+    ) {
 
         self.init(clause.predicate)
     }
@@ -133,8 +170,10 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      
      - parameter value: the boolean value for the predicate
      */
-    public init(_ value: Bool) {
-        
+    public init(
+        _ value: Bool
+    ) {
+
         self.init(NSPredicate(value: value))
     }
     
@@ -144,8 +183,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter format: the format string for the predicate
      - parameter args: the arguments for `format`
      */
-    public init(_ format: String, _ args: Any...) {
-        
+    public init(
+        _ format: String,
+        _ args: Any...
+    ) {
+
         self.init(NSPredicate(format: format, argumentArray: args))
     }
     
@@ -155,8 +197,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter format: the format string for the predicate
      - parameter argumentArray: the arguments for `format`
      */
-    public init(_ format: String, argumentArray: [Any]?) {
-        
+    public init(
+        _ format: String,
+        argumentArray: [Any]?
+    ) {
+
         self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
@@ -166,8 +211,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init(_ keyPath: KeyPathString, isEqualTo null: Void?) {
-        
+    public init(
+        _ keyPath: KeyPathString,
+        isEqualTo null: Void?
+    ) {
+
         self.init(NSPredicate(format: "\(keyPath) == nil"))
     }
 
@@ -177,7 +225,10 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<V: FieldStorableType>(_ keyPath: KeyPathString, isEqualTo value: V) {
+    public init<V: FieldStorableType>(
+        _ keyPath: KeyPathString,
+        isEqualTo value: V
+    ) {
 
         var nilPredicate: NSPredicate {
             
@@ -227,16 +278,28 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter value: the arguments for the `==` operator
      */
     @_disfavoredOverload
-    public init<U: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: U?) {
+    public init<U: QueryableAttributeType>(
+        _ keyPath: KeyPathString,
+        isEqualTo value: U?
+    ) {
 
         switch value {
 
         case nil,
              is NSNull:
-            self.init(NSPredicate(format: "\(keyPath) == nil"))
+            self.init(
+                NSPredicate(
+                    format: "\(keyPath) == nil"
+                )
+            )
 
         case let value?:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryableNativeType()]))
+            self.init(
+                NSPredicate(
+                    format: "\(keyPath) == %@",
+                    argumentArray: [value.cs_toQueryableNativeType()]
+                )
+            )
         }
     }
     
@@ -246,15 +309,27 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter object: the arguments for the `==` operator
      */
-    public init<Other: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: Other?) {
+    public init<Other: DynamicObject>(
+        _ keyPath: KeyPathString,
+        isEqualTo object: Other?
+    ) {
 
         switch object {
             
         case nil:
-            self.init(NSPredicate(format: "\(keyPath) == nil"))
-            
+            self.init(
+                NSPredicate(
+                    format: "\(keyPath) == nil"
+                )
+            )
+
         case let object?:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.cs_id()]))
+            self.init(
+                NSPredicate(
+                    format: "\(keyPath) == %@",
+                    argumentArray: [object.cs_id()]
+                )
+            )
         }
     }
     
@@ -264,9 +339,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter objectID: the arguments for the `==` operator
      */
-    public init(_ keyPath: KeyPathString, isEqualTo objectID: NSManagedObjectID) {
-        
-        self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [objectID]))
+    public init(
+        _ keyPath: KeyPathString,
+        isEqualTo objectID: NSManagedObjectID
+    ) {
+
+        self.init(
+            NSPredicate(
+                format: "\(keyPath) == %@",
+                argumentArray: [objectID]
+            )
+        )
     }
 
     /**
@@ -275,9 +358,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: FieldStorableType {
+    public init<S: Sequence>(
+        _ keyPath: KeyPathString,
+        isMemberOf list: S
+    ) where S.Iterator.Element: FieldStorableType {
 
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toFieldStoredNativeType() }) as NSArray))
+        self.init(
+            NSPredicate(
+                format: "\(keyPath) IN %@",
+                list.map({ $0.cs_toFieldStoredNativeType() }) as NSArray
+            )
+        )
     }
     
     /**
@@ -287,9 +378,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter list: the sequence to check membership of
      */
     @_disfavoredOverload
-    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: QueryableAttributeType {
-        
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
+    public init<S: Sequence>(
+        _ keyPath: KeyPathString,
+        isMemberOf list: S
+    ) where S.Iterator.Element: QueryableAttributeType {
+
+        self.init(
+            NSPredicate(
+                format: "\(keyPath) IN %@",
+                list.map({ $0.cs_toQueryableNativeType() }) as NSArray
+            )
+        )
     }
     
     /**
@@ -298,9 +397,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: DynamicObject {
-        
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_id() }) as NSArray))
+    public init<S: Sequence>(
+        _ keyPath: KeyPathString,
+        isMemberOf list: S
+    ) where S.Iterator.Element: DynamicObject {
+
+        self.init(
+            NSPredicate(
+                format: "\(keyPath) IN %@",
+                list.map({ $0.cs_id() }) as NSArray
+            )
+        )
     }
     
     /**
@@ -309,9 +416,17 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
-        
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0 }) as NSArray))
+    public init<S: Sequence>(
+        _ keyPath: KeyPathString,
+        isMemberOf list: S
+    ) where S.Iterator.Element: NSManagedObjectID {
+
+        self.init(
+            NSPredicate(
+                format: "\(keyPath) IN %@",
+                list.map({ $0 }) as NSArray
+            )
+        )
     }
     
     
@@ -332,8 +447,10 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest<ResultType>(_ fetchRequest: NSFetchRequest<ResultType>) {
-        
+    public func applyToFetchRequest<ResultType>(
+        _ fetchRequest: NSFetchRequest<ResultType>
+    ) {
+
         if let predicate = fetchRequest.predicate, predicate != self.predicate {
             
             Internals.log(
@@ -348,8 +465,11 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
     
     // MARK: Equatable
     
-    public static func == (lhs: Where, rhs: Where) -> Bool {
-        
+    public static func == (
+        lhs: Self,
+        rhs: Self
+    ) -> Bool {
+
         return lhs.predicate == rhs.predicate
     }
     
@@ -373,9 +493,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<V: QueryableAttributeType>(_ keyPath: KeyPath<O, V>, isEqualTo null: Void?) {
-        
-        self.init(keyPath._kvcKeyPathString!, isEqualTo: null)
+    public init<V: QueryableAttributeType>(
+        _ keyPath: KeyPath<O, V>,
+        isEqualTo null: Void?
+    ) {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isEqualTo: null
+        )
     }
     
     /**
@@ -384,9 +510,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<D: DynamicObject>(_ keyPath: KeyPath<O, D>, isEqualTo null: Void?) {
-        
-        self.init(keyPath._kvcKeyPathString!, isEqualTo: null)
+    public init<D: DynamicObject>(
+        _ keyPath: KeyPath<O, D>,
+        isEqualTo null: Void?
+    ) {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isEqualTo: null
+        )
     }
     
     /**
@@ -395,9 +527,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<V: QueryableAttributeType>(_ keyPath: KeyPath<O, V>, isEqualTo value: V?) {
-        
-        self.init(keyPath._kvcKeyPathString!, isEqualTo: value)
+    public init<V: QueryableAttributeType>(
+        _ keyPath: KeyPath<O, V>,
+        isEqualTo value: V?
+    ) {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isEqualTo: value
+        )
     }
     
     /**
@@ -406,9 +544,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<D: DynamicObject>(_ keyPath: KeyPath<O, D>, isEqualTo value: D?) {
-        
-        self.init(keyPath._kvcKeyPathString!, isEqualTo: value)
+    public init<D: DynamicObject>(
+        _ keyPath: KeyPath<O, D>,
+        isEqualTo value: D?
+    ) {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isEqualTo: value
+        )
     }
     
     /**
@@ -417,9 +561,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter objectID: the arguments for the `==` operator
      */
-    public init<D: DynamicObject>(_ keyPath: KeyPath<O, D>, isEqualTo objectID: NSManagedObjectID) {
-        
-        self.init(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+    public init<D: DynamicObject>(
+        _ keyPath: KeyPath<O, D>,
+        isEqualTo objectID: NSManagedObjectID
+    ) {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isEqualTo: objectID
+        )
     }
     
     /**
@@ -428,9 +578,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<V: QueryableAttributeType, S: Sequence>(_ keyPath: KeyPath<O, V>, isMemberOf list: S) where S.Iterator.Element == V {
-        
-        self.init(keyPath._kvcKeyPathString!, isMemberOf: list)
+    public init<V: QueryableAttributeType, S: Sequence>(
+        _ keyPath: KeyPath<O, V>,
+        isMemberOf list: S
+    ) where S.Iterator.Element == V {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isMemberOf: list
+        )
     }
     
     /**
@@ -439,9 +595,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<D: DynamicObject, S: Sequence>(_ keyPath: KeyPath<O, D>, isMemberOf list: S) where S.Iterator.Element == D {
-        
-        self.init(keyPath._kvcKeyPathString!, isMemberOf: list)
+    public init<D: DynamicObject, S: Sequence>(
+        _ keyPath: KeyPath<O, D>,
+        isMemberOf list: S
+    ) where S.Iterator.Element == D {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isMemberOf: list
+        )
     }
     
     /**
@@ -450,9 +612,15 @@ extension Where where O: NSManagedObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<D: DynamicObject, S: Sequence>(_ keyPath: KeyPath<D, O>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
-        
-        self.init(keyPath._kvcKeyPathString!, isMemberOf: list)
+    public init<D: DynamicObject, S: Sequence>(
+        _ keyPath: KeyPath<D, O>,
+        isMemberOf list: S
+    ) where S.Iterator.Element: NSManagedObjectID {
+
+        self.init(
+            keyPath._kvcKeyPathString!,
+            isMemberOf: list
+        )
     }
 }
 
@@ -467,9 +635,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isEqualTo value: V) {
+    public init<V>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+        isEqualTo value: V
+    ) {
 
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isEqualTo: value
+        )
     }
 
     /**
@@ -478,9 +652,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<V: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isEqualTo value: V.DestinationObjectType?) {
+    public init<V: FieldRelationshipToOneType>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>,
+        isEqualTo value: V.DestinationObjectType?
+    ) {
 
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isEqualTo: value
+        )
     }
     
     /**
@@ -489,9 +669,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isEqualTo null: Void?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    public init<V>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+        isEqualTo null: Void?
+    ) {
+
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isEqualTo: null
+        )
     }
     
     /**
@@ -500,9 +686,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter null: the arguments for the `==` operator
      */
-    public init<V: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isEqualTo null: Void?) {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isEqualTo: null)
+    public init<V: FieldRelationshipToOneType>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>,
+        isEqualTo null: Void?
+    ) {
+
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isEqualTo: null
+        )
     }
     
     /**
@@ -511,9 +703,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<V, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, isMemberOf list: S) where S.Iterator.Element == V {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    public init<V, S: Sequence>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+        isMemberOf list: S
+    ) where S.Iterator.Element == V {
+
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isMemberOf: list
+        )
     }
     
     /**
@@ -522,9 +720,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<V: FieldRelationshipToOneType, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isMemberOf list: S) where S.Iterator.Element == V.DestinationObjectType {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    public init<V: FieldRelationshipToOneType, S: Sequence>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>,
+        isMemberOf list: S
+    ) where S.Iterator.Element == V.DestinationObjectType {
+
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isMemberOf: list
+        )
     }
     
     /**
@@ -533,9 +737,15 @@ extension Where where O: CoreStoreObject {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<V: FieldRelationshipToOneType, S: Sequence>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
-        
-        self.init(O.meta[keyPath: keyPath].keyPath, isMemberOf: list)
+    public init<V: FieldRelationshipToOneType, S: Sequence>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<V>>,
+        isMemberOf list: S
+    ) where S.Iterator.Element: NSManagedObjectID {
+
+        self.init(
+            O.meta[keyPath: keyPath].keyPath,
+            isMemberOf: list
+        )
     }
     
     /**
@@ -543,8 +753,10 @@ extension Where where O: CoreStoreObject {
      
      - parameter condition: closure that returns the `Where` clause
      */
-    public init(_ condition: (O) -> Where<O>) {
-        
+    public init(
+        _ condition: (O) -> Where<O>
+    ) {
+
         self = condition(O.meta)
     }
 }
@@ -559,7 +771,12 @@ extension Sequence where Iterator.Element: WhereClauseType {
      */
     public func combinedByAnd() -> Where<Iterator.Element.ObjectType> {
         
-        return Where(NSCompoundPredicate(type: .and, subpredicates: self.map({ $0.predicate })))
+        return Where(
+            NSCompoundPredicate(
+                type: .and,
+                subpredicates: self.map({ $0.predicate })
+            )
+        )
     }
     
     /**
@@ -567,7 +784,12 @@ extension Sequence where Iterator.Element: WhereClauseType {
      */
     public func combinedByOr() -> Where<Iterator.Element.ObjectType> {
         
-        return Where(NSCompoundPredicate(type: .or, subpredicates: self.map({ $0.predicate })))
+        return Where(
+            NSCompoundPredicate(
+                type: .or,
+                subpredicates: self.map({ $0.predicate })
+            )
+        )
     }
 }
 

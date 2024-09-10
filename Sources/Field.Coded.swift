@@ -127,8 +127,19 @@ extension FieldContainer {
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
             coder fieldCoderType: Coder.Type,
-            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            customGetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>
+                ) -> V
+            )? = nil,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
         ) where Coder.FieldStoredValue == V {
 
@@ -172,8 +183,19 @@ extension FieldContainer {
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
             coder fieldCoderType: Coder.Type,
-            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            customGetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>
+                ) -> V
+            )? = nil,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
             dynamicInitialValue: @escaping () -> V
         ) where Coder.FieldStoredValue == V {
@@ -276,9 +298,23 @@ extension FieldContainer {
           _ keyPath: KeyPathString,
           versionHashModifier: @autoclosure @escaping () -> String? = nil,
           previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-          coder: (encode: (V) -> Data?, decode: (Data?) -> V),
-          customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-          customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+          coder: (
+            encode: (V) -> Data?,
+            decode: (Data?) -> V
+          ),
+          customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+          )? = nil,
+          customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+          )? = nil,
           affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
       ) {
 
@@ -328,9 +364,23 @@ extension FieldContainer {
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-            coder: (encode: (V) -> Data?, decode: (Data?) -> V),
-            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            coder: (
+                encode: (V) -> Data?,
+                decode: (Data?) -> V
+            ),
+            customGetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>
+                ) -> V
+            )? = nil,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
             dynamicInitialValue: @escaping () -> V
         ) {
@@ -428,7 +478,10 @@ extension FieldContainer {
             return ObjectType.self
         }
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func read(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject
+        ) -> Any? {
 
             let field = field as! Self
             if let customGetter = field.customGetter {
@@ -449,7 +502,11 @@ extension FieldContainer {
             }
         }
 
-        internal static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?) {
+        internal static func modify(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject,
+            newValue: Any?
+        ) {
 
             Internals.assert(
                 rawObject.isEditableInContext() == true,
@@ -564,10 +621,22 @@ extension FieldContainer {
             versionHashModifier: @escaping () -> String?,
             renamingIdentifier: @escaping () -> String?,
             valueTransformer: @escaping () -> Internals.AnyFieldCoder?,
-            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
+            customGetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>
+                ) -> V
+            )?,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? ,
             dynamicInitialValue: (() -> V)?,
-            affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
+            affectedByKeyPaths: @escaping () -> Set<KeyPathString>
+        ) {
 
             self.keyPath = keyPath
             self.entityDescriptionValues = {
@@ -682,8 +751,19 @@ extension FieldContainer.Coded where V: FieldOptionalType {
       versionHashModifier: @autoclosure @escaping () -> String? = nil,
       previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
       coder: Coder.Type,
-      customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-      customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+      customGetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>
+        ) -> V
+      )? = nil,
+      customSetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>,
+            _ newValue: V
+        ) -> Void
+      )? = nil,
       affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
   ) where Coder.FieldStoredValue == V.Wrapped {
 
@@ -727,8 +807,19 @@ extension FieldContainer.Coded where V: FieldOptionalType {
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
         coder: Coder.Type,
-        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )? = nil,
+        customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
         dynamicInitialValue: @escaping () -> V
     ) where Coder.FieldStoredValue == V.Wrapped {
@@ -832,9 +923,23 @@ extension FieldContainer.Coded where V: FieldOptionalType {
       _ keyPath: KeyPathString,
       versionHashModifier: @autoclosure @escaping () -> String? = nil,
       previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-      coder: (encode: (V) -> Data?, decode: (Data?) -> V),
-      customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-      customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+      coder: (
+        encode: (V) -> Data?,
+        decode: (Data?) -> V
+      ),
+      customGetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>
+        ) -> V
+      )? = nil,
+      customSetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>,
+            _ newValue: V
+        ) -> Void
+      )? = nil,
       affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
   ) {
 
@@ -884,9 +989,23 @@ extension FieldContainer.Coded where V: FieldOptionalType {
         _ keyPath: KeyPathString,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-        coder: (encode: (V) -> Data?, decode: (Data?) -> V),
-        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        coder: (
+            encode: (V) -> Data?,
+            decode: (Data?) -> V
+        ),
+        customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )? = nil,
+        customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
         dynamicInitialValue: @escaping () -> V
     ) {
@@ -978,8 +1097,19 @@ extension FieldContainer.Coded where V: DefaultNSSecureCodable {
       _ keyPath: KeyPathString,
       versionHashModifier: @autoclosure @escaping () -> String? = nil,
       previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-      customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-      customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+      customGetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>
+        ) -> V
+      )? = nil,
+      customSetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>,
+            _ newValue: V
+        ) -> Void
+      )? = nil,
       affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
   ) {
 
@@ -1020,8 +1150,19 @@ extension FieldContainer.Coded where V: DefaultNSSecureCodable {
         _ keyPath: KeyPathString,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )? = nil,
+        customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
         dynamicInitialValue: @escaping () -> V
     ) {
@@ -1113,8 +1254,19 @@ extension FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSS
       _ keyPath: KeyPathString,
       versionHashModifier: @autoclosure @escaping () -> String? = nil,
       previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-      customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-      customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+      customGetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>
+        ) -> V
+      )? = nil,
+      customSetter: (
+        (
+            _ object: ObjectProxy<O>,
+            _ field: ObjectProxy<O>.FieldProxy<V>,
+            _ newValue: V
+        ) -> Void
+      )? = nil,
       affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []
   ) {
 
@@ -1155,8 +1307,19 @@ extension FieldContainer.Coded where V: FieldOptionalType, V.Wrapped: DefaultNSS
         _ keyPath: KeyPathString,
         versionHashModifier: @autoclosure @escaping () -> String? = nil,
         previousVersionKeyPath: @autoclosure @escaping () -> String? = nil,
-        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )? = nil,
+        customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = [],
         dynamicInitialValue: @escaping () -> V
     ) {

@@ -80,7 +80,13 @@ extension FieldContainer {
         public init(
             _ keyPath: KeyPathString,
             customGetter: @escaping (_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
             self.init(
@@ -99,8 +105,19 @@ extension FieldContainer {
             wrappedValue initial: @autoclosure @escaping () -> V,
             _ keyPath: KeyPathString,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
-            customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-            customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+            customGetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>
+                ) -> V
+            )? = nil,
+            customSetter: (
+                (
+                    _ object: ObjectProxy<O>,
+                    _ field: ObjectProxy<O>.FieldProxy<V>,
+                    _ newValue: V
+                ) -> Void
+            )? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
             fatalError()
@@ -185,7 +202,10 @@ extension FieldContainer {
             return ObjectType.self
         }
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func read(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject
+        ) -> Any? {
 
             let field = field as! Self
             if let customGetter = field.customGetter {
@@ -206,7 +226,11 @@ extension FieldContainer {
             }
         }
 
-        internal static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?) {
+        internal static func modify(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject,
+            newValue: Any?
+        ) {
 
             Internals.assert(
                 rawObject.isEditableInContext() == true,
@@ -285,7 +309,8 @@ extension FieldContainer {
             keyPath: KeyPathString,
             customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?,
             customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? ,
-            affectedByKeyPaths: @escaping () -> Set<KeyPathString>) {
+            affectedByKeyPaths: @escaping () -> Set<KeyPathString>
+        ) {
 
             self.keyPath = keyPath
             self.entityDescriptionValues = {
@@ -308,8 +333,19 @@ extension FieldContainer {
 
         // MARK: Private
 
-        private let customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)?
-        private let customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)?
+        private let customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )?
+        private let customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )?
     }
 }
 
@@ -342,8 +378,19 @@ extension FieldContainer.Virtual where V: FieldOptionalType {
      */
     public init(
         _ keyPath: KeyPathString,
-        customGetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>) -> V)? = nil,
-        customSetter: ((_ object: ObjectProxy<O>, _ field: ObjectProxy<O>.FieldProxy<V>, _ newValue: V) -> Void)? = nil,
+        customGetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>
+            ) -> V
+        )? = nil,
+        customSetter: (
+            (
+                _ object: ObjectProxy<O>,
+                _ field: ObjectProxy<O>.FieldProxy<V>,
+                _ newValue: V
+            ) -> Void
+        )? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<KeyPathString> = []) {
 
         self.init(

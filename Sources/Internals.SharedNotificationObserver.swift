@@ -35,7 +35,12 @@ extension Internals {
 
         // MARK: Internal
 
-        internal init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, sharedValue: @escaping (_ note: Notification) -> T) {
+        internal init(
+            notificationName: Notification.Name,
+            object: Any?,
+            queue: OperationQueue? = nil,
+            sharedValue: @escaping (_ note: Notification) -> T
+        ) {
 
             self.observer = NotificationCenter.default.addObserver(
                 forName: notificationName,
@@ -59,9 +64,15 @@ extension Internals {
             self.observers.removeAllObjects()
         }
 
-        internal func addObserver<U: AnyObject>(_ observer: U, closure: @escaping (T) -> Void) {
+        internal func addObserver<U: AnyObject>(
+            _ observer: U,
+            closure: @escaping (T) -> Void
+        ) {
 
-            self.observers.setObject(Closure<T, Void>(closure), forKey: observer)
+            self.observers.setObject(
+                Closure<T, Void>(closure),
+                forKey: observer
+            )
         }
         
         internal func removeObserver<U: AnyObject>(_ observer: U) {

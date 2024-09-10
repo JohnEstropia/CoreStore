@@ -70,8 +70,14 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain `KeyPath`s to properties of the entity.
      - parameter uniqueConstraints: sets uniqueness constraints for the entity. A uniqueness constraint is a set of one or more `KeyPath`s whose value must be unique over the set of instances of that entity. This value forms part of the entity's version hash. Uniqueness constraint violations can be computationally expensive to handle. It is highly suggested that there be only one uniqueness constraint per entity hierarchy. Uniqueness constraints must be defined at the highest level possible, and CoreStore will raise an assertion failure if unique constraints are added to a sub entity.
      */
-    public convenience init(_ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = [], uniqueConstraints: [[PartialKeyPath<O>]]) {
-        
+    public convenience init(
+        _ entityName: String,
+        isAbstract: Bool = false,
+        versionHashModifier: String? = nil,
+        indexes: [[PartialKeyPath<O>]] = [],
+        uniqueConstraints: [[PartialKeyPath<O>]]
+    ) {
+
         self.init(
             O.self,
             entityName,
@@ -92,7 +98,12 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter versionHashModifier: the version hash modifier for the entity. Used to mark or denote an entity as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where, for example, the structure of an entity is unchanged but the format or content of data has changed.)
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain `KeyPath`s to properties of the entity.
      */
-    public convenience init(_ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = []) {
+    public convenience init(
+        _ entityName: String,
+        isAbstract: Bool = false,
+        versionHashModifier: String? = nil,
+        indexes: [[PartialKeyPath<O>]] = []
+    ) {
 
         self.init(
             O.self,
@@ -115,8 +126,15 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain KeyPath's to properties of the entity.
      - parameter uniqueConstraints: sets uniqueness constraints for the entity. A uniqueness constraint is a set of one or more `KeyPath`s whose value must be unique over the set of instances of that entity. This value forms part of the entity's version hash. Uniqueness constraint violations can be computationally expensive to handle. It is highly suggested that there be only one uniqueness constraint per entity hierarchy. Uniqueness constraints must be defined at the highest level possible, and CoreStore will raise an assertion failure if unique constraints are added to a sub entity.
      */
-    public init(_ type: O.Type, _ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = [], uniqueConstraints: [[PartialKeyPath<O>]]) {
-        
+    public init(
+        _ type: O.Type,
+        _ entityName: String,
+        isAbstract: Bool = false,
+        versionHashModifier: String? = nil,
+        indexes: [[PartialKeyPath<O>]] = [],
+        uniqueConstraints: [[PartialKeyPath<O>]]
+    ) {
+
         let meta = O.meta
         let toStringArray: ([PartialKeyPath<O>]) -> [KeyPathString] = {
             
@@ -147,7 +165,13 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
      - parameter indexes: the compound indexes for the entity as an array of arrays. The arrays contained in the returned array contain KeyPath's to properties of the entity.
      - parameter uniqueConstraints: sets uniqueness constraints for the entity. A uniqueness constraint is a set of one or more `KeyPath`s whose value must be unique over the set of instances of that entity. This value forms part of the entity's version hash. Uniqueness constraint violations can be computationally expensive to handle. It is highly suggested that there be only one uniqueness constraint per entity hierarchy. Uniqueness constraints must be defined at the highest level possible, and CoreStore will raise an assertion failure if unique constraints are added to a sub entity.
      */
-    public init(_ type: O.Type, _ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil, indexes: [[PartialKeyPath<O>]] = []) {
+    public init(
+        _ type: O.Type,
+        _ entityName: String,
+        isAbstract: Bool = false,
+        versionHashModifier: String? = nil,
+        indexes: [[PartialKeyPath<O>]] = []
+    ) {
 
         let meta = O.meta
         let toStringArray: ([PartialKeyPath<O>]) -> [KeyPathString] = {
@@ -232,8 +256,15 @@ public /*abstract*/ class DynamicEntity: Hashable {
     
     // MARK: Internal
     
-    internal init(type: DynamicObject.Type, entityName: String, isAbstract: Bool, versionHashModifier: String?, indexes: [[KeyPathString]], uniqueConstraints: [[KeyPathString]]) {
-        
+    internal init(
+        type: DynamicObject.Type,
+        entityName: String,
+        isAbstract: Bool,
+        versionHashModifier: String?,
+        indexes: [[KeyPathString]],
+        uniqueConstraints: [[KeyPathString]]
+    ) {
+
         self.type = type
         self.entityName = entityName
         self.isAbstract = isAbstract

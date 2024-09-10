@@ -52,8 +52,10 @@ extension ListPublisher {
         public typealias Output = ListSnapshot<O>
         public typealias Failure = Never
         
-        public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
-            
+        public func receive<S: Subscriber>(
+            subscriber: S
+        ) where S.Input == Output, S.Failure == Failure {
+
             subscriber.receive(
                 subscription: ListSnapshotSubscription(
                     publisher: self.listPublisher,

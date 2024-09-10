@@ -78,8 +78,11 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be created from `source`. Return `false` to ignore.
      */
-    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
-    
+    static func shouldInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool
+
     /**
      Return `true` if an object should be updated from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
      
@@ -87,8 +90,11 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be updated from `source`. Return `false` to ignore.
      */
-    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
-    
+    static func shouldUpdate(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool
+
     /**
      Return the unique ID as extracted from `source`. This method is called before `shouldInsert(from:in:)` or `shouldUpdate(from:in:)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
      
@@ -96,23 +102,32 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: the unique ID as extracted from `source`, or `nil` to skip importing from `source`.
      */
-    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType?
-    
+    static func uniqueID(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) throws(any Swift.Error) -> UniqueIDType?
+
     /**
      Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueID(from:in:)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `update(from:in:)`.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
-    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
-    
+    func didInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) throws(any Swift.Error)
+
     /**
      Implements the actual importing of data from `source`. This method is called just after the existing object is fetched using its unique ID. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
-    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
+    func update(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) throws(any Swift.Error)
 }
 
 
@@ -146,18 +161,27 @@ extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDat
 
 extension ImportableUniqueObject {
     
-    public static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
-        
+    public static func shouldInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool {
+
         return Self.shouldUpdate(from: source, in: transaction)
     }
     
-    public static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
-        
+    public static func shouldUpdate(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool {
+
         return true
     }
     
-    public func didInsert(from source: Self.ImportSource, in transaction: BaseDataTransaction) throws {
-        
+    public func didInsert(
+        from source: Self.ImportSource,
+        in transaction: BaseDataTransaction
+    ) throws(any Swift.Error) {
+
         try self.update(from: source, in: transaction)
     }
 }

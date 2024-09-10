@@ -60,7 +60,10 @@ public struct From<O: DynamicObject> {
      */
     public init() {
         
-        self.init(entityClass: O.self, configurations: nil)
+        self.init(
+            entityClass: O.self,
+            configurations: nil
+        )
     }
     
     /**
@@ -70,9 +73,14 @@ public struct From<O: DynamicObject> {
      ```
      - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
      */
-    public init(_ entity: O.Type) {
-        
-        self.init(entityClass: entity, configurations: nil)
+    public init(
+        _ entity: O.Type
+    ) {
+
+        self.init(
+            entityClass: entity,
+            configurations: nil
+        )
     }
     
     /**
@@ -83,9 +91,15 @@ public struct From<O: DynamicObject> {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
-        
-        self.init(entityClass: O.self, configurations: [configuration] + otherConfigurations)
+    public init(
+        _ configuration: ModelConfiguration,
+        _ otherConfigurations: ModelConfiguration...
+    ) {
+
+        self.init(
+            entityClass: O.self,
+            configurations: [configuration] + otherConfigurations
+        )
     }
     
     /**
@@ -95,9 +109,14 @@ public struct From<O: DynamicObject> {
      ```
      - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ configurations: [ModelConfiguration]) {
-        
-        self.init(entityClass: O.self, configurations: configurations)
+    public init(
+        _ configurations: [ModelConfiguration]
+    ) {
+
+        self.init(
+            entityClass: O.self,
+            configurations: configurations
+        )
     }
     
     /**
@@ -109,9 +128,16 @@ public struct From<O: DynamicObject> {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ entity: O.Type, _ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
-        
-        self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
+    public init(
+        _ entity: O.Type,
+        _ configuration: ModelConfiguration,
+        _ otherConfigurations: ModelConfiguration...
+    ) {
+
+        self.init(
+            entityClass: entity,
+            configurations: [configuration] + otherConfigurations
+        )
     }
     
     /**
@@ -122,9 +148,15 @@ public struct From<O: DynamicObject> {
      - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
      - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ entity: O.Type, _ configurations: [ModelConfiguration]) {
-        
-        self.init(entityClass: entity, configurations: configurations)
+    public init(
+        _ entity: O.Type,
+        _ configurations: [ModelConfiguration]
+    ) {
+
+        self.init(
+            entityClass: entity,
+            configurations: configurations
+        )
     }
     
     
@@ -132,14 +164,24 @@ public struct From<O: DynamicObject> {
     
     internal let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
     
-    internal init(entityClass: O.Type, configurations: [ModelConfiguration]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
-        
+    internal init(
+        entityClass: O.Type,
+        configurations: [ModelConfiguration]?,
+        findPersistentStores: @escaping (
+            _ context: NSManagedObjectContext
+        ) -> [NSPersistentStore]?
+    ) {
+
         self.entityClass = entityClass
         self.configurations = configurations
         self.findPersistentStores = findPersistentStores
     }
     
-    internal func applyToFetchRequest<U>(_ fetchRequest: Internals.CoreStoreFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
+    internal func applyToFetchRequest<U>(
+        _ fetchRequest: Internals.CoreStoreFetchRequest<U>,
+        context: NSManagedObjectContext,
+        applyAffectedStores: Bool = true
+    ) throws(CoreStoreError) {
 
         guard let parentStack = context.parentStack else {
 
@@ -158,7 +200,7 @@ public struct From<O: DynamicObject> {
 
             try self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
         }
-        catch let error as CoreStoreError {
+        catch {
 
             Internals.log(
                 error,
@@ -166,14 +208,13 @@ public struct From<O: DynamicObject> {
             )
             throw error
         }
-        catch {
-
-            throw error
-        }
     }
     
-    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: Internals.CoreStoreFetchRequest<U>, context: NSManagedObjectContext) throws {
-        
+    internal func applyAffectedStoresForFetchedRequest<U>(
+        _ fetchRequest: Internals.CoreStoreFetchRequest<U>,
+        context: NSManagedObjectContext
+    ) throws(CoreStoreError) {
+
         let stores = self.findPersistentStores(context)
         fetchRequest.affectedStores = stores
         if stores?.isEmpty == false {
@@ -186,8 +227,11 @@ public struct From<O: DynamicObject> {
     
     // MARK: Private
     
-    private init(entityClass: O.Type, configurations: [ModelConfiguration]?) {
-        
+    private init(
+        entityClass: O.Type,
+        configurations: [ModelConfiguration]?
+    ) {
+
         self.entityClass = entityClass
         self.configurations = configurations
         

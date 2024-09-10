@@ -56,8 +56,12 @@ public final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
      - parameter destinationVersion: the destination model version for the mapping
      - parameter mappingModelBundle: the `Bundle` that contains the xcmappingmodel file
      */
-    public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, mappingModelBundle: Bundle) {
-        
+    public required init(
+        from sourceVersion: ModelVersion,
+        to destinationVersion: ModelVersion,
+        mappingModelBundle: Bundle
+    ) {
+
         self.sourceVersion = sourceVersion
         self.destinationVersion = destinationVersion
         self.mappingModelBundle = mappingModelBundle
@@ -85,8 +89,15 @@ public final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: SchemaMappingProvider
     
-    public func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
-        
+    public func cs_createMappingModel(
+        from sourceSchema: DynamicSchema,
+        to destinationSchema: DynamicSchema,
+        storage: LocalStorage
+    ) throws(CoreStoreError) -> (
+        mappingModel: NSMappingModel,
+        migrationType: MigrationType
+    ) {
+
         let sourceModel = sourceSchema.rawModel()
         let destinationModel = destinationSchema.rawModel()
         

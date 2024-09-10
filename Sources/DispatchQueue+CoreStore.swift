@@ -31,8 +31,11 @@ import Foundation
 extension DispatchQueue {
     
     @nonobjc @inline(__always)
-    internal static func serial(_ label: String, qos: DispatchQoS) -> DispatchQueue {
-        
+    internal static func serial(
+        _ label: String,
+        qos: DispatchQoS
+    ) -> DispatchQueue {
+
         return DispatchQueue(
             label: label,
             qos: qos,
@@ -43,8 +46,11 @@ extension DispatchQueue {
     }
     
     @nonobjc @inline(__always)
-    internal static func concurrent(_ label: String, qos: DispatchQoS) -> DispatchQueue {
-        
+    internal static func concurrent(
+        _ label: String,
+        qos: DispatchQoS
+    ) -> DispatchQueue {
+
         return DispatchQueue(
             label: label,
             qos: qos,
@@ -69,26 +75,57 @@ extension DispatchQueue {
     }
     
     @nonobjc @inline(__always)
-    internal func cs_sync<T>(_ closure: () throws -> T) rethrows -> T {
-        
+    internal func cs_sync<T>(
+        _ closure: () -> T
+    ) -> T {
+
+        return self.sync { autoreleasepool(invoking: closure) }
+    }
+
+    @nonobjc @inline(__always)
+    internal func cs_sync<T>(
+        _ closure: () throws(any Swift.Error) -> T
+    ) throws(any Swift.Error) -> T {
+
         return try self.sync { try autoreleasepool(invoking: closure) }
     }
-    
+
     @nonobjc @inline(__always)
-    internal func cs_async(_ closure: @escaping () -> Void) {
-        
+    internal func cs_sync<T>(
+        _ closure: () throws(CoreStoreError) -> T
+    ) throws(CoreStoreError) -> T {
+
+        do {
+
+            return try self.sync { try autoreleasepool(invoking: closure) }
+        }
+        catch {
+
+            throw CoreStoreError(error)
+        }
+    }
+
+    @nonobjc @inline(__always)
+    internal func cs_async(
+        _ closure: @escaping () -> Void
+    ) {
+
         self.async { autoreleasepool(invoking: closure) }
     }
     
     @nonobjc @inline(__always)
-    internal func cs_barrierSync<T>(_ closure: () throws -> T) rethrows -> T {
-        
+    internal func cs_barrierSync<T>(
+        _ closure: () throws(any Swift.Error) -> T
+    ) rethrows -> T {
+
         return try self.sync(flags: .barrier) { try autoreleasepool(invoking: closure) }
     }
     
     @nonobjc @inline(__always)
-    internal func cs_barrierAsync(_ closure: @escaping () -> Void) {
-        
+    internal func cs_barrierAsync(
+        _ closure: @escaping () -> Void
+    ) {
+
         self.async(flags: .barrier) { autoreleasepool(invoking: closure) }
     }
     

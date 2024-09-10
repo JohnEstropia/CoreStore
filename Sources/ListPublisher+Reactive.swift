@@ -95,8 +95,10 @@ extension ListPublisher.ReactiveNamespace {
      - parameter emitInitialValue: If `true`, the current value is immediately emitted to the first subscriber. If `false`, the event fires only starting the next `ListSnapshot` update.
      - returns: A `Publisher` that emits a `ListSnapshot` whenever changes occur in the `ListPublisher`.
      */
-    public func snapshot(emitInitialValue: Bool = true) -> ListPublisher.SnapshotPublisher {
-        
+    public func snapshot(
+        emitInitialValue: Bool = true
+    ) -> ListPublisher.SnapshotPublisher {
+
         return .init(
             listPublisher: self.base,
             emitInitialValue: emitInitialValue

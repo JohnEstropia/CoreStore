@@ -51,8 +51,12 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
      - parameter destinationVersion: the destination model version for the mapping
      - parameter entityMappings: a list of `CustomMapping`s. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible. Any conflicts or ambiguity will raise an assertion.
      */
-    public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, entityMappings: Set<CustomMapping> = []) {
-        
+    public required init(
+        from sourceVersion: ModelVersion,
+        to destinationVersion: ModelVersion,
+        entityMappings: Set<CustomMapping> = []
+    ) {
+
         Internals.assert(
             Internals.with {
                 
@@ -101,13 +105,19 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          - parameter sourceObject: a proxy object representing the source entity. The properties can be accessed via keyPath.
          - parameter createDestinationObject: the closure to create the object for the destination entity. The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight). The object is created lazily and executing the closure multiple times will return the same instance. The destination object's properties can be accessed and updated via keyPath.
          */
-        public typealias Transformer = (_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void
-        
+        public typealias Transformer = (
+            _ sourceObject: UnsafeSourceObject,
+            _ createDestinationObject: () -> UnsafeDestinationObject
+        ) throws(any Swift.Error) -> Void
+
         /**
          The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight).
          */
-        public static func inferredTransformation(_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void {
-            
+        public static func inferredTransformation(
+            _ sourceObject: UnsafeSourceObject,
+            _ createDestinationObject: () -> UnsafeDestinationObject
+        ) throws(any Swift.Error) {
+
             let destinationObject = createDestinationObject()
             destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
                 
@@ -343,8 +353,15 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: SchemaMappingProvider
     
-    public func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
-        
+    public func cs_createMappingModel(
+        from sourceSchema: DynamicSchema,
+        to destinationSchema: DynamicSchema,
+        storage: LocalStorage
+    ) throws(CoreStoreError) -> (
+        mappingModel: NSMappingModel,
+        migrationType: MigrationType
+    ) {
+
         let sourceModel = sourceSchema.rawModel()
         let destinationModel = destinationSchema.rawModel()
         
@@ -535,8 +552,12 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         // MARK: NSEntityMigrationPolicy
         
-        override func createDestinationInstances(forSource sInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
-            
+        override func createDestinationInstances(
+            forSource sInstance: NSManagedObject,
+            in mapping: NSEntityMapping,
+            manager: NSMigrationManager
+        ) throws(any Swift.Error) {
+
             let userInfo = mapping.userInfo!
             let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
             let sourceAttributesByDestinationKey = userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] as! [KeyPathString: NSAttributeDescription]
@@ -563,8 +584,12 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             }
         }
         
-        override func createRelationships(forDestination dInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
-            
+        override func createRelationships(
+            forDestination dInstance: NSManagedObject,
+            in mapping: NSEntityMapping,
+            manager: NSMigrationManager
+        ) throws(any Swift.Error) {
+
             try super.createRelationships(forDestination: dInstance, in: mapping, manager: manager)
         }
         
@@ -583,8 +608,16 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     private let entityMappings: Set<CustomMapping>
     
-    private func resolveEntityMappings(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel) -> (delete: Set<CustomMapping>, insert: Set<CustomMapping>, copy: Set<CustomMapping>, transform: Set<CustomMapping>) {
-        
+    private func resolveEntityMappings(
+        sourceModel: NSManagedObjectModel,
+        destinationModel: NSManagedObjectModel
+    ) -> (
+        delete: Set<CustomMapping>,
+        insert: Set<CustomMapping>,
+        copy: Set<CustomMapping>,
+        transform: Set<CustomMapping>
+    ) {
+
         var deleteMappings: Set<CustomMapping> = []
         var insertMappings: Set<CustomMapping> = []
         var copyMappings: Set<CustomMapping> = []

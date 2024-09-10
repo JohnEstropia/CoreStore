@@ -33,7 +33,13 @@ extension Internals {
     // MARK: Internal
 
     @inline(__always)
-    internal static func log(_ level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func log(
+        _ level: LogLevel,
+        message: String,
+        fileName: StaticString = #file,
+        lineNumber: Int = #line,
+        functionName: StaticString = #function
+    ) {
 
         CoreStoreDefaults.logger.log(
             level: level,
@@ -45,7 +51,13 @@ extension Internals {
     }
 
     @inline(__always)
-    internal static func log(_ error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func log(
+        _ error: CoreStoreError,
+        _ message: String,
+        fileName: StaticString = #file,
+        lineNumber: Int = #line,
+        functionName: StaticString = #function
+    ) {
 
         CoreStoreDefaults.logger.log(
             error: error,
@@ -57,7 +69,13 @@ extension Internals {
     }
 
     @inline(__always)
-    internal static func assert( _ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func assert(
+        _ condition: @autoclosure () -> Bool,
+        _ message: @autoclosure () -> String,
+        fileName: StaticString = #file,
+        lineNumber: Int = #line,
+        functionName: StaticString = #function
+    ) {
 
         CoreStoreDefaults.logger.assert(
             condition(),
@@ -69,7 +87,12 @@ extension Internals {
     }
 
     @inline(__always)
-    internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
+    internal static func abort(
+        _ message: String,
+        fileName: StaticString = #file,
+        lineNumber: Int = #line,
+        functionName: StaticString = #function
+    ) -> Never  {
 
         CoreStoreDefaults.logger.abort(
             message,

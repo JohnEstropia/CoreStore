@@ -57,27 +57,38 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_toReturnType(from value: NativeValueType?) -> Self
+    static func cs_toReturnType(
+        from value: NativeValueType?
+    ) -> Self
 
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_toPublishedType(from value: SnapshotValueType, in context: NSManagedObjectContext) -> PublishedType
+    static func cs_toPublishedType(
+        from value: SnapshotValueType,
+        in context: NSManagedObjectContext
+    ) -> PublishedType
 
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_toNativeType(from value: Self) -> NativeValueType?
+    static func cs_toNativeType(
+        from value: Self
+    ) -> NativeValueType?
 
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType
+    static func cs_toSnapshotType(
+        from value: PublishedType
+    ) -> SnapshotValueType
 
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType
+    static func cs_valueForSnapshot(
+        from objectIDs: [DestinationObjectType.ObjectID]
+    ) -> SnapshotValueType
 }
 
 
@@ -115,27 +126,38 @@ extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrap
 
     public typealias PublishedType = ObjectPublisher<DestinationObjectType>?
 
-    public static func cs_toReturnType(from value: NativeValueType?) -> Self {
+    public static func cs_toReturnType(
+        from value: NativeValueType?
+    ) -> Self {
 
         return value.map(Wrapped.cs_fromRaw(object:))
     }
 
-    public static func cs_toPublishedType(from value: SnapshotValueType, in context: NSManagedObjectContext) -> PublishedType {
+    public static func cs_toPublishedType(
+        from value: SnapshotValueType,
+        in context: NSManagedObjectContext
+    ) -> PublishedType {
 
         return value.map(context.objectPublisher(objectID:))
     }
 
-    public static func cs_toNativeType(from value: Self) -> NativeValueType? {
+    public static func cs_toNativeType(
+        from value: Self
+    ) -> NativeValueType? {
 
         return value?.cs_toRaw()
     }
 
-    public static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType {
+    public static func cs_toSnapshotType(
+        from value: PublishedType
+    ) -> SnapshotValueType {
 
         return value?.objectID()
     }
 
-    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(
+        from objectIDs: [DestinationObjectType.ObjectID]
+    ) -> SnapshotValueType {
 
         return objectIDs.first
     }
@@ -156,7 +178,9 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
 
     public typealias PublishedType = [ObjectPublisher<DestinationObjectType>]
 
-    public static func cs_toReturnType(from value: NativeValueType?) -> Self {
+    public static func cs_toReturnType(
+        from value: NativeValueType?
+    ) -> Self {
 
         guard let value = value else {
 
@@ -165,22 +189,31 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
         return value.map({ Element.cs_fromRaw(object: $0 as! NSManagedObject) })
     }
 
-    public static func cs_toPublishedType(from value: SnapshotValueType, in context: NSManagedObjectContext) -> PublishedType {
+    public static func cs_toPublishedType(
+        from value: SnapshotValueType,
+        in context: NSManagedObjectContext
+    ) -> PublishedType {
 
         return value.map(context.objectPublisher(objectID:))
     }
 
-    public static func cs_toNativeType(from value: Self) -> NativeValueType? {
+    public static func cs_toNativeType(
+        from value: Self
+    ) -> NativeValueType? {
 
         return NSOrderedSet(array: value.map({ $0.rawObject! }))
     }
 
-    public static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType {
+    public static func cs_toSnapshotType(
+        from value: PublishedType
+    ) -> SnapshotValueType {
 
         return value.map({ $0.objectID() })
     }
 
-    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(
+        from objectIDs: [DestinationObjectType.ObjectID]
+    ) -> SnapshotValueType {
 
         return objectIDs
     }
@@ -201,7 +234,9 @@ extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelation
 
     public typealias PublishedType = Set<ObjectPublisher<DestinationObjectType>>
 
-    public static func cs_toReturnType(from value: NativeValueType?) -> Self {
+    public static func cs_toReturnType(
+        from value: NativeValueType?
+    ) -> Self {
 
         guard let value = value else {
 
@@ -210,22 +245,31 @@ extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelation
         return Set(value.map({ Element.cs_fromRaw(object: $0 as! NSManagedObject) }))
     }
 
-    public static func cs_toPublishedType(from value: SnapshotValueType, in context: NSManagedObjectContext) -> PublishedType {
+    public static func cs_toPublishedType(
+        from value: SnapshotValueType,
+        in context: NSManagedObjectContext
+    ) -> PublishedType {
 
         return PublishedType(value.map(context.objectPublisher(objectID:)))
     }
 
-    public static func cs_toNativeType(from value: Self) -> NativeValueType? {
+    public static func cs_toNativeType(
+        from value: Self
+    ) -> NativeValueType? {
 
         return NSSet(array: value.map({ $0.rawObject! }))
     }
 
-    public static func cs_toSnapshotType(from value: PublishedType) -> SnapshotValueType {
+    public static func cs_toSnapshotType(
+        from value: PublishedType
+    ) -> SnapshotValueType {
 
         return SnapshotValueType(value.map({ $0.objectID() }))
     }
 
-    public static func cs_valueForSnapshot(from objectIDs: [DestinationObjectType.ObjectID]) -> SnapshotValueType {
+    public static func cs_valueForSnapshot(
+        from objectIDs: [DestinationObjectType.ObjectID]
+    ) -> SnapshotValueType {
 
         return .init(objectIDs)
     }

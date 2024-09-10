@@ -39,7 +39,9 @@ extension DataStack {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: an `ObjectPublisher` that broadcasts changes to `object`
      */
-    public func publishObject<O: DynamicObject>(_ object: O) -> ObjectPublisher<O> {
+    public func publishObject<O: DynamicObject>(
+        _ object: O
+    ) -> ObjectPublisher<O> {
 
         return self.publishObject(object.cs_id())
     }
@@ -50,7 +52,9 @@ extension DataStack {
      - parameter objectID: the `ObjectID` of the object to observe changes from
      - returns: an `ObjectPublisher` that broadcasts changes to `object`
      */
-    public func publishObject<O: DynamicObject>(_ objectID: O.ObjectID) -> ObjectPublisher<O> {
+    public func publishObject<O: DynamicObject>(
+        _ objectID: O.ObjectID
+    ) -> ObjectPublisher<O> {
 
         let context = self.unsafeContext()
         return context.objectPublisher(objectID: objectID)
@@ -74,7 +78,9 @@ extension DataStack {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
+    public func publishList<B: FetchChainableBuilderType>(
+        _ clauseChain: B
+    ) -> ListPublisher<B.ObjectType> {
 
         return self.publishList(
             clauseChain.from,
@@ -101,7 +107,9 @@ extension DataStack {
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
+    public func publishList<B: SectionMonitorBuilderType>(
+        _ clauseChain: B
+    ) -> ListPublisher<B.ObjectType> {
 
         return self.publishList(
             clauseChain.from,
@@ -117,7 +125,10 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<O>(_ from: From<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
+    public func publishList<O>(
+        _ from: From<O>,
+        _ fetchClauses: FetchClause...
+    ) -> ListPublisher<O> {
 
         return self.publishList(from, fetchClauses)
     }
@@ -129,7 +140,10 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
+    public func publishList<O>(
+        _ from: From<O>,
+        _ fetchClauses: [FetchClause]
+    ) -> ListPublisher<O> {
 
         return ListPublisher(
             dataStack: self,
@@ -155,7 +169,11 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
+    public func publishList<O>(
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
+        _ fetchClauses: FetchClause...
+    ) -> ListPublisher<O> {
 
         return self.publishList(
             from,
@@ -172,7 +190,11 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func publishList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
+    public func publishList<O>(
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
+        _ fetchClauses: [FetchClause]
+    ) -> ListPublisher<O> {
 
         return ListPublisher(
             dataStack: self,

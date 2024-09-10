@@ -43,8 +43,13 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.none`.
      */
-    public init(fileURL: URL, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
-        
+    public init(
+        fileURL: URL,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
         self.fileURL = fileURL
         self.configuration = configuration
         self.migrationMappingProviders = migrationMappingProviders
@@ -60,8 +65,13 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
-        
+    public init(
+        fileName: String,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) {
+
         self.fileURL = SQLiteStore.defaultRootDirectory
             .appendingPathComponent(fileName, isDirectory: false)
         self.configuration = configuration
@@ -91,8 +101,13 @@ public final class SQLiteStore: LocalStorage {
      - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public static func legacy(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) -> SQLiteStore {
-        
+    public static func legacy(
+        fileName: String,
+        configuration: ModelConfiguration = nil,
+        migrationMappingProviders: [SchemaMappingProvider] = [],
+        localStorageOptions: LocalStorageOptions = nil
+    ) -> SQLiteStore {
+
         return SQLiteStore(
             fileURL: SQLiteStore.legacyDefaultRootDirectory
                 .appendingPathComponent(fileName, isDirectory: false),
@@ -192,8 +207,10 @@ public final class SQLiteStore: LocalStorage {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    public func dictionary(forOptions options: LocalStorageOptions) -> [AnyHashable: Any]? {
-        
+    public func dictionary(
+        forOptions options: LocalStorageOptions
+    ) -> [AnyHashable: Any]? {
+
         if options == .none {
             
             return self.storeOptions
@@ -211,8 +228,10 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
      */
-    public func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws {
-        
+    public func cs_finalizeStorageAndWait(
+        soureModelHint: NSManagedObjectModel
+    ) throws(any Swift.Error) {
+
         _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
             
             var storeOptions = self.storeOptions ?? [:]
@@ -230,10 +249,16 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
-        
-        func deleteFiles(storeURL: URL, extraFiles: [String] = []) throws {
-            
+    public func cs_eraseStorageAndWait(
+        metadata: [String: Any],
+        soureModelHint: NSManagedObjectModel?
+    ) throws(any Swift.Error) {
+
+        func deleteFiles(
+            storeURL: URL,
+            extraFiles: [String] = []
+        ) throws(any Swift.Error) {
+
             let fileManager = FileManager.default
             let extraFiles: [String] = [
                 storeURL.path.appending("-wal"),
@@ -263,7 +288,8 @@ public final class SQLiteStore: LocalStorage {
                     return extraFile
                 }
                 DispatchQueue.global(qos: .background).async {
-                    
+
+                    let fileManager = FileManager.default
                     _ = try? fileManager.removeItem(at: temporaryFileURL)
                     extraTemporaryFiles.forEach({ _ = try? fileManager.removeItem(atPath: $0) })
                 }
@@ -276,7 +302,7 @@ public final class SQLiteStore: LocalStorage {
         }
         
         let fileURL = self.fileURL
-        try autoreleasepool {
+        try Internals.autoreleasepool {
             
             if let soureModel = soureModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
                 

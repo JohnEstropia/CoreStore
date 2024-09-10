@@ -37,5 +37,12 @@ public protocol SchemaMappingProvider {
     /**
      Do not call directly.
      */
-    func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType)
+    func cs_createMappingModel(
+        from sourceSchema: DynamicSchema,
+        to destinationSchema: DynamicSchema,
+        storage: LocalStorage
+    ) throws(CoreStoreError) -> (
+        mappingModel: NSMappingModel,
+        migrationType: MigrationType
+    )
 }

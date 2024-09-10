@@ -52,8 +52,10 @@ extension ObjectPublisher {
         public typealias Output = ObjectSnapshot<O>?
         public typealias Failure = Never
         
-        public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
-            
+        public func receive<S: Subscriber>(
+            subscriber: S
+        ) where S.Input == Output, S.Failure == Failure {
+
             subscriber.receive(
                 subscription: ObjectSnapshotSubscription(
                     publisher: self.objectPublisher,

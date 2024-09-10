@@ -106,11 +106,11 @@ extension Internals {
                     }
                 }
 
-                #if os(watchOS)
-                
+#if os(watchOS) || !canImport(QuartzCore)
+
                 performDiffingUpdates()
 
-                #else
+#else
 
                 CATransaction.begin()
                 
@@ -122,8 +122,7 @@ extension Internals {
                 
                 CATransaction.commit()
 
-
-                #endif
+#endif
             }
         }
 

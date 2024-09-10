@@ -39,8 +39,6 @@ internal enum Internals {
         return object_getClass(instance) as! T.Type
     }
 
-    // MARK: Associated Objects
-
     @inline(__always)
     internal static func getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: Any) -> T? {
 
@@ -122,5 +120,48 @@ internal enum Internals {
     internal static func with<T>(_ closure: () -> T) -> T {
 
         return closure()
+    }
+
+    @inline(__always)
+    internal static func autoreleasepool<T>(
+        _ closure: () -> T
+    ) -> T {
+
+        return ObjectiveC.autoreleasepool(invoking: closure)
+    }
+
+    @inline(__always)
+    internal static func autoreleasepool<T>(
+        _ closure: () throws(any Swift.Error) -> T
+    ) throws(any Swift.Error) -> T {
+
+        return try ObjectiveC.autoreleasepool(invoking: closure)
+    }
+
+    @inline(__always)
+    internal static func autoreleasepool<T>(
+        _ closure: () throws(CoreStoreError) -> T
+    ) throws(CoreStoreError) -> T {
+
+        do {
+
+            return try ObjectiveC.autoreleasepool(invoking: closure)
+        }
+        catch {
+
+            throw CoreStoreError(error)
+        }
+    }
+
+    @inline(__always)
+    internal static func withCheckedThrowingContinuation<T>(
+        function: String = #function,
+        _ body: (CheckedContinuation<T, any Swift.Error>) -> Void
+    ) async throws(any Swift.Error) -> T {
+
+        return try await _Concurrency.withCheckedThrowingContinuation(
+            function: function,
+            body
+        )
     }
 }

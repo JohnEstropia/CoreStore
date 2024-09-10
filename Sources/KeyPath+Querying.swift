@@ -35,9 +35,15 @@ import Foundation
  let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
  ```
  */
-public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -46,9 +52,15 @@ public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.nickname != "John"))
  ```
  */
-public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -57,9 +69,15 @@ public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
  let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
  ```
  */
-public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, V>) -> Where<O> where S.Iterator.Element == V {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, V>
+) -> Where<O> where S.Iterator.Element == V {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 
@@ -71,9 +89,15 @@ public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Se
  let person = dataStack.fetchOne(From<Person>().where(\.nickname == "John"))
  ```
  */
-public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -82,9 +106,15 @@ public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.nickname != "John"))
  ```
  */
-public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -93,9 +123,15 @@ public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
  let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
  ```
  */
-public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<V>>) -> Where<O> where S.Iterator.Element == V {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, Optional<V>>
+) -> Where<O> where S.Iterator.Element == V {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 
@@ -107,9 +143,16 @@ public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Se
  let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
  ```
  */
-public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return Where<O>(
+        "%K < %@",
+        keyPath._kvcKeyPathString!,
+        value.cs_toQueryableNativeType()
+    )
 }
 
 /**
@@ -118,9 +161,16 @@ public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.age > 20))
  ```
  */
-public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return Where<O>(
+        "%K > %@",
+        keyPath._kvcKeyPathString!,
+        value.cs_toQueryableNativeType()
+    )
 }
 
 /**
@@ -129,9 +179,16 @@ public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
  ```
  */
-public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return Where<O>(
+        "%K <= %@",
+        keyPath._kvcKeyPathString!,
+        value.cs_toQueryableNativeType()
+    )
 }
 
 /**
@@ -140,9 +197,16 @@ public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
  let person = dataStack.fetchOne(From<Person>().where(\.age >= 20))
  ```
  */
-public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
-    
-    return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, V>,
+    _ value: V
+) -> Where<O> {
+
+    return Where<O>(
+        "%K >= %@",
+        keyPath._kvcKeyPathString!,
+        value.cs_toQueryableNativeType()
+    )
 }
 
 
@@ -154,15 +218,25 @@ public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
  let person = dataStack.fetchOne(From<Person>().where(\.age < 20))
  ```
  */
-public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
+public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
     if let value = value {
         
-        return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<O>(
+            "%K < %@",
+            keyPath._kvcKeyPathString!,
+            value.cs_toQueryableNativeType()
+        )
     }
     else {
         
-        return Where<O>("%K < nil", keyPath._kvcKeyPathString!)
+        return Where<O>(
+            "%K < nil",
+            keyPath._kvcKeyPathString!
+        )
     }
 }
 
@@ -172,15 +246,25 @@ public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.age > 20))
  ```
  */
-public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
+public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
     if let value = value {
         
-        return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<O>(
+            "%K > %@",
+            keyPath._kvcKeyPathString!,
+            value.cs_toQueryableNativeType()
+        )
     }
     else {
         
-        return Where<O>("%K > nil", keyPath._kvcKeyPathString!)
+        return Where<O>(
+            "%K > nil",
+            keyPath._kvcKeyPathString!
+        )
     }
 }
 
@@ -190,15 +274,25 @@ public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  let person = dataStack.fetchOne(From<Person>().where(\.age <= 20))
  ```
  */
-public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
+public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
     if let value = value {
         
-        return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<O>(
+            "%K <= %@",
+            keyPath._kvcKeyPathString!,
+            value.cs_toQueryableNativeType()
+        )
     }
     else {
         
-        return Where<O>("%K <= nil", keyPath._kvcKeyPathString!)
+        return Where<O>(
+            "%K <= nil",
+            keyPath._kvcKeyPathString!
+        )
     }
 }
 
@@ -208,15 +302,25 @@ public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
  let person = dataStack.fetchOne(From<Person>().where(\.age >= 20))
  ```
  */
-public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
-    
+public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(
+    _ keyPath: KeyPath<O, Optional<V>>,
+    _ value: V?
+) -> Where<O> {
+
     if let value = value {
         
-        return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<O>(
+            "%K >= %@",
+            keyPath._kvcKeyPathString!,
+            value.cs_toQueryableNativeType()
+        )
     }
     else {
         
-        return Where<O>("%K >= nil", keyPath._kvcKeyPathString!)
+        return Where<O>(
+            "%K >= nil",
+            keyPath._kvcKeyPathString!
+        )
     }
 }
 
@@ -229,9 +333,15 @@ public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: D) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+public func == <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ object: D
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -240,9 +350,15 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: D) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+public func != <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ object: D
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -251,9 +367,15 @@ public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
  let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.master))
  ```
  */
-public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, D>) -> Where<O> where S.Iterator.Element == D {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, D>
+) -> Where<O> where S.Iterator.Element == D {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 /**
@@ -262,9 +384,15 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ objectID: NSManagedObjectID) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+public func == <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ objectID: NSManagedObjectID
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: objectID
+    )
 }
 
 /**
@@ -273,9 +401,15 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: O) -> Where<O> where O.ObjectType: NSManagedObject {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object.cs_id())
+public func == <O: ObjectRepresentation, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ object: O
+) -> Where<O> where O.ObjectType: NSManagedObject {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object.cs_id()
+    )
 }
 
 /**
@@ -284,9 +418,15 @@ public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ objectID: NSManagedObjectID) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+public func != <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ objectID: NSManagedObjectID
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: objectID
+    )
 }
 
 /**
@@ -295,9 +435,15 @@ public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: O) -> Where<O> where O.ObjectType: NSManagedObject {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object.cs_id())
+public func != <O: ObjectRepresentation, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, D>,
+    _ object: O
+) -> Where<O> where O.ObjectType: NSManagedObject {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object.cs_id()
+    )
 }
 
 /**
@@ -306,9 +452,15 @@ public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<
  let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.master))
  ```
  */
-public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, D>) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, D>
+) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 
@@ -320,9 +472,15 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+public func == <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ object: D?
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -331,9 +489,15 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: O?) -> Where<O> where O.ObjectType: NSManagedObject {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object?.cs_toRaw())
+public func == <O: ObjectRepresentation, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ object: O?
+) -> Where<O> where O.ObjectType: NSManagedObject {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object?.cs_toRaw()
+    )
 }
 
 /**
@@ -342,9 +506,15 @@ public func == <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+public func != <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ object: D?
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -353,9 +523,15 @@ public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: O?) -> Where<O> where O.ObjectType: NSManagedObject {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object?.cs_toRaw())
+public func != <O: ObjectRepresentation, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ object: O?
+) -> Where<O> where O.ObjectType: NSManagedObject {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: object?.cs_toRaw()
+    )
 }
 
 /**
@@ -364,9 +540,15 @@ public func != <O: ObjectRepresentation, D: NSManagedObject>(_ keyPath: KeyPath<
  let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.master))
  ```
  */
-public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<D>>) -> Where<O> where S.Iterator.Element == D {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, Optional<D>>
+) -> Where<O> where S.Iterator.Element == D {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 /**
@@ -375,9 +557,15 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ objectID: NSManagedObjectID) -> Where<O> {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+public func == <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ objectID: NSManagedObjectID
+) -> Where<O> {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: objectID
+    )
 }
 
 /**
@@ -386,9 +574,15 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ objectID: NSManagedObjectID) -> Where<O> {
-    
-    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+public func != <O: NSManagedObject, D: NSManagedObject>(
+    _ keyPath: KeyPath<O, Optional<D>>,
+    _ objectID: NSManagedObjectID
+) -> Where<O> {
+
+    return !Where<O>(
+        keyPath._kvcKeyPathString!,
+        isEqualTo: objectID
+    )
 }
 
 /**
@@ -397,9 +591,15 @@ public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
  let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.master))
  ```
  */
-public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<D>>) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
-    
-    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, Optional<D>>
+) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
+
+    return Where<O>(
+        keyPath._kvcKeyPathString!,
+        isMemberOf: sequence
+    )
 }
 
 
@@ -411,9 +611,15 @@ public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence:
  let person = dataStack.fetchOne(From<Person>().where(\.$nickname == "John"))
  ```
  */
-public func == <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func == <O, V>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return Where<O>(keyPath, isEqualTo: value)
+    return Where<O>(
+        keyPath,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -422,9 +628,15 @@ public func == <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ valu
  let person = dataStack.fetchOne(From<Person>().where(\.$nickname != "John"))
  ```
  */
-public func != <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func != <O, V>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return !Where<O>(keyPath, isEqualTo: value)
+    return !Where<O>(
+        keyPath,
+        isEqualTo: value
+    )
 }
 
 /**
@@ -433,9 +645,15 @@ public func != <O, V>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ valu
  let dog = dataStack.fetchOne(From<Dog>().where(["Pluto", "Snoopy", "Scooby"] ~= \.nickname))
  ```
  */
-public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>) -> Where<O> where S.Iterator.Element == V {
+public func ~= <O, V, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>
+) -> Where<O> where S.Iterator.Element == V {
 
-    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
+    return Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isMemberOf: sequence
+    )
 }
 
 
@@ -447,9 +665,16 @@ public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldCon
  let person = dataStack.fetchOne(From<Person>().where(\.$age < 20))
  ```
  */
-public func < <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func < <O, V: Comparable>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K < %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -458,9 +683,16 @@ public func < <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<
  let person = dataStack.fetchOne(From<Person>().where(\.$age < 20))
  ```
  */
-public func < <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+public func < <O, V: FieldOptionalType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> where V.Wrapped: Comparable {
 
-    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K < %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -469,9 +701,16 @@ public func < <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.
  let person = dataStack.fetchOne(From<Person>().where(\.$age > 20))
  ```
  */
-public func > <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func > <O, V: Comparable>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K > %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -480,9 +719,16 @@ public func > <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<
  let person = dataStack.fetchOne(From<Person>().where(\.$age > 20))
  ```
  */
-public func > <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+public func > <O, V: FieldOptionalType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> where V.Wrapped: Comparable {
 
-    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K > %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -491,9 +737,16 @@ public func > <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.
  let person = dataStack.fetchOne(From<Person>().where(\.$age <= 20))
  ```
  */
-public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func <= <O, V: Comparable>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K <= %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -502,9 +755,16 @@ public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored
  let person = dataStack.fetchOne(From<Person>().where(\.$age <= 20))
  ```
  */
-public func <= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+public func <= <O, V: FieldOptionalType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> where V.Wrapped: Comparable {
 
-    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K <= %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -513,9 +773,16 @@ public func <= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>
  let person = dataStack.fetchOne(From<Person>().where(\.$age >= 20))
  ```
  */
-public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> {
+public func >= <O, V: Comparable>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> {
 
-    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K >= %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 /**
@@ -524,9 +791,16 @@ public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored
  let person = dataStack.fetchOne(From<Person>().where(\.$age >= 20))
  ```
  */
-public func >= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>, _ value: V) -> Where<O> where V.Wrapped: Comparable {
+public func >= <O, V: FieldOptionalType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Stored<V>>,
+    _ value: V
+) -> Where<O> where V.Wrapped: Comparable {
 
-    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType)
+    return Where<O>(
+        "%K >= %@",
+        O.meta[keyPath: keyPath].keyPath,
+        value.cs_toFieldStoredNativeType() as! V.FieldStoredNativeType
+    )
 }
 
 
@@ -538,9 +812,15 @@ public func >= <O, V: FieldOptionalType>(_ keyPath: KeyPath<O, FieldContainer<O>
  let dog = dataStack.fetchOne(From<Dog>().where(\.$master == john))
  ```
  */
-public func == <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: D.DestinationObjectType?) -> Where<O> {
+public func == <O, D: FieldRelationshipToOneType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>,
+    _ object: D.DestinationObjectType?
+) -> Where<O> {
 
-    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+    return Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -549,9 +829,15 @@ public func == <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldCon
  let dog = dataStack.fetchOne(From<Dog>().where(\.master == john))
  ```
  */
-public func == <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: R?) -> Where<O> where D.DestinationObjectType == R.ObjectType {
+public func == <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>,
+    _ object: R?
+) -> Where<O> where D.DestinationObjectType == R.ObjectType {
 
-    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object?.objectID())
+    return Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isEqualTo: object?.objectID()
+    )
 }
 
 /**
@@ -560,9 +846,15 @@ public func == <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ key
  let dog = dataStack.fetchOne(From<Dog>().where(\.$master != john))
  ```
  */
-public func != <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: D.DestinationObjectType?) -> Where<O> {
+public func != <O, D: FieldRelationshipToOneType>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>,
+    _ object: D.DestinationObjectType?
+) -> Where<O> {
 
-    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+    return !Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isEqualTo: object
+    )
 }
 
 /**
@@ -571,9 +863,15 @@ public func != <O, D: FieldRelationshipToOneType>(_ keyPath: KeyPath<O, FieldCon
  let dog = dataStack.fetchOne(From<Dog>().where(\.master != john))
  ```
  */
-public func != <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ object: R?) -> Where<O> where D.DestinationObjectType == R.ObjectType {
+public func != <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(
+    _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>,
+    _ object: R?
+) -> Where<O> where D.DestinationObjectType == R.ObjectType {
 
-    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object?.objectID())
+    return !Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isEqualTo: object?.objectID()
+    )
 }
 
 /**
@@ -582,9 +880,15 @@ public func != <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(_ key
  let dog = dataStack.fetchOne(From<Dog>().where([john, bob, joe] ~= \.$master))
  ```
  */
-public func ~= <O, D: FieldRelationshipToOneType, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>) -> Where<O> where S.Iterator.Element == D.DestinationObjectType {
+public func ~= <O, D: FieldRelationshipToOneType, S: Sequence>(
+    _ sequence: S,
+    _ keyPath: KeyPath<O, FieldContainer<O>.Relationship<D>>
+) -> Where<O> where S.Iterator.Element == D.DestinationObjectType {
 
-    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
+    return Where<O>(
+        O.meta[keyPath: keyPath].keyPath,
+        isMemberOf: sequence
+    )
 }
 
 

@@ -46,8 +46,15 @@ public final class XcodeDataModelSchema: DynamicSchema {
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      - returns: a tuple containing all `XcodeDataModelSchema` for the models declared in the specified .xcdatamodeld file, and the current model version string declared or inferred from the file.
      */
-    public static func from(modelName: XcodeDataModelFileName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) -> (allSchema: [XcodeDataModelSchema], currentModelVersion: ModelVersion) {
-        
+    public static func from(
+        modelName: XcodeDataModelFileName,
+        bundle: Bundle = Bundle.main,
+        migrationChain: MigrationChain = nil
+    ) -> (
+        allSchema: [XcodeDataModelSchema],
+        currentModelVersion: ModelVersion
+    ) {
+
         guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
             
             // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
@@ -116,8 +123,11 @@ public final class XcodeDataModelSchema: DynamicSchema {
      - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
      - parameter bundle: the `Bundle` that contains the .xcdatamodeld's "momd" file. If not specified, the `Bundle.main` will be searched.
      */
-    public convenience init(modelName: ModelVersion, bundle: Bundle = Bundle.main) {
-        
+    public convenience init(
+        modelName: ModelVersion,
+        bundle: Bundle = Bundle.main
+    ) {
+
         guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
             
             // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
@@ -142,8 +152,11 @@ public final class XcodeDataModelSchema: DynamicSchema {
      - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
      - parameter modelVersionFileURL: the file URL that points to the .xcdatamodeld's "momd" file.
      */
-    public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
-        
+    public required init(
+        modelName: ModelVersion,
+        modelVersionFileURL: URL
+    ) {
+
         Internals.assert(
             NSManagedObjectModel(contentsOf: modelVersionFileURL) != nil,
             "Could not find the \"\(modelName).mom\" version file for the model at URL \"\(modelVersionFileURL)\"."

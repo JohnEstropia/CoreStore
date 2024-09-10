@@ -91,11 +91,14 @@ extension Internals {
         // MARK: NSFetchedResultsControllerDelegate
         
         @objc
-        dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        dynamic func controllerDidChangeContent(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>
+        ) {
 
             var snapshot = Internals.DiffableDataSourceSnapshot(
                 sections: controller.sections ?? [],
-                sectionIndexTransformer: self.handler.map({ $0.sectionIndexTransformer }) ?? { _ in nil },
+                sectionIndexTransformer: self.handler
+                    .map({ $0.sectionIndexTransformer }) ?? { _ in nil },
                 fetchOffset: controller.fetchRequest.fetchOffset,
                 fetchLimit: controller.fetchRequest.fetchLimit
             )
@@ -117,13 +120,24 @@ extension Internals {
         }
         
         @objc
-        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        dynamic func controller(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+            didChange anObject: Any,
+            at indexPath: IndexPath?,
+            for type: NSFetchedResultsChangeType,
+            newIndexPath: IndexPath?
+        ) {
 
             let object = anObject as! NSManagedObject
             self.reloadedItemIDs.append(object.objectID)
         }
 
-        func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        func controller(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+            didChange sectionInfo: NSFetchedResultsSectionInfo,
+            atSectionIndex sectionIndex: Int,
+            for type: NSFetchedResultsChangeType
+        ) {
 
             self.reloadedSectionIDs.append(sectionInfo.name)
         }

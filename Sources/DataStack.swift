@@ -241,8 +241,8 @@ public final class DataStack: Equatable {
      - returns: the local SQLite storage added to the stack
      */
     @discardableResult
-    public func addStorageAndWait() throws -> SQLiteStore {
-        
+    public func addStorageAndWait() throws(CoreStoreError) -> SQLiteStore {
+
         return try self.addStorageAndWait(SQLiteStore())
     }
     
@@ -258,8 +258,8 @@ public final class DataStack: Equatable {
     @discardableResult
     public func addStorageAndWait<T: StorageInterface>(
         _ storage: T
-    ) throws -> T {
-        
+    ) throws(CoreStoreError) -> T {
+
         do {
             
             return try self.coordinator.performSynchronously {
@@ -278,12 +278,11 @@ public final class DataStack: Equatable {
         }
         catch {
             
-            let storeError = CoreStoreError(error)
             Internals.log(
-                storeError,
+                error,
                 "Failed to add \(Internals.typeName(storage)) to the stack."
             )
-            throw storeError
+            throw error
         }
     }
     
@@ -299,8 +298,8 @@ public final class DataStack: Equatable {
     @discardableResult
     public func addStorageAndWait<T: LocalStorage>(
         _ storage: T
-    ) throws -> T {
-        
+    ) throws(CoreStoreError) -> T {
+
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
@@ -539,8 +538,8 @@ public final class DataStack: Equatable {
         _ storage: StorageInterface,
         finalURL: URL?,
         finalStoreOptions: [AnyHashable: Any]?
-    ) throws -> NSPersistentStore {
-        
+    ) throws(any Swift.Error) -> NSPersistentStore {
+
         let persistentStore = try self.coordinator.addPersistentStore(
             ofType: type(of: storage).storeType,
             configurationName: storage.configuration,

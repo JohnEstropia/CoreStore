@@ -57,8 +57,14 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
      - parameter xcodeDataModeld: a tuple returned from the `XcodeDataModelSchema.from(modelName:bundle:migrationChain:)` method.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(_ xcodeDataModeld: (allSchema: [XcodeDataModelSchema], currentModelVersion: ModelVersion), migrationChain: MigrationChain = nil) {
-        
+    public convenience init(
+        _ xcodeDataModeld: (
+            allSchema: [XcodeDataModelSchema],
+            currentModelVersion: ModelVersion
+        ),
+        migrationChain: MigrationChain = nil
+    ) {
+
         self.init(
             allSchema: xcodeDataModeld.allSchema,
             migrationChain: migrationChain,
@@ -73,8 +79,13 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      - parameter exactCurrentModelVersion: an optional string to explicitly select the current model version string. This is useful if the `DataStack` should load a non-latest model version (usually to prepare data before migration). If not provided, the current model version will be computed from the `MigrationChain`.
      */
-    public convenience init(_ schema: DynamicSchema, _ otherSchema: DynamicSchema..., migrationChain: MigrationChain = nil, exactCurrentModelVersion: String? = nil) {
-        
+    public convenience init(
+        _ schema: DynamicSchema,
+        _ otherSchema: DynamicSchema...,
+        migrationChain: MigrationChain = nil,
+        exactCurrentModelVersion: String? = nil
+    ) {
+
         self.init(
             allSchema: [schema] + otherSchema,
             migrationChain: migrationChain,
@@ -88,8 +99,12 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      - parameter exactCurrentModelVersion: an optional string to explicitly select the current model version string. This is useful if the `DataStack` should load a non-latest model version (usually to prepare data before migration). If not provided, the current model version will be computed from the `MigrationChain`.
      */
-    public required init(allSchema: [DynamicSchema], migrationChain: MigrationChain = nil, exactCurrentModelVersion: String? = nil) {
-        
+    public required init(
+        allSchema: [DynamicSchema],
+        migrationChain: MigrationChain = nil,
+        exactCurrentModelVersion: String? = nil
+    ) {
+
         if allSchema.isEmpty {
             
             Internals.abort("The \"allSchema\" argument of the \(Internals.typeName(SchemaHistory.self)) initializer cannot be empty.")

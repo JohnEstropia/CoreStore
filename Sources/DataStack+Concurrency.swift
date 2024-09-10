@@ -85,13 +85,16 @@ extension DataStack.AsyncNamespace {
      */
     public func addStorage<T: StorageInterface>(
         _ storage: T
-    ) async throws -> T {
+    ) async throws(any Swift.Error) -> T {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.addStorage(
                 storage,
-                completion: continuation.resume(with:)
+                completion: {
+
+                    continuation.resume(with: $0)
+                }
             )
         }
     }
@@ -115,7 +118,7 @@ extension DataStack.AsyncNamespace {
      */
     public func addStorage<T>(
         _ storage: T
-    ) -> AsyncThrowingStream<MigrationProgress<T>, Swift.Error> {
+    ) -> AsyncThrowingStream<MigrationProgress<T>, any Swift.Error> {
 
         return .init(
             bufferingPolicy: .unbounded,
@@ -178,9 +181,9 @@ extension DataStack.AsyncNamespace {
     public func importObject<O: DynamicObject & ImportableObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) async throws -> O? {
+    ) async throws(any Swift.Error) -> O? {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
@@ -217,9 +220,9 @@ extension DataStack.AsyncNamespace {
     public func importObject<O: DynamicObject & ImportableObject>(
         _ object: O,
         source: O.ImportSource
-    ) async throws -> O? {
+    ) async throws(any Swift.Error) -> O? {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
@@ -261,9 +264,9 @@ extension DataStack.AsyncNamespace {
     public func importUniqueObject<O: DynamicObject & ImportableUniqueObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) async throws -> O? {
+    ) async throws(any Swift.Error) -> O? {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
@@ -306,11 +309,13 @@ extension DataStack.AsyncNamespace {
     public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence>(
         _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping @Sendable (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }
-    ) async throws -> [O]
+        preProcess: @escaping @Sendable (
+            _ mapping: [O.UniqueIDType: O.ImportSource]
+        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
+    ) async throws(any Swift.Error) -> [O]
     where S.Iterator.Element == O.ImportSource {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
                 asynchronous: { (transaction) -> [O] in
@@ -353,14 +358,17 @@ extension DataStack.AsyncNamespace {
      - throws: A `CoreStoreError` value indicating the failure reason
      */
     public func perform<Output>(
-        _ asynchronous: @escaping @Sendable (AsynchronousDataTransaction) throws -> Output
-    ) async throws -> Output {
+        _ asynchronous: @escaping @Sendable (AsynchronousDataTransaction) throws(any Swift.Error) -> Output
+    ) async throws(any Swift.Error) -> Output {
 
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
                 asynchronous: asynchronous,
-                completion: continuation.resume(with:)
+                completion: {
+
+                    continuation.resume(with: $0)
+                }
             )
         }
     }

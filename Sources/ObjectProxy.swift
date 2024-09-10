@@ -38,7 +38,9 @@ public struct ObjectProxy<O: CoreStoreObject> {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>) -> FieldProxy<V> {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>
+    ) -> FieldProxy<V> {
 
         return .init(rawObject: self.rawObject, keyPath: member)
     }
@@ -46,7 +48,9 @@ public struct ObjectProxy<O: CoreStoreObject> {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> FieldProxy<V> {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>
+    ) -> FieldProxy<V> {
 
         return .init(rawObject: self.rawObject, keyPath: member)
     }
@@ -54,7 +58,9 @@ public struct ObjectProxy<O: CoreStoreObject> {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>) -> FieldProxy<V> {
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>
+    ) -> FieldProxy<V> {
 
         return .init(rawObject: self.rawObject, keyPath: member)
     }
@@ -111,22 +117,34 @@ public struct ObjectProxy<O: CoreStoreObject> {
 
         // MARK: Internal
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, keyPath: KeyPath<O, FieldContainer<OBase>.Stored<V>>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            keyPath: KeyPath<O, FieldContainer<OBase>.Stored<V>>
+        ) {
 
             self.init(rawObject: rawObject, field: O.meta[keyPath: keyPath])
         }
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, keyPath: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            keyPath: KeyPath<O, FieldContainer<OBase>.Virtual<V>>
+        ) {
 
             self.init(rawObject: rawObject, field: O.meta[keyPath: keyPath])
         }
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, keyPath: KeyPath<O, FieldContainer<OBase>.Coded<V>>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            keyPath: KeyPath<O, FieldContainer<OBase>.Coded<V>>
+        ) {
 
             self.init(rawObject: rawObject, field: O.meta[keyPath: keyPath])
         }
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, field: FieldContainer<OBase>.Stored<V>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            field: FieldContainer<OBase>.Stored<V>
+        ) {
 
             let keyPathString = field.keyPath
             self.getValue = {
@@ -157,7 +175,10 @@ public struct ObjectProxy<O: CoreStoreObject> {
             }
         }
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, field: FieldContainer<OBase>.Virtual<V>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            field: FieldContainer<OBase>.Virtual<V>
+        ) {
 
             let keyPathString = field.keyPath
             self.getValue = {
@@ -190,7 +211,10 @@ public struct ObjectProxy<O: CoreStoreObject> {
             }
         }
 
-        internal init<OBase>(rawObject: CoreStoreManagedObject, field: FieldContainer<OBase>.Coded<V>) {
+        internal init<OBase>(
+            rawObject: CoreStoreManagedObject,
+            field: FieldContainer<OBase>.Coded<V>
+        ) {
 
             let keyPathString = field.keyPath
             self.getValue = {

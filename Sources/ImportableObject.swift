@@ -66,15 +66,21 @@ public protocol ImportableObject: DynamicObject {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be created from `source`. Return `false` to ignore.
      */
-    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
-    
+    static func shouldInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool
+
     /**
      Implements the actual importing of data from `source`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importObjects(:sourceArray:)` call to be cancelled.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
-    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
+    func didInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) throws(any Swift.Error)
 }
 
 
@@ -82,8 +88,11 @@ public protocol ImportableObject: DynamicObject {
 
 extension ImportableObject {
     
-    public static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
-        
+    public static func shouldInsert(
+        from source: ImportSource,
+        in transaction: BaseDataTransaction
+    ) -> Bool {
+
         return true
     }
 }

@@ -42,23 +42,34 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
-    
+    static func cs_forceCreate(
+        entityDescription: NSEntityDescription,
+        into context: NSManagedObjectContext,
+        assignTo store: NSPersistentStore
+    ) -> Self
+
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]?
-    
+    static func cs_snapshotDictionary(
+        id: ObjectID,
+        context: NSManagedObjectContext
+    ) -> [String: Any]?
+
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_fromRaw(object: NSManagedObject) -> Self
-    
+    static func cs_fromRaw(
+        object: NSManagedObject
+    ) -> Self
+
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_matches(object: NSManagedObject) -> Bool
-    
+    static func cs_matches(
+        object: NSManagedObject
+    ) -> Bool
+
     /**
      Used internally by CoreStore. Do not call directly.
      */
@@ -88,8 +99,12 @@ extension NSManagedObject: DynamicObject {
     
     // MARK: DynamicObject
     
-    public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
-        
+    public class func cs_forceCreate(
+        entityDescription: NSEntityDescription,
+        into context: NSManagedObjectContext,
+        assignTo store: NSPersistentStore
+    ) -> Self {
+
         let object = self.init(entity: entityDescription, insertInto: context)
         defer {
             
@@ -98,7 +113,10 @@ extension NSManagedObject: DynamicObject {
         return object
     }
 
-    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
+    public class func cs_snapshotDictionary(
+        id: ObjectID,
+        context: NSManagedObjectContext
+    ) -> [String: Any]? {
 
         guard let object = context.fetchExisting(id) as NSManagedObject? else {
 
@@ -125,8 +143,10 @@ extension NSManagedObject: DynamicObject {
 #endif
     }
     
-    public static func cs_matches(object: NSManagedObject) -> Bool {
-        
+    public static func cs_matches(
+        object: NSManagedObject
+    ) -> Bool {
+
         return object.isKind(of: self)
     }
     
@@ -148,8 +168,12 @@ extension CoreStoreObject {
     
     // MARK: DynamicObject
     
-    public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
-        
+    public class func cs_forceCreate(
+        entityDescription: NSEntityDescription,
+        into context: NSManagedObjectContext,
+        assignTo store: NSPersistentStore
+    ) -> Self {
+
         let type = NSClassFromString(entityDescription.managedObjectClassName!)! as! NSManagedObject.Type
         let object = type.init(entity: entityDescription, insertInto: context)
         defer {
@@ -159,12 +183,19 @@ extension CoreStoreObject {
         return self.cs_fromRaw(object: object)
     }
 
-    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
+    public class func cs_snapshotDictionary(
+        id: ObjectID,
+        context: NSManagedObjectContext
+    ) -> [String: Any]? {
 
         var values: [KeyPathString: Any] = [:]
         if self.meta.needsReflection {
 
-            func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
+            func initializeAttributes(
+                mirror: Mirror,
+                object: Self,
+                into attributes: inout [KeyPathString: Any]
+            ) {
 
                 if let superClassMirror = mirror.superclassMirror {
 
@@ -225,9 +256,9 @@ extension CoreStoreObject {
                 let object = context.fetchExisting(id) as CoreStoreObject?,
                 let rawObject = object.rawObject,
                 !rawObject.isDeleted
-                else {
+            else {
 
-                    return nil
+                return nil
             }
             for property in self.metaProperties(includeSuperclasses: true) {
 
@@ -267,8 +298,11 @@ extension CoreStoreObject {
             
             return unsafeDowncast(coreStoreObject, to: self)
         }
-        func forceTypeCast<T: CoreStoreObject>(_ type: AnyClass, to: T.Type) -> T.Type {
-            
+        func forceTypeCast<T: CoreStoreObject>(
+            _ type: AnyClass,
+            to: T.Type
+        ) -> T.Type {
+
             return type as! T.Type
         }
         let coreStoreObject = forceTypeCast(object.entity.dynamicObjectType!, to: self).init(rawObject: object)
@@ -276,8 +310,10 @@ extension CoreStoreObject {
         return coreStoreObject
     }
     
-    public static func cs_matches(object: NSManagedObject) -> Bool {
-        
+    public static func cs_matches(
+        object: NSManagedObject
+    ) -> Bool {
+
         guard let type = object.entity.coreStoreEntity?.type else {
             
             return false
