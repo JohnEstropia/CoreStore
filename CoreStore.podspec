@@ -28,8 +28,8 @@ Pod::Spec.new do |s|
         ts.resource_bundles = { 'CoreStoreTests' => ["CoreStoreTests/**/*.momd"] }
         ts.frameworks = "Foundation", "CoreData"
         ts.requires_arc = true
-        ts.ios.deployment_target = "13.0"
-        ts.osx.deployment_target = "10.15"
-        ts.tvos.deployment_target = "13.0"
+        ts.ios.deployment_target = "16.0"
+        ts.osx.deployment_target = "13.0"
+        ts.tvos.deployment_target = "16.0"
     end
 end
