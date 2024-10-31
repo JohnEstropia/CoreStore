@@ -77,13 +77,12 @@ extension Modern.PlacemarksDemo {
             ) -> MKAnnotationView? {
                 
                 let identifier = "MKAnnotationView"
-                var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+                var annotationView: MKMarkerAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
                 if annotationView == nil {
                     
-                    annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                    annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                     annotationView.isEnabled = true
                     annotationView.canShowCallout = true
-                    annotationView.animatesDrop = true
                 }
                 else {
                     
