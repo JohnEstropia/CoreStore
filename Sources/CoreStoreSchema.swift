@@ -94,8 +94,12 @@ public final class CoreStoreSchema: DynamicSchema {
      - parameter entities: an array of `Entity<T>` pertaining to all `CoreStoreObject` subclasses to be added to the schema version.
      - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
      */
-    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
-        
+    public convenience init(
+        modelVersion: ModelVersion,
+        entities: [DynamicEntity],
+        versionLock: VersionLock? = nil
+    ) {
+
         var entityConfigurations: [DynamicEntity: Set<String>] = [:]
         for entity in entities {
             
@@ -138,8 +142,12 @@ public final class CoreStoreSchema: DynamicSchema {
      - parameter entityConfigurations: a dictionary with `Entity<T>` pertaining to all `CoreStoreObject` subclasses  and the corresponding list of "Configurations" they should be added to. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
      - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
      */
-    public required init(modelVersion: ModelVersion, entityConfigurations: [DynamicEntity: Set<String>], versionLock: VersionLock? = nil) {
-        
+    public required init(
+        modelVersion: ModelVersion,
+        entityConfigurations: [DynamicEntity: Set<String>],
+        versionLock: VersionLock? = nil
+    ) {
+
         var actualEntitiesByConfiguration: [String: Set<DynamicEntity>] = [:]
         for (entity, configurations) in entityConfigurations {
             
@@ -305,7 +313,10 @@ public final class CoreStoreSchema: DynamicSchema {
         )
     }
 
-    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (
+    private static func firstPassCreateEntityDescription(
+        from entity: DynamicEntity,
+        in modelVersion: ModelVersion
+    ) -> (
         entity: NSEntityDescription,
         customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter],
         customInitializerByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer],
@@ -323,8 +334,11 @@ public final class CoreStoreSchema: DynamicSchema {
         var customInitialValuesByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomInitializer] = [:]
         var customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter] = [:]
         var fieldCoders: [KeyPathString: Internals.AnyFieldCoder] = [:]
-        func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
-            
+
+        func createProperties(
+            for type: CoreStoreObject.Type
+        ) -> [NSPropertyDescription] {
+
             var propertyDescriptions: [NSPropertyDescription] = []
             for property in type.metaProperties(includeSuperclasses: false) {
                 
@@ -425,15 +439,20 @@ public final class CoreStoreSchema: DynamicSchema {
         )
     }
     
-    private static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
-        
+    private static func secondPassConnectRelationshipAttributes(
+        for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]
+    ) {
+
         var relationshipsByNameByEntity: [DynamicEntity: [String: NSRelationshipDescription]] = [:]
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             relationshipsByNameByEntity[entity] = entityDescription.relationshipsByName
         }
-        func findEntity(for type: CoreStoreObject.Type) -> DynamicEntity {
-            
+
+        func findEntity(
+            for type: CoreStoreObject.Type
+        ) -> DynamicEntity {
+
             var matchedEntities: Set<DynamicEntity> = []
             for (entity, _) in entityDescriptionsByEntity where entity.type == type {
                 
@@ -457,8 +476,11 @@ public final class CoreStoreSchema: DynamicSchema {
             }
         }
         
-        func findInverseRelationshipMatching(destinationEntity: DynamicEntity, destinationKeyPath: String) -> NSRelationshipDescription {
-            
+        func findInverseRelationshipMatching(
+            destinationEntity: DynamicEntity,
+            destinationKeyPath: String
+        ) -> NSRelationshipDescription {
+
             for case (destinationKeyPath, let relationshipDescription) in relationshipsByNameByEntity[destinationEntity]! {
                 
                 return relationshipDescription
@@ -537,10 +559,15 @@ public final class CoreStoreSchema: DynamicSchema {
         }
     }
     
-    private static func thirdPassConnectInheritanceTreeAndIndexes(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
-        
-        func connectBaseEntity(mirror: Mirror, entityDescription: NSEntityDescription) {
-            
+    private static func thirdPassConnectInheritanceTreeAndIndexes(
+        for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]
+    ) {
+
+        func connectBaseEntity(
+            mirror: Mirror,
+            entityDescription: NSEntityDescription
+        ) {
+
             guard let superclassMirror = mirror.superclassMirror,
                 let superType = superclassMirror.subjectType as? CoreStoreObject.Type,
                 superType != CoreStoreObject.self else {

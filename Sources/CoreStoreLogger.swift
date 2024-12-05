@@ -56,8 +56,14 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
-    
+    func log(
+        level: LogLevel,
+        message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    )
+
     /**
      Handles errors sent by the `CoreStore` framework.
      
@@ -67,8 +73,14 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
-    
+    func log(
+        error: CoreStoreError,
+        message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    )
+
     /**
      Handles assertions made throughout the `CoreStore` framework.
      
@@ -78,8 +90,14 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
-    
+    func assert(
+        _ condition: @autoclosure () -> Bool,
+        message: @autoclosure () -> String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    )
+
     /**
      Handles fatal errors made throughout the `CoreStore` framework. The app wil terminate after this method is called.
      - Important: Implementers may guarantee that the function doesn't return, either by calling another `Never` function such as `fatalError()` or `abort()`, or by raising an exception. If the implementation does not terminate the app, CoreStore will call an internal `fatalError()` to do so.
@@ -89,13 +107,23 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func abort(
+        _ message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    )
 }
 
 extension CoreStoreLogger {
     
-    public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
+    public func abort(
+        _ message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    ) {
+
         Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
     }
 }

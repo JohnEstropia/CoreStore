@@ -41,8 +41,8 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      ```
      - Important: Always use plain `try` on a `cancel()` call. Never use `try?` or `try!`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
      */
-    public func cancel() throws -> Never {
-        
+    public func cancel() throws(CoreStoreError) -> Never {
+
         throw CoreStoreError.userCancelled
     }
     
@@ -55,8 +55,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public override func create<O>(_ into: Into<O>) -> O {
-        
+    public override func create<O>(
+        _ into: Into<O>
+    ) -> O {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to create an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
@@ -71,8 +73,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<O: DynamicObject>(_ object: O?) -> O? {
-        
+    public override func edit<O: DynamicObject>(
+        _ object: O?
+    ) -> O? {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to update an entity of type \(Internals.typeName(object)) from an already committed \(Internals.typeName(self))."
@@ -88,8 +92,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
-        
+    public override func edit<O>(
+        _ into: Into<O>,
+        _ objectID: NSManagedObjectID
+    ) -> O? {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
@@ -103,7 +110,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
 
      - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
      */
-    public override func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+    public override func delete<S: Sequence>(
+        objectIDs: S
+    ) where S.Iterator.Element: NSManagedObjectID {
 
         Internals.assert(
             !self.isCommitted,
@@ -119,7 +128,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
      - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public override func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
+    public override func delete<O: ObjectRepresentation>(
+        _ object: O?,
+        _ objects: O?...
+    ) {
 
         Internals.assert(
             !self.isCommitted,
@@ -134,7 +146,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
 
     - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
+    public override func delete<S: Sequence>(
+        _ objects: S
+    ) where S.Iterator.Element: ObjectRepresentation {
 
         Internals.assert(
             !self.isCommitted,
@@ -162,8 +176,13 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
     }
     
-    internal func autoCommit(waitForMerge: Bool) -> (hasChanges: Bool, error: CoreStoreError?) {
-        
+    internal func autoCommit(
+        waitForMerge: Bool
+    ) -> (
+        hasChanges: Bool,
+        error: CoreStoreError?
+    ) {
+
         self.isCommitted = true
         let result = self.context.saveSynchronously(
             waitForMerge: waitForMerge,

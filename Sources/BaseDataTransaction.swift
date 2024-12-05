@@ -121,8 +121,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<O: DynamicObject>(_ object: O?) -> O? {
-        
+    public func edit<O: DynamicObject>(
+        _ object: O?
+    ) -> O? {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to update an entity of type \(Internals.typeName(object)) outside its designated queue."
@@ -141,8 +143,11 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
-        
+    public func edit<O>(
+        _ into: Into<O>,
+        _ objectID: NSManagedObjectID
+    ) -> O? {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) outside its designated queue."
@@ -160,7 +165,9 @@ public /*abstract*/ class BaseDataTransaction {
 
      - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
      */
-    public func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+    public func delete<S: Sequence>(
+        objectIDs: S
+    ) where S.Iterator.Element: NSManagedObjectID {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -179,8 +186,11 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
      - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
-        
+    public func delete<O: ObjectRepresentation>(
+        _ object: O?,
+        _ objects: O?...
+    ) {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete an entity outside its designated queue."
@@ -193,8 +203,10 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
-        
+    public func delete<S: Sequence>(
+        _ objects: S
+    ) where S.Iterator.Element: ObjectRepresentation {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete entities outside their designated queue."
@@ -227,7 +239,9 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `DynamicObject` instance
      - returns: `true` if the object has any property values changed.
      */
-    public func objectHasPersistentChangedValues<O: DynamicObject>(_ object: O) -> Bool {
+    public func objectHasPersistentChangedValues<O: DynamicObject>(
+        _ object: O
+    ) -> Bool {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -246,8 +260,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
-        
+    public func insertedObjects<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<O> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access inserted objects from a \(Internals.typeName(self)) outside its designated queue."
@@ -283,8 +299,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
-        
+    public func insertedObjectIDs<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<NSManagedObjectID> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access inserted object IDs from a \(Internals.typeName(self)) outside its designated queue."
@@ -302,8 +320,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
-        
+    public func updatedObjects<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<O> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access updated objects from a \(Internals.typeName(self)) outside its designated queue."
@@ -339,8 +359,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
-        
+    public func updatedObjectIDs<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<NSManagedObjectID> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access updated object IDs from a \(Internals.typeName(self)) outside its designated queue."
@@ -358,8 +380,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
-        
+    public func deletedObjects<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<O> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access deleted objects from a \(Internals.typeName(self)) outside its designated queue."
@@ -396,8 +420,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
-        
+    public func deletedObjectIDs<O: DynamicObject>(
+        _ entity: O.Type
+    ) -> Set<NSManagedObjectID> {
+
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to access deleted object IDs from a \(Internals.typeName(self)) outside its designated queue."

@@ -186,7 +186,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     public func refetch<B: FetchChainableBuilderType>(
         _ clauseChain: B,
         sourceIdentifier: Any? = nil
-    ) throws where B.ObjectType == O {
+    ) throws(any Swift.Error) where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -215,7 +215,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     public func refetch<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
         sourceIdentifier: Any? = nil
-    ) throws where B.ObjectType == O {
+    ) throws(any Swift.Error) where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -343,7 +343,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
         sourceIdentifier: Any?
-    ) throws {
+    ) throws(any Swift.Error) {
 
         let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
             context: self.fetchedResultsController.managedObjectContext,

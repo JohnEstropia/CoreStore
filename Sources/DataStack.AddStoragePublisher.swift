@@ -52,8 +52,10 @@ extension DataStack {
         public typealias Output = CoreStore.MigrationProgress<Storage>
         public typealias Failure = CoreStoreError
         
-        public func receive<S: Subscriber>(subscriber: S) where S.Input == Output, S.Failure == Failure {
-            
+        public func receive<S: Subscriber>(
+            subscriber: S
+        ) where S.Input == Output, S.Failure == Failure {
+
             subscriber.receive(
                 subscription: AddStorageSubscription(
                     dataStack: self.dataStack,

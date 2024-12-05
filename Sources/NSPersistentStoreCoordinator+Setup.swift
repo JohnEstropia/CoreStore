@@ -32,14 +32,18 @@ import CoreData
 extension NSPersistentStoreCoordinator {
     
     @nonobjc
-    internal func performAsynchronously(_ closure: @escaping () -> Void) {
-        
+    internal func performAsynchronously(
+        _ closure: @escaping () -> Void
+    ) {
+
         self.perform(closure)
     }
     
     @nonobjc
-    internal func performSynchronously<T>(_ closure: @escaping () -> T) -> T {
-        
+    internal func performSynchronously<T>(
+        _ closure: @escaping () -> T
+    ) -> T {
+
         var result: T?
         self.performAndWait {
             
@@ -49,9 +53,11 @@ extension NSPersistentStoreCoordinator {
     }
     
     @nonobjc
-    internal func performSynchronously<T>(_ closure: @escaping () throws -> T) throws -> T {
-        
-        var closureError: Error?
+    internal func performSynchronously<T>(
+        _ closure: @escaping () throws(any Swift.Error) -> T
+    ) throws(CoreStoreError) -> T {
+
+        var closureError: (any Swift.Error)?
         var result: T?
         self.performAndWait {
             
@@ -66,29 +72,27 @@ extension NSPersistentStoreCoordinator {
         }
         if let closureError = closureError {
             
-            throw closureError
+            throw CoreStoreError(closureError)
         }
         return result!
     }
-    
+
     @nonobjc
-    internal func addPersistentStoreSynchronously(_ storeType: String, configuration: ModelConfiguration, URL storeURL: URL?, options: [AnyHashable: Any]?) throws -> NSPersistentStore {
-        
+    internal func addPersistentStoreSynchronously(
+        _ storeType: String,
+        configuration: ModelConfiguration,
+        URL storeURL: URL?,
+        options: [AnyHashable: Any]?
+    ) throws(CoreStoreError) -> NSPersistentStore {
+
         return try self.performSynchronously {
-            
-            do {
-                
-                return try self.addPersistentStore(
-                    ofType: storeType,
-                    configurationName: configuration,
-                    at: storeURL,
-                    options: options
-                )
-            }
-            catch {
-                
-                throw CoreStoreError(error)
-            }
+
+            return try self.addPersistentStore(
+                ofType: storeType,
+                configurationName: configuration,
+                at: storeURL,
+                options: options
+            )
         }
     }
 }

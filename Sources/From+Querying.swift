@@ -37,8 +37,10 @@ extension From {
      - parameter clause: the `Where` clause to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that starts with the specified `Where` clause
      */
-    public func `where`(_ clause: Where<O>) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        _ clause: Where<O>
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause)
     }
     
@@ -48,8 +50,10 @@ extension From {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
      */
-    public func `where`(combineByAnd clauses: Where<O>...) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        combineByAnd clauses: Where<O>...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clauses.combinedByAnd())
     }
     
@@ -59,8 +63,10 @@ extension From {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
      */
-    public func `where`(combineByOr clauses: Where<O>...) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        combineByOr clauses: Where<O>...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clauses.combinedByOr())
     }
     
@@ -100,7 +106,9 @@ extension From {
      - parameter clause: the `OrderBy` clause to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that starts with the specified `OrderBy` clause
      */
-    public func orderBy(_ clause: OrderBy<O>) -> FetchChainBuilder<O> {
+    public func orderBy(
+        _ clause: OrderBy<O>
+    ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: clause)
     }
@@ -126,7 +134,9 @@ extension From {
      - parameter sortKeys: a series of `SortKey`s
      - returns: a `FetchChainBuilder` with a series of `SortKey`s
      */
-    public func orderBy(_ sortKeys: [OrderBy<O>.SortKey]) -> FetchChainBuilder<O> {
+    public func orderBy(
+        _ sortKeys: [OrderBy<O>.SortKey]
+    ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: OrderBy<O>(sortKeys))
     }
@@ -137,8 +147,10 @@ extension From {
      - parameter fetchRequest: the block to customize the `NSFetchRequest`
      - returns: a `FetchChainBuilder` with closure where the `NSFetchRequest` may be configured
      */
-    public func tweak(_ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void) -> FetchChainBuilder<O> {
-        
+    public func tweak(
+        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: Tweak(fetchRequest))
     }
     
@@ -148,8 +160,10 @@ extension From {
      - parameter clause: the `FetchClause` to add to the `FetchChainBuilder`
      - returns: a `FetchChainBuilder` containing the specified `FetchClause`
      */
-    public func appending(_ clause: FetchClause) -> FetchChainBuilder<O> {
-        
+    public func appending(
+        _ clause: FetchClause
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause)
     }
     
@@ -159,8 +173,10 @@ extension From {
      - parameter clauses: the `FetchClause`s to add to the `FetchChainBuilder`
      - returns: a `FetchChainBuilder` containing the specified `FetchClause`s
      */
-    public func appending<S: Sequence>(contentsOf clauses: S) -> FetchChainBuilder<O> where S.Element == FetchClause {
-        
+    public func appending<S: Sequence>(
+        contentsOf clauses: S
+    ) -> FetchChainBuilder<O> where S.Element == FetchClause {
+
         return self.fetchChain(appending: clauses)
     }
     
@@ -170,8 +186,10 @@ extension From {
      - parameter clause: the `Select` clause to create a `QueryChainBuilder` with
      - returns: a `QueryChainBuilder` that starts with the specified `Select` clause
      */
-    public func select<R>(_ clause: Select<O, R>) -> QueryChainBuilder<O, R> {
-        
+    public func select<R>(
+        _ clause: Select<O, R>
+    ) -> QueryChainBuilder<O, R> {
+
         return .init(
             from: self,
             select: clause,
@@ -221,8 +239,10 @@ extension From {
      - parameter clause: the `SectionBy` to be used by the `ListMonitor`
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy(_ clause: SectionBy<O>) -> SectionMonitorChainBuilder<O> {
-        
+    public func sectionBy(
+        _ clause: SectionBy<O>
+    ) -> SectionMonitorChainBuilder<O> {
+
         return .init(
             from: self,
             sectionBy: clause,
@@ -236,8 +256,10 @@ extension From {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy(_ sectionKeyPath: KeyPathString) -> SectionMonitorChainBuilder<O> {
-        
+    public func sectionBy(
+        _ sectionKeyPath: KeyPathString
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionBy(sectionKeyPath, sectionIndexTransformer: { _ in nil })
     }
     
@@ -267,13 +289,17 @@ extension From {
     
     // MARK: Private
     
-    private func fetchChain(appending clause: FetchClause) -> FetchChainBuilder<O> {
-        
+    private func fetchChain(
+        appending clause: FetchClause
+    ) -> FetchChainBuilder<O> {
+
         return .init(from: self, fetchClauses: [clause])
     }
     
-    private func fetchChain<S: Sequence>(appending clauses: S) -> FetchChainBuilder<O> where S.Element == FetchClause {
-        
+    private func fetchChain<S: Sequence>(
+        appending clauses: S
+    ) -> FetchChainBuilder<O> where S.Element == FetchClause {
+
         return .init(from: self, fetchClauses: Array(clauses))
     }
 }
@@ -289,8 +315,10 @@ extension From where O: NSManagedObject {
      - parameter keyPath: the keyPath to query the value for
      - returns: a `QueryChainBuilder` that starts with a `Select` clause created from the specified key path
      */
-    public func select<R>(_ keyPath: KeyPath<O, R>) -> QueryChainBuilder<O, R> {
-        
+    public func select<R>(
+        _ keyPath: KeyPath<O, R>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.select(R.self, [SelectTerm<O>.attribute(keyPath)])
     }
     
@@ -300,8 +328,10 @@ extension From where O: NSManagedObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, T>) -> SectionMonitorChainBuilder<O> {
-        
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, T>
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionBy(
             sectionKeyPath._kvcKeyPathString!,
             sectionIndexTransformer: { _ in nil }
@@ -339,8 +369,10 @@ extension From where O: CoreStoreObject {
      - parameter clause: a closure that returns a `Where` clause
      - returns: a `FetchChainBuilder` that starts with the specified `Where` clause
      */
-    public func `where`<T: AnyWhereClause>(_ clause: (O) -> T) -> FetchChainBuilder<O> {
-        
+    public func `where`<T: AnyWhereClause>(
+        _ clause: (O) -> T
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause(O.meta))
     }
     
@@ -350,8 +382,10 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) -> SectionMonitorChainBuilder<O> {
-        
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionBy(
             O.meta[keyPath: sectionKeyPath].keyPath,
             sectionIndexTransformer: { _ in nil }
@@ -364,8 +398,10 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) -> SectionMonitorChainBuilder<O> {
-        
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionBy(
             O.meta[keyPath: sectionKeyPath].keyPath,
             sectionIndexTransformer: { _ in nil }
@@ -378,7 +414,9 @@ extension From where O: CoreStoreObject {
      - parameter sectionKeyPath: the `KeyPath` to use to group the objects into sections
      - returns: a `SectionMonitorChainBuilder` that is sectioned by the specified key path
      */
-    public func sectionBy<T>(_ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) -> SectionMonitorChainBuilder<O> {
+    public func sectionBy<T>(
+        _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>
+    ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionBy(
             O.meta[keyPath: sectionKeyPath].keyPath,
@@ -455,8 +493,10 @@ extension FetchChainBuilder {
      - parameter clause: a `Where` clause to add to the fetch builder
      - returns: a new `FetchChainBuilder` containing the `Where` clause
      */
-    public func `where`(_ clause: Where<O>) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        _ clause: Where<O>
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause)
     }
     
@@ -466,8 +506,10 @@ extension FetchChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
      */
-    public func `where`(combineByAnd clauses: Where<O>...) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        combineByAnd clauses: Where<O>...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clauses.combinedByAnd())
     }
     
@@ -477,8 +519,10 @@ extension FetchChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
      */
-    public func `where`(combineByOr clauses: Where<O>...) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        combineByOr clauses: Where<O>...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clauses.combinedByOr())
     }
     
@@ -489,8 +533,11 @@ extension FetchChainBuilder {
      - parameter args: the arguments for `format`
      - returns: a new `FetchChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, _ args: Any...) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        format: String,
+        _ args: Any...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: Where<O>(format, argumentArray: args))
     }
     
@@ -501,8 +548,11 @@ extension FetchChainBuilder {
      - parameter argumentArray: the arguments for `format`
      - returns: a new `FetchChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, argumentArray: [Any]?) -> FetchChainBuilder<O> {
-        
+    public func `where`(
+        format: String,
+        argumentArray: [Any]?
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: Where<O>(format, argumentArray: argumentArray))
     }
 
@@ -512,7 +562,9 @@ extension FetchChainBuilder {
      - parameter clause: the `OrderBy` clause to add
      - returns: a new `FetchChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ clause: OrderBy<O>) -> FetchChainBuilder<O> {
+    public func orderBy(
+        _ clause: OrderBy<O>
+    ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: clause)
     }
@@ -524,8 +576,11 @@ extension FetchChainBuilder {
      - parameter sortKeys: a series of other `SortKey`s
      - returns: a new `FetchChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKey: OrderBy<O>.SortKey, _ sortKeys: OrderBy<O>.SortKey...) -> FetchChainBuilder<O> {
-        
+    public func orderBy(
+        _ sortKey: OrderBy<O>.SortKey,
+        _ sortKeys: OrderBy<O>.SortKey...
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: OrderBy<O>([sortKey] + sortKeys))
     }
 
@@ -535,7 +590,9 @@ extension FetchChainBuilder {
      - parameter sortKeys: a series of `SortKey`s
      - returns: a new `FetchChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKeys: [OrderBy<O>.SortKey]) -> FetchChainBuilder<O> {
+    public func orderBy(
+        _ sortKeys: [OrderBy<O>.SortKey]
+    ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: OrderBy<O>(sortKeys))
     }
@@ -546,8 +603,10 @@ extension FetchChainBuilder {
      - parameter fetchRequest: the block to customize the `NSFetchRequest`
      - returns: a new `FetchChainBuilder` containing the `Tweak` clause
      */
-    public func tweak(_ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void) -> FetchChainBuilder<O> {
-        
+    public func tweak(
+        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: Tweak(fetchRequest))
     }
     
@@ -557,8 +616,10 @@ extension FetchChainBuilder {
      - parameter clause: the `FetchClause` to add to the `FetchChainBuilder`
      - returns: a new `FetchChainBuilder` containing the `FetchClause`
      */
-    public func appending(_ clause: FetchClause) -> FetchChainBuilder<O> {
-        
+    public func appending(
+        _ clause: FetchClause
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause)
     }
     
@@ -568,24 +629,30 @@ extension FetchChainBuilder {
      - parameter clauses: the `FetchClause`s to add to the `FetchChainBuilder`
      - returns: a new `FetchChainBuilder` containing the `FetchClause`s
      */
-    public func appending<S: Sequence>(contentsOf clauses: S) -> FetchChainBuilder<O> where S.Element == FetchClause {
-        
+    public func appending<S: Sequence>(
+        contentsOf clauses: S
+    ) -> FetchChainBuilder<O> where S.Element == FetchClause {
+
         return self.fetchChain(appending: clauses)
     }
     
     
     // MARK: Private
     
-    private func fetchChain(appending clause: FetchClause) -> FetchChainBuilder<O> {
-        
+    private func fetchChain(
+        appending clause: FetchClause
+    ) -> FetchChainBuilder<O> {
+
         return .init(
             from: self.from,
             fetchClauses: self.fetchClauses + [clause]
         )
     }
     
-    private func fetchChain<S: Sequence>(appending clauses: S) -> FetchChainBuilder<O> where S.Element == FetchClause {
-        
+    private func fetchChain<S: Sequence>(
+        appending clauses: S
+    ) -> FetchChainBuilder<O> where S.Element == FetchClause {
+
         return .init(
             from: self.from,
             fetchClauses: self.fetchClauses + Array(clauses)
@@ -598,8 +665,10 @@ extension FetchChainBuilder {
 
 extension FetchChainBuilder where O: CoreStoreObject {
     
-    public func `where`<T: AnyWhereClause>(_ clause: (O) -> T) -> FetchChainBuilder<O> {
-        
+    public func `where`<T: AnyWhereClause>(
+        _ clause: (O) -> T
+    ) -> FetchChainBuilder<O> {
+
         return self.fetchChain(appending: clause(O.meta))
     }
 }
@@ -615,8 +684,10 @@ extension QueryChainBuilder {
      - parameter clause: a `Where` clause to add to the query builder
      - returns: a new `QueryChainBuilder` containing the `Where` clause
      */
-    public func `where`(_ clause: Where<O>) -> QueryChainBuilder<O, R> {
-        
+    public func `where`(
+        _ clause: Where<O>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clause)
     }
     
@@ -626,8 +697,10 @@ extension QueryChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
      */
-    public func `where`(combineByAnd clauses: Where<O>...) -> QueryChainBuilder<O, R> {
-        
+    public func `where`(
+        combineByAnd clauses: Where<O>...
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clauses.combinedByAnd())
     }
     
@@ -637,8 +710,10 @@ extension QueryChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
      */
-    public func `where`(combineByOr clauses: Where<O>...) -> QueryChainBuilder<O, R> {
-        
+    public func `where`(
+        combineByOr clauses: Where<O>...
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clauses.combinedByOr())
     }
     
@@ -649,8 +724,11 @@ extension QueryChainBuilder {
      - parameter args: the arguments for `format`
      - returns: a new `QueryChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, _ args: Any...) -> QueryChainBuilder<O, R> {
-        
+    public func `where`(
+        format: String,
+        _ args: Any...
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: Where<O>(format, argumentArray: args))
     }
     
@@ -661,8 +739,11 @@ extension QueryChainBuilder {
      - parameter argumentArray: the arguments for `format`
      - returns: a new `QueryChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, argumentArray: [Any]?) -> QueryChainBuilder<O, R> {
-        
+    public func `where`(
+        format: String,
+        argumentArray: [Any]?
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: Where<O>(format, argumentArray: argumentArray))
     }
 
@@ -672,7 +753,9 @@ extension QueryChainBuilder {
      - parameter clause: the `OrderBy` clause to add
      - returns: a new `QueryChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ clause: OrderBy<O>) -> QueryChainBuilder<O, R> {
+    public func orderBy(
+        _ clause: OrderBy<O>
+    ) -> QueryChainBuilder<O, R> {
 
         return self.queryChain(appending: clause)
     }
@@ -684,8 +767,11 @@ extension QueryChainBuilder {
      - parameter sortKeys: a series of other `SortKey`s
      - returns: a new `QueryChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKey: OrderBy<O>.SortKey, _ sortKeys: OrderBy<O>.SortKey...) -> QueryChainBuilder<O, R> {
-        
+    public func orderBy(
+        _ sortKey: OrderBy<O>.SortKey,
+        _ sortKeys: OrderBy<O>.SortKey...
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: OrderBy<O>([sortKey] + sortKeys))
     }
 
@@ -695,7 +781,9 @@ extension QueryChainBuilder {
      - parameter sortKeys: a series of `SortKey`s
      - returns: a new `QueryChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKeys: [OrderBy<O>.SortKey]) -> QueryChainBuilder<O, R> {
+    public func orderBy(
+        _ sortKeys: [OrderBy<O>.SortKey]
+    ) -> QueryChainBuilder<O, R> {
 
         return self.queryChain(appending: OrderBy<O>(sortKeys))
     }
@@ -706,8 +794,10 @@ extension QueryChainBuilder {
      - parameter fetchRequest: the block to customize the `NSFetchRequest`
      - returns: a new `QueryChainBuilder` containing the `Tweak` clause
      */
-    public func tweak(_ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void) -> QueryChainBuilder<O, R> {
-        
+    public func tweak(
+        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: Tweak(fetchRequest))
     }
     
@@ -717,8 +807,10 @@ extension QueryChainBuilder {
      - parameter clause: a `GroupBy` clause to add to the query builder
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy(_ clause: GroupBy<O>) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy(
+        _ clause: GroupBy<O>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clause)
     }
     
@@ -729,8 +821,11 @@ extension QueryChainBuilder {
      - parameter keyPaths: other key paths to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy(_ keyPath: KeyPathString, _ keyPaths: KeyPathString...) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy(
+        _ keyPath: KeyPathString,
+        _ keyPaths: KeyPathString...
+    ) -> QueryChainBuilder<O, R> {
+
         return self.groupBy(GroupBy<O>([keyPath] + keyPaths))
     }
     
@@ -740,8 +835,10 @@ extension QueryChainBuilder {
      - parameter keyPaths: a series of key paths to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy(_ keyPaths: [KeyPathString]) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy(
+        _ keyPaths: [KeyPathString]
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: GroupBy<O>(keyPaths))
     }
     
@@ -751,8 +848,10 @@ extension QueryChainBuilder {
      - parameter clause: the `QueryClause` to add to the `QueryChainBuilder`
      - returns: a new `QueryChainBuilder` containing the `QueryClause`
      */
-    public func appending(_ clause: QueryClause) -> QueryChainBuilder<O, R> {
-        
+    public func appending(
+        _ clause: QueryClause
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clause)
     }
     
@@ -762,16 +861,20 @@ extension QueryChainBuilder {
      - parameter clauses: the `QueryClause`s to add to the `QueryChainBuilder`
      - returns: a new `QueryChainBuilder` containing the `QueryClause`s
      */
-    public func appending<S: Sequence>(contentsOf clauses: S) -> QueryChainBuilder<O, R> where S.Element == QueryClause {
-        
+    public func appending<S: Sequence>(
+        contentsOf clauses: S
+    ) -> QueryChainBuilder<O, R> where S.Element == QueryClause {
+
         return self.queryChain(appending: clauses)
     }
     
     
     // MARK: Private
     
-    private func queryChain(appending clause: QueryClause) -> QueryChainBuilder<O, R> {
-        
+    private func queryChain(
+        appending clause: QueryClause
+    ) -> QueryChainBuilder<O, R> {
+
         return .init(
             from: self.from,
             select: self.select,
@@ -779,8 +882,10 @@ extension QueryChainBuilder {
         )
     }
     
-    private func queryChain<S: Sequence>(appending clauses: S) -> QueryChainBuilder<O, R> where S.Element == QueryClause {
-        
+    private func queryChain<S: Sequence>(
+        appending clauses: S
+    ) -> QueryChainBuilder<O, R> where S.Element == QueryClause {
+
         return .init(
             from: self.from,
             select: self.select,
@@ -800,8 +905,10 @@ extension QueryChainBuilder where O: NSManagedObject {
      - parameter keyPath: a key path to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy<T>(_ keyPath: KeyPath<O, T>) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy<T>(
+        _ keyPath: KeyPath<O, T>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.groupBy(GroupBy<O>(keyPath))
     }
 }
@@ -817,8 +924,10 @@ extension QueryChainBuilder where O: CoreStoreObject {
      - parameter clause: a `Where` clause to add to the query builder
      - returns: a new `QueryChainBuilder` containing the `Where` clause
      */
-    public func `where`<T: AnyWhereClause>(_ clause: (O) -> T) -> QueryChainBuilder<O, R> {
-        
+    public func `where`<T: AnyWhereClause>(
+        _ clause: (O) -> T
+    ) -> QueryChainBuilder<O, R> {
+
         return self.queryChain(appending: clause(O.meta))
     }
     
@@ -828,8 +937,10 @@ extension QueryChainBuilder where O: CoreStoreObject {
      - parameter keyPath: a key path to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Stored<T>>) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy<T>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Stored<T>>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.groupBy(GroupBy<O>(keyPath))
     }
     
@@ -839,8 +950,10 @@ extension QueryChainBuilder where O: CoreStoreObject {
      - parameter keyPath: a key path to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy<T>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.groupBy(GroupBy<O>(keyPath))
     }
     
@@ -850,8 +963,10 @@ extension QueryChainBuilder where O: CoreStoreObject {
      - parameter keyPath: a key path to group the query results with
      - returns: a new `QueryChainBuilder` containing the `GroupBy` clause
      */
-    public func groupBy<T>(_ keyPath: KeyPath<O, FieldContainer<O>.Coded<T>>) -> QueryChainBuilder<O, R> {
-        
+    public func groupBy<T>(
+        _ keyPath: KeyPath<O, FieldContainer<O>.Coded<T>>
+    ) -> QueryChainBuilder<O, R> {
+
         return self.groupBy(GroupBy<O>(keyPath))
     }
 }
@@ -867,8 +982,10 @@ extension SectionMonitorChainBuilder {
      - parameter clause: a `Where` clause to add to the fetch builder
      - returns: a new `SectionMonitorChainBuilder` containing the `Where` clause
      */
-    public func `where`(_ clause: Where<O>) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`(
+        _ clause: Where<O>
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: clause)
     }
     
@@ -878,8 +995,10 @@ extension SectionMonitorChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `AND`s the specified `Where` clauses
      */
-    public func `where`(combineByAnd clauses: Where<O>...) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`(
+        combineByAnd clauses: Where<O>...
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: clauses.combinedByAnd())
     }
     
@@ -889,8 +1008,10 @@ extension SectionMonitorChainBuilder {
      - parameter clauses: the `Where` clauses to create a `FetchChainBuilder` with
      - returns: a `FetchChainBuilder` that `OR`s the specified `Where` clauses
      */
-    public func `where`(combineByOr clauses: Where<O>...) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`(
+        combineByOr clauses: Where<O>...
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: clauses.combinedByOr())
     }
     
@@ -901,8 +1022,11 @@ extension SectionMonitorChainBuilder {
      - parameter args: the arguments for `format`
      - returns: a new `SectionMonitorChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, _ args: Any...) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`(
+        format: String,
+        _ args: Any...
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: Where<O>(format, argumentArray: args))
     }
     
@@ -913,8 +1037,11 @@ extension SectionMonitorChainBuilder {
      - parameter argumentArray: the arguments for `format`
      - returns: a new `SectionMonitorChainBuilder` containing the `Where` clause
      */
-    public func `where`(format: String, argumentArray: [Any]?) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`(
+        format: String,
+        argumentArray: [Any]?
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: Where<O>(format, argumentArray: argumentArray))
     }
 
@@ -924,7 +1051,9 @@ extension SectionMonitorChainBuilder {
      - parameter clause: the `OrderBy` clause to add
      - returns: a new `SectionMonitorChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ clause: OrderBy<O>) -> SectionMonitorChainBuilder<O> {
+    public func orderBy(
+        _ clause: OrderBy<O>
+    ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionMonitorChain(appending: clause)
     }
@@ -936,8 +1065,11 @@ extension SectionMonitorChainBuilder {
      - parameter sortKeys: a series of other `SortKey`s
      - returns: a new `SectionMonitorChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKey: OrderBy<O>.SortKey, _ sortKeys: OrderBy<O>.SortKey...) -> SectionMonitorChainBuilder<O> {
-        
+    public func orderBy(
+        _ sortKey: OrderBy<O>.SortKey,
+        _ sortKeys: OrderBy<O>.SortKey...
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: OrderBy<O>([sortKey] + sortKeys))
     }
 
@@ -947,7 +1079,9 @@ extension SectionMonitorChainBuilder {
      - parameter sortKeys: a series of `SortKey`s
      - returns: a new `SectionMonitorChainBuilder` containing the `OrderBy` clause
      */
-    public func orderBy(_ sortKeys: [OrderBy<O>.SortKey]) -> SectionMonitorChainBuilder<O> {
+    public func orderBy(
+        _ sortKeys: [OrderBy<O>.SortKey]
+    ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionMonitorChain(appending: OrderBy<O>(sortKeys))
     }
@@ -958,8 +1092,10 @@ extension SectionMonitorChainBuilder {
      - parameter fetchRequest: the block to customize the `NSFetchRequest`
      - returns: a new `SectionMonitorChainBuilder` containing the `Tweak` clause
      */
-    public func tweak(_ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void) -> SectionMonitorChainBuilder<O> {
-        
+    public func tweak(
+        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: Tweak(fetchRequest))
     }
     
@@ -969,8 +1105,10 @@ extension SectionMonitorChainBuilder {
      - parameter clause: the `QueryClause` to add to the `SectionMonitorChainBuilder`
      - returns: a new `SectionMonitorChainBuilder` containing the `QueryClause`
      */
-    public func appending(_ clause: FetchClause) -> SectionMonitorChainBuilder<O> {
-        
+    public func appending(
+        _ clause: FetchClause
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: clause)
     }
     
@@ -980,16 +1118,20 @@ extension SectionMonitorChainBuilder {
      - parameter clauses: the `QueryClause`s to add to the `SectionMonitorChainBuilder`
      - returns: a new `SectionMonitorChainBuilder` containing the `QueryClause`s
      */
-    public func appending<S: Sequence>(contentsOf clauses: S) -> SectionMonitorChainBuilder<O> where S.Element == FetchClause {
-        
+    public func appending<S: Sequence>(
+        contentsOf clauses: S
+    ) -> SectionMonitorChainBuilder<O> where S.Element == FetchClause {
+
         return self.sectionMonitorChain(appending: clauses)
     }
     
     
     // MARK: Private
     
-    private func sectionMonitorChain(appending clause: FetchClause) -> SectionMonitorChainBuilder<O> {
-        
+    private func sectionMonitorChain(
+        appending clause: FetchClause
+    ) -> SectionMonitorChainBuilder<O> {
+
         return .init(
             from: self.from,
             sectionBy: self.sectionBy,
@@ -997,8 +1139,10 @@ extension SectionMonitorChainBuilder {
         )
     }
     
-    private func sectionMonitorChain<S: Sequence>(appending clauses: S) -> SectionMonitorChainBuilder<O> where S.Element == FetchClause {
-        
+    private func sectionMonitorChain<S: Sequence>(
+        appending clauses: S
+    ) -> SectionMonitorChainBuilder<O> where S.Element == FetchClause {
+
         return .init(
             from: self.from,
             sectionBy: self.sectionBy,
@@ -1018,8 +1162,10 @@ extension SectionMonitorChainBuilder where O: CoreStoreObject {
      - parameter clause: a `Where` clause to add to the fetch builder
      - returns: a new `SectionMonitorChainBuilder` containing the `Where` clause
      */
-    public func `where`<T: AnyWhereClause>(_ clause: (O) -> T) -> SectionMonitorChainBuilder<O> {
-        
+    public func `where`<T: AnyWhereClause>(
+        _ clause: (O) -> T
+    ) -> SectionMonitorChainBuilder<O> {
+
         return self.sectionMonitorChain(appending: clause(O.meta))
     }
 }

@@ -47,8 +47,14 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
+    public func log(
+        level: LogLevel,
+        message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    ) {
+
         #if DEBUG
             let icon: String
             let levelString: String
@@ -83,8 +89,14 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
+    public func log(
+        error: CoreStoreError,
+        message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    ) {
+
         #if DEBUG
             Swift.print("⚠️ [CoreStore: Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
         #endif
@@ -99,8 +111,14 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
+    public func assert(
+        _ condition: @autoclosure () -> Bool,
+        message: @autoclosure () -> String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    ) {
+
         #if DEBUG
             if condition() {
                 
@@ -120,8 +138,13 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
+    public func abort(
+        _ message: String,
+        fileName: StaticString,
+        lineNumber: Int,
+        functionName: StaticString
+    ) {
+
         Swift.print("❗ [CoreStore: Fatal Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         Swift.fatalError(file: fileName, line: UInt(lineNumber))
     }

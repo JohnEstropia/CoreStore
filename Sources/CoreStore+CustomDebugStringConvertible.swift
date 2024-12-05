@@ -1073,13 +1073,21 @@ private func formattedDebugDescription(_ any: Any) -> String {
     return string
 }
 
-private func createFormattedString(_ firstLine: String, _ lastLine: String, _ info: (key: String, value: Any)...) -> String {
-    
+private func createFormattedString(
+    _ firstLine: String,
+    _ lastLine: String,
+    _ info: (key: String, value: Any)...
+) -> String {
+
     return createFormattedString(firstLine, lastLine, info)
 }
 
-private func createFormattedString(_ firstLine: String, _ lastLine: String, _ info: [(key: String, value: Any)]) -> String {
-    
+private func createFormattedString(
+    _ firstLine: String,
+    _ lastLine: String,
+    _ info: [(key: String, value: Any)]
+) -> String {
+
     var string = firstLine
     for (key, value) in info {
         
@@ -1102,8 +1110,11 @@ extension String {
         self = self.replacingOccurrences(of: "\n", with: "\n\(String.indention(level))")
     }
     
-    fileprivate mutating func appendDumpInfo(_ key: String, _ value: Any) {
-        
+    fileprivate mutating func appendDumpInfo(
+        _ key: String,
+        _ value: Any
+    ) {
+
         self.append("\n.\(key) = \(formattedValue(value));")
     }
 }
@@ -1189,8 +1200,9 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
     }
 }
 
+extension NSAttributeType: @retroactive CustomDebugStringConvertible {}
 extension NSAttributeType: CoreStoreDebugStringConvertible {
-    
+
     public var debugDescription: String {
         
         return formattedDebugDescription(self)
@@ -1235,6 +1247,7 @@ extension Bundle: CoreStoreDebugStringConvertible {
     }
 }
 
+extension NSDeleteRule: @retroactive CustomDebugStringConvertible {}
 extension NSDeleteRule: CoreStoreDebugStringConvertible {
     
     public var debugDescription: String {
@@ -1399,6 +1412,7 @@ extension Optional: CoreStoreDebugStringConvertible {
     }
 }
 
+extension Result: @retroactive CustomDebugStringConvertible {}
 extension Result: CoreStoreDebugStringConvertible {
     
     public var debugDescription: String {
@@ -1425,6 +1439,7 @@ extension Result: CoreStoreDebugStringConvertible {
     }
 }
 
+extension Selector: @retroactive CustomDebugStringConvertible {}
 extension Selector: CoreStoreDebugStringConvertible {
     
     public var debugDescription: String {

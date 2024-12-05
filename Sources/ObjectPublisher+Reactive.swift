@@ -94,8 +94,10 @@ extension ObjectPublisher.ReactiveNamespace {
      - parameter emitInitialValue: If `true`, the current value is immediately emitted to the first subscriber. If `false`, the event fires only starting the next `ObjectSnapshot` update.
      - returns: A `Publisher` that emits an `ObjectSnapshot?` whenever changes occur in the `ObjectPublisher`. The event emits `nil` if the object has been deletd.
      */
-    public func snapshot(emitInitialValue: Bool = true) -> ObjectPublisher.SnapshotPublisher {
-        
+    public func snapshot(
+        emitInitialValue: Bool = true
+    ) -> ObjectPublisher.SnapshotPublisher {
+
         return .init(
             objectPublisher: self.base,
             emitInitialValue: emitInitialValue
@@ -111,7 +113,9 @@ extension ObjectPublisher.ReactiveNamespace where O: NSManagedObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> some Publisher {
+    public subscript<V: AllowedObjectiveCKeyPathValue>(
+        dynamicMember member: KeyPath<O, V>
+    ) -> some Publisher {
 
         return self
             .snapshot(emitInitialValue: true)
@@ -127,8 +131,10 @@ extension ObjectPublisher.ReactiveNamespace where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>) -> some Publisher {
-        
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Stored<V>>
+    ) -> some Publisher {
+
         return self
             .snapshot(emitInitialValue: true)
             .map({ $0?[dynamicMember: member] })
@@ -137,8 +143,10 @@ extension ObjectPublisher.ReactiveNamespace where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>) -> some Publisher {
-        
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Virtual<V>>
+    ) -> some Publisher {
+
         return self
             .snapshot(emitInitialValue: true)
             .map({ $0?[dynamicMember: member] })
@@ -147,8 +155,10 @@ extension ObjectPublisher.ReactiveNamespace where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, V>(dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>) -> some Publisher {
-        
+    public subscript<OBase, V>(
+        dynamicMember member: KeyPath<O, FieldContainer<OBase>.Coded<V>>
+    ) -> some Publisher {
+
         return self
             .snapshot(emitInitialValue: true)
             .map({ $0?[dynamicMember: member] })

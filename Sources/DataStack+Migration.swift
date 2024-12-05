@@ -47,8 +47,11 @@ extension DataStack {
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
-        
+    public func addStorage<T>(
+        _ storage: T,
+        completion: @escaping (SetupResult<T>) -> Void
+    ) {
+
         self.coordinator.performAsynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
@@ -105,8 +108,11 @@ extension DataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
-        
+    public func addStorage<T: LocalStorage>(
+        _ storage: T,
+        completion: @escaping (SetupResult<T>) -> Void
+    ) -> Progress? {
+
         let fileURL = storage.fileURL
         Internals.assert(
             fileURL.isFileURL,
@@ -256,8 +262,11 @@ extension DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: a `Progress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
-        
+    public func upgradeStorageIfNeeded<T: LocalStorage>(
+        _ storage: T,
+        completion: @escaping (MigrationResult) -> Void
+    ) throws(CoreStoreError) -> Progress? {
+
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
@@ -298,8 +307,10 @@ extension DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: a `MigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, an error is thrown if either inspection of the store failed, or if no mapping model was found/inferred.
      */
-    public func requiredMigrationsForStorage<T: LocalStorage>(_ storage: T) throws -> [MigrationType] {
-        
+    public func requiredMigrationsForStorage<T: LocalStorage>(
+        _ storage: T
+    ) throws(CoreStoreError) -> [MigrationType] {
+
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
@@ -362,8 +373,12 @@ extension DataStack {
     
     // MARK: Private
     
-    private func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, metadata: [String: Any], completion: @escaping (MigrationResult) -> Void) -> Progress? {
-        
+    private func upgradeStorageIfNeeded<T: LocalStorage>(
+        _ storage: T,
+        metadata: [String: Any],
+        completion: @escaping (MigrationResult) -> Void
+    ) -> Progress? {
+
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
             let error = CoreStoreError.mappingModelNotFound(
@@ -485,35 +500,38 @@ extension DataStack {
         return progress
     }
     
-    private func computeMigrationFromStorage<T: LocalStorage>(_ storage: T, metadata: [String: Any]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
-        
+    private func computeMigrationFromStorage<T: LocalStorage>(
+        _ storage: T,
+        metadata: [String: Any]
+    ) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
+
         let schemaHistory = self.schemaHistory
         if schemaHistory.rawModel.isConfiguration(withName: storage.configuration, compatibleWithStoreMetadata: metadata) {
-            
+
             return []
         }
-        
+
         guard let initialSchema = schemaHistory.schema(for: metadata) else {
-            
+
             return nil
         }
         var currentVersion = initialSchema.modelVersion
         let migrationChain: MigrationChain = schemaHistory.migrationChain.isEmpty
             ? [currentVersion: schemaHistory.currentModelVersion]
             : schemaHistory.migrationChain
-        
+
         var migrationSteps = [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]()
-        
+
         while let nextVersion = migrationChain.nextVersionFrom(currentVersion),
             let sourceSchema = schemaHistory.schema(for: currentVersion),
             sourceSchema.modelVersion != schemaHistory.currentModelVersion,
             let destinationSchema = schemaHistory.schema(for: nextVersion) {
-                
+
                 let mappingProviders = storage.migrationMappingProviders
                 do {
-                    
+
                     try withExtendedLifetime((sourceSchema.rawModel(), destinationSchema.rawModel())) {
-                        
+
                         let (sourceModel, destinationModel) = $0
                         let mapping = try mappingProviders.findMapping(
                             sourceSchema: sourceSchema,
@@ -531,22 +549,29 @@ extension DataStack {
                     }
                 }
                 catch {
-                    
+
                     return nil
                 }
                 currentVersion = nextVersion
         }
-        
+
         if migrationSteps.last?.destinationModel == schemaHistory.rawModel {
-            
+
             return migrationSteps
         }
-        
+
         return nil
     }
     
-    private func startMigrationForStorage<T: LocalStorage>(_ storage: T, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType, progress: Progress) throws {
-        
+    private func startMigrationForStorage<T: LocalStorage>(
+        _ storage: T,
+        sourceModel: NSManagedObjectModel,
+        destinationModel: NSManagedObjectModel,
+        mappingModel: NSMappingModel,
+        migrationType: MigrationType,
+        progress: Progress
+    ) throws(CoreStoreError) {
+
         do {
             
             try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
@@ -703,8 +728,12 @@ extension DataStack {
 
 extension Array where Element == SchemaMappingProvider {
     
-    func findMapping(sourceSchema: DynamicSchema, destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
-        
+    func findMapping(
+        sourceSchema: DynamicSchema,
+        destinationSchema: DynamicSchema,
+        storage: LocalStorage
+    ) throws(CoreStoreError) -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+
         for element in self {
             
             switch element {

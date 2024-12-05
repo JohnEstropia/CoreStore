@@ -41,25 +41,26 @@ extension BaseDataTransaction {
      */
     public func importObject<O: ImportableObject>(
         _ into: Into<O>,
-        source: O.ImportSource) throws -> O? {
-            
-            Internals.assert(
-                self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
-            )
-        
-            return try autoreleasepool {
-                
-                let entityType = into.entityClass
-                guard entityType.shouldInsert(from: source, in: self) else {
-                    
-                    return nil
-                }
-                
-                let object = self.create(into)
-                try object.didInsert(from: source, in: self)
-                return object
+        source: O.ImportSource
+    ) throws(any Swift.Error) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
+        )
+
+        return try Internals.autoreleasepool {
+
+            let entityType = into.entityClass
+            guard entityType.shouldInsert(from: source, in: self) else {
+
+                return nil
             }
+
+            let object = self.create(into)
+            try object.didInsert(from: source, in: self)
+            return object
+        }
     }
     
     /**
@@ -71,22 +72,23 @@ extension BaseDataTransaction {
      */
     public func importObject<O: ImportableObject>(
         _ object: O,
-        source: O.ImportSource) throws {
-            
-            Internals.assert(
-                self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(Internals.typeName(object)) outside the transaction's designated queue."
-            )
-            
-            try autoreleasepool {
-              
-                let entityType = object.runtimeType()
-                guard entityType.shouldInsert(from: source, in: self) else {
-                    
-                    return
-                }
-                try object.didInsert(from: source, in: self)
+        source: O.ImportSource
+    ) throws(any Swift.Error) {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to import an object of type \(Internals.typeName(object)) outside the transaction's designated queue."
+        )
+
+        try Internals.autoreleasepool {
+
+            let entityType = object.runtimeType()
+            guard entityType.shouldInsert(from: source, in: self) else {
+
+                return
             }
+            try object.didInsert(from: source, in: self)
+        }
     }
     
     /**
@@ -99,30 +101,31 @@ extension BaseDataTransaction {
      */
     public func importObjects<O: ImportableObject, S: Sequence>(
         _ into: Into<O>,
-        sourceArray: S) throws -> [O] where S.Iterator.Element == O.ImportSource {
-            
-            Internals.assert(
-                self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
-            )
-            
-            return try autoreleasepool {
-                
-                return try sourceArray.compactMap { (source) -> O? in
-                  
-                    let entityType = into.entityClass 
-                    guard entityType.shouldInsert(from: source, in: self) else {
-                        
-                        return nil
-                    }
-                    return try autoreleasepool {
-                        
-                        let object = self.create(into)
-                        try object.didInsert(from: source, in: self)
-                        return object
-                    }
+        sourceArray: S
+    ) throws(any Swift.Error) -> [O] where S.Iterator.Element == O.ImportSource {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
+        )
+
+        return try Internals.autoreleasepool {
+
+            return try sourceArray.compactMap { (source) -> O? in
+
+                let entityType = into.entityClass
+                guard entityType.shouldInsert(from: source, in: self) else {
+
+                    return nil
+                }
+                return try autoreleasepool {
+
+                    let object = self.create(into)
+                    try object.didInsert(from: source, in: self)
+                    return object
                 }
             }
+        }
     }
     
     /**
@@ -135,43 +138,44 @@ extension BaseDataTransaction {
      */
     public func importUniqueObject<O: ImportableUniqueObject>(
         _ into: Into<O>,
-        source: O.ImportSource) throws -> O? {
-            
-            Internals.assert(
-                self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
-            )
-            
-            return try autoreleasepool {
-              
-                let entityType = into.entityClass 
-                let uniqueIDKeyPath = entityType.uniqueIDKeyPath
-                guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
-                    
+        source: O.ImportSource
+    ) throws(any Swift.Error) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
+        )
+
+        return try Internals.autoreleasepool {
+
+            let entityType = into.entityClass
+            let uniqueIDKeyPath = entityType.uniqueIDKeyPath
+            guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
+
+                return nil
+            }
+
+            if let object = try self.fetchOne(From(entityType), Where<O>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+
+                guard entityType.shouldUpdate(from: source, in: self) else {
+
                     return nil
                 }
-                
-                if let object = try self.fetchOne(From(entityType), Where<O>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
-                    
-                    guard entityType.shouldUpdate(from: source, in: self) else {
-                        
-                        return nil
-                    }
-                    try object.update(from: source, in: self)
-                    return object
-                }
-                else {
-                    
-                    guard entityType.shouldInsert(from: source, in: self) else {
-                        
-                        return nil
-                    }
-                    let object = self.create(into)
-                    object.uniqueIDValue = uniqueIDValue
-                    try object.didInsert(from: source, in: self)
-                    return object
-                }
+                try object.update(from: source, in: self)
+                return object
             }
+            else {
+
+                guard entityType.shouldInsert(from: source, in: self) else {
+
+                    return nil
+                }
+                let object = self.create(into)
+                object.uniqueIDValue = uniqueIDValue
+                try object.didInsert(from: source, in: self)
+                return object
+            }
+        }
     }
     
     /**
@@ -188,71 +192,74 @@ extension BaseDataTransaction {
     public func importUniqueObjects<O: ImportableUniqueObject, S: Sequence>(
         _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }) throws -> [O] where S.Iterator.Element == O.ImportSource {
-            
-            Internals.assert(
-                self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
-            )
-            
-            return try autoreleasepool {
-              
-                let entityType = into.entityClass 
-                var importSourceByID = Dictionary<O.UniqueIDType, O.ImportSource>()
-                let sortedIDs = try autoreleasepool {
-                  
-                    return try sourceArray.compactMap { (source) -> O.UniqueIDType? in
-                        
-                        guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
-                            
-                            return nil
-                        }
-                        importSourceByID[uniqueIDValue] = source // effectively replaces duplicate with the latest
-                        return uniqueIDValue
-                    }
-                }
-                
-                importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
+        preProcess: @escaping (
+            _ mapping: [O.UniqueIDType: O.ImportSource]
+        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
+    ) throws(any Swift.Error) -> [O] where S.Iterator.Element == O.ImportSource {
 
-                var existingObjectsByID = Dictionary<O.UniqueIDType, O>()
-                try self
-                    .fetchAll(From(entityType), Where<O>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))
-                    .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
-              
-                var processedObjectIDs = Set<O.UniqueIDType>()
-                var result = [O]()
-              
-                for objectID in sortedIDs where !processedObjectIDs.contains(objectID) {
-                    
-                    guard let source = importSourceByID[objectID] else {
-                        
-                        continue
-                    }
-                    try autoreleasepool {
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
+        )
 
-                        if let object = existingObjectsByID[objectID]
-                            ?? self.context.insertedObjects
-                            .compactMap({ O.cs_matches(object: $0) ? O.cs_fromRaw(object: $0) : nil })
-                            .first(where: { $0.uniqueIDValue == objectID }) {
-                            
-                            guard entityType.shouldUpdate(from: source, in: self) else {
-                                
-                                return
-                            }
-                            try object.update(from: source, in: self)
-                            result.append(object)
-                        }
-                        else if entityType.shouldInsert(from: source, in: self) {
-                            
-                            let object = self.create(into)
-                            object.uniqueIDValue = objectID
-                            try object.didInsert(from: source, in: self)
-                            result.append(object)
-                        }
-                        processedObjectIDs.insert(objectID)
+        return try Internals.autoreleasepool {
+
+            let entityType = into.entityClass
+            var importSourceByID = Dictionary<O.UniqueIDType, O.ImportSource>()
+            let sortedIDs = try Internals.autoreleasepool {
+
+                return try sourceArray.compactMap { (source) -> O.UniqueIDType? in
+
+                    guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
+
+                        return nil
                     }
+                    importSourceByID[uniqueIDValue] = source // effectively replaces duplicate with the latest
+                    return uniqueIDValue
                 }
-                return result
             }
+
+            importSourceByID = try Internals.autoreleasepool { try preProcess(importSourceByID) }
+
+            var existingObjectsByID = Dictionary<O.UniqueIDType, O>()
+            try self
+                .fetchAll(From(entityType), Where<O>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))
+                .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
+
+            var processedObjectIDs = Set<O.UniqueIDType>()
+            var result = [O]()
+
+            for objectID in sortedIDs where !processedObjectIDs.contains(objectID) {
+
+                guard let source = importSourceByID[objectID] else {
+
+                    continue
+                }
+                try Internals.autoreleasepool {
+
+                    if let object = existingObjectsByID[objectID]
+                        ?? self.context.insertedObjects
+                        .compactMap({ O.cs_matches(object: $0) ? O.cs_fromRaw(object: $0) : nil })
+                        .first(where: { $0.uniqueIDValue == objectID }) {
+
+                        guard entityType.shouldUpdate(from: source, in: self) else {
+
+                            return
+                        }
+                        try object.update(from: source, in: self)
+                        result.append(object)
+                    }
+                    else if entityType.shouldInsert(from: source, in: self) {
+
+                        let object = self.create(into)
+                        object.uniqueIDValue = objectID
+                        try object.didInsert(from: source, in: self)
+                        result.append(object)
+                    }
+                    processedObjectIDs.insert(objectID)
+                }
+            }
+            return result
+        }
     }
 }

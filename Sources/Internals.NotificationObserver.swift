@@ -38,7 +38,12 @@ extension Internals {
 
         let observer: NSObjectProtocol
 
-        init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, closure: @escaping (_ note: Notification) -> Void) {
+        init(
+            notificationName: Notification.Name,
+            object: Any?,
+            queue: OperationQueue? = nil,
+            closure: @escaping (_ note: Notification) -> Void
+        ) {
 
             self.observer = NotificationCenter.default.addObserver(
                 forName: notificationName,

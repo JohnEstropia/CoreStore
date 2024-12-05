@@ -118,9 +118,15 @@ extension Where {
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~<O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
+public func ~<O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(
+    _ lhs: KeyPath<O, D>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -129,9 +135,15 @@ public func ~<O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPat
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(
+    _ lhs: KeyPath<O, D?>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -140,9 +152,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPa
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(
+    _ lhs: KeyPath<O, D>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -151,9 +169,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToMan
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(
+    _ lhs: KeyPath<O, D?>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -162,9 +186,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToMan
  let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(
+    _ lhs: Where<O>.Expression<T, D>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<T, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -173,9 +203,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKe
  let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(
+    _ lhs: Where<O>.Expression<T, D?>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<T, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -184,9 +220,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKe
  let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(
+    _ lhs: Where<O>.Expression<T, D>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -195,9 +237,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCTo
  let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(
+    _ lhs: Where<O>.Expression<T, D?>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 /**
@@ -206,9 +254,15 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCTo
  let spousesWithBadNamingSense = dataStack.fetchAll(From<Person>().where((\.spouse ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, C>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(
+    _ lhs: Where<O>.Expression<T, C>,
+    _ rhs: KeyPath<D, V>
+) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
-    return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
+    return .init(
+        lhs.cs_keyPathString,
+        rhs.cs_keyPathString
+    )
 }
 
 
@@ -220,7 +274,10 @@ public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCTo
  let owner = dataStack.fetchOne(From<Pet>().where((\.$master ~ \.$name) == "John"))
  ```
  */
-public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, FieldContainer<O>.Relationship<D>>, _ rhs: KeyPath<D.DestinationObjectType, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D.DestinationObjectType {
+public func ~ <O: CoreStoreObject, D: FieldRelationshipToOneType, K: KeyPathStringConvertible>(
+    _ lhs: KeyPath<O, FieldContainer<O>.Relationship<D>>,
+    _ rhs: KeyPath<D.DestinationObjectType, K>
+) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D.DestinationObjectType {
 
     return .init(
         O.meta[keyPath: lhs].cs_keyPathString,

@@ -36,9 +36,15 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.nickname == "John" }))
      ```
      */
-    public static func == (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func == (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return Where(attribute.keyPath, isEqualTo: value)
+        return Where(
+            attribute.keyPath,
+            isEqualTo: value
+        )
     }
 
     /**
@@ -47,9 +53,15 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.nickname != "John" }))
      ```
      */
-    public static func != (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func != (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return !Where(attribute.keyPath, isEqualTo: value)
+        return !Where(
+            attribute.keyPath,
+            isEqualTo: value
+        )
     }
 
     /**
@@ -58,9 +70,16 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.age < 20 }))
      ```
      */
-    public static func < (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func < (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return Where("%K < %@", attribute.keyPath, value.cs_toFieldStoredNativeType() as Any)
+        return Where(
+            "%K < %@",
+            attribute.keyPath,
+            value.cs_toFieldStoredNativeType() as Any
+        )
     }
 
     /**
@@ -69,9 +88,16 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.age > 20 }))
      ```
      */
-    public static func > (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func > (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return Where("%K > %@", attribute.keyPath, value.cs_toFieldStoredNativeType() as Any)
+        return Where(
+            "%K > %@",
+            attribute.keyPath,
+            value.cs_toFieldStoredNativeType() as Any
+        )
     }
 
     /**
@@ -80,9 +106,16 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.age <= 20 }))
      ```
      */
-    public static func <= (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func <= (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return Where("%K <= %@", attribute.keyPath, value.cs_toFieldStoredNativeType() as Any)
+        return Where(
+            "%K <= %@",
+            attribute.keyPath,
+            value.cs_toFieldStoredNativeType() as Any
+        )
     }
 
     /**
@@ -91,9 +124,16 @@ extension FieldContainer.Stored {
      let person = dataStack.fetchOne(From<Person>().where({ $0.age >= 20 }))
      ```
      */
-    public static func >= (_ attribute: Self, _ value: V) -> Where<O> {
+    public static func >= (
+        _ attribute: Self,
+        _ value: V
+    ) -> Where<O> {
 
-        return Where("%K >= %@", attribute.keyPath, value.cs_toFieldStoredNativeType() as Any)
+        return Where(
+            "%K >= %@",
+            attribute.keyPath,
+            value.cs_toFieldStoredNativeType() as Any
+        )
     }
 
     /**
@@ -102,9 +142,15 @@ extension FieldContainer.Stored {
      let dog = dataStack.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
      ```
      */
-    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: Self) -> Where<O> where S.Iterator.Element == V {
+    public static func ~= <S: Sequence>(
+        _ sequence: S,
+        _ attribute: Self
+    ) -> Where<O> where S.Iterator.Element == V {
 
-        return Where(attribute.keyPath, isMemberOf: sequence)
+        return Where(
+            attribute.keyPath,
+            isMemberOf: sequence
+        )
     }
 }
 

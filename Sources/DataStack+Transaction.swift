@@ -39,7 +39,9 @@ extension DataStack {
      - parameter completion: the closure executed after the save completes. The `Result` argument of the closure will either wrap the return value of `task`, or any uncaught errors thrown from within `task`. Cancelled `task`s will be indicated by `.failure(error: CoreStoreError.userCancelled)`. Custom errors thrown by the user will be wrapped in `CoreStoreError.userError(error: Error)`.
      */
     public func perform<T>(
-        asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T,
+        asynchronous task: @escaping (
+            _ transaction: AsynchronousDataTransaction
+        ) throws(any Swift.Error) -> T,
         sourceIdentifier: Any? = nil,
         completion: @escaping (AsynchronousDataTransaction.Result<T>) -> Void
     ) {
@@ -61,7 +63,9 @@ extension DataStack {
      - parameter failure: the closure executed if the save fails or if any errors are thrown within `task`. Cancelled `task`s will be indicated by `CoreStoreError.userCancelled`. Custom errors thrown by the user will be wrapped in `CoreStoreError.userError(error: Error)`.
      */
     public func perform<T>(
-        asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T,
+        asynchronous task: @escaping (
+            _ transaction: AsynchronousDataTransaction
+        ) throws(any Swift.Error) -> T,
         sourceIdentifier: Any? = nil,
         success: @escaping (T) -> Void,
         failure: @escaping (CoreStoreError) -> Void
@@ -117,41 +121,43 @@ extension DataStack {
      - returns: the value returned from `task`
      */
     public func perform<T>(
-        synchronous task: ((_ transaction: SynchronousDataTransaction) throws -> T),
+        synchronous task: (
+            _ transaction: SynchronousDataTransaction
+        ) throws(any Swift.Error) -> T,
         waitForAllObservers: Bool = true,
         sourceIdentifier: Any? = nil
-    ) throws -> T {
-        
+    ) throws(CoreStoreError) -> T {
+
         let transaction = SynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
             sourceIdentifier: sourceIdentifier
         )
-        return try transaction.transactionQueue.cs_sync {
-            
+        return try transaction.transactionQueue.cs_sync { () throws(CoreStoreError) -> T in
+
             defer {
-                
+
                 withExtendedLifetime((self, transaction), {})
             }
             let userInfo: T
             do {
-                
+
                 userInfo = try withoutActuallyEscaping(task, do: { try $0(transaction) })
             }
             catch let error as CoreStoreError {
-                
-                throw error
+
+                throw error as CoreStoreError
             }
             catch let error {
-                
+
                 throw CoreStoreError.userError(error: error)
             }
             if case (_, let error?) = transaction.autoCommit(waitForMerge: waitForAllObservers) {
-                
+
                 throw error
             }
             else {
-                
+
                 return userInfo
             }
         }

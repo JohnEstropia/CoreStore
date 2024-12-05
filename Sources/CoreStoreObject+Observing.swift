@@ -27,9 +27,17 @@ import Foundation
 import CoreData
 
 
+// MARK: - DynamicObject where Self: CoreStoreObject
+
 extension DynamicObject where Self: CoreStoreObject {
 
-    public func observe<O, V>(_ keyPath: KeyPath<Self, FieldContainer<O>.Stored<V>>, options: NSKeyValueObservingOptions = [], changeHandler: @escaping (Self, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
+    // MARK: Public
+
+    public func observe<O, V>(
+        _ keyPath: KeyPath<Self, FieldContainer<O>.Stored<V>>,
+        options: NSKeyValueObservingOptions = [],
+        changeHandler: @escaping (Self, CoreStoreObjectValueDiff<V>) -> Void
+    ) -> CoreStoreObjectKeyValueObservation {
 
         let result = _CoreStoreObjectKeyValueObservation(
             object: self.rawObject!,
@@ -186,7 +194,12 @@ public final class CoreStoreObjectObjectDiff<D: CoreStoreObject> {
 
     // MARK: FilePrivate
 
-    fileprivate init(kind: NSKeyValueChange, newNativeValue: CoreStoreManagedObject?, oldNativeValue: CoreStoreManagedObject?, isPrior: Bool) {
+    fileprivate init(
+        kind: NSKeyValueChange,
+        newNativeValue: CoreStoreManagedObject?,
+        oldNativeValue: CoreStoreManagedObject?,
+        isPrior: Bool
+    ) {
 
         self.kind = kind
         self.newNativeValue = newNativeValue
@@ -232,7 +245,12 @@ public final class CoreStoreObjectUnorderedDiff<D: CoreStoreObject> {
 
     // MARK: FilePrivate
 
-    fileprivate init(kind: NSKeyValueChange, newNativeValue: NSOrderedSet?, oldNativeValue: NSOrderedSet?, isPrior: Bool) {
+    fileprivate init(
+        kind: NSKeyValueChange,
+        newNativeValue: NSOrderedSet?,
+        oldNativeValue: NSOrderedSet?,
+        isPrior: Bool
+    ) {
 
         self.kind = kind
         self.newNativeValue = newNativeValue ?? []
@@ -283,7 +301,13 @@ public final class CoreStoreObjectOrderedDiff<D: CoreStoreObject> {
 
     // MARK: FilePrivate
 
-    fileprivate init(kind: NSKeyValueChange, newNativeValue: NSArray?, oldNativeValue: NSArray?, indexes: IndexSet, isPrior: Bool) {
+    fileprivate init(
+        kind: NSKeyValueChange,
+        newNativeValue: NSArray?,
+        oldNativeValue: NSArray?,
+        indexes: IndexSet,
+        isPrior: Bool
+    ) {
 
         self.kind = kind
         self.newNativeValue = newNativeValue ?? []
@@ -362,7 +386,18 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
     // MARK: FilePrivate
 
     @nonobjc
-    fileprivate init(object: CoreStoreManagedObject, keyPath: KeyPathString, callback: @escaping (_ object: CoreStoreManagedObject, _ kind: NSKeyValueChange, _ newValue: Any?, _ oldValue: Any?, _ indexes: IndexSet?, _ isPrior: Bool) -> Void) {
+    fileprivate init(
+        object: CoreStoreManagedObject,
+        keyPath: KeyPathString,
+        callback: @escaping (
+            _ object: CoreStoreManagedObject,
+            _ kind: NSKeyValueChange,
+            _ newValue: Any?,
+            _ oldValue: Any?,
+            _ indexes: IndexSet?,
+            _ isPrior: Bool
+        ) -> Void
+    ) {
 
         let _ = _CoreStoreObjectKeyValueObservation.swizzler
         self.keyPath = keyPath
@@ -373,12 +408,19 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
     @nonobjc
     fileprivate func start(_ options: NSKeyValueObservingOptions) {
         
-        self.object?.addObserver(self, forKeyPath: self.keyPath, options: options, context: nil)
+        self.object?
+            .addObserver(
+                self,
+                forKeyPath: self.keyPath,
+                options: options,
+                context: nil
+            )
     }
 
     deinit {
 
-        self.object?.removeObserver(self, forKeyPath: self.keyPath, context: nil)
+        self.object?
+            .removeObserver(self, forKeyPath: self.keyPath, context: nil)
     }
 
 
@@ -387,7 +429,8 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
     @nonobjc
     public func invalidate() {
 
-        self.object?.removeObserver(self, forKeyPath: self.keyPath, context: nil)
+        self.object?
+            .removeObserver(self, forKeyPath: self.keyPath, context: nil)
         self.object = nil
     }
 
@@ -401,11 +444,17 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
         let bridgeClass: AnyClass = _CoreStoreObjectKeyValueObservation.self
         let rootObserveImpl = class_getInstanceMethod(
             bridgeClass,
-            #selector(_CoreStoreObjectKeyValueObservation.observeValue(forKeyPath:of:change:context:))
+            #selector(
+                _CoreStoreObjectKeyValueObservation
+                    .observeValue(forKeyPath:of:change:context:)
+            )
         )!
         let swapObserveImpl = class_getInstanceMethod(
             bridgeClass,
-            #selector(_CoreStoreObjectKeyValueObservation._cs_swizzle_me_observeValue(forKeyPath:of:change:context:))
+            #selector(
+                _CoreStoreObjectKeyValueObservation
+                    ._cs_swizzle_me_observeValue(forKeyPath:of:change:context:)
+            )
         )!
         method_exchangeImplementations(rootObserveImpl, swapObserveImpl)
         return nil
@@ -415,21 +464,33 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
     private weak var object: CoreStoreManagedObject?
 
     @nonobjc
-    private let callback: (_ object: CoreStoreManagedObject, _ kind: NSKeyValueChange, _ newValue: Any?, _ oldValue: Any?, _ indexes: IndexSet?, _ isPrior: Bool) -> Void
+    private let callback: (
+        _ object: CoreStoreManagedObject,
+        _ kind: NSKeyValueChange,
+        _ newValue: Any?,
+        _ oldValue: Any?,
+        _ indexes: IndexSet?,
+        _ isPrior: Bool
+    ) -> Void
 
     @nonobjc
     private let keyPath: KeyPathString
 
     @objc
-    private dynamic func _cs_swizzle_me_observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSString: Any]?, context: UnsafeMutableRawPointer?) {
+    private dynamic func _cs_swizzle_me_observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSString: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
 
         guard
             let object = object as? CoreStoreManagedObject,
             object == self.object,
             let change = change
-            else {
+        else {
 
-                return
+            return
         }
         let rawKind: UInt = change[NSKeyValueChangeKey.kindKey.rawValue as NSString] as! UInt
         self.callback(

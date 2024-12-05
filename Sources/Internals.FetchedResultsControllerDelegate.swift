@@ -96,7 +96,9 @@ extension Internals {
         // MARK: NSFetchedResultsControllerDelegate
 
         @objc
-        dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        dynamic func controllerWillChangeContent(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>
+        ) {
 
             self.taskGroup.enter()
             guard self.enabled else {
@@ -107,7 +109,9 @@ extension Internals {
         }
 
         @objc
-        dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        dynamic func controllerDidChangeContent(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>
+        ) {
 
             defer {
 
@@ -121,7 +125,13 @@ extension Internals {
         }
 
         @objc
-        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        dynamic func controller(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+            didChange anObject: Any,
+            at indexPath: IndexPath?,
+            for type: NSFetchedResultsChangeType,
+            newIndexPath: IndexPath?
+        ) {
 
             guard self.enabled else {
 
@@ -137,7 +147,12 @@ extension Internals {
         }
 
         @objc
-        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        dynamic func controller(
+            _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+            didChange sectionInfo: NSFetchedResultsSectionInfo,
+            atSectionIndex sectionIndex: Int,
+            for type: NSFetchedResultsChangeType
+        ) {
 
             guard self.enabled else {
 

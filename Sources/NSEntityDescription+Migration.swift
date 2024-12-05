@@ -32,7 +32,12 @@ import Foundation
 extension NSEntityDescription {
     
     @nonobjc
-    internal func cs_resolveAttributeNames() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
+    internal func cs_resolveAttributeNames() -> [
+        String: (
+            attribute: NSAttributeDescription,
+            versionHash: Data
+        )
+    ] {
 
         return self.attributesByName.reduce(
             into: [:],
@@ -44,7 +49,12 @@ extension NSEntityDescription {
     }
     
     @nonobjc
-    internal func cs_resolveAttributeRenamingIdentities() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
+    internal func cs_resolveAttributeRenamingIdentities() -> [
+        String: (
+            attribute: NSAttributeDescription,
+            versionHash: Data
+        )
+    ] {
 
         return self.attributesByName.reduce(
             into: [:],
@@ -56,7 +66,12 @@ extension NSEntityDescription {
     }
     
     @nonobjc
-    internal func cs_resolveRelationshipNames() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
+    internal func cs_resolveRelationshipNames() -> [
+        String: (
+            relationship: NSRelationshipDescription,
+            versionHash: Data
+        )
+    ] {
 
         return self.relationshipsByName.reduce(
             into: [:],
@@ -68,7 +83,12 @@ extension NSEntityDescription {
     }
     
     @nonobjc
-    internal func cs_resolveRelationshipRenamingIdentities() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
+    internal func cs_resolveRelationshipRenamingIdentities() -> [
+        String: (
+            relationship: NSRelationshipDescription,
+            versionHash: Data
+        )
+    ] {
 
         return self.relationshipsByName.reduce(
             into: [:],

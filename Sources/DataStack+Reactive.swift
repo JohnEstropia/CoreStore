@@ -139,8 +139,10 @@ extension DataStack.ReactiveNamespace {
      - parameter storage: the local storage
      - returns: A `DataStack.AddStoragePublisher` that emits a `MigrationProgress` value with metadata for migration progress. Note that the `LocalStorage` event value may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: LocalStorage>(_ storage: T) -> DataStack.AddStoragePublisher<T> {
-        
+    public func addStorage<T: LocalStorage>(
+        _ storage: T
+    ) -> DataStack.AddStoragePublisher<T> {
+
         return .init(
             dataStack: self.base,
             storage: storage
@@ -317,7 +319,9 @@ extension DataStack.ReactiveNamespace {
     public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence>(
         _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }
+        preProcess: @escaping (
+            _ mapping: [O.UniqueIDType: O.ImportSource]
+        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
     ) -> Future<[O], CoreStoreError> where S.Iterator.Element == O.ImportSource {
         
         return .init { (promise) in
@@ -367,7 +371,9 @@ extension DataStack.ReactiveNamespace {
      - returns: A `Future` whose event value be the value returned from the `task` closure.
      */
     public func perform<Output>(
-        _ asynchronous: @escaping (AsynchronousDataTransaction) throws -> Output
+        _ asynchronous: @escaping (
+            _ transaction: AsynchronousDataTransaction
+        ) throws(any Swift.Error) -> Output
     ) -> Future<Output, CoreStoreError> {
         
         return .init { (promise) in

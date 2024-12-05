@@ -45,7 +45,11 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query, or `nil` if no match was found. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryValue<O, U: QueryableAttributeType>(_ from: From<O>, _ selectClause: Select<O, U>, _ queryClauses: QueryClause...) throws -> U?
+    func queryValue<O, U: QueryableAttributeType>(
+        _ from: From<O>,
+        _ selectClause: Select<O, U>,
+        _ queryClauses: QueryClause...
+    ) throws(CoreStoreError) -> U?
 
     /**
      Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -58,8 +62,12 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query, or `nil` if no match was found. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryValue<O, U: QueryableAttributeType>(_ from: From<O>, _ selectClause: Select<O, U>, _ queryClauses: [QueryClause]) throws -> U?
-    
+    func queryValue<O, U: QueryableAttributeType>(
+        _ from: From<O>,
+        _ selectClause: Select<O, U>,
+        _ queryClauses: [QueryClause]
+    ) throws(CoreStoreError) -> U?
+
     /**
      Queries a property value or aggregate as specified by the `QueryChainableBuilderType` built from a chain of clauses.
      
@@ -75,7 +83,9 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`, or `nil` if no match was found.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType
+    func queryValue<B: QueryChainableBuilderType>(
+        _ clauseChain: B
+    ) throws(CoreStoreError) -> B.ResultType? where B.ResultType: QueryableAttributeType
 
     /**
      Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -88,7 +98,11 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryAttributes<O>(_ from: From<O>, _ selectClause: Select<O, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]]
+    func queryAttributes<O>(
+        _ from: From<O>,
+        _ selectClause: Select<O, NSDictionary>,
+        _ queryClauses: QueryClause...
+    ) throws(CoreStoreError) -> [[String: Any]]
 
     /**
      Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -101,8 +115,12 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryAttributes<O>(_ from: From<O>, _ selectClause: Select<O, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]]
-    
+    func queryAttributes<O>(
+        _ from: From<O>,
+        _ selectClause: Select<O, NSDictionary>,
+        _ queryClauses: [QueryClause]
+    ) throws(CoreStoreError) -> [[String: Any]]
+
     /**
      Queries a dictionary of attribute values or  as specified by the `QueryChainableBuilderType` built from a chain of clauses.
      
@@ -127,8 +145,10 @@ public protocol QueryableSource: AnyObject {
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`
      - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
-    func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary
-    
+    func queryAttributes<B: QueryChainableBuilderType>(
+        _ clauseChain: B
+    ) throws(CoreStoreError) -> [[String: Any]] where B.ResultType == NSDictionary
+
     /**
      The internal `NSManagedObjectContext` managed by this `QueryableSource`. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
      */

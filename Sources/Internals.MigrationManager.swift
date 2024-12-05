@@ -55,11 +55,18 @@ extension Internals {
 
         // MARK: NSMigrationManager
 
-        init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, progress: Progress) {
+        init(
+            sourceModel: NSManagedObjectModel,
+            destinationModel: NSManagedObjectModel,
+            progress: Progress
+        ) {
 
             self.progress = progress
 
-            super.init(sourceModel: sourceModel, destinationModel: destinationModel)
+            super.init(
+                sourceModel: sourceModel,
+                destinationModel: destinationModel
+            )
         }
 
 

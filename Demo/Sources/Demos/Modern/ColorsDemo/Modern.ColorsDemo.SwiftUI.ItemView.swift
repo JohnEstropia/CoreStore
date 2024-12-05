@@ -40,7 +40,7 @@ extension Modern.ColorsDemo.SwiftUI {
                         .padding(),
                     alignment: .leading
                 )
-                .animation(.default)
+                .animation(.default, value: palette)
             }
         }
     }

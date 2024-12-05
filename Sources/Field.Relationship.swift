@@ -167,7 +167,10 @@ extension FieldContainer {
             return ObjectType.self
         }
 
-        internal static func read(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func read(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject
+        ) -> Any? {
 
             let field = field as! Self
             let keyPath = field.keyPath
@@ -176,8 +179,12 @@ extension FieldContainer {
             )
         }
 
-        internal static func modify(field: FieldProtocol, for rawObject: CoreStoreManagedObject, newValue: Any?) {
-            
+        internal static func modify(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject,
+            newValue: Any?
+        ) {
+
             Internals.assert(
                 rawObject.isEditableInContext() == true,
                 "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
@@ -196,7 +203,10 @@ extension FieldContainer {
 
         internal let entityDescriptionValues: () -> FieldRelationshipProtocol.EntityDescriptionValues
 
-        internal static func valueForSnapshot(field: FieldProtocol, for rawObject: CoreStoreManagedObject) -> Any? {
+        internal static func valueForSnapshot(
+            field: FieldProtocol,
+            for rawObject: CoreStoreManagedObject
+        ) -> Any? {
 
             Internals.assert(
                 rawObject.isRunningInAllowedQueue() == true,

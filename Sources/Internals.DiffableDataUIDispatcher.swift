@@ -106,24 +106,23 @@ extension Internals {
                     }
                 }
 
-                #if canImport(QuartzCore)
+#if os(watchOS) || !canImport(QuartzCore)
+
+                performDiffingUpdates()
+
+#else
 
                 CATransaction.begin()
-
+                
                 if !animatingDifferences {
-
+                    
                     CATransaction.setDisableActions(true)
                 }
                 performDiffingUpdates()
-
+                
                 CATransaction.commit()
 
-                #else
-
-                performDiffingUpdates()
-
-
-                #endif
+#endif
             }
         }
 

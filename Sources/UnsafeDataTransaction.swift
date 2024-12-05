@@ -41,8 +41,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the optional `error` argument of the block.
      */
-    public func commit(_ completion: @escaping (_ error: CoreStoreError?) -> Void) {
-        
+    public func commit(
+        _ completion: @escaping (_ error: CoreStoreError?) -> Void
+    ) {
+
         self.context.saveAsynchronously(
             sourceIdentifier: self.sourceIdentifier,
             completion: { (_, error) in
@@ -58,8 +60,8 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      
      - throws: a `CoreStoreError` value indicating the failure.
      */
-    public func commitAndWait() throws {
-        
+    public func commitAndWait() throws(CoreStoreError) {
+
         if case (_, let error?) = self.context.saveSynchronously(
             waitForMerge: true,
             sourceIdentifier: self.sourceIdentifier
@@ -111,8 +113,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush(closure: () throws -> Void) rethrows {
-        
+    public func flush(
+        closure: () throws(any Swift.Error) -> Void
+    ) rethrows {
+
         try closure()
         self.context.processPendingChanges()
     }

@@ -129,7 +129,10 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
 
     internal class func metaProperties(includeSuperclasses: Bool) -> [PropertyProtocol] {
 
-        func keyPaths(_ allKeyPaths: inout [PropertyProtocol], for dynamicType: CoreStoreObject.Type) {
+        func keyPaths(
+            _ allKeyPaths: inout [PropertyProtocol],
+            for dynamicType: CoreStoreObject.Type
+        ) {
 
             allKeyPaths.append(contentsOf: dynamicType.meta.propertyProtocolsByName())
             guard
@@ -151,7 +154,10 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     // MARK: Private
 
-    private func containsLegacyAttributes(mirror: Mirror, object: CoreStoreObject) -> Bool {
+    private func containsLegacyAttributes(
+        mirror: Mirror,
+        object: CoreStoreObject
+    ) -> Bool {
 
         if let superclassMirror = mirror.superclassMirror,
             self.containsLegacyAttributes(mirror: superclassMirror, object: object) {
@@ -175,8 +181,11 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         return false
     }
     
-    private func registerReceiver(mirror: Mirror, object: CoreStoreObject) {
-        
+    private func registerReceiver(
+        mirror: Mirror,
+        object: CoreStoreObject
+    ) {
+
         if let superclassMirror = mirror.superclassMirror {
             
             self.registerReceiver(

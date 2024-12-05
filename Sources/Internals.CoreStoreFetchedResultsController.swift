@@ -77,8 +77,8 @@ extension Internals {
         }
         
         @nonobjc
-        internal func performFetchFromSpecifiedStores() throws {
-            
+        internal func performFetchFromSpecifiedStores() throws(any Swift.Error) {
+
             try self.reapplyAffectedStores(self.typedFetchRequest, self.managedObjectContext)
             try self.performFetch()
 
@@ -103,6 +103,9 @@ extension Internals {
         // MARK: Private
         
         @nonobjc
-        private let reapplyAffectedStores: (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) throws -> Void
+        private let reapplyAffectedStores: (
+            _ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>,
+            _ context: NSManagedObjectContext
+        ) throws(any Swift.Error) -> Void
     }
 }
