@@ -23,7 +23,7 @@
 //  SOFTWARE.
 //
 
-#if canImport(UIKit) && (os(iOS) || os(tvOS))
+#if canImport(UIKit) && (os(iOS) || os(tvOS) || os(visionOS))
 
 import UIKit
 import CoreData
