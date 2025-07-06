@@ -367,7 +367,7 @@ CoreStoreDefaults.dataStack = DataStack(
 ```
 
 **`CoreStoreSchema`-based model version (No *.xcdatamodeld* file needed)**
-*(For more details, see also [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
+*(For more details, see also [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
 ```swift
 class Animal: CoreStoreObject {
     // ...
