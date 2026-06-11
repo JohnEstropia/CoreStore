@@ -81,15 +81,6 @@ extension DispatchQueue {
 
         return self.sync { autoreleasepool(invoking: closure) }
     }
-
-    @nonobjc @inline(__always)
-    internal func cs_sync<T>(
-        _ closure: () throws(any Swift.Error) -> T
-    ) throws(any Swift.Error) -> T {
-
-        return try self.sync { try autoreleasepool(invoking: closure) }
-    }
-
     @nonobjc @inline(__always)
     internal func cs_sync<T>(
         _ closure: () throws(CoreStoreError) -> T
@@ -99,9 +90,16 @@ extension DispatchQueue {
 
             return try self.sync { try autoreleasepool(invoking: closure) }
         }
-        catch {
+        catch let error {
 
-            throw CoreStoreError(error)
+            switch error {
+
+            case let error as CoreStoreError:
+                throw error
+
+            default:
+                throw CoreStoreError(error)
+            }
         }
     }
 
