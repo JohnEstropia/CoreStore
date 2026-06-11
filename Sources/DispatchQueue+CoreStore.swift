@@ -87,16 +87,11 @@ extension DispatchQueue {
     ) throws(CoreStoreError) -> T {
 
         do {
-
             return try self.sync { try autoreleasepool(invoking: closure) }
-        }
-        catch let error {
-
+        } catch let error {
             switch error {
-
             case let error as CoreStoreError:
                 throw error
-
             default:
                 throw CoreStoreError(error)
             }
