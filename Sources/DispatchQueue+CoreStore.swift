@@ -84,14 +84,6 @@ extension DispatchQueue {
 
     @nonobjc @inline(__always)
     internal func cs_sync<T>(
-        _ closure: () throws(any Swift.Error) -> T
-    ) throws(any Swift.Error) -> T {
-
-        return try self.sync { try autoreleasepool(invoking: closure) }
-    }
-
-    @nonobjc @inline(__always)
-    internal func cs_sync<T>(
         _ closure: () throws(CoreStoreError) -> T
     ) throws(CoreStoreError) -> T {
 
