@@ -74,7 +74,7 @@ extension Modern {
         
         // MARK: - TransactionSource
         
-        enum TransactionSource {
+        enum TransactionSource: Sendable {
             
             case add
             case delete

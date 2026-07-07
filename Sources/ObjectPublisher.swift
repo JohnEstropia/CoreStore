@@ -76,6 +76,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
      - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
@@ -112,6 +113,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
      - parameter initialSourceIdentifier: an optional value that identifies the initial callback invocation if `notifyInitial` is `true`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
@@ -145,6 +147,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
      - parameter observer: the object whose notifications will be unregistered
      */
+    @MainActor
     public func removeObserver<T: AnyObject>(_ observer: T) {
 
         Internals.assert(

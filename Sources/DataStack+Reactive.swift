@@ -47,7 +47,7 @@ extension DataStack {
     /**
      Combine utilities for the `DataStack` are exposed through this namespace. Extend this type if you need to add other Combine Publisher utilities for `DataStack`.
      */
-    public struct ReactiveNamespace {
+    public struct ReactiveNamespace: Sendable {
         
         // MARK: Public
         
@@ -99,6 +99,7 @@ extension DataStack.ReactiveNamespace {
         
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.addStorage(
                 storage,
                 completion: { (result) in
@@ -179,6 +180,7 @@ extension DataStack.ReactiveNamespace {
         
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
                     
@@ -222,8 +224,10 @@ extension DataStack.ReactiveNamespace {
         source: O.ImportSource
     ) -> Future<O?, CoreStoreError> {
         
+        nonisolated(unsafe) let object = object
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
                     
@@ -273,6 +277,7 @@ extension DataStack.ReactiveNamespace {
         
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.perform(
                 asynchronous: { (transaction) -> O? in
                     
@@ -316,16 +321,17 @@ extension DataStack.ReactiveNamespace {
      - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
      - returns: A `Future` for the imported objects. The event values will be the object instances correctly associated for the `DataStack`.
      */
-    public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence>(
+    public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence & Sendable>(
         _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping (
+        preProcess: @escaping @Sendable (
             _ mapping: [O.UniqueIDType: O.ImportSource]
         ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
     ) -> Future<[O], CoreStoreError> where S.Iterator.Element == O.ImportSource {
         
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.perform(
                 asynchronous: { (transaction) -> [O] in
                     
@@ -370,14 +376,15 @@ extension DataStack.ReactiveNamespace {
      - parameter task: the asynchronous closure where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: A `Future` whose event value be the value returned from the `task` closure.
      */
-    public func perform<Output>(
-        _ asynchronous: @escaping (
+    public func perform<Output: Sendable>(
+        _ asynchronous: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
         ) throws(any Swift.Error) -> Output
     ) -> Future<Output, CoreStoreError> {
         
         return .init { (promise) in
             
+            nonisolated(unsafe) let promise = promise
             self.base.perform(
                 asynchronous: asynchronous,
                 success: { promise(.success($0)) },

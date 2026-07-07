@@ -90,7 +90,8 @@ extension DataStack {
         
         // MARK: - AddStorageSubscription
         
-        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription where S.Input == Output, S.Failure == CoreStoreError {
+        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription, @unchecked Sendable
+        where S.Input == Output, S.Failure == CoreStoreError {
             
             // MARK: FilePrivate
             
@@ -114,7 +115,7 @@ extension DataStack {
                     
                     return
                 }
-                var progress: Progress? = nil
+                nonisolated(unsafe) var progress: Progress? = nil
                 progress = self.dataStack.addStorage(
                     self.storage,
                     completion: { [weak self] result in
@@ -150,21 +151,24 @@ extension DataStack {
                 )
                 if let progress = progress {
                     
-                    progress.setProgressHandler { [weak self] progress in
+                    Internals.mainActorImmediate { @MainActor [weak self] in
                         
-                        guard
-                            let self = self,
-                            let subscriber = self.subscriber
-                        else {
+                        progress.setProgressHandler { progress in
                             
-                            return
-                        }
-                        _ = subscriber.receive(
-                            .migrating(
-                                storage: self.storage,
-                                progressObject: progress
+                            guard
+                                let self = self,
+                                let subscriber = self.subscriber
+                            else {
+                                
+                                return
+                            }
+                            _ = subscriber.receive(
+                                .migrating(
+                                    storage: self.storage,
+                                    progressObject: progress
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

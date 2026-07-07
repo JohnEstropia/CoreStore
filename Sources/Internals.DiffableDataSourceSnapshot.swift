@@ -43,7 +43,7 @@ extension Internals {
     // MARK: - DiffableDataSourceSnapshot
 
     // Implementation based on https://github.com/ra1028/DiffableDataSources
-    internal struct DiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol {
+    internal struct DiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol, @unchecked Sendable {
 
         // MARK: Internal
 

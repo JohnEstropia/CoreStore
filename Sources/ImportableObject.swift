@@ -57,7 +57,7 @@ public protocol ImportableObject: DynamicObject {
     /**
      The data type for the import source. This is most commonly an json type, `NSDictionary`, or another external source such as `NSUserDefaults`.
      */
-    associatedtype ImportSource
+    associatedtype ImportSource: Sendable
     
     /**
      Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.

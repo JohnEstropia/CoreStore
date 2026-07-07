@@ -33,7 +33,7 @@ import CoreData
  
  - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
  */
-public final class SQLiteStore: LocalStorage {
+public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
@@ -165,10 +165,13 @@ public final class SQLiteStore: LocalStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [AnyHashable: Any]? = [
-        NSSQLitePragmasOption: ["journal_mode": "WAL"],
-        NSBinaryStoreInsecureDecodingCompatibilityOption: true
-    ]
+    public var storeOptions: [AnyHashable: Any]? {
+        
+        return [
+            NSSQLitePragmasOption: ["journal_mode": "WAL"],
+            NSBinaryStoreInsecureDecodingCompatibilityOption: true
+        ]
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.

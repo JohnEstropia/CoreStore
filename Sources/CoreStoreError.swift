@@ -24,7 +24,7 @@
 //
 
 import Foundation
-import CoreData
+@preconcurrency import CoreData
 
 
 // MARK: - CoreStoreError
@@ -32,7 +32,7 @@ import CoreData
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: Error, CustomNSError, Hashable {
+public enum CoreStoreError: Error, CustomNSError, Hashable, @unchecked Sendable {
     
     /**
      A failure occured because of an unknown error.

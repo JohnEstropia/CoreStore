@@ -46,7 +46,7 @@ extension DiffableDataSource {
 /**
  The `DiffableDataSource.Target` protocol allows custom views to consume `ListSnapshot` diffable data similar to how `DiffableDataSource.TableViewAdapter` and `DiffableDataSource.CollectionViewAdapter` reloads data for their corresponding views.
  */
-public protocol DiffableDataSourceTarget {
+public protocol DiffableDataSourceTarget: Sendable {
 
     // MARK: Public
 
@@ -98,7 +98,7 @@ public protocol DiffableDataSourceTarget {
     /**
      Animates multiple insert, delete, reload, and move operations as a group.
      */
-    func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void)
+    func performBatchUpdates(updates: @escaping @Sendable () -> Void, animated: Bool, completion: @escaping @Sendable () -> Void)
 
     /**
      Reloads all sections and items.
@@ -110,18 +110,24 @@ extension DiffableDataSource.Target {
 
     // MARK: Internal
 
-    internal func reload<C, O>(
+    internal func reload<C: Sendable, O>(
         using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
         animated: Bool,
         interrupt: ((Internals.DiffableDataUIDispatcher<O>.Changeset<C>) -> Bool)? = nil,
-        setData: (C) -> Void,
+        setData: @escaping @Sendable (C) -> Void,
         completion: @escaping () -> Void
     ) {
 
         let group = DispatchGroup()
         defer {
 
-            group.notify(queue: .main, execute: completion)
+            group.notify(
+                queue: .main,
+                execute: {
+                    
+                    completion()
+                }
+            )
         }
         if self.shouldSuspendBatchUpdates, let data = stagedChangeset.last?.data {
 

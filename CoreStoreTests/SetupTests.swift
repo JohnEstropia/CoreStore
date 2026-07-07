@@ -35,6 +35,7 @@ import CoreStore
 class SetupTests: BaseTestDataTestCase {
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_ConfigureCorrectly() {
         
         do {

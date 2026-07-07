@@ -42,7 +42,7 @@ extension Internals {
             notificationName: Notification.Name,
             object: Any?,
             queue: OperationQueue? = nil,
-            closure: @escaping (_ note: Notification) -> Void
+            closure: @escaping @Sendable (_ note: Notification) -> Void
         ) {
 
             self.observer = NotificationCenter.default.addObserver(

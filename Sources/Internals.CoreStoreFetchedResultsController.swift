@@ -33,7 +33,7 @@ extension Internals {
     
     // MARK: - CoreStoreFetchedResultsController
     
-    internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject> {
+    internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject>, @unchecked Sendable {
         
         // MARK: Internal
         

@@ -35,6 +35,7 @@ import CoreStore
 class ConvenienceTests: BaseTestCase {
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanCreateFetchedResultsControllers() {
 
         self.prepareStack { (stack) in
@@ -62,6 +63,7 @@ class ConvenienceTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatUnsafeDataTransactions_CanCreateFetchedResultsControllers() {
         
         self.prepareStack { (stack) in

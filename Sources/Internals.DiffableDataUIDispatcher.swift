@@ -32,6 +32,8 @@ import QuartzCore
 
 #endif
 
+import os
+
 
 // MARK: - Internals
 
@@ -41,7 +43,7 @@ extension Internals {
 
     // Implementation based on https://github.com/ra1028/DiffableDataSources
     @usableFromInline
-    internal final class DiffableDataUIDispatcher<O: DynamicObject> {
+    internal final class DiffableDataUIDispatcher<O: DynamicObject>: @unchecked Sendable {
 
         // MARK: Internal
         
@@ -55,10 +57,10 @@ extension Internals {
         func purge<Target: DiffableDataSource.Target>(
             target: Target?,
             animatingDifferences: Bool,
-            performUpdates: @escaping (
+            performUpdates: @escaping @Sendable (
                 Target,
                 StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
-                @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
+                @escaping @Sendable ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
             ) -> Void
         ) {
 
@@ -74,14 +76,14 @@ extension Internals {
             _ snapshot: DiffableDataSourceSnapshot,
             target: Target?,
             animatingDifferences: Bool,
-            performUpdates: @escaping (
+            performUpdates: @escaping @Sendable (
                 Target,
                 StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
-                @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
+                @escaping @Sendable ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
             ) -> Void
         ) {
             
-            self.dispatcher.dispatch { [weak self] in
+            self.dispatcher.dispatch { @MainActor [weak self] in
                 
                 guard let self = self else {
                     
@@ -97,13 +99,17 @@ extension Internals {
                     return
                 }
 
-                let performDiffingUpdates: () -> Void = {
+                let performDiffingUpdates: @MainActor () -> Void = {
                     
                     let changeset = StagedChangeset(source: self.sections, target: newSections)
-                    performUpdates(target, changeset) { sections in
-                        
-                        self.sections = sections
-                    }
+                    performUpdates(
+                        target,
+                        changeset,
+                        { sections in
+                            
+                            self.sections = sections
+                        }
+                    )
                 }
 
 #if os(watchOS) || !canImport(QuartzCore)
@@ -212,7 +218,7 @@ extension Internals {
         // MARK: - ElementPath
         
         @usableFromInline
-        internal struct ElementPath: Hashable {
+        internal struct ElementPath: Hashable, Sendable {
             
             @usableFromInline
             var element: Int
@@ -231,18 +237,21 @@ extension Internals {
 
         // MARK: - MainThreadSerialDispatcher
 
-        fileprivate final class MainThreadSerialDispatcher {
+        fileprivate final class MainThreadSerialDispatcher: Sendable {
 
             // MARK: FilePrivate
 
             fileprivate init() {}
 
-            fileprivate func dispatch(_ action: @escaping () -> Void) {
+            fileprivate func dispatch(_ action: @escaping @MainActor () -> Void) {
 
                 let count = self.executingCount.incrementAndGet()
                 if Thread.isMainThread && count == 1 {
 
-                    action()
+                    MainActor.assumeIsolated {
+                        
+                        action()
+                    }
                     self.executingCount.decrement()
                 }
                 else {
@@ -267,36 +276,31 @@ extension Internals {
             
             // MARK: - AtomicInt
             
-            fileprivate class AtomicInt {
+            fileprivate final class AtomicInt: Sendable {
                 
                 // MARK: FilePrivate
 
                 fileprivate func incrementAndGet() -> Int {
 
-                    self.lock.wait()
-                    defer {
+                    return self.value.withLock {
                         
-                        self.lock.signal()
+                        $0 += 1
+                        return $0
                     }
-                    self.value += 1
-                    return self.value
                 }
 
                 fileprivate func decrement() {
 
-                    self.lock.wait()
-                    defer {
+                    self.value.withLock {
                         
-                        self.lock.signal()
+                        $0 -= 1
                     }
-                    self.value -= 1
                 }
 
                 
                 // MARK: Private
 
-                private let lock = DispatchSemaphore(value: 1)
-                private var value = 0
+                private let value: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
             }
         }
         

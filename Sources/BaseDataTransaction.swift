@@ -441,7 +441,7 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      An arbitrary value that identifies the source of this transaction. Callers of the transaction can provide this value through the `DataStack.perform(...)` methods.
      */
-    public let sourceIdentifier: Any?
+    public let sourceIdentifier: (any Sendable)?
     
     /**
      Allow external libraries to store custom data in the transaction. App code should rarely have a need for this.
@@ -471,7 +471,7 @@ public /*abstract*/ class BaseDataTransaction {
         queue: DispatchQueue,
         supportsUndo: Bool,
         bypassesQueueing: Bool,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
@@ -493,7 +493,10 @@ public /*abstract*/ class BaseDataTransaction {
         }
         else if context.undoManager == nil {
             
-            context.undoManager = UndoManager()
+            Internals.mainActorImmediate {
+                
+                context.undoManager = UndoManager()
+            }
         }
     }
     

@@ -94,6 +94,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
@@ -128,6 +129,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      - parameter initialSourceIdentifier: an optional value that identifies the initial callback invocation if `notifyInitial` is `true`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
@@ -159,6 +161,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 
      - parameter observer: the object whose notifications will be unregistered
      */
+    @MainActor
     public func removeObserver<T: AnyObject>(_ observer: T) {
 
         Internals.assert(
@@ -185,7 +188,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      */
     public func refetch<B: FetchChainableBuilderType>(
         _ clauseChain: B,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) throws(any Swift.Error) where B.ObjectType == O {
 
         try self.refetch(
@@ -214,7 +217,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      */
     public func refetch<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) throws(any Swift.Error) where B.ObjectType == O {
 
         try self.refetch(
@@ -342,7 +345,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) throws(any Swift.Error) {
 
         let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(

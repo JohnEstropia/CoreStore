@@ -95,7 +95,7 @@ extension Internals {
 
         // MARK: FilePrivate
 
-        fileprivate static var cachedCoders: [NSValueTransformerName: AnyFieldCoder] = [:]
+        fileprivate static nonisolated(unsafe) var cachedCoders: [NSValueTransformerName: AnyFieldCoder] = [:]
 
 
         // MARK: - TransformableDefaultValueCodingBox

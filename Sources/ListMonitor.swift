@@ -66,7 +66,7 @@ import CoreData
  ```
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
-public final class ListMonitor<O: DynamicObject>: Hashable {
+public final class ListMonitor<O: DynamicObject>: Hashable, @unchecked Sendable {
     
     // MARK: Public (Accessors)
     
@@ -648,7 +648,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      */
     public func refetch(
         _ fetchClauses: FetchClause...,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) {
         
         self.refetch(
@@ -668,7 +668,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      */
     public func refetch(
         _ fetchClauses: [FetchClause],
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) {
         
         self.refetch(
@@ -751,7 +751,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void
     ) {
         
         self.init(
@@ -786,7 +786,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void
     ) {
         
         self.init(
@@ -803,7 +803,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (_ monitor: ListMonitor<O>) -> Void
+        callback: @escaping @Sendable (_ monitor: ListMonitor<O>) -> Void
     ) {
         
         Internals.setAssociatedRetainedObject(
@@ -828,7 +828,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (
+        callback: @escaping @Sendable (
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ indexPath: IndexPath?,
@@ -864,7 +864,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (
+        callback: @escaping @Sendable (
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ sectionIndex: Int
@@ -892,21 +892,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(
+    internal func registerObserver<U: AnyObject & Sendable>(
         _ observer: U,
-        willChange: @escaping (
+        willChange: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        didChange: @escaping (
+        didChange: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        willRefetch: @escaping (
+        willRefetch: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        didRefetch: @escaping (
+        didRefetch: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void) {
@@ -969,27 +969,27 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(
+    internal func registerObserver<U: AnyObject & Sendable>(
         _ observer: U,
-        didInsertObject: @escaping (
+        didInsertObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O, 
             _ toIndexPath: IndexPath
         ) -> Void,
-        didDeleteObject: @escaping (
+        didDeleteObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ fromIndexPath: IndexPath
         ) -> Void,
-        didUpdateObject: @escaping (
+        didUpdateObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ atIndexPath: IndexPath
         ) -> Void,
-        didMoveObject: @escaping (
+        didMoveObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
@@ -1056,15 +1056,15 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(
+    internal func registerObserver<U: AnyObject & Sendable>(
         _ observer: U,
-        didInsertSection: @escaping (
+        didInsertSection: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ toIndex: Int
         ) -> Void,
-        didDeleteSection: @escaping (
+        didDeleteSection: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
@@ -1127,7 +1127,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     
     internal func refetch(
         _ applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         Internals.assert(
@@ -1302,7 +1302,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: ((ListMonitor<O>) -> Void)?
+        createAsynchronously: (@Sendable (ListMonitor<O>) -> Void)?
     ) {
         
         self.isSectioned = (sectionBy != nil)

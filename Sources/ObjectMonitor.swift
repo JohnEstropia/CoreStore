@@ -39,7 +39,7 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation {
+public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation, @unchecked Sendable {
     
     /**
      Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
@@ -71,7 +71,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
-    public func addObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == O {
+    public func addObserver<U: ObjectObserver & Sendable>(_ observer: U) where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -243,19 +243,19 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
-    internal func registerObserver<U: AnyObject>(
+    internal func registerObserver<U: AnyObject & Sendable>(
         _ observer: U,
-        willChangeObject: @escaping (
+        willChangeObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ObjectMonitor<O>,
             _ object: O
         ) -> Void,
-        didDeleteObject: @escaping (
+        didDeleteObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ObjectMonitor<O>,
             _ object: O
         ) -> Void,
-        didUpdateObject: @escaping (
+        didUpdateObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ObjectMonitor<O>,
             _ object: O,
@@ -361,7 +361,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (_ monitor: ObjectMonitor<O>) -> Void
+        callback: @escaping @Sendable (_ monitor: ObjectMonitor<O>) -> Void
     ) {
         
         Internals.setAssociatedRetainedObject(
@@ -386,7 +386,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (_ monitor: ObjectMonitor<O>, _ object: O) -> Void
+        callback: @escaping @Sendable (_ monitor: ObjectMonitor<O>, _ object: O) -> Void
     ) {
         
         Internals.setAssociatedRetainedObject(

@@ -39,7 +39,7 @@ import CoreData
  let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct Into<O: DynamicObject>: Hashable {
+public struct Into<O: DynamicObject>: Hashable, @unchecked Sendable {
     
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class

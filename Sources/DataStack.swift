@@ -32,7 +32,7 @@ import CoreData
 /**
  The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
  */
-public final class DataStack: Equatable {
+public final class DataStack: Equatable, @unchecked Sendable {
     
     /**
      The resolved application name, used by the `DataStack` as the default Xcode model name (.xcdatamodel filename) if not explicitly provided.
@@ -398,7 +398,7 @@ public final class DataStack: Equatable {
      - parameter completion: the closure to execute after all persistent stores are removed
      */
     public func unsafeRemoveAllPersistentStores(
-        completion: @escaping () -> Void = {}
+        completion: @escaping @MainActor () -> Void = {}
     ) {
         
         let coordinator = self.coordinator
@@ -459,7 +459,7 @@ public final class DataStack: Equatable {
     
     // MARK: Internal
     
-    internal static var defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
+    internal static let defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
     
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext

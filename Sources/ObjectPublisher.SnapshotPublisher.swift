@@ -90,7 +90,8 @@ extension ObjectPublisher {
         
         // MARK: - ObjectSnapshotSubscription
         
-        fileprivate final class ObjectSnapshotSubscription<S: Subscriber>: Subscription where S.Input == Output, S.Failure == Never {
+        fileprivate final class ObjectSnapshotSubscription<S: Subscriber>: Subscription, @unchecked Sendable
+        where S.Input == Output, S.Failure == Never {
             
             // MARK: FilePrivate
             
@@ -114,21 +115,24 @@ extension ObjectPublisher {
                     
                     return
                 }
-                self.publisher.addObserver(
-                    self,
-                    notifyInitial: self.emitInitialValue,
-                    { [weak self] (publisher) in
-                        
-                        guard
-                            let self = self,
-                            let subscriber = self.subscriber
-                        else {
+                Internals.mainActorImmediate { [self] in
+                    
+                    self.publisher.addObserver(
+                        self,
+                        notifyInitial: self.emitInitialValue,
+                        { [weak self] (publisher) in
                             
-                            return
+                            guard
+                                let self = self,
+                                let subscriber = self.subscriber
+                            else {
+                                
+                                return
+                            }
+                            _ = subscriber.receive(publisher.snapshot)
                         }
-                        _ = subscriber.receive(publisher.snapshot)
-                    }
-                )
+                    )
+                }
             }
             
             
@@ -138,16 +142,9 @@ extension ObjectPublisher {
                 
                 self.subscriber = nil
                 
-                if Thread.isMainThread {
+                Internals.mainActorImmediate {
                     
                     self.publisher.removeObserver(self)
-                }
-                else {
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.publisher.removeObserver(self)
-                    }
                 }
             }
             

@@ -36,6 +36,7 @@ import CoreStore
 class ListPublisherTests: BaseTestDataTestCase {
 
     @objc
+    @MainActor
     dynamic func test_ThatListPublishers_CanReceiveInsertNotifications() {
 
         self.prepareStack { (stack) in
@@ -62,7 +63,7 @@ class ListPublisherTests: BaseTestDataTestCase {
             
             let saveExpectation = self.expectation(description: "save")
             stack.perform(
-                asynchronous: { (transaction) -> Bool in
+                asynchronous: { [dateFormatter] (transaction) -> Bool in
 
                     let object = transaction.create(Into<TestEntity1>())
                     object.testBoolean = NSNumber(value: true)
@@ -70,7 +71,7 @@ class ListPublisherTests: BaseTestDataTestCase {
                     object.testDecimal = NSDecimalNumber(string: "1")
                     object.testString = "nil:TestEntity1:1"
                     object.testData = ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                    object.testDate = self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
+                    object.testDate = dateFormatter.date(from: "2000-01-01T00:00:00Z")!
 
                     return transaction.hasChanges
                 },
@@ -92,6 +93,7 @@ class ListPublisherTests: BaseTestDataTestCase {
     }
 
     @objc
+    @MainActor
     dynamic func test_ThatListPublishers_CanReceiveUpdateNotifications() {
 
         self.prepareStack { (stack) in
@@ -126,7 +128,7 @@ class ListPublisherTests: BaseTestDataTestCase {
 
             let saveExpectation = self.expectation(description: "save")
             stack.perform(
-                asynchronous: { (transaction) -> Bool in
+                asynchronous: { [dateFormatter] (transaction) -> Bool in
 
                     if let object = try transaction.fetchOne(
                         From<TestEntity1>(),
@@ -136,7 +138,7 @@ class ListPublisherTests: BaseTestDataTestCase {
                         object.testDecimal = NSDecimalNumber(string: "11")
                         object.testString = "nil:TestEntity1:11"
                         object.testData = ("nil:TestEntity1:11" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                        object.testDate = self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!
+                        object.testDate = dateFormatter.date(from: "2000-01-11T00:00:00Z")!
                     }
                     else {
 
@@ -150,7 +152,7 @@ class ListPublisherTests: BaseTestDataTestCase {
                         object.testDecimal = NSDecimalNumber(string: "22")
                         object.testString = "nil:TestEntity1:22"
                         object.testData = ("nil:TestEntity1:22" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                        object.testDate = self.dateFormatter.date(from: "2000-01-22T00:00:00Z")!
+                        object.testDate = dateFormatter.date(from: "2000-01-22T00:00:00Z")!
                     }
                     else {
 
@@ -176,6 +178,7 @@ class ListPublisherTests: BaseTestDataTestCase {
     }
 
     @objc
+    @MainActor
     dynamic func test_ThatListPublishers_CanReceiveMoveNotifications() {
 
         self.prepareStack { (stack) in
@@ -242,6 +245,7 @@ class ListPublisherTests: BaseTestDataTestCase {
     }
 
     @objc
+    @MainActor
     dynamic func test_ThatListPublishers_CanReceiveDeleteNotifications() {
 
         self.prepareStack { (stack) in

@@ -31,7 +31,7 @@ import CoreData
 /**
  A storage interface that is backed only in memory.
  */
-public final class InMemoryStore: StorageInterface {
+public final class InMemoryStore: StorageInterface, @unchecked Sendable {
     
     /**
      Initializes an `InMemoryStore` for the specified configuration
@@ -66,7 +66,10 @@ public final class InMemoryStore: StorageInterface {
     /**
      The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.
      */
-    public let storeOptions: [AnyHashable: Any]? = nil
+    public var storeOptions: [AnyHashable: Any]? {
+        
+        return nil
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.

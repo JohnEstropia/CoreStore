@@ -175,7 +175,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     internal init(
         mainContext: NSManagedObjectContext,
         queue: DispatchQueue,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         super.init(
@@ -188,7 +188,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     internal func autoCommit(
-        _ completion: @escaping (
+        _ completion: @escaping @MainActor (
             _ hasChanges: Bool,
             _ error: CoreStoreError?
         ) -> Void
@@ -197,12 +197,14 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.isCommitted = true
         let group = DispatchGroup()
         group.enter()
+        
+        nonisolated(unsafe) let transaction = self
         self.context.saveAsynchronously(
             sourceIdentifier: self.sourceIdentifier,
             completion: { (hasChanges, error) -> Void in
                 
                 completion(hasChanges, error)
-                self.result = (hasChanges, error)
+                transaction.result = (hasChanges, error)
                 group.leave()
             }
         )

@@ -164,7 +164,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     internal init(
         mainContext: NSManagedObjectContext,
         queue: DispatchQueue,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         super.init(

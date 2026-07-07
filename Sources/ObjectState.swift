@@ -23,9 +23,9 @@
 //  SOFTWARE.
 //
 
-#if canImport(Combine) && canImport(SwiftUI)
+#if canImport(Observation) && canImport(SwiftUI)
 
-import Combine
+import Observation
 import SwiftUI
 
 
@@ -62,19 +62,22 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
      
      - parameter objectPublisher: The `ObjectPublisher` that the `ObjectState` will observe changes for
      */
+    @MainActor
     public init(_ objectPublisher: ObjectPublisher<O>?) {
         
-        self.observer = .init(objectPublisher: objectPublisher)
+        self._observer = .init(wrappedValue: .init(objectPublisher: objectPublisher))
     }
     
     
     // MARK: @propertyWrapper
     
+    @MainActor
     public var wrappedValue: ObjectSnapshot<O>? {
         
         return self.observer.item
     }
     
+    @MainActor
     public var projectedValue: ObjectPublisher<O>? {
         
         return self.observer.objectPublisher
@@ -91,18 +94,35 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     
     // MARK: Private
     
-    @ObservedObject
+    @State
     private var observer: Observer
     
     
     // MARK: - Observer
     
-    private final class Observer: ObservableObject {
+    @MainActor
+    private final class Observer: Observation.Observable {
         
-        @Published
-        var item: ObjectSnapshot<O>?
+        private let registrar = ObservationRegistrar()
+        private var _item: ObjectSnapshot<O>?
         
         let objectPublisher: ObjectPublisher<O>?
+        
+        var item: ObjectSnapshot<O>? {
+            
+            get {
+                
+                self.registrar.access(self, keyPath: \.item)
+                return self._item
+            }
+            set {
+                
+                self.registrar.withMutation(of: self, keyPath: \.item) {
+                    
+                    self._item = newValue
+                }
+            }
+        }
         
         init(objectPublisher: ObjectPublisher<O>?) {
 
@@ -112,12 +132,12 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             else {
 
                 self.objectPublisher = nil
-                self.item = nil
+                self._item = nil
                 return
             }
             
             self.objectPublisher = objectPublisher
-            self.item = objectPublisher.snapshot
+            self._item = objectPublisher.snapshot
             
             objectPublisher.addObserver(self) { [weak self] (objectPublisher) in
                 
@@ -129,7 +149,7 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             }
         }
         
-        deinit {
+        isolated deinit {
             
             self.objectPublisher?.removeObserver(self)
         }

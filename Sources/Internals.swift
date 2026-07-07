@@ -121,6 +121,7 @@ internal enum Internals {
 
         return closure()
     }
+    
 
     @inline(__always)
     internal static func autoreleasepool<T>(
@@ -129,7 +130,7 @@ internal enum Internals {
 
         return ObjectiveC.autoreleasepool(invoking: closure)
     }
-
+    
     @inline(__always)
     internal static func autoreleasepool<T>(
         _ closure: () throws(any Swift.Error) -> T
@@ -137,31 +138,65 @@ internal enum Internals {
 
         return try ObjectiveC.autoreleasepool(invoking: closure)
     }
-
+    
     @inline(__always)
-    internal static func autoreleasepool<T>(
-        _ closure: () throws(CoreStoreError) -> T
-    ) throws(CoreStoreError) -> T {
-
-        do {
-
-            return try ObjectiveC.autoreleasepool(invoking: closure)
-        }
-        catch {
-
-            throw CoreStoreError(error)
-        }
+    internal static func autoreleasepool<T, E>(
+        _ closure: () throws(E) -> T
+    ) throws(E) -> T {
+        
+        return try ObjectiveC.autoreleasepool(invoking: closure)
     }
-
+    
+    
     @inline(__always)
     internal static func withCheckedThrowingContinuation<T>(
         function: String = #function,
         _ body: (CheckedContinuation<T, any Swift.Error>) -> Void
-    ) async throws(any Swift.Error) -> T {
+    ) async throws(any Swift.Error) -> sending T {
 
         return try await _Concurrency.withCheckedThrowingContinuation(
             function: function,
             body
         )
+    }
+    
+    @inline(__always)
+    internal static func withCheckedThrowingContinuation<T, E>(
+        function: String = #function,
+        _ body: (CheckedContinuation<T, E>) -> Void
+    ) async throws(E) -> sending T {
+        
+        return try await _Concurrency.withCheckedThrowingContinuation(
+            function: function,
+            body
+        )
+    }
+    
+    
+    @inline(__always)
+    internal static func mainActorImmediate(
+        _ body: @escaping @MainActor () -> Void
+    ) {
+        
+        if #available(iOS 26.0, macOS 26.0, watchOS 26.0, tvOS 26.0, *) {
+            
+            Task.immediate { @MainActor in
+                
+                body()
+            }
+        }
+        else if Thread.isMainThread {
+            
+            MainActor.assumeIsolated {
+                body()
+            }
+        }
+        else {
+            
+            Task { @MainActor in
+                
+                body()
+            }
+        }
     }
 }

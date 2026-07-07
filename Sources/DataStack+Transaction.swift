@@ -38,12 +38,12 @@ extension DataStack {
      - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      - parameter completion: the closure executed after the save completes. The `Result` argument of the closure will either wrap the return value of `task`, or any uncaught errors thrown from within `task`. Cancelled `task`s will be indicated by `.failure(error: CoreStoreError.userCancelled)`. Custom errors thrown by the user will be wrapped in `CoreStoreError.userError(error: Error)`.
      */
-    public func perform<T>(
-        asynchronous task: @escaping (
+    public func perform<T: Sendable>(
+        asynchronous task: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
         ) throws(any Swift.Error) -> T,
-        sourceIdentifier: Any? = nil,
-        completion: @escaping (AsynchronousDataTransaction.Result<T>) -> Void
+        sourceIdentifier: (any Sendable)? = nil,
+        completion: @escaping @Sendable (AsynchronousDataTransaction.Result<T>) -> Void
     ) {
         
         self.perform(
@@ -63,22 +63,22 @@ extension DataStack {
      - parameter failure: the closure executed if the save fails or if any errors are thrown within `task`. Cancelled `task`s will be indicated by `CoreStoreError.userCancelled`. Custom errors thrown by the user will be wrapped in `CoreStoreError.userError(error: Error)`.
      */
     public func perform<T>(
-        asynchronous task: @escaping (
+        asynchronous task: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
         ) throws(any Swift.Error) -> T,
-        sourceIdentifier: Any? = nil,
-        success: @escaping (T) -> Void,
-        failure: @escaping (CoreStoreError) -> Void
+        sourceIdentifier: (any Sendable)? = nil,
+        success: @escaping @Sendable (sending T) -> Void,
+        failure: @escaping @Sendable (CoreStoreError) -> Void
     ) {
         
-        let transaction = AsynchronousDataTransaction(
+        nonisolated(unsafe) let transaction = AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
             sourceIdentifier: sourceIdentifier
         )
         transaction.transactionQueue.cs_async {
             
-            let userInfo: T
+            nonisolated(unsafe) let userInfo: T
             do {
                 
                 userInfo = try task(transaction)
@@ -125,7 +125,7 @@ extension DataStack {
             _ transaction: SynchronousDataTransaction
         ) throws(any Swift.Error) -> T,
         waitForAllObservers: Bool = true,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) throws(CoreStoreError) -> T {
 
         let transaction = SynchronousDataTransaction(
@@ -172,7 +172,7 @@ extension DataStack {
      */
     public func beginUnsafe(
         supportsUndo: Bool = false,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(

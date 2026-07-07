@@ -99,7 +99,7 @@ extension DispatchQueue {
 
     @nonobjc @inline(__always)
     internal func cs_async(
-        _ closure: @escaping () -> Void
+        _ closure: @escaping @Sendable () -> Void
     ) {
 
         self.async { autoreleasepool(invoking: closure) }
@@ -115,7 +115,7 @@ extension DispatchQueue {
     
     @nonobjc @inline(__always)
     internal func cs_barrierAsync(
-        _ closure: @escaping () -> Void
+        _ closure: @escaping @Sendable () -> Void
     ) {
 
         self.async(flags: .barrier) { autoreleasepool(invoking: closure) }

@@ -24,6 +24,7 @@
 //
 
 import XCTest
+import os
 
 @testable
 import CoreStore
@@ -34,6 +35,7 @@ import CoreStore
 class ObjectObserverTests: BaseTestDataTestCase {
     
     @objc
+    @MainActor
     dynamic func test_ThatObjectObservers_CanReceiveUpdateNotifications() {
         
         self.prepareStack { (stack) in
@@ -54,23 +56,27 @@ class ObjectObserverTests: BaseTestDataTestCase {
             XCTAssertEqual(monitor.object, object)
             XCTAssertFalse(monitor.isObjectDeleted)
             
-            var events = 0
+            let events: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
             
             _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:willUpdateObject:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(events, 0)
-                    XCTAssertEqual(
-                        ((note.userInfo as NSDictionary?) ?? [:]),
-                        ["object": object] as NSDictionary
-                    )
-                    defer {
+                    nonisolated(unsafe) let note = note
+                    return events.withLock { events in
                         
-                        events += 1
+                        XCTAssertEqual(events, 0)
+                        XCTAssertEqual(
+                            ((note.userInfo as NSDictionary?) ?? [:]),
+                            ["object": object] as NSDictionary
+                        )
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 0
                     }
-                    return events == 0
                 }
             )
             _ = self.expectation(
@@ -78,28 +84,32 @@ class ObjectObserverTests: BaseTestDataTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(events, 1)
-                    XCTAssertEqual(
-                        ((note.userInfo as NSDictionary?) ?? [:]),
-                        [
-                            "object": object,
-                            "changedPersistentKeys": Set(
-                                [
-                                    #keyPath(TestEntity1.testNumber),
-                                    #keyPath(TestEntity1.testString)
-                                ]
-                            )
-                        ] as NSDictionary
-                    )
-                    let object = note.userInfo?["object"] as? TestEntity1
-                    XCTAssertEqual(object?.testNumber, NSNumber(value: 10))
-                    XCTAssertEqual(object?.testString, "nil:TestEntity1:10")
-                    
-                    defer {
+                    nonisolated(unsafe) let note = note
+                    return events.withLock { events in
                         
-                        events += 1
+                        XCTAssertEqual(events, 1)
+                        XCTAssertEqual(
+                            ((note.userInfo as NSDictionary?) ?? [:]),
+                            [
+                                "object": object,
+                                "changedPersistentKeys": Set(
+                                    [
+                                        #keyPath(TestEntity1.testNumber),
+                                        #keyPath(TestEntity1.testString)
+                                    ]
+                                )
+                            ] as NSDictionary
+                        )
+                        let object = note.userInfo?["object"] as? TestEntity1
+                        XCTAssertEqual(object?.testNumber, NSNumber(value: 10))
+                        XCTAssertEqual(object?.testString, "nil:TestEntity1:10")
+                        
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 1
                     }
-                    return events == 1
                 }
             )
             let saveExpectation = self.expectation(description: "save")
@@ -131,6 +141,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatObjectObservers_CanReceiveDeleteNotifications() {
         
         self.prepareStack { (stack) in
@@ -151,23 +162,27 @@ class ObjectObserverTests: BaseTestDataTestCase {
             XCTAssertEqual(monitor.object, object)
             XCTAssertFalse(monitor.isObjectDeleted)
             
-            var events = 0
+            let events: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
             
             _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:didDeleteObject:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(events, 0)
-                    XCTAssertEqual(
-                        ((note.userInfo as NSDictionary?) ?? [:]),
-                        ["object": object] as NSDictionary
-                    )
-                    defer {
+                    nonisolated(unsafe) let note = note
+                    return events.withLock { events in
                         
-                        events += 1
+                        XCTAssertEqual(events, 0)
+                        XCTAssertEqual(
+                            ((note.userInfo as NSDictionary?) ?? [:]),
+                            ["object": object] as NSDictionary
+                        )
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 0
                     }
-                    return events == 0
                 }
             )
             let saveExpectation = self.expectation(description: "save")
@@ -202,7 +217,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
 
 // MARK: TestObjectObserver
 
-class TestObjectObserver: ObjectObserver {
+final class TestObjectObserver: ObjectObserver {
     
     typealias ObjectEntityType = TestEntity1
     

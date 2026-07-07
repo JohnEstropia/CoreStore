@@ -45,7 +45,7 @@ public enum LogLevel {
 /**
  Custom loggers should implement the `CoreStoreLogger` protocol and pass its instance to `CoreStoreDefaults.logger`. Calls to `log(...)`, `assert(...)`, and `abort(...)` are not tied to a specific queue/thread, so it is the implementer's job to handle thread-safety.
  */
-public protocol CoreStoreLogger {
+public protocol CoreStoreLogger: Sendable {
     
     /**
      Handles log messages sent by the `CoreStore` framework.

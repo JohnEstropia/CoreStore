@@ -23,9 +23,9 @@
 //  SOFTWARE.
 //
 
-#if canImport(Combine) && canImport(SwiftUI)
+#if canImport(Observation) && canImport(SwiftUI)
 
-import Combine
+import Observation
 import SwiftUI
 
 
@@ -65,11 +65,12 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter listPublisher: The `ListPublisher` that the `ListState` will observe changes for
      */
+    @MainActor
     public init(
         _ listPublisher: ListPublisher<Object>
     ) {
         
-        self.observer = .init(listPublisher: listPublisher)
+        self._observer = .init(wrappedValue: .init(listPublisher: listPublisher))
     }
     
     /**
@@ -98,6 +99,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      */
+    @MainActor
     public init<B: FetchChainableBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
@@ -139,6 +141,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      */
+    @MainActor
     public init<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
@@ -174,6 +177,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
         _ from: From<Object>,
         _ fetchClauses: FetchClause...,
@@ -212,6 +216,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
         _ from: From<Object>,
         _ fetchClauses: [FetchClause],
@@ -256,6 +261,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
         _ from: From<Object>,
         _ sectionBy: SectionBy<Object>,
@@ -303,6 +309,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
         _ from: From<Object>,
         _ sectionBy: SectionBy<Object>,
@@ -316,11 +323,13 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     
     // MARK: @propertyWrapper
     
+    @MainActor
     public var wrappedValue: ListSnapshot<Object> {
         
         return self.observer.items
     }
     
+    @MainActor
     public var projectedValue: ListPublisher<Object> {
         
         return self.observer.listPublisher
@@ -337,23 +346,40 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     
     // MARK: Private
     
-    @ObservedObject
+    @State
     private var observer: Observer
     
     
     // MARK: - Observer
     
-    private final class Observer: ObservableObject {
+    @MainActor
+    private final class Observer: Observation.Observable {
         
-        @Published
-        var items: ListSnapshot<Object>
+        private let registrar = ObservationRegistrar()
+        private var _items: ListSnapshot<Object>
         
         let listPublisher: ListPublisher<Object>
+        
+        var items: ListSnapshot<Object> {
+            
+            get {
+                
+                self.registrar.access(self, keyPath: \.items)
+                return self._items
+            }
+            set {
+                
+                self.registrar.withMutation(of: self, keyPath: \.items) {
+                    
+                    self._items = newValue
+                }
+            }
+        }
         
         init(listPublisher: ListPublisher<Object>) {
             
             self.listPublisher = listPublisher
-            self.items = listPublisher.snapshot
+            self._items = listPublisher.snapshot
             
             listPublisher.addObserver(self) { [weak self] (listPublisher) in
                 
@@ -365,7 +391,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
             }
         }
         
-        deinit {
+        isolated deinit {
             
             self.listPublisher.removeObserver(self)
         }

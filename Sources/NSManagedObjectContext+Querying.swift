@@ -292,30 +292,23 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     internal func fetchObjectIDs(
         _ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObjectID>
     ) throws(CoreStoreError) -> [NSManagedObjectID] {
-
-        var fetchResults: [NSManagedObjectID]?
-        var fetchError: Error?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            return try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.dynamicCast())
-            }
-            catch {
-                
-                fetchError = error
+                return try self.fetch(fetchRequest.staticCast())
             }
         }
-        if let fetchResults = fetchResults {
-
-            return fetchResults
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing query request."
+            )
+            throw coreStoreError
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
     }
     
     
@@ -442,30 +435,24 @@ extension NSManagedObjectContext {
     internal func fetchOne<O: NSManagedObject>(
         _ fetchRequest: Internals.CoreStoreFetchRequest<O>
     ) throws(CoreStoreError) -> O? {
-
-        var fetchResults: [O]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            let fetchResults = try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
+                return try self.fetch(fetchRequest.staticCast())
             }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if let fetchResults = fetchResults {
-
             return fetchResults.first
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing fetch request."
+            )
+            throw coreStoreError
+        }
     }
     
     @nonobjc
@@ -473,89 +460,74 @@ extension NSManagedObjectContext {
         _ fetchRequest: Internals.CoreStoreFetchRequest<O>
     ) throws(CoreStoreError) -> [O] {
 
-        var fetchResults: [O]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        do {
             
-            do {
+            return try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
-            }
-            catch {
-                
-                fetchError = error
+                return try self.fetch(fetchRequest.staticCast())
             }
         }
-        if let fetchResults = fetchResults {
-
-            return fetchResults
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing fetch request."
+            )
+            throw coreStoreError
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
     }
     
     @nonobjc
     internal func fetchCount(
         _ fetchRequest: Internals.CoreStoreFetchRequest<NSNumber>
     ) throws(CoreStoreError) -> Int {
-
-        var count = 0
-        var countError: (any Swift.Error)?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            let count = try self.performAndWait {
                 
-                count = try self.count(for: fetchRequest.staticCast())
+                return try self.count(for: fetchRequest.staticCast())
             }
-            catch {
-                
-                countError = error
-            }
-        }
-        if count == NSNotFound {
+            guard count != NSNotFound else {
 
-            let coreStoreError = CoreStoreError(countError)
+                throw CoreStoreError(nil)
+            }
+            return count
+        }
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
             Internals.log(
                 coreStoreError,
                 "Failed executing count request."
             )
             throw coreStoreError
         }
-        return count
     }
     
     @nonobjc
     internal func fetchObjectID(
         _ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObjectID>
     ) throws(CoreStoreError) -> NSManagedObjectID? {
-
-        var fetchResults: [NSManagedObjectID]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            let fetchResults = try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
+                return try self.fetch(fetchRequest.staticCast())
             }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if let fetchResults = fetchResults {
-
             return fetchResults.first
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing fetch request."
+            )
+            throw coreStoreError
+        }
     }
     
     
@@ -566,35 +538,29 @@ extension NSManagedObjectContext {
         _ selectTerms: [SelectTerm<O>],
         fetchRequest: Internals.CoreStoreFetchRequest<NSDictionary>
     ) throws(CoreStoreError) -> U? {
-
-        var fetchResults: [Any]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            let fetchResults = try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
+                return try self.fetch(fetchRequest.staticCast())
             }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if let fetchResults = fetchResults {
-            
-            if let rawResult = fetchResults.first as? NSDictionary,
+            if let rawResult = fetchResults.first,
                 let rawObject = rawResult[selectTerms.first!.keyPathString] as? U.QueryableNativeType {
                 
                 return Select<O, U>.ReturnType.cs_fromQueryableNativeType(rawObject)
             }
             return nil
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing query request."
+            )
+            throw coreStoreError
+        }
     }
     
     @nonobjc
@@ -603,64 +569,52 @@ extension NSManagedObjectContext {
         fetchRequest: Internals.CoreStoreFetchRequest<NSDictionary>
     ) throws(CoreStoreError) -> Any? {
 
-        var fetchResults: [Any]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        do {
             
-            do {
+            let fetchResults = try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
+                return try self.fetch(fetchRequest.staticCast())
             }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if let fetchResults = fetchResults {
-            
-            if let rawResult = fetchResults.first as? NSDictionary,
+            if let rawResult = fetchResults.first,
                 let rawObject = rawResult[selectTerms.first!.keyPathString] {
                 
                 return rawObject
             }
             return nil
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing query request."
+            )
+            throw coreStoreError
+        }
     }
     
     @nonobjc
     internal func queryAttributes(
         _ fetchRequest: Internals.CoreStoreFetchRequest<NSDictionary>
     ) throws(CoreStoreError) -> [[String: Any]] {
-
-        var fetchResults: [Any]?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            let fetchResults = try self.performAndWait {
                 
-                fetchResults = try self.fetch(fetchRequest.staticCast())
+                return try self.fetch(fetchRequest.staticCast())
             }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if let fetchResults = fetchResults {
-            
             return NSDictionary.cs_fromQueryResultsNativeType(fetchResults)
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing fetch request."
-        )
-        throw coreStoreError
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing query request."
+            )
+            throw coreStoreError
+        }
     }
     
     
@@ -671,36 +625,29 @@ extension NSManagedObjectContext {
         _ fetchRequest: Internals.CoreStoreFetchRequest<O>
     ) throws(CoreStoreError) -> Int {
 
-        var numberOfDeletedObjects: Int?
-        var fetchError: (any Swift.Error)?
-        self.performAndWait {
+        do {
             
-            Internals.autoreleasepool {
-
-                do {
+            return try self.performAndWait {
+                
+                return try Internals.autoreleasepool {
                     
                     let fetchResults = try self.fetch(fetchRequest.staticCast())
                     for object in fetchResults {
                         
                         self.delete(object)
                     }
-                    numberOfDeletedObjects = fetchResults.count
-                }
-                catch {
-                    
-                    fetchError = error
+                    return fetchResults.count
                 }
             }
         }
-        if let numberOfDeletedObjects = numberOfDeletedObjects {
-
-            return numberOfDeletedObjects
+        catch {
+            
+            let coreStoreError = CoreStoreError(error)
+            Internals.log(
+                coreStoreError,
+                "Failed executing delete request."
+            )
+            throw coreStoreError
         }
-        let coreStoreError = CoreStoreError(fetchError)
-        Internals.log(
-            coreStoreError,
-            "Failed executing delete request."
-        )
-        throw coreStoreError
     }
 }

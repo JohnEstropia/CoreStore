@@ -192,8 +192,8 @@ extension NSManagedObjectContext {
 
     private struct PropertyKeys {
 
-        static var observerForWillSaveNotification: Void?
-        static var shouldCascadeSavesToParent: Void?
+        static nonisolated(unsafe) var observerForWillSaveNotification: Void?
+        static nonisolated(unsafe) var shouldCascadeSavesToParent: Void?
     }
 
 

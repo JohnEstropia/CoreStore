@@ -34,6 +34,7 @@ import CoreStore
 class ObjectPublisherTests: BaseTestDataTestCase {
 
     @objc
+    @MainActor
     dynamic func test_ThatObjectPublishers_CanReceiveUpdateNotifications() {
 
         self.prepareStack { (stack) in
@@ -93,6 +94,7 @@ class ObjectPublisherTests: BaseTestDataTestCase {
     }
 
     @objc
+    @MainActor
     dynamic func test_ThatObjectPublishers_CanReceiveDeleteNotifications() {
 
         self.prepareStack { (stack) in
