@@ -127,7 +127,7 @@ extension DiffableDataSource {
             cellForItemAt indexPath: IndexPath
         ) -> UICollectionViewCell {
 
-            guard let objectID = self.itemID(for: indexPath) else {
+            guard let objectID: NSManagedObjectID = self.itemID(for: indexPath) else {
 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }

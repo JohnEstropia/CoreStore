@@ -4,66 +4,75 @@
 
 import Foundation
 import UIKit
-import Combine
 
 // MARK: - ImageDownloader
 
-final class ImageDownloader: ObservableObject {
-    
-    // MARK: FilePrivate
-    
+@MainActor
+final class ImageDownloader {
+
+    // MARK: Internal
+
     private(set) var image: UIImage?
-    
+
     let url: URL?
-    
+
     init(url: URL?) {
-        
+
         self.url = url
-        guard let url = url else {
-            
+        guard let url else {
+
             return
         }
         if let image = Self.cache[url] {
-            
+
             self.image = image
         }
     }
-    
+
     func fetchImage(completion: @escaping (UIImage) -> Void = { _ in }) {
-        
-        guard let url = url else {
-            
+
+        guard let url else {
+
             return
         }
         if let image = Self.cache[url] {
-            
-            self.objectWillChange.send()
+
             self.image = image
             completion(image)
             return
         }
-        self.cancellable = URLSession.shared
-            .dataTaskPublisher(for: url)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { _ in },
-                receiveValue: { output in
-                    
-                    if let image = UIImage(data: output.data) {
-                        
-                        Self.cache[url] = image
-                        self.objectWillChange.send()
-                        self.image = image
-                        completion(image)
-                    }
+
+        self.task = Task { [weak self] in
+            
+            guard let self else {
+
+                return
+            }
+            do {
+                
+                let (data, _) = try await URLSession.shared.data(from: url)
+                guard
+                    !Task.isCancelled,
+                    let image = UIImage(data: data)
+                else {
+
+                    return
                 }
-            )
+                Self.cache[url] = image
+                self.image = image
+                completion(image)
+            }
+            catch {
+                
+                return
+            }
+        }
     }
-    
-    
+
+
     // MARK: Private
-    
+
     private static var cache: [URL: UIImage] = [:]
-    
-    private var cancellable: AnyCancellable?
+
+    private var task: Task<Void, Never>?
 }

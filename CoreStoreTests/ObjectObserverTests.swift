@@ -24,7 +24,6 @@
 //
 
 import XCTest
-import os
 
 @testable
 import CoreStore
@@ -56,7 +55,8 @@ class ObjectObserverTests: BaseTestDataTestCase {
             XCTAssertEqual(monitor.object, object)
             XCTAssertFalse(monitor.isObjectDeleted)
             
-            let events: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
+            let events: Internals.Mutex<Int> = .init(0)
+            let persistentID = object.persistentID()
             
             _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:willUpdateObject:"),
@@ -68,8 +68,8 @@ class ObjectObserverTests: BaseTestDataTestCase {
                         
                         XCTAssertEqual(events, 0)
                         XCTAssertEqual(
-                            ((note.userInfo as NSDictionary?) ?? [:]),
-                            ["object": object] as NSDictionary
+                            (note.userInfo?["object"] as? TestEntity1)?.persistentID(),
+                            persistentID
                         )
                         defer {
                             
@@ -89,16 +89,17 @@ class ObjectObserverTests: BaseTestDataTestCase {
                         
                         XCTAssertEqual(events, 1)
                         XCTAssertEqual(
-                            ((note.userInfo as NSDictionary?) ?? [:]),
-                            [
-                                "object": object,
-                                "changedPersistentKeys": Set(
-                                    [
-                                        #keyPath(TestEntity1.testNumber),
-                                        #keyPath(TestEntity1.testString)
-                                    ]
-                                )
-                            ] as NSDictionary
+                            (note.userInfo?["object"] as? TestEntity1)?.persistentID(),
+                            persistentID
+                        )
+                        XCTAssertEqual(
+                            note.userInfo?["changedPersistentKeys"] as? Set<String>,
+                            Set(
+                                [
+                                    #keyPath(TestEntity1.testNumber),
+                                    #keyPath(TestEntity1.testString)
+                                ]
+                            )
                         )
                         let object = note.userInfo?["object"] as? TestEntity1
                         XCTAssertEqual(object?.testNumber, NSNumber(value: 10))
@@ -116,7 +117,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
                     
-                    guard let object = transaction.edit(object) else {
+                    guard let object = transaction.edit(persistentID) else {
                         
                         XCTFail()
                         try transaction.cancel()
@@ -162,7 +163,8 @@ class ObjectObserverTests: BaseTestDataTestCase {
             XCTAssertEqual(monitor.object, object)
             XCTAssertFalse(monitor.isObjectDeleted)
             
-            let events: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
+            let events: Internals.Mutex<Int> = .init(0)
+            let persistentID = object.persistentID()
             
             _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "objectMonitor:didDeleteObject:"),
@@ -174,8 +176,8 @@ class ObjectObserverTests: BaseTestDataTestCase {
                         
                         XCTAssertEqual(events, 0)
                         XCTAssertEqual(
-                            ((note.userInfo as NSDictionary?) ?? [:]),
-                            ["object": object] as NSDictionary
+                            (note.userInfo?["object"] as? TestEntity1)?.persistentID(),
+                            persistentID
                         )
                         defer {
                             
@@ -189,7 +191,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
                     
-                    guard let object = transaction.edit(object) else {
+                    guard let object = transaction.edit(persistentID) else {
                         
                         XCTFail()
                         try transaction.cancel()

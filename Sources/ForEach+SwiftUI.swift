@@ -59,9 +59,9 @@ extension ForEach where Content: View {
     public init<O: DynamicObject>(
         _ objectSnapshots: Data,
         @ViewBuilder content: @escaping (ObjectSnapshot<O>) -> Content
-    ) where Data.Element == ObjectSnapshot<O>, ID == O.ObjectID {
+    ) where Data.Element == ObjectSnapshot<O>, ID == NSManagedObjectID {
         
-        self.init(objectSnapshots, id: \.cs_objectID, content: content)
+        self.init(objectSnapshots, id: \.managedObjectID, content: content)
     }
 
     /**
@@ -89,9 +89,9 @@ extension ForEach where Content: View {
     public init<O: DynamicObject>(
         objectIn listSnapshot: Data,
         @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
-    ) where Data == ListSnapshot<O>, ID == O.ObjectID {
+    ) where Data == ListSnapshot<O>, ID == NSManagedObjectID {
         
-        self.init(listSnapshot, id: \.cs_objectID, content: content)
+        self.init(listSnapshot, id: \.managedObjectID, content: content)
     }
     
     /**
@@ -118,9 +118,9 @@ extension ForEach where Content: View {
     public init<O: DynamicObject>(
         objectIn objectPublishers: Data,
         @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
-    ) where Data.Element == ObjectPublisher<O>, ID == O.ObjectID {
+    ) where Data.Element == ObjectPublisher<O>, ID == NSManagedObjectID {
         
-        self.init(objectPublishers, id: \.cs_objectID, content: content)
+        self.init(objectPublishers, id: \.managedObjectID, content: content)
     }
     
     /**
@@ -191,9 +191,9 @@ extension ForEach where Content: View {
     public init<O: DynamicObject>(
         objectIn sectionInfo: Data,
         @ViewBuilder content: @escaping (ObjectPublisher<O>) -> Content
-    ) where Data == ListSnapshot<O>.SectionInfo, ID == O.ObjectID {
+    ) where Data == ListSnapshot<O>.SectionInfo, ID == NSManagedObjectID {
         
-        self.init(sectionInfo, id: \.cs_objectID, content: content)
+        self.init(sectionInfo, id: \.managedObjectID, content: content)
     }
 }
 

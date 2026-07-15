@@ -39,7 +39,7 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation, @unchecked Sendable {
+public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentation, Sendable {
     
     /**
      Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
@@ -71,6 +71,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
+    @MainActor
     public func addObserver<U: ObjectObserver & Sendable>(_ observer: U) where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
@@ -111,6 +112,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      
      - parameter observer: an `ObjectObserver` to unregister notifications to
      */
+    @MainActor
     public func removeObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
@@ -165,11 +167,13 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     // MARK: AnyObjectRepresentation
     
-    public func objectID() -> O.ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
         
         return self.id
     }
     
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.context.parentStack
@@ -182,7 +186,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
-        return dataStack.unsafeContext().objectPublisher(objectID: self.id)
+        return dataStack.unsafeContext().objectPublisher(managedObjectID: self.id)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
@@ -198,20 +202,20 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
         
         let context = dataStack.unsafeContext()
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.id, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
         
         let context = transaction.unsafeContext()
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.id, context: context)
     }
     
     
     // MARK: Internal
     
     internal init(
-        objectID: O.ObjectID,
+        objectID: NSManagedObjectID,
         context: NSManagedObjectContext
     ) {
         
@@ -240,9 +244,13 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         try! fetchedResultsController.performFetchFromSpecifiedStores()
         
-        self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
+        self.lastCommittedAttributes.withLock {
+            
+            $0 = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
+        }
     }
     
+    @MainActor
     internal func registerObserver<U: AnyObject & Sendable>(
         _ observer: U,
         willChangeObject: @escaping @Sendable (
@@ -303,25 +311,29 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
                     
                     return
                 }
-                
-                let previousCommitedAttributes = self.lastCommittedAttributes
-                let currentCommitedAttributes = object.cs_toRaw().committedValues(forKeys: nil) as! [String: NSObject]
-                
-                var changedKeys = Set<String>()
-                for key in currentCommitedAttributes.keys {
+                let changedKeys = self.lastCommittedAttributes.withLock {
                     
-                    if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
+                    let previousCommitedAttributes = $0
+                    let currentCommitedAttributes = object.cs_toRaw().committedValues(forKeys: nil) as! [String: NSObject]
+                    
+                    var changedKeys = Set<String>()
+                    for key in currentCommitedAttributes.keys {
                         
-                        changedKeys.insert(key)
+                        if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
+                            
+                            changedKeys.insert(key)
+                        }
                     }
+                    
+                    $0 = currentCommitedAttributes
+                    return changedKeys
                 }
-                
-                self.lastCommittedAttributes = currentCommitedAttributes
                 didUpdateObject(observer, monitor, object, changedKeys)
             }
         )
     }
     
+    @MainActor
     internal func unregisterObserver(_ observer: AnyObject) {
         
         Internals.assert(
@@ -343,14 +355,14 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     // MARK: Private
     
-    private let id: O.ObjectID
+    private let id: NSManagedObjectID
     private let fetchedResultsController: Internals.CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
-    private var lastCommittedAttributes = [String: NSObject]()
+    private let lastCommittedAttributes: Internals.Mutex<[String: NSObject]> = .init([:])
     
-    private var willChangeObjectKey: Void?
-    private var didDeleteObjectKey: Void?
-    private var didUpdateObjectKey: Void?
+    private nonisolated(unsafe) var willChangeObjectKey: Void?
+    private nonisolated(unsafe) var didDeleteObjectKey: Void?
+    private nonisolated(unsafe) var didUpdateObjectKey: Void?
 
     private var context: NSManagedObjectContext {
 

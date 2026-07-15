@@ -2,64 +2,48 @@
 // Demo
 // Copyright © 2020 John Rommel Estropia, Inc. All rights reserved.
 
-import Foundation
-import Combine
+import CoreData
 import CoreStore
-import UIKit
+import Foundation
+import Observation
 
 
 // MARK: - Modern.PokedexDemo
 
 extension Modern.PokedexDemo {
-
+    
     // MARK: - Modern.PokedexDemo.Service
-
-    final class Service: ObservableObject {
+    
+    @MainActor
+    @Observable
+    final class Service {
         
         /**
          ⭐️ Sample 1: Importing a list of JSON data into `ImportableUniqueObject`s whose `ImportSource` are tuples
          */
-        private static func importPokedexEntries(
-            from output: URLSession.DataTaskPublisher.Output
-        ) -> Future<Void, Modern.PokedexDemo.Service.Error> {
+        private static func importPokedexEntries(from data: Data) async throws {
             
-            return .init { promise in
+            do {
                 
-                Modern.PokedexDemo.dataStack.perform(
-                    asynchronous: { transaction -> Void in
-
-                        let json: Dictionary<String, Any> = try self.parseJSON(
-                            try JSONSerialization.jsonObject(with: output.data, options: [])
-                        )
-                        let results: [Dictionary<String, Any>] = try self.parseJSON(
-                            json["results"]
-                        )
-                        _ = try transaction.importUniqueObjects(
-                            Into<Modern.PokedexDemo.PokedexEntry>(),
-                            sourceArray: results.enumerated().map { (index, json) in
-                                (index: index, json: json)
-                            }
-                        )
-                    },
-                    success: { result in
-
-                        promise(.success(result))
-                    },
-                    failure: { error in
-                        
-                        switch error {
-                        
-                        case .userError(let error as Modern.PokedexDemo.Service.Error):
-                            promise(.failure(error))
-                            
-                        case .userError(let error):
-                            promise(.failure(.otherError(error)))
-                            
-                        case let error:
-                            promise(.failure(.saveError(error)))
+                try await Modern.PokedexDemo.dataStack.async.perform { transaction -> Void in
+                    
+                    let json: Dictionary<String, Any> = try self.parseJSON(
+                        try JSONSerialization.jsonObject(with: data, options: [])
+                    )
+                    let results: [Dictionary<String, Any>] = try self.parseJSON(
+                        json["results"]
+                    )
+                    _ = try transaction.importUniqueObjects(
+                        Into<Modern.PokedexDemo.PokedexEntry>(),
+                        sourceArray: results.enumerated().map { index, json in
+                            (index: index, json: json)
                         }
-                    }
-                )
+                    )
+                }
+            }
+            catch {
+                
+                throw self.mapError(error)
             }
         }
         
@@ -67,134 +51,93 @@ extension Modern.PokedexDemo {
          ⭐️ Sample 2: Importing a single JSON data into an `ImportableUniqueObject` whose `ImportSource` is a JSON `Dictionary`
          */
         private static func importSpecies(
-            for details: ObjectSnapshot<Modern.PokedexDemo.Details>,
-            from output: URLSession.DataTaskPublisher.Output
-        ) -> Future<ObjectSnapshot<Modern.PokedexDemo.Species>, Modern.PokedexDemo.Service.Error> {
+            for detailsObjectID: NSManagedObjectID,
+            from data: Data
+        ) async throws -> ObjectSnapshot<Modern.PokedexDemo.Species> {
             
-            return .init { promise in
+            let speciesObjectID = try await Modern.PokedexDemo.dataStack.async.perform { transaction -> NSManagedObjectID in
                 
-                Modern.PokedexDemo.dataStack.perform(
-                    asynchronous: { transaction -> Modern.PokedexDemo.Species in
-
-                        let json: Dictionary<String, Any> = try self.parseJSON(
-                            try JSONSerialization.jsonObject(with: output.data, options: [])
-                        )
-                        guard
-                            let species = try transaction.importUniqueObject(
-                                Into<Modern.PokedexDemo.Species>(),
-                                source: json
-                            )
-                        else {
-                            
-                            throw Modern.PokedexDemo.Service.Error.unexpected
-                        }
-                        details.asEditable(in: transaction)?.species = species
-                        return species
-                    },
-                    success: { species in
-                        
-                        promise(.success(species.asSnapshot(in: Modern.PokedexDemo.dataStack)!))
-                    },
-                    failure: { error in
-                        
-                        switch error {
-                        
-                        case .userError(let error as Modern.PokedexDemo.Service.Error):
-                            promise(.failure(error))
-                            
-                        case .userError(let error):
-                            promise(.failure(.otherError(error)))
-                            
-                        case let error:
-                            promise(.failure(.saveError(error)))
-                        }
-                    }
+                let json: Dictionary<String, Any> = try self.parseJSON(
+                    try JSONSerialization.jsonObject(with: data, options: [])
                 )
+                guard
+                    let species = try transaction.importUniqueObject(
+                        Into<Modern.PokedexDemo.Species>(),
+                        source: json
+                    )
+                else {
+                    
+                    throw Modern.PokedexDemo.Service.Error.unexpected
+                }
+                transaction
+                    .edit(Into<Modern.PokedexDemo.Details>(), detailsObjectID)?
+                    .species = species
+                return species.objectID()
             }
+            guard
+                let species: Modern.PokedexDemo.Species = Modern.PokedexDemo.dataStack.fetchExisting(speciesObjectID),
+                let snapshot = species.asSnapshot()
+            else {
+                
+                throw Modern.PokedexDemo.Service.Error.unexpected
+            }
+            return snapshot
         }
         
         /**
          ⭐️ Sample 3: Importing a list of JSON data into `ImportableUniqueObject`s whose `ImportSource` are JSON `Dictionary`s
          */
         private static func importForms(
-            for details: ObjectSnapshot<Modern.PokedexDemo.Details>,
-            from outputs: [URLSession.DataTaskPublisher.Output]
-        ) -> Future<Void, Modern.PokedexDemo.Service.Error> {
+            for detailsObjectID: NSManagedObjectID,
+            from dataArray: [Data]
+        ) async throws {
             
-            return .init { promise in
+            do {
                 
-                Modern.PokedexDemo.dataStack.perform(
-                    asynchronous: { transaction -> Void in
-
-                        let forms = try transaction.importUniqueObjects(
-                            Into<Modern.PokedexDemo.Form>(),
-                            sourceArray: outputs.map { output in
-                                
-                                return try self.parseJSON(
-                                    try JSONSerialization.jsonObject(with: output.data, options: [])
-                                )
-                            }
-                        )
-                        guard !forms.isEmpty else {
+                try await Modern.PokedexDemo.dataStack.async.perform { transaction -> Void in
+                    
+                    let forms = try transaction.importUniqueObjects(
+                        Into<Modern.PokedexDemo.Form>(),
+                        sourceArray: dataArray.map { data in
                             
-                            throw Modern.PokedexDemo.Service.Error.unexpected
+                            try self.parseJSON(
+                                try JSONSerialization.jsonObject(with: data, options: [])
+                            ) as [String: Any]
                         }
-                        details.asEditable(in: transaction)?.forms = forms
-                    },
-                    success: {
+                    )
+                    guard !forms.isEmpty else {
                         
-                        promise(.success(()))
-                    },
-                    failure: { error in
-                        
-                        switch error {
-                        
-                        case .userError(let error as Modern.PokedexDemo.Service.Error):
-                            promise(.failure(error))
-                            
-                        case .userError(let error):
-                            promise(.failure(.otherError(error)))
-                            
-                        case let error:
-                            promise(.failure(.saveError(error)))
-                        }
+                        throw Modern.PokedexDemo.Service.Error.unexpected
                     }
-                )
+                    transaction
+                        .edit(Into<Modern.PokedexDemo.Details>(), detailsObjectID)?
+                        .forms = forms
+                }
+            }
+            catch {
+                
+                throw self.mapError(error)
             }
         }
         
-
+        
         // MARK: Internal
-
-        private(set) var isLoading: Bool = false {
-            
-            willSet {
-                
-                self.objectWillChange.send()
-            }
-        }
         
-        private(set) var lastError: (error: Modern.PokedexDemo.Service.Error, retry: () -> Void)? {
-            
-            willSet {
-                
-                self.objectWillChange.send()
-            }
-        }
-
+        private(set) var isLoading: Bool = false
+        
         init() {}
-
-        static func parseJSON<Output>(
+        
+        static nonisolated func parseJSON<Output>(
             _ json: Any?,
             file: StaticString = #file,
             line: Int = #line
         ) throws -> Output {
-
+            
             switch json {
-
+                
             case let json as Output:
                 return json
-
+                
             case let any:
                 throw Modern.PokedexDemo.Service.Error.parseError(
                     expected: Output.self,
@@ -203,20 +146,20 @@ extension Modern.PokedexDemo {
                 )
             }
         }
-
-        static func parseJSON<JSONType, Output>(
+        
+        static nonisolated func parseJSON<JSONType, Output>(
             _ json: Any?,
             transformer: (JSONType) throws -> Output?,
             file: StaticString = #file,
             line: Int = #line
         ) throws -> Output {
-
+            
             switch json {
-
+                
             case let json as JSONType:
                 let transformed = try transformer(json)
                 if let json = transformed {
-
+                    
                     return json
                 }
                 throw Modern.PokedexDemo.Service.Error.parseError(
@@ -224,7 +167,7 @@ extension Modern.PokedexDemo {
                     actual: type(of: transformed),
                     file: "\(file):\(line)"
                 )
-
+                
             case let any:
                 throw Modern.PokedexDemo.Service.Error.parseError(
                     expected: Output.self,
@@ -233,69 +176,17 @@ extension Modern.PokedexDemo {
                 )
             }
         }
-
+        
         func fetchPokedexEntries() {
-
-            self.cancellable["pokedexEntries"] = self.pokedexEntries
-                .receive(on: DispatchQueue.main)
-                .handleEvents(
-                    receiveSubscription: { [weak self] _ in
-
-                        guard let self = self else {
-
-                            return
-                        }
-                        self.lastError = nil
-                        self.isLoading = true
-                    }
-                )
-                .sink(
-                    receiveCompletion: { [weak self] completion in
-
-                        guard let self = self else {
-
-                            return
-                        }
-                        self.isLoading = false
-                        switch completion {
-
-                        case .finished:
-                            self.lastError = nil
-
-                        case .failure(let error):
-                            print(error)
-                            self.lastError = (
-                                error: error,
-                                retry: { [weak self] in
-
-                                    self?.fetchPokedexEntries()
-                                }
-                            )
-                        }
-                    },
-                    receiveValue: {}
-                )
+            
+            self.pokedexEntriesTask?.cancel()
+            self.pokedexEntriesTask = Task { [weak self] in
+                
+                await self?.runFetchPokedexEntries()
+            }
         }
         
         func fetchDetails(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
-            
-            self.fetchSpeciesIfNeeded(for: pokedexEntry)
-        }
-
-
-        // MARK: Private
-
-        private var cancellable: Dictionary<String, AnyCancellable> = [:]
-
-        private lazy var pokedexEntries: AnyPublisher<Void, Modern.PokedexDemo.Service.Error> = URLSession.shared
-            .dataTaskPublisher(
-                for: URL(string: "https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0")!
-            )
-            .mapError({ .networkError($0) })
-            .flatMap(Self.importPokedexEntries(from:))
-            .eraseToAnyPublisher()
-
-        private func fetchSpeciesIfNeeded(for pokedexEntry: ObjectSnapshot<Modern.PokedexDemo.PokedexEntry>) {
             
             guard let details = pokedexEntry.$details?.snapshot else {
                 
@@ -303,83 +194,217 @@ extension Modern.PokedexDemo {
             }
             if let species = details.$species?.snapshot {
                 
-                self.fetchFormsIfNeeded(for: species)
+                self.fetchFormsIfNeeded(
+                    key: species.$id,
+                    detailsObjectID: details.objectID(),
+                    species: species
+                )
                 return
             }
-            self.cancellable["species.\(pokedexEntry.$id)"] = URLSession.shared
-                .dataTaskPublisher(for: pokedexEntry.$speciesURL)
-                .mapError({ .networkError($0) })
-                .flatMap({ Self.importSpecies(for: details, from: $0) })
-                .sink(
-                    receiveCompletion: { completion in
-                        
-                        switch completion {
-
-                        case .finished:
-                            break
-                            
-                        case .failure(let error):
-                            print(error)
-                        }
-                    },
-                    receiveValue: { species in
-
-                        self.fetchFormsIfNeeded(for: species)
-                    }
-                )
-        }
-        
-        private func fetchFormsIfNeeded(for species: ObjectSnapshot<Modern.PokedexDemo.Species>) {
-            
-            guard
-                let details = species.$details?.snapshot,
-                details.$forms.isEmpty
-            else {
+            let key = pokedexEntry.$id
+            guard self.detailTasks[key] == nil else {
                 
                 return
             }
-            self.cancellable["forms.\(species.$id)"] = species
-                .$formsURLs
-                .map(
-                    {
-                        URLSession.shared
-                            .dataTaskPublisher(for: $0)
-                            .mapError({ Modern.PokedexDemo.Service.Error.networkError($0) })
-                            .eraseToAnyPublisher()
-                    }
+            let speciesURL = pokedexEntry.$speciesURL
+            let detailsObjectID = details.objectID()
+            self.detailTasks[key] = Task { [weak self] in
+                
+                guard let self else {
+                    
+                    return
+                }
+                defer {
+                    
+                    self.detailTasks.removeValue(forKey: key)
+                }
+                await self.fetchSpecies(
+                    key: key,
+                    detailsObjectID: detailsObjectID,
+                    speciesURL: speciesURL
                 )
-                .reduce(
-                    into: Just<[URLSession.DataTaskPublisher.Output]>([])
-                        .setFailureType(to: Modern.PokedexDemo.Service.Error.self)
-                        .eraseToAnyPublisher(),
-                    { (result, publisher) in
-                        result = result
-                            .zip(publisher, { $0 + [$1] })
-                            .eraseToAnyPublisher()
-                    }
-                )
-                .flatMap({ Self.importForms(for: details, from: $0) })
-                .sink(
-                    receiveCompletion: { completion in
-                        
-                        switch completion {
-
-                        case .finished:
-                            break
-                            
-                        case .failure(let error):
-                            print(error)
-                        }
-                    },
-                    receiveValue: { _ in }
-                )
+            }
         }
-
-
+        
+        
+        // MARK: Private
+        
+        @ObservationIgnored
+        private static let pokedexURL = URL(
+            string: "https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0"
+        )!
+        
+        @ObservationIgnored
+        private var pokedexEntriesTask: Task<Void, Never>?
+        
+        @ObservationIgnored
+        private var detailTasks: [String: Task<Void, Never>] = [:]
+        
+        private static func mapError(_ error: CoreStoreError) -> Modern.PokedexDemo.Service.Error {
+            
+            switch error {
+            case .userError(let error as Modern.PokedexDemo.Service.Error):
+                return error
+                
+            case .userError(let error):
+                return .otherError(error)
+                
+            case let error:
+                return .saveError(error)
+            }
+        }
+        
+        private func runFetchPokedexEntries() async {
+            
+            self.isLoading = true
+            defer {
+                
+                self.isLoading = false
+                self.pokedexEntriesTask = nil
+            }
+            
+            do {
+                
+                let (data, _) = try await URLSession.shared.data(from: Self.pokedexURL)
+                try Task.checkCancellation()
+                try await Self.importPokedexEntries(from: data)
+            }
+            catch is CancellationError {
+                
+                return
+            }
+            catch let error as Modern.PokedexDemo.Service.Error {
+                
+                print(error)
+            }
+            catch let error as URLError {
+                
+                print(Modern.PokedexDemo.Service.Error.networkError(error))
+            }
+            catch {
+                
+                print(Modern.PokedexDemo.Service.Error.otherError(error))
+            }
+        }
+        
+        private func fetchSpecies(
+            key: String,
+            detailsObjectID: NSManagedObjectID,
+            speciesURL: URL
+        ) async {
+            
+            do {
+                
+                let (data, _) = try await URLSession.shared.data(from: speciesURL)
+                try Task.checkCancellation()
+                
+                let species = try await Self.importSpecies(
+                    for: detailsObjectID,
+                    from: data
+                )
+                guard species.$details?.snapshot?.$forms.isEmpty == true else {
+                    
+                    return
+                }
+                await self.fetchForms(
+                    detailsObjectID: detailsObjectID,
+                    formsURLs: species.$formsURLs
+                )
+            }
+            catch is CancellationError {
+                
+                return
+            }
+            catch let error as Modern.PokedexDemo.Service.Error {
+                
+                print(error)
+            }
+            catch let error as URLError {
+                
+                print(Modern.PokedexDemo.Service.Error.networkError(error))
+            }
+            catch {
+                
+                print(Modern.PokedexDemo.Service.Error.otherError(error))
+            }
+        }
+        
+        private func fetchFormsIfNeeded(
+            key: String,
+            detailsObjectID: NSManagedObjectID,
+            species: ObjectSnapshot<Modern.PokedexDemo.Species>
+        ) {
+            
+            guard species.$details?.snapshot?.$forms.isEmpty == true else {
+                
+                return
+            }
+            guard self.detailTasks[key] == nil else {
+                
+                return
+            }
+            
+            let formsURLs = species.$formsURLs
+            self.detailTasks[key] = Task { [weak self] in
+                
+                guard let self else {
+                    
+                    return
+                }
+                defer {
+                    
+                    self.detailTasks.removeValue(forKey: key)
+                }
+                await self.fetchForms(
+                    detailsObjectID: detailsObjectID,
+                    formsURLs: formsURLs
+                )
+            }
+        }
+        
+        private func fetchForms(
+            detailsObjectID: NSManagedObjectID,
+            formsURLs: [URL]
+        ) async {
+            
+            do {
+                
+                var dataArray: [Data] = []
+                dataArray.reserveCapacity(formsURLs.count)
+                
+                for url in formsURLs {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    try Task.checkCancellation()
+                    dataArray.append(data)
+                }
+                try await Self.importForms(
+                    for: detailsObjectID,
+                    from: dataArray
+                )
+            }
+            catch is CancellationError {
+                
+                return
+            }
+            catch let error as Modern.PokedexDemo.Service.Error {
+                
+                print(error)
+            }
+            catch let error as URLError {
+                
+                print(Modern.PokedexDemo.Service.Error.networkError(error))
+            }
+            catch {
+                
+                print(Modern.PokedexDemo.Service.Error.otherError(error))
+            }
+        }
+        
+        
         // MARK: - Modern.PokedexDemo.Service.Error
-
+        
         enum Error: Swift.Error {
-
+            
             case networkError(URLError)
             case parseError(expected: Any.Type, actual: Any.Type, file: String)
             case saveError(CoreStoreError)

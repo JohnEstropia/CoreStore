@@ -43,7 +43,7 @@ extension DataStack {
             _ transaction: AsynchronousDataTransaction
         ) throws(any Swift.Error) -> T,
         sourceIdentifier: (any Sendable)? = nil,
-        completion: @escaping @Sendable (AsynchronousDataTransaction.Result<T>) -> Void
+        completion: @escaping @MainActor @Sendable (AsynchronousDataTransaction.Result<T>) -> Void
     ) {
         
         self.perform(
@@ -67,8 +67,8 @@ extension DataStack {
             _ transaction: AsynchronousDataTransaction
         ) throws(any Swift.Error) -> T,
         sourceIdentifier: (any Sendable)? = nil,
-        success: @escaping @Sendable (sending T) -> Void,
-        failure: @escaping @Sendable (CoreStoreError) -> Void
+        success: @escaping @MainActor @Sendable (sending T) -> Void,
+        failure: @escaping @MainActor @Sendable (CoreStoreError) -> Void
     ) {
         
         nonisolated(unsafe) let transaction = AsynchronousDataTransaction(
@@ -186,6 +186,7 @@ extension DataStack {
     /**
      Refreshes all registered objects `NSManagedObject`s or `CoreStoreObject`s in the `DataStack`.
      */
+    @MainActor
     public func refreshAndMergeAllObjects() {
         
         Internals.assert(

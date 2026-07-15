@@ -32,8 +32,6 @@ import QuartzCore
 
 #endif
 
-import os
-
 
 // MARK: - Internals
 
@@ -99,7 +97,7 @@ extension Internals {
                     return
                 }
 
-                let performDiffingUpdates: @MainActor () -> Void = {
+                let performDiffingUpdates: @MainActor @Sendable () -> Void = {
                     
                     let changeset = StagedChangeset(source: self.sections, target: newSections)
                     performUpdates(
@@ -148,7 +146,7 @@ extension Internals {
             return self.sections[section].differenceIdentifier
         }
 
-        func itemIdentifier(for indexPath: IndexPath) -> O.ObjectID? {
+        func itemIdentifier(for indexPath: IndexPath) -> NSManagedObjectID? {
 
             guard self.sections.indices.contains(indexPath.section) else {
                 
@@ -162,9 +160,9 @@ extension Internals {
             return items[indexPath.item].differenceIdentifier
         }
 
-        func indexPath(for itemIdentifier: O.ObjectID) -> IndexPath? {
+        func indexPath(for itemIdentifier: NSManagedObjectID) -> IndexPath? {
             
-            let indexPathMap: [O.ObjectID: IndexPath] = self.sections.enumerated().reduce(into: [:]) { result, section in
+            let indexPathMap: [NSManagedObjectID: IndexPath] = self.sections.enumerated().reduce(into: [:]) { result, section in
                 
                 for (itemIndex, item) in section.element.elements.enumerated() {
                     
@@ -243,7 +241,7 @@ extension Internals {
 
             fileprivate init() {}
 
-            fileprivate func dispatch(_ action: @escaping @MainActor () -> Void) {
+            fileprivate func dispatch(_ action: @escaping @MainActor @Sendable () -> Void) {
 
                 let count = self.executingCount.incrementAndGet()
                 if Thread.isMainThread && count == 1 {
@@ -300,7 +298,7 @@ extension Internals {
                 
                 // MARK: Private
 
-                private let value: OSAllocatedUnfairLock<Int> = .init(initialState: 0)
+                private let value: Internals.Mutex<Int> = .init(0)
             }
         }
         

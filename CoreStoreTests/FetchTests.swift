@@ -33,6 +33,7 @@ import CoreStore
 
 final class FetchTests: BaseTestDataTestCase {
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacksAndTransactions_CanFetchOneExisting() {
         
@@ -103,14 +104,14 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
+                let persistentID = object.persistentID()
                 let fetchExpectation = self.expectation(description: "fetch")
-                var existing1: TestEntity1?
                 stack.perform(
                     asynchronous: { (transaction) in
                         
-                        existing1 = transaction.fetchExisting(object)
+                        let existing1 = transaction.fetchExisting(persistentID)
                         XCTAssertNotNil(existing1)
-                        XCTAssertEqual(existing1!.objectID, object.objectID)
+                        XCTAssertEqual(existing1!.persistentID(), persistentID)
                         XCTAssertEqual(existing1!.managedObjectContext, transaction.context)
                         
                         try transaction.cancel()
@@ -123,9 +124,9 @@ final class FetchTests: BaseTestDataTestCase {
                         
                         XCTAssertEqual(error, CoreStoreError.userCancelled)
                         
-                        let existing2 = stack.fetchExisting(existing1!)
+                        let existing2 = stack.fetchExisting(persistentID)
                         XCTAssertNotNil(existing2)
-                        XCTAssertEqual(existing2!.objectID, object.objectID)
+                        XCTAssertEqual(existing2!.persistentID(), persistentID)
                         XCTAssertEqual(existing2!.managedObjectContext, stack.mainContext)
                         
                         fetchExpectation.fulfill()
@@ -136,6 +137,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacksAndTransactions_CanFetchAllExisting() {
         
@@ -230,15 +232,15 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
+                let persistentIDs = objects.map({ $0.persistentID() })
                 let fetchExpectation = self.expectation(description: "fetch")
-                var existing1 = [TestEntity1]()
                 stack.perform(
                     asynchronous: { (transaction) in
                         
-                        existing1 = transaction.fetchExisting(objects)
+                        let existing1 = transaction.fetchExisting(persistentIDs)
                         XCTAssertEqual(
-                            existing1.map { $0.objectID },
-                            objects.map { $0.objectID }
+                            existing1.map { $0.persistentID() },
+                            persistentIDs
                         )
                         for object in existing1 {
                             
@@ -254,10 +256,10 @@ final class FetchTests: BaseTestDataTestCase {
                 
                         XCTAssertEqual(error, CoreStoreError.userCancelled)
                         
-                        let existing2 = stack.fetchExisting(existing1)
+                        let existing2 = stack.fetchExisting(persistentIDs)
                         XCTAssertEqual(
-                            existing2.map { $0.objectID },
-                            objects.map { $0.objectID }
+                            existing2.map { $0.persistentID() },
+                            persistentIDs
                         )
                         for object in existing2 {
                             
@@ -271,6 +273,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromDefaultConfiguration() {
         
@@ -404,6 +407,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromSingleConfiguration() {
         
@@ -581,6 +585,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromMultipleConfigurations() {
         
@@ -724,6 +729,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromDefaultConfiguration() {
         
@@ -912,6 +918,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromSingleConfiguration() {
         
@@ -1125,6 +1132,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromMultipleConfigurations() {
         
@@ -1306,6 +1314,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromDefaultConfiguration() {
         
@@ -1420,6 +1429,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromSingleConfiguration() {
         
@@ -1567,6 +1577,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromMultipleConfigurations() {
         
@@ -1677,6 +1688,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromDefaultConfiguration() {
         
@@ -1818,6 +1830,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromSingleConfiguration() {
         
@@ -2006,6 +2019,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromMultipleConfigurations() {
         
@@ -2157,6 +2171,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromDefaultConfiguration() {
         
@@ -2353,6 +2368,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromSingleConfiguration() {
         
@@ -2589,6 +2605,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromMultipleConfigurations() {
         
@@ -2790,6 +2807,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromDefaultConfiguration() {
         
@@ -2918,6 +2936,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromSingleConfiguration() {
         
@@ -3076,6 +3095,7 @@ final class FetchTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromMultipleConfigurations() {
         

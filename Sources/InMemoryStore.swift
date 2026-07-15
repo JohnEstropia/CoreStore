@@ -31,7 +31,7 @@ import CoreData
 /**
  A storage interface that is backed only in memory.
  */
-public final class InMemoryStore: StorageInterface, @unchecked Sendable {
+public final class InMemoryStore: StorageInterface {
     
     /**
      Initializes an `InMemoryStore` for the specified configuration
@@ -74,6 +74,7 @@ public final class InMemoryStore: StorageInterface, @unchecked Sendable {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
@@ -82,6 +83,7 @@ public final class InMemoryStore: StorageInterface, @unchecked Sendable {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
@@ -90,5 +92,5 @@ public final class InMemoryStore: StorageInterface, @unchecked Sendable {
     
     // MARK: Private
     
-    private weak var dataStack: DataStack?
+    private nonisolated(unsafe) weak var dataStack: DataStack?
 }

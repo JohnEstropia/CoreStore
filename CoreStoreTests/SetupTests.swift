@@ -27,6 +27,7 @@ import CoreData
 import XCTest
 
 @testable
+@_spi(Internals)
 import CoreStore
 
 

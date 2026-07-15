@@ -63,10 +63,11 @@ class ObjectPublisherTests: BaseTestDataTestCase {
             }
 
             let saveExpectation = self.expectation(description: "save")
+            let persistentID = object.persistentID()
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
 
-                    guard let object = transaction.edit(object) else {
+                    guard let object = transaction.edit(persistentID) else {
 
                         XCTFail()
                         try transaction.cancel()
@@ -123,10 +124,11 @@ class ObjectPublisherTests: BaseTestDataTestCase {
             }
 
             let saveExpectation = self.expectation(description: "save")
+            let persistentID = object.persistentID()
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
 
-                    guard let object = transaction.edit(object) else {
+                    guard let object = transaction.edit(persistentID) else {
 
                         XCTFail()
                         try transaction.cancel()

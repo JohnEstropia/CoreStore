@@ -35,7 +35,7 @@ import SwiftUI
  A property wrapper type that can read `ListPublisher` changes.
  */
 @propertyWrapper
-public struct ListState<Object: DynamicObject>: DynamicProperty {
+public struct ListState<O: DynamicObject>: DynamicProperty {
     
     // MARK: Public
     
@@ -67,7 +67,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      */
     @MainActor
     public init(
-        _ listPublisher: ListPublisher<Object>
+        _ listPublisher: ListPublisher<O>
     ) {
         
         self._observer = .init(wrappedValue: .init(listPublisher: listPublisher))
@@ -103,7 +103,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     public init<B: FetchChainableBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
-    ) where B.ObjectType == Object {
+    ) where B.ObjectType == O {
         
         self.init(dataStack.publishList(clauseChain))
     }
@@ -145,7 +145,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     public init<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
-    ) where B.ObjectType == Object {
+    ) where B.ObjectType == O {
         
         self.init(dataStack.publishList(clauseChain))
     }
@@ -179,7 +179,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      */
     @MainActor
     public init(
-        _ from: From<Object>,
+        _ from: From<O>,
         _ fetchClauses: FetchClause...,
         in dataStack: DataStack
     ) {
@@ -218,7 +218,7 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      */
     @MainActor
     public init(
-        _ from: From<Object>,
+        _ from: From<O>,
         _ fetchClauses: [FetchClause],
         in dataStack: DataStack
     ) {
@@ -263,8 +263,8 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      */
     @MainActor
     public init(
-        _ from: From<Object>,
-        _ sectionBy: SectionBy<Object>,
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
         _ fetchClauses: FetchClause...,
         in dataStack: DataStack
     ) {
@@ -311,8 +311,8 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      */
     @MainActor
     public init(
-        _ from: From<Object>,
-        _ sectionBy: SectionBy<Object>,
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
         _ fetchClauses: [FetchClause],
         in dataStack: DataStack
     ) {
@@ -324,13 +324,13 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     // MARK: @propertyWrapper
     
     @MainActor
-    public var wrappedValue: ListSnapshot<Object> {
+    public var wrappedValue: ListSnapshot<O> {
         
         return self.observer.items
     }
     
     @MainActor
-    public var projectedValue: ListPublisher<Object> {
+    public var projectedValue: ListPublisher<O> {
         
         return self.observer.listPublisher
     }
@@ -355,31 +355,28 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     @MainActor
     private final class Observer: Observation.Observable {
         
-        private let registrar = ObservationRegistrar()
-        private var _items: ListSnapshot<Object>
+        let listPublisher: ListPublisher<O>
         
-        let listPublisher: ListPublisher<Object>
-        
-        var items: ListSnapshot<Object> {
+        nonisolated var items: ListSnapshot<O> {
             
             get {
                 
                 self.registrar.access(self, keyPath: \.items)
-                return self._items
+                return self.current.withLock({ $0 })
             }
             set {
                 
                 self.registrar.withMutation(of: self, keyPath: \.items) {
                     
-                    self._items = newValue
+                    self.current.withLock({ $0 = newValue })
                 }
             }
         }
         
-        init(listPublisher: ListPublisher<Object>) {
+        init(listPublisher: ListPublisher<O>) {
             
             self.listPublisher = listPublisher
-            self._items = listPublisher.snapshot
+            self.current = .init(listPublisher.snapshot)
             
             listPublisher.addObserver(self) { [weak self] (listPublisher) in
                 
@@ -395,6 +392,12 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
             
             self.listPublisher.removeObserver(self)
         }
+        
+        
+        // MARK: Private
+        
+        private let registrar = ObservationRegistrar()
+        private let current: Internals.Mutex<ListSnapshot<O>>
     }
 }
 

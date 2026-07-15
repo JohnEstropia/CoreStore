@@ -33,7 +33,7 @@ import CoreData
  
  - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
  */
-public final class SQLiteStore: LocalStorage, @unchecked Sendable {
+public final class SQLiteStore: LocalStorage {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
@@ -176,6 +176,7 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
@@ -184,6 +185,7 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
@@ -205,7 +207,7 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     /**
      Options that tell the `DataStack` how to setup the persistent store
      */
-    public var localStorageOptions: LocalStorageOptions
+    public let localStorageOptions: LocalStorageOptions
     
     /**
      The options dictionary for the specified `LocalStorageOptions`
@@ -231,6 +233,7 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
      */
+    @_spi(Internals)
     public func cs_finalizeStorageAndWait(
         soureModelHint: NSManagedObjectModel
     ) throws(any Swift.Error) {
@@ -252,6 +255,7 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
+    @_spi(Internals)
     public func cs_eraseStorageAndWait(
         metadata: [String: Any],
         soureModelHint: NSManagedObjectModel?
@@ -375,5 +379,5 @@ public final class SQLiteStore: LocalStorage, @unchecked Sendable {
     
     // MARK: Private
     
-    private weak var dataStack: DataStack?
+    private nonisolated(unsafe) weak var dataStack: DataStack?
 }

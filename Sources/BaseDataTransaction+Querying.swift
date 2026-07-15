@@ -113,6 +113,19 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     /**
      Fetches the `DynamicObject` instance in the transaction's context from an `NSManagedObjectID`.
      
+     - parameter persistentID: the `DynamicObjectID` for the object
+     - returns: the `DynamicObject` instance if the object exists in the transaction, or `nil` if not found.
+     */
+    public func fetchExisting<O: DynamicObject>(
+        _ persistentID: DynamicObjectID<O>
+    ) -> O? {
+
+        return self.context.fetchExisting(persistentID.managedObjectID)
+    }
+    
+    /**
+     Fetches the `DynamicObject` instance in the transaction's context from an `NSManagedObjectID`.
+     
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `DynamicObject` instance if the object exists in the transaction, or `nil` if not found.
      */
@@ -134,6 +147,19 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     ) -> [O] where S.Iterator.Element == O {
 
         return self.context.fetchExisting(objects)
+    }
+    
+    /**
+     Fetches the `DynamicObject` instances in the transaction's context from a list of `DynamicObjectID`.
+     
+     - parameter objectIDs: the `DynamicObjectID` array for the objects
+     - returns: the `DynamicObject` array for objects that exists in the transaction
+     */
+    public func fetchExisting<O: DynamicObject, S: Sequence>(
+        _ objectIDs: S
+    ) -> [O] where S.Iterator.Element == DynamicObjectID<O> {
+
+        return self.context.fetchExisting(objectIDs)
     }
     
     /**

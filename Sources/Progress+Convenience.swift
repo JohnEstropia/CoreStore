@@ -37,7 +37,7 @@ extension Progress {
      */
     @nonobjc
     @MainActor
-    public func setProgressHandler(_ closure: (@MainActor (_ progress: Progress) -> Void)?) {
+    public func setProgressHandler(_ closure: (@MainActor @Sendable (_ progress: Progress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure
     }
@@ -81,12 +81,12 @@ extension Progress {
 // MARK: - ProgressObserver
 
 @objc
-private final class ProgressObserver: NSObject, @unchecked Sendable {
+private final class ProgressObserver: NSObject, Sendable {
     
     private unowned let progress: Progress
     
     @MainActor
-    fileprivate var progressHandler: (@MainActor (_ progress: Progress) -> Void)? {
+    fileprivate var progressHandler: (@MainActor @Sendable (_ progress: Progress) -> Void)? {
         
         didSet {
             
@@ -127,7 +127,12 @@ private final class ProgressObserver: NSObject, @unchecked Sendable {
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey : Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         
         guard let progress = object as? Progress,
             progress == self.progress,

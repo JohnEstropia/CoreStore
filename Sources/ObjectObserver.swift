@@ -36,12 +36,12 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-public protocol ObjectObserver: AnyObject & Sendable {
+public protocol ObjectObserver: AnyObject, Sendable {
     
     /**
      The `DynamicObject` type for the observed object
      */
-    associatedtype ObjectEntityType: DynamicObject & Sendable
+    associatedtype ObjectEntityType: DynamicObject
     
     /**
      Handles processing just before a change to the observed `object` occurs. (Optional)

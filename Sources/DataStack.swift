@@ -32,7 +32,7 @@ import CoreData
 /**
  The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
  */
-public final class DataStack: Equatable, @unchecked Sendable {
+public final class DataStack: Equatable, Sendable {
     
     /**
      The resolved application name, used by the `DataStack` as the default Xcode model name (.xcdatamodel filename) if not explicitly provided.
@@ -398,7 +398,7 @@ public final class DataStack: Equatable, @unchecked Sendable {
      - parameter completion: the closure to execute after all persistent stores are removed
      */
     public func unsafeRemoveAllPersistentStores(
-        completion: @escaping @MainActor () -> Void = {}
+        completion: @escaping @MainActor @Sendable () -> Void = {}
     ) {
         
         let coordinator = self.coordinator
@@ -466,7 +466,6 @@ public final class DataStack: Equatable, @unchecked Sendable {
     internal let mainContext: NSManagedObjectContext
     internal let schemaHistory: SchemaHistory
     internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue", qos: .utility)
-    internal let storeMetadataLock: NSRecursiveLock = .init()
     internal let migrationQueue: OperationQueue = Internals.with {
         
         let migrationQueue = OperationQueue()
@@ -487,15 +486,14 @@ public final class DataStack: Equatable, @unchecked Sendable {
     }
     
     internal func persistentStores(
-        for entityIdentifier: Internals.EntityIdentifier
+        for entityIdentifier: sending Internals.EntityIdentifier
     ) -> [NSPersistentStore]? {
 
-        self.storeMetadataLock.lock()
-        defer {
-            self.storeMetadataLock.unlock()
+        return self.storeMetadataLock.withLockUnchecked { metadata in
+        
+            return metadata.finalConfigurationsByEntityIdentifier[entityIdentifier]?
+                .map({ metadata.persistentStoresByFinalConfiguration[$0]! }) ?? []
         }
-        return self.finalConfigurationsByEntityIdentifier[entityIdentifier]?
-            .map({ self.persistentStoresByFinalConfiguration[$0]! }) ?? []
     }
     
     internal func persistentStore(
@@ -504,33 +502,32 @@ public final class DataStack: Equatable, @unchecked Sendable {
         inferStoreIfPossible: Bool
     ) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
 
-        self.storeMetadataLock.lock()
-        defer {
-            self.storeMetadataLock.unlock()
-        }
-        let configurationsForEntity = self.finalConfigurationsByEntityIdentifier[entityIdentifier] ?? []
-        if let configuration = configuration {
+        return self.storeMetadataLock.withLockUnchecked { metadata in
+            
+            let configurationsForEntity = metadata.finalConfigurationsByEntityIdentifier[entityIdentifier] ?? []
+            if let configuration = configuration {
 
-            if configurationsForEntity.contains(configuration) {
+                if configurationsForEntity.contains(configuration) {
 
-                return (store: self.persistentStoresByFinalConfiguration[configuration], isAmbiguous: false)
+                    return (store: metadata.persistentStoresByFinalConfiguration[configuration], isAmbiguous: false)
+                }
+                else if !inferStoreIfPossible {
+
+                    return (store: nil, isAmbiguous: false)
+                }
             }
-            else if !inferStoreIfPossible {
 
+            switch configurationsForEntity.count {
+
+            case 0:
                 return (store: nil, isAmbiguous: false)
+
+            case 1 where inferStoreIfPossible:
+                return (store: metadata.persistentStoresByFinalConfiguration[configurationsForEntity.first!], isAmbiguous: false)
+
+            default:
+                return (store: nil, isAmbiguous: true)
             }
-        }
-
-        switch configurationsForEntity.count {
-
-        case 0:
-            return (store: nil, isAmbiguous: false)
-
-        case 1 where inferStoreIfPossible:
-            return (store: self.persistentStoresByFinalConfiguration[configurationsForEntity.first!], isAmbiguous: false)
-
-        default:
-            return (store: nil, isAmbiguous: true)
         }
     }
     
@@ -550,26 +547,24 @@ public final class DataStack: Equatable, @unchecked Sendable {
 
         do {
 
-            self.storeMetadataLock.lock()
-            defer {
-                self.storeMetadataLock.unlock()
-            }
-            
-            let configurationName = persistentStore.configurationName
-            self.persistentStoresByFinalConfiguration[configurationName] = persistentStore
-            for entityDescription in (self.coordinator.managedObjectModel.entities(forConfigurationName: configurationName) ?? []) {
+            self.storeMetadataLock.withLock { metadata in
                 
-                let managedObjectClassName = entityDescription.managedObjectClassName!
-                Internals.assert(
-                    NSClassFromString(managedObjectClassName) != nil,
-                    "The class \(Internals.typeName(managedObjectClassName)) for the entity \(Internals.typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
-                )
-                let entityIdentifier = Internals.EntityIdentifier(entityDescription)
-                if self.finalConfigurationsByEntityIdentifier[entityIdentifier] == nil {
+                let configurationName = persistentStore.configurationName
+                metadata.persistentStoresByFinalConfiguration[configurationName] = persistentStore
+                for entityDescription in (self.coordinator.managedObjectModel.entities(forConfigurationName: configurationName) ?? []) {
                     
-                    self.finalConfigurationsByEntityIdentifier[entityIdentifier] = []
+                    let managedObjectClassName = entityDescription.managedObjectClassName!
+                    Internals.assert(
+                        NSClassFromString(managedObjectClassName) != nil,
+                        "The class \(Internals.typeName(managedObjectClassName)) for the entity \(Internals.typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
+                    )
+                    let entityIdentifier = Internals.EntityIdentifier(entityDescription)
+                    if metadata.finalConfigurationsByEntityIdentifier[entityIdentifier] == nil {
+                        
+                        metadata.finalConfigurationsByEntityIdentifier[entityIdentifier] = []
+                    }
+                    metadata.finalConfigurationsByEntityIdentifier[entityIdentifier]?.insert(configurationName)
                 }
-                self.finalConfigurationsByEntityIdentifier[entityIdentifier]?.insert(configurationName)
             }
         }
         storage.cs_didAddToDataStack(self)
@@ -586,8 +581,12 @@ public final class DataStack: Equatable, @unchecked Sendable {
     
     // MARK: Private
     
-    private var persistentStoresByFinalConfiguration = [String: NSPersistentStore]()
-    private var finalConfigurationsByEntityIdentifier = [Internals.EntityIdentifier: Set<String>]()
+    private let storeMetadataLock: Internals.Mutex<
+        (
+            persistentStoresByFinalConfiguration: [String: NSPersistentStore],
+            finalConfigurationsByEntityIdentifier: [Internals.EntityIdentifier: Set<String>]
+        )
+    > = .init(([:], [:]))
     
     deinit {
         

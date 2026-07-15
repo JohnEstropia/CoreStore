@@ -49,7 +49,7 @@ extension Modern.ColorsDemo.UIKit {
             }
         }
         
-        deinit {
+        isolated deinit {
             
             self.palette.removeObserver(self)
         }
@@ -88,14 +88,17 @@ extension Modern.ColorsDemo.UIKit {
         
         // MARK: ObjectObserver
         
-        func objectMonitor(
+        nonisolated func objectMonitor(
             _ monitor: ObjectMonitor<Modern.ColorsDemo.Palette>,
-            didUpdateObject object: Modern.ColorsDemo.Palette,
+            didUpdateObject object: sending Modern.ColorsDemo.Palette,
             changedPersistentKeys: Set<KeyPathString>,
             sourceIdentifier: Any?
         ) {
             
-            self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            MainActor.assumeIsolated {
+                
+                self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            }
         }
         
         
@@ -245,6 +248,7 @@ extension Modern.ColorsDemo.UIKit {
         private let saturationSlider: UISlider = .init()
         private let brightnessSlider: UISlider = .init()
         
+        @MainActor
         @objc
         private dynamic func hueSliderValueDidChange(_ sender: UISlider) {
             
@@ -259,6 +263,7 @@ extension Modern.ColorsDemo.UIKit {
             )
         }
         
+        @MainActor
         @objc
         private dynamic func saturationSliderValueDidChange(_ sender: UISlider) {
             
@@ -273,6 +278,7 @@ extension Modern.ColorsDemo.UIKit {
             )
         }
         
+        @MainActor
         @objc
         private dynamic func brightnessSliderValueDidChange(_ sender: UISlider) {
             

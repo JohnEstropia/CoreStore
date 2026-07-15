@@ -180,7 +180,7 @@ extension RelationshipContainer {
 
         internal var valueForSnapshot: Any? {
 
-            return self.value?.objectID()
+            return self.value?.cs_id()
         }
 
 

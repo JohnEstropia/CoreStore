@@ -39,7 +39,7 @@ import CoreData
  let person = transaction.fetchOne(From<Person>("Configuration1"))
  ```
  */
-public struct From<O: DynamicObject> {
+public struct From<O: DynamicObject>: Sendable {
     
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class
@@ -162,12 +162,12 @@ public struct From<O: DynamicObject> {
     
     // MARK: Internal
     
-    internal let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
+    internal let findPersistentStores: @Sendable (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     internal init(
         entityClass: O.Type,
         configurations: [ModelConfiguration]?,
-        findPersistentStores: @escaping (
+        findPersistentStores: @escaping @Sendable (
             _ context: NSManagedObjectContext
         ) -> [NSPersistentStore]?
     ) {

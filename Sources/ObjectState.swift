@@ -103,23 +103,20 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     @MainActor
     private final class Observer: Observation.Observable {
         
-        private let registrar = ObservationRegistrar()
-        private var _item: ObjectSnapshot<O>?
-        
         let objectPublisher: ObjectPublisher<O>?
         
-        var item: ObjectSnapshot<O>? {
+        nonisolated var item: ObjectSnapshot<O>? {
             
             get {
                 
                 self.registrar.access(self, keyPath: \.item)
-                return self._item
+                return self.current.withLock({ $0 })
             }
             set {
                 
                 self.registrar.withMutation(of: self, keyPath: \.item) {
                     
-                    self._item = newValue
+                    self.current.withLock({ $0 = newValue })
                 }
             }
         }
@@ -132,12 +129,12 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             else {
 
                 self.objectPublisher = nil
-                self._item = nil
+                self.current = .init(nil)
                 return
             }
             
             self.objectPublisher = objectPublisher
-            self._item = objectPublisher.snapshot
+            self.current = .init(objectPublisher.snapshot)
             
             objectPublisher.addObserver(self) { [weak self] (objectPublisher) in
                 
@@ -153,6 +150,12 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             
             self.objectPublisher?.removeObserver(self)
         }
+        
+        
+        // MARK: Private
+        
+        private let registrar = ObservationRegistrar()
+        private let current: Internals.Mutex<ObjectSnapshot<O>?>
     }
 }
 

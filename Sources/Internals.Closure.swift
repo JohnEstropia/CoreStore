@@ -39,7 +39,7 @@ extension Internals {
         internal typealias Arguments = T
         internal typealias Result = U
         
-        internal init(_ closure: @escaping (T) -> U) {
+        internal init(_ closure: @escaping @Sendable (T) -> U) {
             
             self.closure = closure
         }
@@ -52,6 +52,6 @@ extension Internals {
         
         // MARK: Private
         
-        private let closure: (T) -> U
+        private let closure: @Sendable (T) -> U
     }
 }

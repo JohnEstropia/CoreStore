@@ -18,6 +18,7 @@ extension Modern {
         
         // MARK: Internal
         
+        @MainActor
         static let dataStack: DataStack = {
             
             let dataStack = DataStack(
@@ -44,6 +45,7 @@ extension Modern {
             return dataStack
         }()
         
+        @MainActor
         static let palettesPublisher: ListPublisher<Modern.ColorsDemo.Palette> = Modern.ColorsDemo.dataStack.publishList(
             From<Modern.ColorsDemo.Palette>()
                 .sectionBy(
@@ -54,6 +56,7 @@ extension Modern {
                 .orderBy(.ascending(\.$hue))
         )
         
+        @MainActor
         static var filter: Modern.ColorsDemo.Filter = .all {
             
             didSet {

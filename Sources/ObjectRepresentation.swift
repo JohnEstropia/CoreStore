@@ -34,14 +34,16 @@ import CoreData
 public protocol AnyObjectRepresentation {
     
     /**
-     The internal ID for the object.
-     */
-    func objectID() -> NSManagedObjectID
-    
-    /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     func cs_dataStack() -> DataStack?
+    
+    /**
+     The internal `NSManagedObjectID` for the object. Do not call directly.
+     */
+    @_spi(Internals)
+    func cs_id() -> NSManagedObjectID
 }
 
 
@@ -98,7 +100,7 @@ extension DynamicObject where Self: ObjectRepresentation {
 
         return self.cs_toRaw()
             .managedObjectContext
-            .map({ $0.objectPublisher(objectID: self.cs_id()) })
+            .map({ $0.objectPublisher(managedObjectID: self.cs_id()) })
     }
 
     /**
@@ -108,17 +110,19 @@ extension DynamicObject where Self: ObjectRepresentation {
 
         return self.cs_toRaw()
             .managedObjectContext
-            .flatMap({ ObjectSnapshot<Self>(objectID: self.cs_id(), context: $0) })
+            .flatMap({ ObjectSnapshot<Self>(managedObjectID: self.cs_id(), context: $0) })
     }
     
     
     // MARK: AnyObjectRepresentation
     
-    public func objectID() -> Self.ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
 
         return self.cs_id()
     }
     
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.cs_toRaw().managedObjectContext?.parentStack
@@ -130,7 +134,7 @@ extension DynamicObject where Self: ObjectRepresentation {
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<Self> {
 
         let context = dataStack.unsafeContext()
-        return context.objectPublisher(objectID: self.cs_id())
+        return context.objectPublisher(managedObjectID: self.cs_id())
     }
 
     public func asReadOnly(in dataStack: DataStack) -> Self? {
@@ -156,12 +160,12 @@ extension DynamicObject where Self: ObjectRepresentation {
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<Self>? {
 
         let context = dataStack.unsafeContext()
-        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
+        return ObjectSnapshot<Self>(managedObjectID: self.cs_id(), context: context)
     }
 
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<Self>? {
 
         let context = transaction.unsafeContext()
-        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
+        return ObjectSnapshot<Self>(managedObjectID: self.cs_id(), context: context)
     }
 }

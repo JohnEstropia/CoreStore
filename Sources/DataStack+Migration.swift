@@ -24,8 +24,7 @@
 //
 
 import Foundation
-@preconcurrency import CoreData
-import os
+import CoreData
 
 
 // MARK: - DataStack
@@ -50,7 +49,7 @@ extension DataStack {
      */
     public func addStorage<T>(
         _ storage: T,
-        completion: @escaping @MainActor (SetupResult<T>) -> Void
+        completion: @escaping @MainActor @Sendable (SetupResult<T>) -> Void
     ) {
 
         self.coordinator.performAsynchronously {
@@ -111,7 +110,7 @@ extension DataStack {
      */
     public func addStorage<T: LocalStorage>(
         _ storage: T,
-        completion: @escaping @MainActor (SetupResult<T>) -> Void
+        completion: @escaping @MainActor @Sendable (SetupResult<T>) -> Void
     ) -> Progress? {
 
         let fileURL = storage.fileURL
@@ -274,7 +273,7 @@ extension DataStack {
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(
         _ storage: T,
-        completion: @escaping @MainActor (MigrationResult) -> Void
+        completion: @escaping @MainActor @Sendable (MigrationResult) -> Void
     ) throws(CoreStoreError) -> Progress? {
 
         return try self.coordinator.performSynchronously {
@@ -386,7 +385,7 @@ extension DataStack {
     private func upgradeStorageIfNeeded<T: LocalStorage>(
         _ storage: T,
         metadata: [String: Any],
-        completion: @escaping @MainActor (MigrationResult) -> Void
+        completion: @escaping @MainActor @Sendable (MigrationResult) -> Void
     ) -> Progress? {
 
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
@@ -433,8 +432,8 @@ extension DataStack {
         }
         
         let migrationTypes = migrationSteps.map { $0.migrationType }
-        let migrationState: OSAllocatedUnfairLock<(migrationResult: MigrationResult?, cancelled: Bool)> = .init(
-            initialState: (
+        let migrationState: Internals.Mutex<(migrationResult: MigrationResult?, cancelled: Bool)> = .init(
+            (
                 migrationResult: nil,
                 cancelled: false
             )
@@ -451,6 +450,9 @@ extension DataStack {
             let childProgress = Progress(parent: progress, userInfo: nil)
             childProgress.totalUnitCount = 100
             
+            nonisolated(unsafe) let sourceModel = sourceModel
+            nonisolated(unsafe) let destinationModel = destinationModel
+            nonisolated(unsafe) let mappingModel = mappingModel
             operations.append(
                 BlockOperation { [weak self] in
                     
@@ -508,13 +510,11 @@ extension DataStack {
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             
+            let migrationResult = migrationState.withLock { $0.migrationResult }
             DispatchQueue.main.async {
                 
                 progress.setProgressHandler(nil)
-                completion(
-                    migrationState.withLock { $0.migrationResult }
-                    ?? .success(migrationTypes)
-                )
+                completion(migrationResult ?? .success(migrationTypes))
                 return
             }
         }
@@ -620,7 +620,7 @@ extension DataStack {
                 let estimatedTime: TimeInterval = 60 * 3 // 3 mins
                 let interval: TimeInterval = 1
                 let fakeTotalUnitCount: Float = 0.9 * Float(progress.totalUnitCount)
-                let fakeProgress: OSAllocatedUnfairLock<Float> = .init(initialState: 0)
+                let fakeProgress: Internals.Mutex<Float> = .init(0)
                 
                 @Sendable
                 func recursiveCheck() {
@@ -656,9 +656,11 @@ extension DataStack {
                         )
                     )
                 }
-                timerQueue.sync {
-                    
-                    fakeProgress.withLock({ $0 = 1.0 })
+                withoutActuallyEscaping(timerQueue.sync) { escapingClosure in
+                    escapingClosure {
+                        
+                        fakeProgress.withLock({ $0 = 1.0 })
+                    }
                 }
                 _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount

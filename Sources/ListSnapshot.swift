@@ -43,7 +43,7 @@ import AppKit
 
  Since `ListSnapshot` is a value type, you can freely modify its items.
  */
-public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
+public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable, Sendable {
 
     // MARK: Public (Accessors)
 
@@ -72,7 +72,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         let context = self.context!
         let itemID = self.diffableSnapshot.itemIdentifier(atAllItemsIndex: index)!
-        return context.objectPublisher(objectID: itemID)
+        return context.objectPublisher(managedObjectID: itemID)
     }
 
     /**
@@ -90,7 +90,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
             return nil
         }
-        return context.objectPublisher(objectID: itemID)
+        return context.objectPublisher(managedObjectID: itemID)
     }
 
     /**
@@ -109,7 +109,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         let snapshot = self.diffableSnapshot
         let sectionID = snapshot.sectionIdentifiers[sectionIndex]
         let itemID = snapshot.itemIdentifiers(inSection: sectionID)[itemIndex]
-        return context.objectPublisher(objectID: itemID)
+        return context.objectPublisher(managedObjectID: itemID)
     }
 
     /**
@@ -141,7 +141,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
             return nil
         }
         let itemID = itemIDs[itemIndex]
-        return context.objectPublisher(objectID: itemID)
+        return context.objectPublisher(managedObjectID: itemID)
     }
 
     /**
@@ -287,7 +287,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      */
     public func sectionID(containingItemWithID itemID: ItemID) -> SectionID? {
 
-        return self.diffableSnapshot.sectionIdentifier(containingItem: itemID)
+        return self.diffableSnapshot.sectionIdentifier(containingItem: itemID.managedObjectID)
     }
     
     /**
@@ -319,6 +319,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     public var itemIDs: [ItemID] {
 
         return self.diffableSnapshot.itemIdentifiers
+            .map(ItemID.init(managedObjectID:))
     }
 
     /**
@@ -330,6 +331,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     public func itemIDs(inSectionWithID sectionID: SectionID) -> [ItemID] {
 
         return self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
+            .map(ItemID.init(managedObjectID:))
     }
 
     /**
@@ -345,7 +347,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     ) -> [ItemID] where S.Element == Int {
 
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return indices.map({ itemIDs[$0] })
+        return indices.map({ .init(managedObjectID: itemIDs[$0]) })
     }
 
     /**
@@ -356,7 +358,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      */
     public func indexOfItem(withID itemID: ItemID) -> Index? {
 
-        return self.diffableSnapshot.indexOfItem(itemID)
+        return self.diffableSnapshot.indexOfItem(itemID.managedObjectID)
     }
 
     /**
@@ -383,7 +385,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return indices.map { position in
 
             let itemID = itemIDs[position]
-            return context.objectPublisher(objectID: itemID)
+            return context.objectPublisher(managedObjectID: itemID)
         }
     }
 
@@ -397,7 +399,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIDs.map(context.objectPublisher(objectID:))
+        return itemIDs.map(context.objectPublisher(managedObjectID:))
     }
 
     /**
@@ -417,7 +419,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return itemIndices.map { position in
 
             let itemID = itemIDs[position]
-            return context.objectPublisher(objectID: itemID)
+            return context.objectPublisher(managedObjectID: itemID)
         }
     }
 
@@ -434,7 +436,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return indices.lazy.map { position in
 
             let itemID = itemIDs[position]
-            return context.objectPublisher(objectID: itemID)
+            return context.objectPublisher(managedObjectID: itemID)
         }
     }
 
@@ -448,7 +450,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIDs.lazy.map(context.objectPublisher(objectID:))
+        return itemIDs.lazy.map(context.objectPublisher(managedObjectID:))
     }
 
     /**
@@ -468,7 +470,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return itemIndices.lazy.map { position in
 
             let itemID = itemIDs[position]
-            return context.objectPublisher(objectID: itemID)
+            return context.objectPublisher(managedObjectID: itemID)
         }
     }
 
@@ -487,8 +489,8 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     ) where C.Element == ItemID {
 
         self.mutate {
-
-            $0.appendItems(itemIDs, toSection: sectionID)
+            
+            $0.appendItems(itemIDs.map({ $0.managedObjectID }), toSection: sectionID)
         }
     }
     
@@ -505,7 +507,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.unsafeAppendItems(itemIDs, toSectionAt: sectionIndex)
+            $0.unsafeAppendItems(itemIDs.map({ $0.managedObjectID }), toSectionAt: sectionIndex)
         }
     }
     
@@ -522,7 +524,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.insertItems(itemIDs, beforeItem: beforeItemID)
+            $0.insertItems(itemIDs.map({ $0.managedObjectID }), beforeItem: beforeItemID.managedObjectID)
         }
     }
     
@@ -539,7 +541,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.insertItems(itemIDs, afterItem: afterItemID)
+            $0.insertItems(itemIDs.map({ $0.managedObjectID }), afterItem: afterItemID.managedObjectID)
         }
     }
     
@@ -556,7 +558,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.unsafeInsertItems(itemIDs, at: indexPath)
+            $0.unsafeInsertItems(itemIDs.map({ $0.managedObjectID }), at: indexPath)
         }
     }
     
@@ -569,7 +571,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.deleteItems(itemIDs)
+            $0.deleteItems(itemIDs.map({ $0.managedObjectID }))
         }
     }
     
@@ -610,7 +612,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.moveItem(itemID, beforeItem: beforeItemID)
+            $0.moveItem(itemID.managedObjectID, beforeItem: beforeItemID.managedObjectID)
         }
     }
     
@@ -627,7 +629,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.moveItem(itemID, afterItem: afterItemID)
+            $0.moveItem(itemID.managedObjectID, afterItem: afterItemID.managedObjectID)
         }
     }
     
@@ -657,7 +659,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         self.mutate {
 
-            $0.reloadItems(itemIDs)
+            $0.reloadItems(itemIDs.map({ $0.managedObjectID }))
         }
     }
     
@@ -906,7 +908,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
             return .init()
         }
         let itemIDs = self.diffableSnapshot.itemIdentifiers(atAllItemsBounds: bounds)
-        return ArraySlice(itemIDs.map(context.objectPublisher(objectID:)))
+        return ArraySlice(itemIDs.map(context.objectPublisher(managedObjectID:)))
     }
 
     

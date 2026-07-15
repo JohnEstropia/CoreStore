@@ -196,7 +196,7 @@ extension RelationshipContainer {
 
         internal var valueForSnapshot: Any? {
 
-            return self.value.map({ $0.objectID() })
+            return self.value.map({ $0.cs_id() })
         }
 
         private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {

@@ -40,7 +40,7 @@ import AppKit
  The `ObjectSnapshot` is a full copy of a `DynamicObject`'s properties at a given point in time. This is useful especially when keeping thread-safe state values, in ViewModels for example. Since this is a value type, any changes in this `struct` does not affect the actual object.
  */
 @dynamicMemberLookup
-public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, @unchecked Sendable {
+public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, Sendable {
 
     // MARK: Public
 
@@ -52,11 +52,13 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
     
     // MARK: AnyObjectRepresentation
     
-    public func objectID() -> O.ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
         
-        return self.id
+        return self.managedObjectID
     }
     
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.context.parentStack
@@ -70,29 +72,29 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()
-        return context.objectPublisher(objectID: self.id)
+        return context.objectPublisher(managedObjectID: self.managedObjectID)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
 
-        return dataStack.unsafeContext().fetchExisting(self.id)
+        return dataStack.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return transaction.unsafeContext().fetchExisting(self.id)
+        return transaction.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
         
         let context = dataStack.unsafeContext()
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
         
         let context = transaction.unsafeContext()
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
 
 
@@ -100,7 +102,7 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
 
     public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
 
-        return lhs.id == rhs.id
+        return lhs.managedObjectID == rhs.managedObjectID
             && (lhs.generation == rhs.generation || lhs.valuesRef == rhs.valuesRef)
     }
 
@@ -109,34 +111,34 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
 
     public func hash(into hasher: inout Hasher) {
 
-        hasher.combine(self.id)
+        hasher.combine(self.managedObjectID)
         hasher.combine(self.valuesRef)
     }
 
 
     // MARK: Internal
+    
+    internal let managedObjectID: NSManagedObjectID
 
-    internal init?(objectID: O.ObjectID, context: NSManagedObjectContext) {
+    internal init?(
+        managedObjectID: NSManagedObjectID,
+        context: NSManagedObjectContext
+    ) {
 
-        guard let values = O.cs_snapshotDictionary(id: objectID, context: context) else {
+        guard let values = O.cs_snapshotDictionary(managedObjectID: managedObjectID, context: context) else {
 
             return nil
         }
-        self.id = objectID
+        self.managedObjectID = managedObjectID
         self.context = context
         self.values = values
         self.generation = .init()
-    }
-    
-    internal var cs_objectID: O.ObjectID {
-        
-        return self.objectID()
     }
 
 
     // MARK: FilePrivate
 
-    fileprivate var values: [String: Any] {
+    fileprivate nonisolated(unsafe) var values: [String: Any] {
         
         didSet {
             
@@ -147,7 +149,6 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
 
     // MARK: Private
 
-    private let id: O.ObjectID
     private let context: NSManagedObjectContext
     
     private var generation: UUID
@@ -344,16 +345,16 @@ extension ObjectSnapshot where O: CoreStoreObject {
         get {
 
             let key = String(keyPath: member)
-            guard let id = self.values[key] as? D.ObjectID else {
+            guard let id = self.values[key] as? NSManagedObjectID else {
 
                 return nil
             }
-            return self.context.objectPublisher(objectID: id)
+            return self.context.objectPublisher(managedObjectID: id)
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = newValue?.objectID()
+            self.values[key] = newValue?.cs_id()
         }
     }
     
@@ -365,13 +366,13 @@ extension ObjectSnapshot where O: CoreStoreObject {
 
             let key = String(keyPath: member)
             let context = self.context
-            let ids = self.values[key] as! [D.ObjectID]
-            return ids.map(context.objectPublisher(objectID:))
+            let ids = self.values[key] as! [NSManagedObjectID]
+            return ids.map(context.objectPublisher(managedObjectID:))
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = newValue.map({ $0.objectID() })
+            self.values[key] = newValue.map({ $0.cs_id() })
         }
     }
     
@@ -383,13 +384,13 @@ extension ObjectSnapshot where O: CoreStoreObject {
 
             let key = String(keyPath: member)
             let context = self.context
-            let ids = self.values[key] as! Set<D.ObjectID>
-            return Set(ids.map(context.objectPublisher(objectID:)))
+            let ids = self.values[key] as! Set<NSManagedObjectID>
+            return Set(ids.map(context.objectPublisher(managedObjectID:)))
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = Set(newValue.map({ $0.objectID() }))
+            self.values[key] = Set(newValue.map({ $0.cs_id() }))
         }
     }
 }

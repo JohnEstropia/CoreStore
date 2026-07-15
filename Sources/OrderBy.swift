@@ -32,7 +32,7 @@ import CoreData
 /**
  The `OrderBy` clause specifies the sort order for results for a fetch or a query.
  */
-public struct OrderBy<O: DynamicObject>: OrderByClause, FetchClause, QueryClause, DeleteClause, Hashable {
+public struct OrderBy<O: DynamicObject>: OrderByClause, FetchClause, QueryClause, DeleteClause, Hashable, Sendable {
     
     /**
      Combines two `OrderBy` sort descriptors together
@@ -104,7 +104,7 @@ public struct OrderBy<O: DynamicObject>: OrderByClause, FetchClause, QueryClause
     
     public typealias ObjectType = O
     
-    public let sortDescriptors: [NSSortDescriptor]
+    public nonisolated(unsafe) let sortDescriptors: [NSSortDescriptor]
     
     
     // MARK: FetchClause, QueryClause, DeleteClause

@@ -11,8 +11,8 @@ extension Modern {
     // MARK: - Modern.PlacemarksDemo
     
     /**
-    Sample usages for `CoreStoreObject` transactions
-    */
+     Sample usages for `CoreStoreObject` transactions
+     */
     enum PlacemarksDemo {
         
         // MARK: Internal
@@ -20,6 +20,7 @@ extension Modern {
         /**
          ⭐️ Sample 1: Setting up the `DataStack` and storage
          */
+        @MainActor
         static let dataStack: DataStack = {
             
             let dataStack = DataStack(
@@ -45,7 +46,8 @@ extension Modern {
             )
             return dataStack
         }()
-
+        
+        @MainActor
         static let placePublisher: ObjectPublisher<Modern.PlacemarksDemo.Place> = {
             
             let dataStack = Modern.PlacemarksDemo.dataStack

@@ -57,7 +57,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     /**
      The actual `DynamicObject` instance. Becomes `nil` if the object has been deleted.
      */
-    public private(set) lazy var object: O? = self.context.fetchExisting(self.id)
+    public private(set) lazy var object: O? = self.context.fetchExisting(self.managedObjectID)
 
 
 
@@ -80,7 +80,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
-        _ callback: @escaping (ObjectPublisher<O>) -> Void
+        _ callback: @escaping @Sendable (ObjectPublisher<O>) -> Void
     ) {
 
         Internals.assert(
@@ -118,7 +118,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
         _ observer: T,
         notifyInitial: Bool = false,
         initialSourceIdentifier: Any? = nil,
-        _ callback: @escaping (
+        _ callback: @escaping @Sendable (
             _ objectPublisher: ObjectPublisher<O>,
             _ sourceIdentifier: Any?
         ) -> Void
@@ -160,11 +160,13 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     
     // MARK: AnyObjectRepresentation
     
-    public func objectID() -> O.ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
         
-        return self.id
+        return self.managedObjectID
     }
     
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.context.parentStack
@@ -182,17 +184,17 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             
             return self
         }
-        return context.objectPublisher(objectID: self.id)
+        return context.objectPublisher(managedObjectID: self.managedObjectID)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
 
-        return dataStack.unsafeContext().fetchExisting(self.id)
+        return dataStack.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return transaction.unsafeContext().fetchExisting(self.id)
+        return transaction.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
@@ -202,7 +204,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             
             return self.lazySnapshot
         }
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
@@ -212,7 +214,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             
             return self.lazySnapshot
         }
-        return ObjectSnapshot<O>(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
 
 
@@ -220,7 +222,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
     public static func == (_ lhs: ObjectPublisher, _ rhs: ObjectPublisher) -> Bool {
 
-        return lhs.id == rhs.id
+        return lhs.managedObjectID == rhs.managedObjectID
             && lhs.context == rhs.context
     }
 
@@ -229,24 +231,24 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
     public func hash(into hasher: inout Hasher) {
 
-        hasher.combine(self.id)
+        hasher.combine(self.managedObjectID)
         hasher.combine(self.context)
     }
 
 
     // MARK: Internal
     
-    internal var cs_objectID: O.ObjectID {
-        
-        return self.objectID()
-    }
+    internal let managedObjectID: NSManagedObjectID
 
-    internal static func createUncached(objectID: O.ObjectID, context: NSManagedObjectContext) -> ObjectPublisher<O> {
+    internal static func createUncached(
+        managedObjectID: NSManagedObjectID,
+        context: NSManagedObjectContext
+    ) -> ObjectPublisher<O> {
 
         return self.init(
-            objectID: objectID,
+            managedObjectID: managedObjectID,
             context: context,
-            initializer: ObjectSnapshot<O>.init(objectID:context:)
+            initializer: ObjectSnapshot<O>.init(managedObjectID:context:)
         )
     }
 
@@ -261,43 +263,52 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     
     fileprivate typealias ObserverClosureType = Internals.Closure<(objectPublisher: ObjectPublisher<O>, sourceIdentifier: Any?), Void>
 
-    fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>?) {
+    fileprivate init(
+        managedObjectID: NSManagedObjectID,
+        context: NSManagedObjectContext,
+        initializer: @escaping @Sendable (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>?
+    ) {
 
-        self.id = objectID
+        self.managedObjectID = managedObjectID
         self.context = context
         self.$lazySnapshot.initialize { [weak self] in
 
             guard let self = self else {
 
-                return initializer(objectID, context)
+                return initializer(managedObjectID, context)
             }
-            context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (updatedIDs, deletedIDs) in
-
-                guard let self = self else {
-
-                    return
-                }
-                if deletedIDs.contains(objectID) {
-
-                    self.object = nil
-
-                    self.$lazySnapshot.reset({ nil })
-                    self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
-                }
-                else if updatedIDs.contains(objectID) {
-
-                    self.$lazySnapshot.reset({ initializer(objectID, context) })
-                    self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
-                }
-            }
-            return initializer(objectID, context)
+            nonisolated(unsafe) weak let weakSelf = self as Optional
+            context
+                .objectsDidChangeObserver(for: self)
+                .addObserver(
+                    self,
+                    closure: { (updatedIDs, deletedIDs) in
+                        
+                        guard let self = weakSelf else {
+                            
+                            return
+                        }
+                        if deletedIDs.contains(managedObjectID) {
+                            
+                            self.object = nil
+                            
+                            self.$lazySnapshot.reset({ nil })
+                            self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
+                        }
+                        else if updatedIDs.contains(managedObjectID) {
+                            
+                            self.$lazySnapshot.reset({ initializer(managedObjectID, context) })
+                            self.notifyObservers(sourceIdentifier: self.context.saveMetadata)
+                        }
+                    }
+                )
+            return initializer(managedObjectID, context)
         }
     }
 
 
     // MARK: Private
     
-    private let id: O.ObjectID
     private let context: NSManagedObjectContext
 
     @Internals.LazyNonmutating(uninitialized: ())

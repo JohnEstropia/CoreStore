@@ -72,6 +72,7 @@ class ImportTests: BaseTestDataTestCase {
         XCTAssertEqual(Double(MAXFLOAT).cs_toQueryableNativeType(), NSNumber(value: Double(MAXFLOAT)))
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObject_CanSkipImport() {
         
@@ -107,6 +108,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObject_CanThrowError() {
         
@@ -160,6 +162,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObject_CanImportCorrectly() {
         
@@ -220,6 +223,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObjects_CanSkipImport() {
         
@@ -275,6 +279,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObjects_CanThrowError() {
         
@@ -339,6 +344,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportObjects_CanImportCorrectly() {
         
@@ -397,6 +403,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObject_CanSkipImport() {
         
@@ -466,6 +473,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObjects_ImportsLastOfImportSourcesWithSameIDs() {
         
@@ -523,7 +531,8 @@ class ImportTests: BaseTestDataTestCase {
             }
         }
     }
-
+    
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObjects_MaintainsOrderOfInputSourceArray() {
         
@@ -585,6 +594,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObject_CanThrowError() {
         
@@ -680,7 +690,8 @@ class ImportTests: BaseTestDataTestCase {
             }
         }
     }
-
+    
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObject_CanImportCorrectly() {
         
@@ -757,7 +768,8 @@ class ImportTests: BaseTestDataTestCase {
             }
         }
     }
-
+    
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObjects_CanSkipImport() {
         
@@ -815,7 +827,8 @@ class ImportTests: BaseTestDataTestCase {
             }
         }
     }
-
+    
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObjects_CanThrowError() {
         
@@ -977,6 +990,7 @@ class ImportTests: BaseTestDataTestCase {
         }
     }
     
+    @MainActor
     @objc
     dynamic func test_ThatImportUniqueObjects_CanImportCorrectly() {
         
@@ -1065,7 +1079,7 @@ extension TestEntity1: ImportableUniqueObject {
     
     // MARK: ImportableObject
     
-    typealias ImportSource = [String: Any]
+    typealias ImportSource = [String: any Sendable]
     
     static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         

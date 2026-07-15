@@ -85,7 +85,7 @@ extension DiffableDataSource {
         public init(
             tableView: UITableView,
             dataStack: DataStack,
-            cellProvider: @escaping @MainActor (UITableView, IndexPath, O) -> UITableViewCell?
+            cellProvider: @escaping @MainActor @Sendable (UITableView, IndexPath, O) -> UITableViewCell?
         ) {
 
             self.cellProvider = cellProvider
@@ -150,7 +150,7 @@ extension DiffableDataSource {
             cellForRowAt indexPath: IndexPath
         ) -> UITableViewCell {
             
-            guard let objectID = self.itemID(for: indexPath) else {
+            guard let objectID: NSManagedObjectID = self.itemID(for: indexPath) else {
                 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }

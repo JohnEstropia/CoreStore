@@ -39,7 +39,7 @@ import CoreData
  )
  ```
  */
-public struct SectionBy<O: DynamicObject> {
+public struct SectionBy<O: DynamicObject>: Sendable {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
@@ -63,7 +63,7 @@ public struct SectionBy<O: DynamicObject> {
      */
     public init(
         _ sectionKeyPath: KeyPathString,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.sectionKeyPath = sectionKeyPath
@@ -74,7 +74,7 @@ public struct SectionBy<O: DynamicObject> {
     // MARK: Internal
     
     internal let sectionKeyPath: KeyPathString
-    internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
+    internal let sectionIndexTransformer: @Sendable (_ sectionName: String?) -> String?
 }
 
 
@@ -104,7 +104,7 @@ extension SectionBy where O: NSManagedObject {
      */
     public init<T>(
         _ sectionKeyPath: KeyPath<O, T>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.init(
@@ -167,7 +167,7 @@ extension SectionBy where O: CoreStoreObject {
      */
     public init<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
 
         self.init(
@@ -185,7 +185,7 @@ extension SectionBy where O: CoreStoreObject {
      */
     public init<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
 
         self.init(
@@ -203,7 +203,7 @@ extension SectionBy where O: CoreStoreObject {
      */
     public init<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
 
         self.init(
@@ -255,7 +255,7 @@ extension SectionBy {
     
     public init<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.init(
@@ -266,7 +266,7 @@ extension SectionBy {
     
     public init<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.init(
@@ -277,7 +277,7 @@ extension SectionBy {
     
     public init<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.init(
@@ -288,7 +288,7 @@ extension SectionBy {
     
     public init<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) {
         
         self.init(

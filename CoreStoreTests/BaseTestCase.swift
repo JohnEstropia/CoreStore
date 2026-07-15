@@ -24,10 +24,10 @@
 //
 
 import XCTest
-import os
 
 @testable
 import CoreStore
+
 
 #if !SWIFT_PACKAGE
 
@@ -196,7 +196,7 @@ final class TestLogger: CoreStoreLogger {
     
     init(_ expectations: [Expectation: XCTestExpectation]) {
         
-        self.expectations = .init(initialState: expectations)
+        self.expectations = .init(expectations)
     }
     
     
@@ -236,7 +236,7 @@ final class TestLogger: CoreStoreLogger {
     
     // MARK: Private
     
-    private let expectations: OSAllocatedUnfairLock<[Expectation: XCTestExpectation]>
+    private let expectations: Internals.Mutex<[Expectation: XCTestExpectation]>
     
     private func fulfill(_ expectation: Expectation) {
         

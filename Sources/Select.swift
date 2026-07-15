@@ -33,7 +33,7 @@ import CoreData
 /**
  The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
  */
-public protocol SelectResultType {}
+public protocol SelectResultType: Sendable {}
 
 
 // MARK: - SelectAttributesResultType
@@ -43,6 +43,7 @@ public protocol SelectResultType {}
  */
 public protocol SelectAttributesResultType: SelectResultType {
     
+    @_spi(Internals)
     static func cs_fromQueryResultsNativeType(
         _ result: [Any]
     ) -> [[String: Any]]

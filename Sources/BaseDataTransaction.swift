@@ -118,6 +118,27 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
+     - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public func edit<O: DynamicObject>(
+        _ persistentID: DynamicObjectID<O>?
+    ) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to update an entity for \(Internals.typeName(persistentID)) outside its designated queue."
+        )
+        guard let persistentID = persistentID else {
+            
+            return nil
+        }
+        return self.context.fetchExisting(persistentID.managedObjectID)
+    }
+    
+    /**
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
+     
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */

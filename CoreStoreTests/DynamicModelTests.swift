@@ -201,6 +201,7 @@ class Person: CoreStoreObject {
 
 class DynamicModelTests: BaseTestDataTestCase {
     
+    @MainActor
     @objc
     dynamic func test_ThatDynamicModels_CanBeDeclaredCorrectly() {
         

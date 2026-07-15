@@ -10,7 +10,7 @@ import SwiftUI
 extension Modern.ColorsDemo {
     
     // MARK: - Modern.ColorsDemo.MainView
-
+    
     struct MainView<ListView: View, DetailView: View>: View {
         
         // MARK: Internal
@@ -20,7 +20,8 @@ extension Modern.ColorsDemo {
                 _ listPublisher: ListPublisher<Modern.ColorsDemo.Palette>,
                 _ onPaletteTapped: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> Void
             ) -> ListView,
-            detailView: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> DetailView) {
+            detailView: @escaping (ObjectPublisher<Modern.ColorsDemo.Palette>) -> DetailView
+        ) {
             
             self.listView = listView
             self.detailView = detailView
@@ -30,42 +31,51 @@ extension Modern.ColorsDemo {
         // MARK: View
         
         var body: some View {
-            return VStack(spacing: 0) {
-                self.listView(self.$palettes, { self.selectedPalette = $0 })
-                    .navigationBarTitle(
-                        Text("Colors (\(self.palettes.count) objects)")
-                    )
-                    .frame(minHeight: 0, maxHeight: .infinity)
-                self.selectedPalette.map {
+            
+            VStack(spacing: 0) {
+                
+                self.listView(
+                    self.$palettes,
+                    {
+                        self.selectedPalette = $0
+                    }
+                )
+                .frame(minHeight: 0, maxHeight: .infinity)
+                
+                if let selectedPalette = self.selectedPalette {
                     
-                    self.detailView($0)
-                        .edgesIgnoringSafeArea(.all)
+                    self.detailView(selectedPalette)
+                        .ignoresSafeArea()
                         .frame(minHeight: 0, maxHeight: .infinity)
                 }
             }
-            .navigationBarItems(
-                leading: HStack {
+            .navigationTitle("Colors (\(self.palettes.count) objects)")
+            .toolbar {
+                
+                ToolbarItemGroup(placement: .topBarLeading) {
                     EditButton()
-                    Button(
-                        action: { self.clearColors() },
-                        label: { Text("Clear") }
-                    )
-                },
-                trailing: HStack {
-                    Button(
-                        action: { self.changeFilter() },
-                        label: { Text(self.filter.rawValue) }
-                    )
-                    Button(
-                        action: { self.shuffleColors() },
-                        label: { Text("Shuffle") }
-                    )
-                    Button(
-                        action: { self.addColor() },
-                        label: { Text("Add") }
-                    )
+                    Button("Clear") {
+                        
+                        self.clearColors()
+                    }
                 }
-            )
+                
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    
+                    Button(self.filter.rawValue) {
+                        
+                        self.changeFilter()
+                    }
+                    Button("Shuffle") {
+                        
+                        self.shuffleColors()
+                    }
+                    Button("Add") {
+                        
+                        self.addColor()
+                    }
+                }
+            }
         }
         
         
@@ -99,7 +109,7 @@ extension Modern.ColorsDemo {
             
             Modern.ColorsDemo.dataStack.perform(
                 asynchronous: { transaction in
-
+                    
                     try transaction.deleteAll(From<Modern.ColorsDemo.Palette>())
                 },
                 sourceIdentifier: TransactionSource.clear,
@@ -108,10 +118,10 @@ extension Modern.ColorsDemo {
         }
         
         private func addColor() {
-
+            
             Modern.ColorsDemo.dataStack.perform(
                 asynchronous: { transaction in
-
+                    
                     _ = transaction.create(Into<Modern.ColorsDemo.Palette>())
                 },
                 sourceIdentifier: TransactionSource.add,
@@ -120,12 +130,12 @@ extension Modern.ColorsDemo {
         }
         
         private func shuffleColors() {
-
+            
             Modern.ColorsDemo.dataStack.perform(
                 asynchronous: { transaction in
-
+                    
                     for palette in try transaction.fetchAll(From<Modern.ColorsDemo.Palette>()) {
-
+                        
                         palette.setRandomHue()
                     }
                 },
@@ -136,42 +146,38 @@ extension Modern.ColorsDemo {
     }
 }
 
-#if DEBUG
 
-struct _Demo_Modern_ColorsDemo_MainView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        let minimumSamples = 10
-        try! Modern.ColorsDemo.dataStack.perform(
-            synchronous: { transaction in
+// MARK: - Preview
 
-                let missing = minimumSamples
-                    - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
-                guard missing > 0 else {
-                    return
-                }
-                for _ in 0..<missing {
-                    
-                    let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
-                    palette.setRandomHue()
-                }
+#Preview {
+    
+    let minimumSamples = 10
+    try! Modern.ColorsDemo.dataStack.perform(
+        synchronous: { transaction in
+            
+            let missing = minimumSamples
+            - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
+            guard missing > 0 else {
+                return
             }
-        )
-        return Modern.ColorsDemo.MainView(
-            listView: { listPublisher, onPaletteTapped in
-                Modern.ColorsDemo.SwiftUI.ListView(
-                    listPublisher: listPublisher,
-                    onPaletteTapped: onPaletteTapped
-                )
-            },
-            detailView: { objectPublisher in
-                Modern.ColorsDemo.SwiftUI.DetailView(objectPublisher)
+            for _ in 0..<missing {
+                
+                let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
+                palette.setRandomHue()
             }
-        )
-    }
+        }
+    )
+    return Modern.ColorsDemo.MainView(
+        listView: { listPublisher, onPaletteTapped in
+            
+            Modern.ColorsDemo.SwiftUI.ListView(
+                listPublisher: listPublisher,
+                onPaletteTapped: onPaletteTapped
+            )
+        },
+        detailView: { objectPublisher in
+            
+            Modern.ColorsDemo.SwiftUI.DetailView(objectPublisher)
+        }
+    )
 }
-
-#endif

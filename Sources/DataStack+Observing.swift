@@ -37,6 +37,7 @@ extension DataStack {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: an `ObjectMonitor` that monitors changes to `object`
      */
+    @MainActor
     public func monitorObject<O: DynamicObject>(
         _ object: O
     ) -> ObjectMonitor<O> {
@@ -55,6 +56,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
+    @MainActor
     public func monitorList<O>(
         _ from: From<O>,
         _ fetchClauses: FetchClause...
@@ -70,6 +72,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
+    @MainActor
     public func monitorList<O>(
         _ from: From<O>,
         _ fetchClauses: [FetchClause]
@@ -107,6 +110,7 @@ extension DataStack {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
+    @MainActor
     public func monitorList<B: FetchChainableBuilderType>(
         _ clauseChain: B
     ) -> ListMonitor<B.ObjectType> {
@@ -124,6 +128,7 @@ extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public func monitorList<O>(
         createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
@@ -144,6 +149,7 @@ extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public func monitorList<O>(
         createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
@@ -187,6 +193,7 @@ extension DataStack {
      - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      */
+    @MainActor
     public func monitorList<B: FetchChainableBuilderType>(
         createAsynchronously: @escaping @Sendable (ListMonitor<B.ObjectType>) -> Void,
         _ clauseChain: B
@@ -207,6 +214,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
+    @MainActor
     public func monitorSectionedList<O>(
         _ from: From<O>,
         _ sectionBy: SectionBy<O>,
@@ -228,6 +236,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
+    @MainActor
     public func monitorSectionedList<O>(
         _ from: From<O>,
         _ sectionBy: SectionBy<O>,
@@ -268,6 +277,7 @@ extension DataStack {
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType`
      */
+    @MainActor
     public func monitorSectionedList<B: SectionMonitorBuilderType>(
         _ clauseChain: B
     ) -> ListMonitor<B.ObjectType> {
@@ -287,6 +297,7 @@ extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public func monitorSectionedList<O>(
         createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
@@ -310,6 +321,7 @@ extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public func monitorSectionedList<O>(
         createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
@@ -355,6 +367,7 @@ extension DataStack {
      - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      */
+    @MainActor
     public func monitorSectionedList<B: SectionMonitorBuilderType>(
         createAsynchronously: @escaping @Sendable (ListMonitor<B.ObjectType>) -> Void,
         _ clauseChain: B

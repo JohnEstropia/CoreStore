@@ -220,7 +220,10 @@ extension DiffableDataSource.Target {
                     }
                 },
                 animated: animated,
-                completion: group.leave
+                completion: {
+                    
+                    group.leave()
+                }
             )
         }
     }

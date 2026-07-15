@@ -66,7 +66,7 @@ extension Internals {
 
         internal func addObserver<U: AnyObject>(
             _ observer: U,
-            closure: @escaping (T) -> Void
+            closure: @escaping @Sendable (T) -> Void
         ) {
 
             self.observers.setObject(

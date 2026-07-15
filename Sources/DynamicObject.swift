@@ -32,16 +32,19 @@ import CoreData
 /**
  All CoreStore's utilities are designed around `DynamicObject` instances. `NSManagedObject` and `CoreStoreObject` instances all conform to `DynamicObject`.
  */
-public protocol DynamicObject: AnyObject {
+@_nonSendable
+public nonisolated protocol DynamicObject: AnyObject, SendableMetatype {
     
     /**
      The object ID for this instance
      */
-    typealias ObjectID = NSManagedObjectID
+    typealias ObjectID = DynamicObjectID<Self>
+    
     
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_forceCreate(
         entityDescription: NSEntityDescription,
         into context: NSManagedObjectContext,
@@ -51,14 +54,16 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_snapshotDictionary(
-        id: ObjectID,
+        managedObjectID: NSManagedObjectID,
         context: NSManagedObjectContext
     ) -> [String: Any]?
 
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_fromRaw(
         object: NSManagedObject
     ) -> Self
@@ -66,6 +71,7 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_matches(
         object: NSManagedObject
     ) -> Bool
@@ -73,15 +79,25 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     func cs_toRaw() -> NSManagedObject
     
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    func cs_id() -> ObjectID
+    @_spi(Internals)
+    func cs_id() -> NSManagedObjectID
 }
 
 extension DynamicObject {
+    
+    // MARK: Public
+    
+    public func persistentID() -> DynamicObjectID<Self> {
+        
+        return .init(managedObjectID: self.cs_id())
+    }
+    
     
     // MARK: Internal
     
@@ -99,6 +115,7 @@ extension NSManagedObject: DynamicObject {
     
     // MARK: DynamicObject
     
+    @_spi(Internals)
     public class func cs_forceCreate(
         entityDescription: NSEntityDescription,
         into context: NSManagedObjectContext,
@@ -112,13 +129,14 @@ extension NSManagedObject: DynamicObject {
         }
         return object
     }
-
+    
+    @_spi(Internals)
     public class func cs_snapshotDictionary(
-        id: ObjectID,
+        managedObjectID: NSManagedObjectID,
         context: NSManagedObjectContext
     ) -> [String: Any]? {
 
-        guard let object = context.fetchExisting(id) as NSManagedObject? else {
+        guard let object = context.fetchExisting(managedObjectID) as NSManagedObject? else {
 
             return nil
         }
@@ -131,6 +149,7 @@ extension NSManagedObject: DynamicObject {
         return dictionary
     }
     
+    @_spi(Internals)
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
 
 #if swift(>=5.9)
@@ -143,6 +162,7 @@ extension NSManagedObject: DynamicObject {
 #endif
     }
     
+    @_spi(Internals)
     public static func cs_matches(
         object: NSManagedObject
     ) -> Bool {
@@ -150,12 +170,14 @@ extension NSManagedObject: DynamicObject {
         return object.isKind(of: self)
     }
     
+    @_spi(Internals)
     public func cs_toRaw() -> NSManagedObject {
         
         return self
     }
     
-    public func cs_id() -> ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
         
         return self.objectID
     }
@@ -168,6 +190,7 @@ extension CoreStoreObject {
     
     // MARK: DynamicObject
     
+    @_spi(Internals)
     public class func cs_forceCreate(
         entityDescription: NSEntityDescription,
         into context: NSManagedObjectContext,
@@ -182,9 +205,10 @@ extension CoreStoreObject {
         }
         return self.cs_fromRaw(object: object)
     }
-
+    
+    @_spi(Internals)
     public class func cs_snapshotDictionary(
-        id: ObjectID,
+        managedObjectID: NSManagedObjectID,
         context: NSManagedObjectContext
     ) -> [String: Any]? {
 
@@ -240,7 +264,7 @@ extension CoreStoreObject {
                     }
                 }
             }
-            guard let object = context.fetchExisting(id) as CoreStoreObject? else {
+            guard let object = context.fetchExisting(managedObjectID) as CoreStoreObject? else {
 
                 return nil
             }
@@ -253,7 +277,7 @@ extension CoreStoreObject {
         else {
 
             guard
-                let object = context.fetchExisting(id) as CoreStoreObject?,
+                let object = context.fetchExisting(managedObjectID) as CoreStoreObject?,
                 let rawObject = object.rawObject,
                 !rawObject.isDeleted
             else {
@@ -292,6 +316,7 @@ extension CoreStoreObject {
         return values
     }
     
+    @_spi(Internals)
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
         if let coreStoreObject = object.coreStoreObject {
@@ -310,6 +335,7 @@ extension CoreStoreObject {
         return coreStoreObject
     }
     
+    @_spi(Internals)
     public static func cs_matches(
         object: NSManagedObject
     ) -> Bool {
@@ -321,12 +347,14 @@ extension CoreStoreObject {
         return (self as AnyClass).isSubclass(of: type as AnyClass)
     }
     
+    @_spi(Internals)
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
     }
     
-    public func cs_id() -> ObjectID {
+    @_spi(Internals)
+    public func cs_id() -> NSManagedObjectID {
         
         return self.rawObject!.objectID
     }

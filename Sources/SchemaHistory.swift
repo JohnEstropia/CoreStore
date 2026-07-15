@@ -23,7 +23,7 @@
 //  SOFTWARE.
 //
 
-import CoreData
+@preconcurrency import CoreData
 import Foundation
 
 
@@ -32,7 +32,7 @@ import Foundation
 /**
  The `SchemaHistory` encapsulates multiple `DynamicSchema` across multiple model versions. It contains all model history and is used by the `DataStack` to 
  */
-public final class SchemaHistory: ExpressibleByArrayLiteral {
+public final class SchemaHistory: ExpressibleByArrayLiteral, Sendable {
     
     /**
      The version string for the current model version. The `DataStack` will try to migrate all `StorageInterface`s added to itself to this version, following the version steps provided by the `migrationChain`.
@@ -161,6 +161,14 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         self.migrationChain = migrationChain
         self.currentModelVersion = currentModelVersion
         self.rawModel = schemaByVersion[currentModelVersion]!.rawModel()
+        self.entityDescriptionsByEntityIdentifier = self.rawModel.entities.reduce(
+            into: [:],
+            { mapping, entityDescription in
+                
+                let entityIdentifier = Internals.EntityIdentifier(entityDescription)
+                mapping[entityIdentifier] = entityDescription
+            }
+        )
     }
     
     
@@ -168,7 +176,7 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
     
     public typealias Element = DynamicSchema
     
-    public convenience init(arrayLiteral elements: DynamicSchema...) {
+    public convenience init(arrayLiteral elements: any DynamicSchema...) {
 
         self.init(
             allSchema: elements,
@@ -180,19 +188,9 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
     
     // MARK: Internal
     
-    internal let schemaByVersion: [ModelVersion: DynamicSchema]
+    internal let schemaByVersion: [ModelVersion: any DynamicSchema]
     internal let rawModel: NSManagedObjectModel
-    
-    internal private(set) lazy var entityDescriptionsByEntityIdentifier: [Internals.EntityIdentifier: NSEntityDescription] = Internals.with { [unowned self] in
-        
-        var mapping: [Internals.EntityIdentifier: NSEntityDescription] = [:]
-        self.rawModel.entities.forEach { (entityDescription) in
-            
-            let entityIdentifier = Internals.EntityIdentifier(entityDescription)
-            mapping[entityIdentifier] = entityDescription
-        }
-        return mapping
-    }
+    internal let entityDescriptionsByEntityIdentifier: [Internals.EntityIdentifier: NSEntityDescription]
     
     internal func rawModel(for modelVersion: ModelVersion) -> NSManagedObjectModel? {
         

@@ -12,12 +12,11 @@ extension Modern.PokedexDemo.UIKit {
     // MARK: - Modern.PokedexDemo.ListView
 
     struct ListView: UIViewControllerRepresentable {
-        
+
         // MARK: Internal
-        
+
         init() {
-            
-            self.service = Modern.PokedexDemo.Service.init()
+            self._service = State(initialValue: Modern.PokedexDemo.Service())
             self.listPublisher = Modern.PokedexDemo.dataStack
                 .publishList(
                     From<Modern.PokedexDemo.PokedexEntry>()
@@ -41,30 +40,20 @@ extension Modern.PokedexDemo.UIKit {
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Self.Context) {}
 
         static func dismantleUIViewController(_ uiViewController: UIViewControllerType, coordinator: Void) {}
-        
-        
+
+
         // MARK: Private
-        
-        @ObservedObject
+
+        @State
         private var service: Modern.PokedexDemo.Service
-        
+
         private let listPublisher: ListPublisher<Modern.PokedexDemo.PokedexEntry>
     }
 }
 
-#if DEBUG
 
-struct _Demo_Modern_PokedexDemo_UIKit_ListView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        let service = Modern.PokedexDemo.Service()
-        service.fetchPokedexEntries()
-        
-        return Modern.PokedexDemo.UIKit.ListView()
-    }
+// MARK: - Preview
+
+#Preview {
+    Modern.PokedexDemo.UIKit.ListView()
 }
-
-#endif

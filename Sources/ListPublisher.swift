@@ -98,7 +98,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
-        _ callback: @escaping (ListPublisher<O>) -> Void
+        _ callback: @escaping @Sendable (ListPublisher<O>) -> Void
     ) {
 
         Internals.assert(
@@ -134,7 +134,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         _ observer: T,
         notifyInitial: Bool = false,
         initialSourceIdentifier: Any? = nil,
-        _ callback: @escaping (
+        _ callback: @escaping @Sendable (
             _ listPublisher: ListPublisher<O>,
             _ sourceIdentifier: Any?
         ) -> Void
@@ -234,6 +234,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.context.parentStack

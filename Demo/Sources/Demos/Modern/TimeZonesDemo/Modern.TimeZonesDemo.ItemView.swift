@@ -15,18 +15,22 @@ extension Modern.TimeZonesDemo {
         // MARK: Internal
         
         init(title: String, subtitle: String) {
+            
             self.title = title
             self.subtitle = subtitle
         }
         
         
         // MARK: View
-
+        
         var body: some View {
+            
             VStack(alignment: .leading) {
+                
                 Text(self.title)
                     .font(.headline)
                     .foregroundColor(.primary)
+                
                 Text(self.subtitle)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
@@ -40,19 +44,3 @@ extension Modern.TimeZonesDemo {
         fileprivate let subtitle: String
     }
 }
-
-#if DEBUG
-
-struct _Demo_Modern_TimeZonesDemo_ItemView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        Modern.TimeZonesDemo.ItemView(
-            title: "Item Title",
-            subtitle: "A subtitle caption for this item"
-        )
-    }
-}
-
-#endif

@@ -54,11 +54,13 @@ public protocol StorageInterface: AnyObject, Sendable {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     func cs_didAddToDataStack(_ dataStack: DataStack)
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     func cs_didRemoveFromDataStack(_ dataStack: DataStack)
 }
 
@@ -146,6 +148,7 @@ public protocol LocalStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. (SQLite stores for example, can convert the database's WAL journaling mode to DELETE to force a checkpoint)
      */
+    @_spi(Internals)
     func cs_finalizeStorageAndWait(
         soureModelHint: NSManagedObjectModel
     ) throws(any Swift.Error)
@@ -153,6 +156,7 @@ public protocol LocalStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
+    @_spi(Internals)
     func cs_eraseStorageAndWait(
         metadata: [String: Any], 
         soureModelHint: NSManagedObjectModel?

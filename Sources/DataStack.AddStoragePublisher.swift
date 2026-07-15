@@ -90,7 +90,7 @@ extension DataStack {
         
         // MARK: - AddStorageSubscription
         
-        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription, @unchecked Sendable
+        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription
         where S.Input == Output, S.Failure == CoreStoreError {
             
             // MARK: FilePrivate
@@ -116,14 +116,15 @@ extension DataStack {
                     return
                 }
                 nonisolated(unsafe) var progress: Progress? = nil
+                nonisolated(unsafe) weak let weakSelf = self as Optional
                 progress = self.dataStack.addStorage(
                     self.storage,
-                    completion: { [weak self] result in
+                    completion: { result in
                         
                         progress?.setProgressHandler(nil)
                         
                         guard
-                            let self = self,
+                            let self = weakSelf,
                             let subscriber = self.subscriber
                         else {
                             
@@ -151,12 +152,12 @@ extension DataStack {
                 )
                 if let progress = progress {
                     
-                    Internals.mainActorImmediate { @MainActor [weak self] in
+                    Internals.mainActorImmediate { @MainActor in
                         
                         progress.setProgressHandler { progress in
                             
                             guard
-                                let self = self,
+                                let self = weakSelf,
                                 let subscriber = self.subscriber
                             else {
                                 

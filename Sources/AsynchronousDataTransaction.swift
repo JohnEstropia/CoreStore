@@ -32,7 +32,8 @@ import CoreData
 /**
  The `AsynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.perform(asynchronous:...)`.
  */
-public final class AsynchronousDataTransaction: BaseDataTransaction {
+@_nonSendable
+public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction {
     
     /**
      Cancels a transaction by throwing `CoreStoreError.userCancelled`.
@@ -76,6 +77,23 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         )
         
         return super.create(into)
+    }
+    
+    /**
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
+     
+     - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O: DynamicObject>(
+        _ persistentID: DynamicObjectID<O>?
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity for \(Internals.typeName(persistentID)) from an already committed \(Internals.typeName(self))."
+        )
+        return super.edit(persistentID)
     }
     
     /**
@@ -188,7 +206,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     internal func autoCommit(
-        _ completion: @escaping @MainActor (
+        _ completion: @escaping @MainActor @Sendable (
             _ hasChanges: Bool,
             _ error: CoreStoreError?
         ) -> Void

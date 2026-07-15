@@ -24,7 +24,6 @@
 //
 
 import Foundation
-import os
 
 
 // MARK: - CoreStoreDefaults
@@ -94,6 +93,6 @@ public enum CoreStoreDefaults {
 
     // MARK: Private
 
-    private static let defaultStackInstance: OSAllocatedUnfairLock<DataStack?> = .init(initialState: nil)
-    private static let loggerInstance: OSAllocatedUnfairLock<(any CoreStoreLogger)?> = .init(initialState: nil)
+    private static let defaultStackInstance: Internals.Mutex<DataStack?> = .init(nil)
+    private static let loggerInstance: Internals.Mutex<(any CoreStoreLogger)?> = .init(nil)
 }

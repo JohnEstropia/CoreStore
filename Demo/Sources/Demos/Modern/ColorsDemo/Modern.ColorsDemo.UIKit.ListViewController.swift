@@ -42,13 +42,13 @@ extension Modern.ColorsDemo.UIKit {
                 switch transactionSource as? Modern.ColorsDemo.TransactionSource {
                     
                 case .add,
-                     .delete,
-                     .shuffle,
-                     .clear:
+                        .delete,
+                        .shuffle,
+                        .clear:
                     dataSource.apply(listPublisher.snapshot, animatingDifferences: true)
                     
                 case nil,
-                     .refetch:
+                        .refetch:
                     dataSource.apply(listPublisher.snapshot, animatingDifferences: false)
                 }
             }
@@ -57,22 +57,22 @@ extension Modern.ColorsDemo.UIKit {
         /**
          ⭐️ Sample 3: We can end monitoring updates anytime. `removeObserver()` was called here for illustration purposes only. `ListPublisher`s safely remove deallocated observers automatically.
          */
-        deinit {
+        isolated deinit {
             
             self.listPublisher.removeObserver(self)
         }
-
+        
         /**
          ⭐️ Sample 4: This is the custom `DiffableDataSource.TableViewAdapter` subclass we wrote that enabled swipe-to-delete gestures and section index titles on the `UITableView`.
          */
         final class CustomDataSource: DiffableDataSource.TableViewAdapter<Modern.ColorsDemo.Palette> {
             
             // MARK: UITableViewDataSource
-
+            
             override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-
+                
                 switch editingStyle {
-
+                    
                 case .delete:
                     guard let itemID = self.itemID(for: indexPath) else {
                         
@@ -80,13 +80,13 @@ extension Modern.ColorsDemo.UIKit {
                     }
                     self.dataStack.perform(
                         asynchronous: { (transaction) in
-
+                            
                             transaction.delete(objectIDs: [itemID])
                         },
                         sourceIdentifier: Modern.ColorsDemo.TransactionSource.delete,
                         completion: { _ in }
                     )
-
+                    
                 default:
                     break
                 }
@@ -116,10 +116,10 @@ extension Modern.ColorsDemo.UIKit {
             
             super.init(style: .plain)
         }
-
+        
         
         // MARK: UIViewController
-
+        
         override func viewDidLoad() {
             
             super.viewDidLoad()
@@ -128,7 +128,7 @@ extension Modern.ColorsDemo.UIKit {
                 Modern.ColorsDemo.UIKit.ItemCell.self,
                 forCellReuseIdentifier: Modern.ColorsDemo.UIKit.ItemCell.reuseIdentifier
             )
-
+            
             self.startObservingList()
         }
         

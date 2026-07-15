@@ -218,6 +218,7 @@ extension DiffableDataSource {
         public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
 
             return self.dispatcher.itemIdentifier(for: indexPath)
+                .map(O.ObjectID.init(managedObjectID:))
         }
 
         /**
@@ -228,7 +229,7 @@ extension DiffableDataSource {
          */
         public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
 
-            return self.dispatcher.indexPath(for: itemID)
+            return self.dispatcher.indexPath(for: itemID.managedObjectID)
         }
         
         /**
@@ -254,6 +255,11 @@ extension DiffableDataSource {
         // MARK: Internal
 
         internal let dispatcher: Internals.DiffableDataUIDispatcher<O>
+        
+        internal func itemID(for indexPath: IndexPath) -> NSManagedObjectID? {
+            
+            return self.dispatcher.itemIdentifier(for: indexPath)
+        }
     }
 }
 

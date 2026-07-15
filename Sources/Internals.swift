@@ -140,15 +140,6 @@ internal enum Internals {
     }
     
     @inline(__always)
-    internal static func autoreleasepool<T, E>(
-        _ closure: () throws(E) -> T
-    ) throws(E) -> T {
-        
-        return try ObjectiveC.autoreleasepool(invoking: closure)
-    }
-    
-    
-    @inline(__always)
     internal static func withCheckedThrowingContinuation<T>(
         function: String = #function,
         _ body: (CheckedContinuation<T, any Swift.Error>) -> Void
@@ -158,6 +149,17 @@ internal enum Internals {
             function: function,
             body
         )
+    }
+    
+    
+#if compiler(>=27)
+    
+    @inline(__always)
+    internal static func autoreleasepool<T, E>(
+        _ closure: () throws(E) -> T
+    ) throws(E) -> T {
+        
+        return try ObjectiveC.autoreleasepool(invoking: closure)
     }
     
     @inline(__always)
@@ -172,10 +174,12 @@ internal enum Internals {
         )
     }
     
+#endif
+    
     
     @inline(__always)
     internal static func mainActorImmediate(
-        _ body: @escaping @MainActor () -> Void
+        _ body: @escaping @MainActor @Sendable () -> Void
     ) {
         
         if #available(iOS 26.0, macOS 26.0, watchOS 26.0, tvOS 26.0, *) {

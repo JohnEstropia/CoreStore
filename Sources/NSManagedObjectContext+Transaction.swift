@@ -187,7 +187,7 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func saveAsynchronously(
         sourceIdentifier: (any Sendable)?,
-        completion: @escaping @MainActor (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }
+        completion: @escaping @MainActor @Sendable (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }
     ) {
         
         self.perform {

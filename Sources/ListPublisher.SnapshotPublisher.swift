@@ -52,7 +52,7 @@ extension ListPublisher {
         public typealias Output = ListSnapshot<O>
         public typealias Failure = Never
         
-        public func receive<S: Subscriber>(
+        public func receive<S: Subscriber & SendableMetatype>(
             subscriber: S
         ) where S.Input == Output, S.Failure == Failure {
 
@@ -90,7 +90,7 @@ extension ListPublisher {
         
         // MARK: - ListSnapshotSubscription
         
-        fileprivate final class ListSnapshotSubscription<S: Subscriber>: Subscription, @unchecked Sendable
+        fileprivate final class ListSnapshotSubscription<S: Subscriber & SendableMetatype>: Subscription
         where S.Input == Output, S.Failure == Never {
             
             // MARK: FilePrivate
@@ -115,15 +115,17 @@ extension ListPublisher {
                     
                     return
                 }
-                Internals.mainActorImmediate { [self] in
+                nonisolated(unsafe) let strongSelf = self
+                Internals.mainActorImmediate {
                     
-                    self.publisher.addObserver(
-                        self,
-                        notifyInitial: self.emitInitialValue,
-                        { [weak self] (publisher) in
+                    nonisolated(unsafe) weak let weakSelf = strongSelf as Optional
+                    strongSelf.publisher.addObserver(
+                        strongSelf,
+                        notifyInitial: strongSelf.emitInitialValue,
+                        { (publisher) in
                             
                             guard
-                                let self = self,
+                                let self = weakSelf,
                                 let subscriber = self.subscriber
                             else {
                                 
@@ -142,9 +144,10 @@ extension ListPublisher {
                 
                 self.subscriber = nil
                 
+                nonisolated(unsafe) let strongSelf = self
                 Internals.mainActorImmediate {
                     
-                    self.publisher.removeObserver(self)
+                    strongSelf.publisher.removeObserver(strongSelf)
                 }
             }
             
