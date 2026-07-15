@@ -46,7 +46,7 @@ extension DataStack {
             Thread.isMainThread,
             "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        return .init(objectID: object.cs_id(), context: self.unsafeContext())
+        return .init(managedObjectID: object.cs_id(), context: self.unsafeContext())
     }
     
     /**

@@ -41,7 +41,7 @@ extension UnsafeDataTransaction {
         _ object: O
     ) -> ObjectMonitor<O> {
 
-        return .init(objectID: object.cs_id(), context: self.unsafeContext())
+        return .init(managedObjectID: object.cs_id(), context: self.unsafeContext())
     }
     
     /**

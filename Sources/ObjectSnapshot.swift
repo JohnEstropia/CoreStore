@@ -69,6 +69,11 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable, 
 
     public typealias ObjectType = O
     
+    public func persistentID() -> ObjectType.ObjectID {
+        
+        return .init(managedObjectID: self.managedObjectID)
+    }
+    
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()

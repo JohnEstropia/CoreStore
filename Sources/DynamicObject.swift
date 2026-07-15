@@ -91,14 +91,6 @@ public nonisolated protocol DynamicObject: AnyObject, SendableMetatype {
 
 extension DynamicObject {
     
-    // MARK: Public
-    
-    public func persistentID() -> DynamicObjectID<Self> {
-        
-        return .init(managedObjectID: self.cs_id())
-    }
-    
-    
     // MARK: Internal
     
     internal func runtimeType() -> Self.Type {

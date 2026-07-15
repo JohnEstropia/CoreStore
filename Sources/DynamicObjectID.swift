@@ -95,6 +95,11 @@ public struct DynamicObjectID<O: DynamicObject>: Hashable, ObjectRepresentation,
     
     public typealias ObjectType = O
     
+    public func persistentID() -> ObjectType.ObjectID {
+        
+        return self
+    }
+    
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<ObjectType> {
         
         let context = dataStack.unsafeContext()

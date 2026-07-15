@@ -177,6 +177,11 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
     public typealias ObjectType = O
     
+    public func persistentID() -> O.ObjectID {
+        
+        return .init(managedObjectID: self.managedObjectID)
+    }
+    
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()

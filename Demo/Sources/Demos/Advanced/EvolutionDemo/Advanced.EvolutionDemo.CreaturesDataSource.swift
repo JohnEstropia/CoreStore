@@ -50,11 +50,11 @@ extension Advanced.EvolutionDemo {
             }
             self.mutateItemAtIndex = { index in
                 
-                let object = listPublisher.snapshot[index]
+                let persistentID = listPublisher.snapshot[index].persistentID()
                 dataStack.perform(
                     asynchronous: { transaction in
                         
-                        object
+                        persistentID
                             .asEditable(in: transaction)?
                             .mutate(in: transaction)
                     },

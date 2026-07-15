@@ -60,6 +60,11 @@ public protocol ObjectRepresentation: AnyObjectRepresentation {
     associatedtype ObjectType: DynamicObject
     
     /**
+     The `Sendable` ID to use for referencing the object between isolation contexts.
+     */
+    func persistentID() -> ObjectType.ObjectID
+    
+    /**
      An instance that may be observed for object changes.
      */
     func asPublisher(in dataStack: DataStack) -> ObjectPublisher<ObjectType>
@@ -85,6 +90,7 @@ public protocol ObjectRepresentation: AnyObjectRepresentation {
     func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
 }
 
+
 extension NSManagedObject: ObjectRepresentation {}
 
 extension CoreStoreObject: ObjectRepresentation {}
@@ -92,6 +98,14 @@ extension CoreStoreObject: ObjectRepresentation {}
 extension DynamicObject where Self: ObjectRepresentation {
 
     // MARK: Public
+    
+    /**
+     The `Sendable` ID to use for referencing the object between isolation contexts.
+     */
+    public func persistentID() -> Self.ObjectID {
+        
+        return .init(managedObjectID: self.cs_id())
+    }
 
     /**
      An `ObjectPublisher` wrapper for the exact same object

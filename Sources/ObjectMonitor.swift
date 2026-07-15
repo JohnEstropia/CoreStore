@@ -170,7 +170,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     @_spi(Internals)
     public func cs_id() -> NSManagedObjectID {
         
-        return self.id
+        return self.managedObjectID
     }
     
     @_spi(Internals)
@@ -184,43 +184,48 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     public typealias ObjectType = O
     
+    public func persistentID() -> O.ObjectID {
+        
+        return .init(managedObjectID: self.managedObjectID)
+    }
+    
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
-        return dataStack.unsafeContext().objectPublisher(managedObjectID: self.id)
+        return dataStack.unsafeContext().objectPublisher(managedObjectID: self.managedObjectID)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
 
-        return dataStack.unsafeContext().fetchExisting(self.id)
+        return dataStack.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return transaction.unsafeContext().fetchExisting(self.id)
+        return transaction.unsafeContext().fetchExisting(self.managedObjectID)
     }
     
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
         
         let context = dataStack.unsafeContext()
-        return ObjectSnapshot<O>(managedObjectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
         
         let context = transaction.unsafeContext()
-        return ObjectSnapshot<O>(managedObjectID: self.id, context: context)
+        return ObjectSnapshot<O>(managedObjectID: self.managedObjectID, context: context)
     }
     
     
     // MARK: Internal
     
     internal init(
-        objectID: NSManagedObjectID,
+        managedObjectID: NSManagedObjectID,
         context: NSManagedObjectContext
     ) {
         
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
-        fetchRequest.entity = objectID.entity
+        fetchRequest.entity = managedObjectID.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.sortDescriptors = []
@@ -230,13 +235,13 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
         let fetchedResultsController = Internals.CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
-            from: From<O>([objectID.persistentStore?.configurationName]),
-            applyFetchClauses: Where<O>("SELF", isEqualTo: objectID).applyToFetchRequest
+            from: From<O>([managedObjectID.persistentStore?.configurationName]),
+            applyFetchClauses: Where<O>("SELF", isEqualTo: managedObjectID).applyToFetchRequest
         )
         
         let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
         
-        self.id = objectID
+        self.managedObjectID = managedObjectID
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         
@@ -355,7 +360,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     
     // MARK: Private
     
-    private let id: NSManagedObjectID
+    private let managedObjectID: NSManagedObjectID
     private let fetchedResultsController: Internals.CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
     private let lastCommittedAttributes: Internals.Mutex<[String: NSObject]> = .init([:])
