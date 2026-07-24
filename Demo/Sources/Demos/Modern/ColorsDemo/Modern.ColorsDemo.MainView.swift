@@ -11,6 +11,7 @@ extension Modern.ColorsDemo {
     
     // MARK: - Modern.ColorsDemo.MainView
     
+    @MainActor
     struct MainView<ListView: View, DetailView: View>: View {
         
         // MARK: Internal

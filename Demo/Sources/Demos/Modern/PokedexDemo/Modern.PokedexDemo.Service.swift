@@ -21,7 +21,7 @@ extension Modern.PokedexDemo {
         /**
          ⭐️ Sample 1: Importing a list of JSON data into `ImportableUniqueObject`s whose `ImportSource` are tuples
          */
-        private static func importPokedexEntries(from data: Data) async throws {
+        private static func importPokedexEntries(from data: Data) async throws(Modern.PokedexDemo.Service.Error) {
             
             do {
                 
@@ -43,7 +43,7 @@ extension Modern.PokedexDemo {
             }
             catch {
                 
-                throw self.mapError(error)
+                throw self.mapError(.init(error))
             }
         }
         
@@ -51,31 +51,31 @@ extension Modern.PokedexDemo {
          ⭐️ Sample 2: Importing a single JSON data into an `ImportableUniqueObject` whose `ImportSource` is a JSON `Dictionary`
          */
         private static func importSpecies(
-            for detailsObjectID: NSManagedObjectID,
+            for detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
             from data: Data
         ) async throws -> ObjectSnapshot<Modern.PokedexDemo.Species> {
             
-            let speciesObjectID = try await Modern.PokedexDemo.dataStack.async.perform { transaction -> NSManagedObjectID in
+            let speciesPersistentID = try await Modern.PokedexDemo.dataStack.async.perform { transaction in
                 
-                let json: Dictionary<String, Any> = try self.parseJSON(
-                    try JSONSerialization.jsonObject(with: data, options: [])
-                )
-                guard
-                    let species = try transaction.importUniqueObject(
-                        Into<Modern.PokedexDemo.Species>(),
-                        source: json
+                    let json: Dictionary<String, Any> = try self.parseJSON(
+                        try JSONSerialization.jsonObject(with: data, options: [])
                     )
-                else {
+                    guard
+                        let species = try transaction.importUniqueObject(
+                            Into<Modern.PokedexDemo.Species>(),
+                            source: .init(json: json)
+                        )
+                    else {
                     
                     throw Modern.PokedexDemo.Service.Error.unexpected
                 }
                 transaction
-                    .edit(Into<Modern.PokedexDemo.Details>(), detailsObjectID)?
+                    .edit(Into<Modern.PokedexDemo.Details>(), detailsPersistentID)?
                     .species = species
-                return species.objectID()
+                return species.persistentID()
             }
             guard
-                let species: Modern.PokedexDemo.Species = Modern.PokedexDemo.dataStack.fetchExisting(speciesObjectID),
+                let species: Modern.PokedexDemo.Species = Modern.PokedexDemo.dataStack.fetchExisting(speciesPersistentID),
                 let snapshot = species.asSnapshot()
             else {
                 
@@ -88,7 +88,7 @@ extension Modern.PokedexDemo {
          ⭐️ Sample 3: Importing a list of JSON data into `ImportableUniqueObject`s whose `ImportSource` are JSON `Dictionary`s
          */
         private static func importForms(
-            for detailsObjectID: NSManagedObjectID,
+            for detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
             from dataArray: [Data]
         ) async throws {
             
@@ -110,13 +110,13 @@ extension Modern.PokedexDemo {
                         throw Modern.PokedexDemo.Service.Error.unexpected
                     }
                     transaction
-                        .edit(Into<Modern.PokedexDemo.Details>(), detailsObjectID)?
+                        .edit(Into<Modern.PokedexDemo.Details>(), detailsPersistentID)?
                         .forms = forms
                 }
             }
             catch {
                 
-                throw self.mapError(error)
+                throw self.mapError(.init(error))
             }
         }
         
@@ -195,8 +195,8 @@ extension Modern.PokedexDemo {
             if let species = details.$species?.snapshot {
                 
                 self.fetchFormsIfNeeded(
-                    key: species.$id,
-                    detailsObjectID: details.objectID(),
+                    key: String(species.$id),
+                    detailsPersistentID: details.persistentID(),
                     species: species
                 )
                 return
@@ -207,7 +207,7 @@ extension Modern.PokedexDemo {
                 return
             }
             let speciesURL = pokedexEntry.$speciesURL
-            let detailsObjectID = details.objectID()
+            let detailsPersistentID = details.persistentID()
             self.detailTasks[key] = Task { [weak self] in
                 
                 guard let self else {
@@ -220,7 +220,7 @@ extension Modern.PokedexDemo {
                 }
                 await self.fetchSpecies(
                     key: key,
-                    detailsObjectID: detailsObjectID,
+                    detailsPersistentID: detailsPersistentID,
                     speciesURL: speciesURL
                 )
             }
@@ -289,7 +289,7 @@ extension Modern.PokedexDemo {
         
         private func fetchSpecies(
             key: String,
-            detailsObjectID: NSManagedObjectID,
+            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
             speciesURL: URL
         ) async {
             
@@ -299,7 +299,7 @@ extension Modern.PokedexDemo {
                 try Task.checkCancellation()
                 
                 let species = try await Self.importSpecies(
-                    for: detailsObjectID,
+                    for: detailsPersistentID,
                     from: data
                 )
                 guard species.$details?.snapshot?.$forms.isEmpty == true else {
@@ -307,7 +307,7 @@ extension Modern.PokedexDemo {
                     return
                 }
                 await self.fetchForms(
-                    detailsObjectID: detailsObjectID,
+                    detailsPersistentID: detailsPersistentID,
                     formsURLs: species.$formsURLs
                 )
             }
@@ -331,7 +331,7 @@ extension Modern.PokedexDemo {
         
         private func fetchFormsIfNeeded(
             key: String,
-            detailsObjectID: NSManagedObjectID,
+            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
             species: ObjectSnapshot<Modern.PokedexDemo.Species>
         ) {
             
@@ -356,14 +356,14 @@ extension Modern.PokedexDemo {
                     self.detailTasks.removeValue(forKey: key)
                 }
                 await self.fetchForms(
-                    detailsObjectID: detailsObjectID,
+                    detailsPersistentID: detailsPersistentID,
                     formsURLs: formsURLs
                 )
             }
         }
         
         private func fetchForms(
-            detailsObjectID: NSManagedObjectID,
+            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
             formsURLs: [URL]
         ) async {
             
@@ -378,7 +378,7 @@ extension Modern.PokedexDemo {
                     dataArray.append(data)
                 }
                 try await Self.importForms(
-                    for: detailsObjectID,
+                    for: detailsPersistentID,
                     from: dataArray
                 )
             }
@@ -408,7 +408,7 @@ extension Modern.PokedexDemo {
             case networkError(URLError)
             case parseError(expected: Any.Type, actual: Any.Type, file: String)
             case saveError(CoreStoreError)
-            case otherError(Swift.Error)
+            case otherError(Swift::Error)
             case unexpected
         }
     }

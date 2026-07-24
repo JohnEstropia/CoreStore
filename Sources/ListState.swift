@@ -35,7 +35,7 @@ import SwiftUI
  A property wrapper type that can read `ListPublisher` changes.
  */
 @propertyWrapper
-public struct ListState<O: DynamicObject>: DynamicProperty {
+public struct ListState<O: DynamicObject>: @MainActor DynamicProperty {
     
     // MARK: Public
     
@@ -70,6 +70,7 @@ public struct ListState<O: DynamicObject>: DynamicProperty {
         _ listPublisher: ListPublisher<O>
     ) {
         
+        self.sourceListPublisher = listPublisher
         self._observer = .init(wrappedValue: .init(listPublisher: listPublisher))
     }
     
@@ -338,9 +339,11 @@ public struct ListState<O: DynamicObject>: DynamicProperty {
     
     // MARK: DynamicProperty
     
+    @MainActor
     public mutating func update() {
         
         self._observer.update()
+        self.observer.rebind(to: self.sourceListPublisher)
     }
     
     
@@ -349,13 +352,15 @@ public struct ListState<O: DynamicObject>: DynamicProperty {
     @State
     private var observer: Observer
     
+    private let sourceListPublisher: ListPublisher<O>
+    
     
     // MARK: - Observer
     
     @MainActor
     private final class Observer: Observation.Observable {
         
-        let listPublisher: ListPublisher<O>
+        private(set) var listPublisher: ListPublisher<O>
         
         nonisolated var items: ListSnapshot<O> {
             
@@ -377,8 +382,35 @@ public struct ListState<O: DynamicObject>: DynamicProperty {
             
             self.listPublisher = listPublisher
             self.current = .init(listPublisher.snapshot)
+            self.attachObserver()
+        }
+        
+        isolated deinit {
             
-            listPublisher.addObserver(self) { [weak self] (listPublisher) in
+            self.listPublisher.removeObserver(self)
+        }
+        
+        func rebind(to listPublisher: ListPublisher<O>) {
+            
+            guard self.listPublisher !== listPublisher else {
+                
+                return
+            }
+            self.listPublisher.removeObserver(self)
+            self.listPublisher = listPublisher
+            self.items = listPublisher.snapshot
+            self.attachObserver()
+        }
+        
+        
+        // MARK: Private
+        
+        private let registrar = ObservationRegistrar()
+        private let current: Internals.Mutex<ListSnapshot<O>>
+        
+        private func attachObserver() {
+            
+            self.listPublisher.addObserver(self) { [weak self] listPublisher in
                 
                 guard let self = self else {
                     
@@ -387,17 +419,6 @@ public struct ListState<O: DynamicObject>: DynamicProperty {
                 self.items = listPublisher.snapshot
             }
         }
-        
-        isolated deinit {
-            
-            self.listPublisher.removeObserver(self)
-        }
-        
-        
-        // MARK: Private
-        
-        private let registrar = ObservationRegistrar()
-        private let current: Internals.Mutex<ListSnapshot<O>>
     }
 }
 

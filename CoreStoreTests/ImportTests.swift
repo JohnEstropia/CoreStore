@@ -1060,17 +1060,17 @@ class ImportTests: BaseTestDataTestCase {
 
 // MARK: - TestInsertError
 
-private struct TestInsertError: Error {}
+private struct TestInsertError: Swift::Error {}
 
 
 // MARK: - TestUpdateError
 
-private struct TestUpdateError: Error {}
+private struct TestUpdateError: Swift::Error {}
 
 
 // MARK: - TestIDError
 
-private struct TestIDError: Error {}
+private struct TestIDError: Swift::Error {}
 
 
 // MARK: - TestEntity1

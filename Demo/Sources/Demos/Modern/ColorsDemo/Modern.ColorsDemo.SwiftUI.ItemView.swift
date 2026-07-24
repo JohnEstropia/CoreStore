@@ -11,6 +11,7 @@ extension Modern.ColorsDemo.SwiftUI {
     
     // MARK: - Modern.ColorsDemo.SwiftUI.ItemView
     
+    @MainActor
     struct ItemView: View {
         
         /**

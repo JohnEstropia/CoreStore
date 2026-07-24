@@ -32,7 +32,7 @@ import Foundation
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: Error, CustomNSError, Hashable, Sendable {
+public enum CoreStoreError: Swift::Error, CustomNSError, Hashable, Sendable {
     
     /**
      A failure occured because of an unknown error.
@@ -67,7 +67,7 @@ public enum CoreStoreError: Error, CustomNSError, Hashable, Sendable {
     /**
      The transaction was terminated by a user-thrown `Error`.
      */
-    case userError(error: Error)
+    case userError(error: Swift::Error)
     
     /**
      The transaction was cancelled by the user.
@@ -82,7 +82,7 @@ public enum CoreStoreError: Error, CustomNSError, Hashable, Sendable {
     /**
      Casts any `Error` to a known `CoreStoreError`, or wraps it in `CoreStoreError.internalError(NSError:)`.
      */
-    public init(_ error: Error?) {
+    public init(_ error: Swift::Error?) {
 
         guard let error = error else {
 

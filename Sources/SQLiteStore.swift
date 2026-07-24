@@ -236,7 +236,7 @@ public final class SQLiteStore: LocalStorage {
     @_spi(Internals)
     public func cs_finalizeStorageAndWait(
         soureModelHint: NSManagedObjectModel
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
             
@@ -259,12 +259,12 @@ public final class SQLiteStore: LocalStorage {
     public func cs_eraseStorageAndWait(
         metadata: [String: Any],
         soureModelHint: NSManagedObjectModel?
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         func deleteFiles(
             storeURL: URL,
             extraFiles: [String] = []
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let fileManager = FileManager.default
             let extraFiles: [String] = [

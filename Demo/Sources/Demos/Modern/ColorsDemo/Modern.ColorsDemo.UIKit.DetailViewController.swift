@@ -92,7 +92,7 @@ extension Modern.ColorsDemo.UIKit {
             _ monitor: ObjectMonitor<Modern.ColorsDemo.Palette>,
             didUpdateObject object: sending Modern.ColorsDemo.Palette,
             changedPersistentKeys: Set<KeyPathString>,
-            sourceIdentifier: Any?
+            sourceIdentifier: (any Sendable)?
         ) {
             
             MainActor.assumeIsolated {
@@ -253,10 +253,11 @@ extension Modern.ColorsDemo.UIKit {
         private dynamic func hueSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.hue = value
                 },
                 completion: { _ in }
@@ -268,10 +269,11 @@ extension Modern.ColorsDemo.UIKit {
         private dynamic func saturationSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.saturation = value
                 },
                 completion: { _ in }
@@ -283,10 +285,11 @@ extension Modern.ColorsDemo.UIKit {
         private dynamic func brightnessSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.brightness = value
                 },
                 completion: { _ in }
@@ -294,5 +297,3 @@ extension Modern.ColorsDemo.UIKit {
         }
     }
 }
-
-

@@ -107,7 +107,7 @@ extension DispatchQueue {
     
     @nonobjc @inline(__always)
     internal func cs_barrierSync<T>(
-        _ closure: () throws(any Swift.Error) -> T
+        _ closure: () throws(any Swift::Error) -> T
     ) rethrows -> T {
 
         return try self.sync(flags: .barrier) { try autoreleasepool(invoking: closure) }

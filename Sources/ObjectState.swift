@@ -35,7 +35,7 @@ import SwiftUI
  A property wrapper type that can read `ObjectPublisher` changes.
  */
 @propertyWrapper
-public struct ObjectState<O: DynamicObject>: DynamicProperty {
+public struct ObjectState<O: DynamicObject>: @MainActor DynamicProperty {
     
     // MARK: Public
     
@@ -65,6 +65,7 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     @MainActor
     public init(_ objectPublisher: ObjectPublisher<O>?) {
         
+        self.sourceObjectPublisher = objectPublisher
         self._observer = .init(wrappedValue: .init(objectPublisher: objectPublisher))
     }
     
@@ -86,9 +87,11 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     
     // MARK: DynamicProperty
     
+    @MainActor
     public mutating func update() {
         
         self._observer.update()
+        self.observer.rebind(to: self.sourceObjectPublisher)
     }
     
     
@@ -97,13 +100,15 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     @State
     private var observer: Observer
     
+    private let sourceObjectPublisher: ObjectPublisher<O>?
+    
     
     // MARK: - Observer
     
     @MainActor
     private final class Observer: Observation.Observable {
         
-        let objectPublisher: ObjectPublisher<O>?
+        private(set) var objectPublisher: ObjectPublisher<O>?
         
         nonisolated var item: ObjectSnapshot<O>? {
             
@@ -122,21 +127,28 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
         }
         
         init(objectPublisher: ObjectPublisher<O>?) {
-
-            guard
-                let dataStack = objectPublisher?.cs_dataStack(),
-                let objectPublisher = objectPublisher?.asPublisher(in: dataStack)
-            else {
-
-                self.objectPublisher = nil
-                self.current = .init(nil)
+            
+            self.objectPublisher = nil
+            self.current = .init(nil)
+            self.rebind(to: objectPublisher)
+        }
+        
+        isolated deinit {
+            
+            self.objectPublisher?.removeObserver(self)
+        }
+        
+        func rebind(to objectPublisher: ObjectPublisher<O>?) {
+            
+            let objectPublisher = Self.canonicalPublisher(for: objectPublisher)
+            guard self.objectPublisher != objectPublisher else {
+                
                 return
             }
-            
+            self.objectPublisher?.removeObserver(self)
             self.objectPublisher = objectPublisher
-            self.current = .init(objectPublisher.snapshot)
-            
-            objectPublisher.addObserver(self) { [weak self] (objectPublisher) in
+            self.item = objectPublisher?.snapshot
+            objectPublisher?.addObserver(self) { [weak self] objectPublisher in
                 
                 guard let self = self else {
                     
@@ -146,16 +158,25 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             }
         }
         
-        isolated deinit {
-            
-            self.objectPublisher?.removeObserver(self)
-        }
-        
         
         // MARK: Private
         
         private let registrar = ObservationRegistrar()
         private let current: Internals.Mutex<ObjectSnapshot<O>?>
+        
+        private static func canonicalPublisher(
+            for objectPublisher: ObjectPublisher<O>?
+        ) -> ObjectPublisher<O>? {
+            
+            guard
+                let objectPublisher = objectPublisher,
+                let dataStack = objectPublisher.cs_dataStack()
+            else {
+                
+                return nil
+            }
+            return objectPublisher.asPublisher(in: dataStack)
+        }
     }
 }
 

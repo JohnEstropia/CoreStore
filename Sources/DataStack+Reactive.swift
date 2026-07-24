@@ -326,7 +326,7 @@ extension DataStack.ReactiveNamespace {
         sourceArray: S,
         preProcess: @escaping @Sendable (
             _ mapping: [O.UniqueIDType: O.ImportSource]
-        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
+        ) throws(any Swift::Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
     ) -> Future<[O], CoreStoreError> where S.Iterator.Element == O.ImportSource {
         
         return .init { (promise) in
@@ -379,7 +379,7 @@ extension DataStack.ReactiveNamespace {
     public func perform<Output: Sendable>(
         _ asynchronous: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
-        ) throws(any Swift.Error) -> Output
+        ) throws(any Swift::Error) -> Output
     ) -> Future<Output, CoreStoreError> {
         
         return .init { (promise) in

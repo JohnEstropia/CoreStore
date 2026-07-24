@@ -81,7 +81,7 @@ extension Modern.ColorsDemo.UIKit {
                     self.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            transaction.delete(objectIDs: [itemID])
+                            transaction.delete(itemID)
                         },
                         sourceIdentifier: Modern.ColorsDemo.TransactionSource.delete,
                         completion: { _ in }

@@ -11,6 +11,7 @@ extension Modern.ColorsDemo.SwiftUI {
     
     // MARK: - Modern.ColorsDemo.SwiftUI.ListView
     
+    @MainActor
     struct ListView: View {
         
         /**
@@ -81,7 +82,7 @@ extension Modern.ColorsDemo.SwiftUI {
             Modern.ColorsDemo.dataStack.perform(
                 asynchronous: { transaction in
                     
-                    transaction.delete(objectIDs: objectIDsToDelete)
+                    transaction.delete(persistentIDs: objectIDsToDelete)
                 },
                 completion: { _ in }
             )

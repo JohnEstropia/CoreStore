@@ -80,7 +80,7 @@ public protocol ImportableObject: DynamicObject {
     func didInsert(
         from source: ImportSource,
         in transaction: BaseDataTransaction
-    ) throws(any Swift.Error)
+    ) throws(any Swift::Error)
 }
 
 

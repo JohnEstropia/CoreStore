@@ -11,6 +11,7 @@ extension Modern.PokedexDemo {
     
     // MARK: - Modern.PokedexDemo.MainView
     
+    @MainActor
     struct MainView<ListView: View>: View {
         
         // MARK: Internal

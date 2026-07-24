@@ -108,7 +108,7 @@ public final class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider 
         public typealias Transformer = @Sendable (
             _ sourceObject: UnsafeSourceObject,
             _ createDestinationObject: () -> UnsafeDestinationObject
-        ) throws(any Swift.Error) -> Void
+        ) throws(any Swift::Error) -> Void
 
         /**
          The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight).
@@ -116,7 +116,7 @@ public final class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider 
         public static func inferredTransformation(
             _ sourceObject: UnsafeSourceObject,
             _ createDestinationObject: () -> UnsafeDestinationObject
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let destinationObject = createDestinationObject()
             destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
@@ -556,7 +556,7 @@ public final class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider 
             forSource sInstance: NSManagedObject,
             in mapping: NSEntityMapping,
             manager: NSMigrationManager
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let userInfo = mapping.userInfo!
             let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
@@ -588,7 +588,7 @@ public final class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider 
             forDestination dInstance: NSManagedObject,
             in mapping: NSEntityMapping,
             manager: NSMigrationManager
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             try super.createRelationships(forDestination: dInstance, in: mapping, manager: manager)
         }

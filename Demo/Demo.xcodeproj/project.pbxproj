@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F035E4F300F726700E98F8F /* WithMainActorImmediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */; };
 		B531EFE724EA762D005F247D /* Menu.PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */; };
 		B531EFE924EB5A53005F247D /* Modern.PokedexDemo.PokedexEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */; };
 		B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */; };
@@ -38,7 +39,7 @@
 		B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */; };
 		B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */; };
 		B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */; };
-		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; platformFilter = ios; };
 		B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917424E6990200E7E8BD /* MapKit.framework */; };
 		B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917624E6990700E7E8BD /* CoreLocation.framework */; };
@@ -115,6 +116,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithMainActorImmediate.swift; sourceTree = "<group>"; };
 		B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.PlaceholderView.swift; sourceTree = "<group>"; };
 		B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokedexEntry.swift; sourceTree = "<group>"; };
 		B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Service.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 		B5A3917A24E6A75F00E7E8BD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */,
 				B5A3917F24E787D900E7E8BD /* InstructionsView.swift */,
 				B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */,
 				B5A3915424E6857F00E7E8BD /* Menu */,
@@ -685,6 +688,7 @@
 				B5A54401250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift in Sources */,
 				B5A543FF250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift in Sources */,
 				B5D6F209250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift in Sources */,
+				5F035E4F300F726700E98F8F /* WithMainActorImmediate.swift in Sources */,
 				B5C18F3325138700001BEFB3 /* Advanced.EvolutionDemo.ProgressView.swift in Sources */,
 				B5D6F1F8250E07FD00DF5D2F /* Advanced.EvolutionDemo.V1.swift in Sources */,
 				B5D6F210250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodeld in Sources */,

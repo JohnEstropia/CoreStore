@@ -114,7 +114,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction, @unchecked Sendab
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
     public func flush(
-        closure: () throws(any Swift.Error) -> Void
+        closure: () throws(any Swift::Error) -> Void
     ) rethrows {
 
         try closure()

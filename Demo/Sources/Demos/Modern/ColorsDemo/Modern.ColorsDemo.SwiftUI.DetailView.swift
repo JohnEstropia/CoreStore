@@ -11,6 +11,7 @@ extension Modern.ColorsDemo.SwiftUI {
     
     // MARK: - Modern.ColorsDemo.SwiftUI.DetailView
     
+    @MainActor
     struct DetailView: View {
         
         /**
@@ -33,6 +34,7 @@ extension Modern.ColorsDemo.SwiftUI {
         
         init(_ palette: ObjectPublisher<Modern.ColorsDemo.Palette>) {
             
+            let persistentID = palette.persistentID()
             self._palette = .init(palette)
             self._hue = Binding(
                 get: { palette.hue ?? 0 },
@@ -41,7 +43,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.hue = percentage
                         },
                         completion: { _ in }
@@ -55,7 +57,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.saturation = percentage
                         },
                         completion: { _ in }
@@ -69,7 +71,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.brightness = percentage
                         },
                         completion: { _ in }

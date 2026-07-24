@@ -151,7 +151,7 @@ public protocol LocalStorage: StorageInterface {
     @_spi(Internals)
     func cs_finalizeStorageAndWait(
         soureModelHint: NSManagedObjectModel
-    ) throws(any Swift.Error)
+    ) throws(any Swift::Error)
 
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
@@ -160,7 +160,7 @@ public protocol LocalStorage: StorageInterface {
     func cs_eraseStorageAndWait(
         metadata: [String: Any], 
         soureModelHint: NSManagedObjectModel?
-    ) throws(any Swift.Error)
+    ) throws(any Swift::Error)
 }
 
 extension LocalStorage {

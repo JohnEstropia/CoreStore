@@ -121,7 +121,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<O: DynamicObject>(
+    public func edit<O>(
         _ persistentID: DynamicObjectID<O>?
     ) -> O? {
 
@@ -158,6 +158,30 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
+     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public func edit<O>(
+        _ into: Into<O>,
+        _ persistentID: DynamicObjectID<O>
+    ) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) outside its designated queue."
+        )
+        Internals.assert(
+            into.inferStoreIfPossible
+            || (into.configuration ?? DataStack.defaultConfigurationName) == persistentID.managedObjectID.persistentStore?.configurationName,
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
+        )
+        return self.fetchExisting(persistentID)
+    }
+    
+    /**
      Returns an editable proxy of the object with the specified `NSManagedObjectID`.
      
      - parameter into: an `Into` clause specifying the entity type
@@ -179,6 +203,26 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID)
+    }
+    
+    /**
+     Deletes the objects with the specified `DynamicObjectID`s.
+
+     - parameter persistentIDs: the `DynamicObjectID`s of the objects to delete
+     */
+    public func delete<O: DynamicObject, S: Sequence>(
+        persistentIDs: S
+    ) where S.Iterator.Element == DynamicObjectID<O> {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete an entity outside its designated queue."
+        )
+        let context = self.context
+        persistentIDs.forEach {
+
+            context.fetchExisting($0).map({ context.delete($0.cs_toRaw()) })
+        }
     }
 
     /**

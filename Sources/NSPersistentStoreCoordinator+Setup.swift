@@ -49,7 +49,7 @@ extension NSPersistentStoreCoordinator {
     
     @nonobjc
     internal func performSynchronously<T>(
-        _ closure: @Sendable () throws(any Swift.Error) -> T
+        _ closure: @Sendable () throws(any Swift::Error) -> T
     ) throws(CoreStoreError) -> T {
         
         do {

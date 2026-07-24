@@ -142,7 +142,9 @@ extension NSManagedObject: DynamicObject {
     }
     
     @_spi(Internals)
-    public class func cs_fromRaw(object: NSManagedObject) -> Self {
+    public class func cs_fromRaw(
+        object: NSManagedObject
+    ) -> Self {
 
 #if swift(>=5.9)
         return unsafeDowncast(object, to: self)
@@ -309,7 +311,9 @@ extension CoreStoreObject {
     }
     
     @_spi(Internals)
-    public class func cs_fromRaw(object: NSManagedObject) -> Self {
+    public class func cs_fromRaw(
+        object: NSManagedObject
+    ) -> Self {
         
         if let coreStoreObject = object.coreStoreObject {
             

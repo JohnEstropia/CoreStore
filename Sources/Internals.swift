@@ -133,8 +133,8 @@ internal enum Internals {
     
     @inline(__always)
     internal static func autoreleasepool<T>(
-        _ closure: () throws(any Swift.Error) -> T
-    ) throws(any Swift.Error) -> T {
+        _ closure: () throws(any Swift::Error) -> T
+    ) throws(any Swift::Error) -> T {
 
         return try ObjectiveC.autoreleasepool(invoking: closure)
     }
@@ -142,8 +142,8 @@ internal enum Internals {
     @inline(__always)
     internal static func withCheckedThrowingContinuation<T>(
         function: String = #function,
-        _ body: (CheckedContinuation<T, any Swift.Error>) -> Void
-    ) async throws(any Swift.Error) -> sending T {
+        _ body: (CheckedContinuation<T, any Swift::Error>) -> Void
+    ) async throws(any Swift::Error) -> sending T {
 
         return try await _Concurrency.withCheckedThrowingContinuation(
             function: function,

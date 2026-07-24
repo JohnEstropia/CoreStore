@@ -13,52 +13,70 @@ extension Menu {
     // MARK: - Menu.MainView
     
     struct MainView: View {
-        
-        @State
-        private var selection: Menu.Route?
-        
+
+        @Environment(\.horizontalSizeClass)
+        private var horizontalSizeClass
         
         // MARK: View
         
+        @ViewBuilder
         var body: some View {
-            
-            NavigationSplitView(
-                sidebar: {
-                    
-                    List(selection: self.$selection) {
-                        
-                        ForEach(Menu.Section.allCases, id: \.self) { section in
-                            
-                            Section(section.rawValue) {
-                                
-                                ForEach(section.routes) { route in
-                                    
-                                    Menu.ItemView(
-                                        title: route.title,
-                                        subtitle: route.subtitle,
-                                        isEnabled: route.isEnabled
-                                    )
-                                    .tag(route as Menu.Route?)
-                                    .disabled(!route.isEnabled)
-                                }
-                            }
-                        }
-                    }
-                    .navigationTitle("CoreStore Demos")
-                    .listStyle(.sidebar)
-                },
-                detail: {
-                    
-                    if let selection = self.selection {
-                        
-                        selection.destination
-                    }
-                    else {
-                        
+
+            if self.horizontalSizeClass == .compact {
+                NavigationStack {
+                    self.menuList
+                }
+            }
+            else {
+                NavigationSplitView(
+                    sidebar: {
+                        self.menuList
+                    },
+                    detail: {
                         Menu.PlaceholderView()
                     }
+                )
+            }
+        }
+
+
+        // MARK: Private
+
+        @ViewBuilder
+        private var menuList: some View {
+            List {
+
+                ForEach(Menu.Section.allCases, id: \.self) { section in
+
+                    SwiftUI.Section(
+                        content: {
+
+                            ForEach(section.routes) { route in
+
+                                NavigationLink(
+                                    destination: {
+                                        route.destination
+                                    },
+                                    label: {
+                                        Menu.ItemView(
+                                            title: route.title,
+                                            subtitle: route.subtitle,
+                                            isEnabled: route.isEnabled
+                                        )
+                                    }
+                                )
+                                .disabled(!route.isEnabled)
+                            }
+                        },
+                        header: {
+
+                            Text(section.rawValue)
+                        }
+                    )
                 }
-            )
+            }
+            .navigationTitle("CoreStore Demos")
+            .listStyle(.sidebar)
         }
     }
 }

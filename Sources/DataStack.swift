@@ -535,7 +535,7 @@ public final class DataStack: Equatable, Sendable {
         _ storage: StorageInterface,
         finalURL: URL?,
         finalStoreOptions: [AnyHashable: Any]?
-    ) throws(any Swift.Error) -> NSPersistentStore {
+    ) throws(any Swift::Error) -> NSPersistentStore {
 
         let persistentStore = try self.coordinator.addPersistentStore(
             ofType: type(of: storage).storeType,

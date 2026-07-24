@@ -14,6 +14,7 @@ extension Modern.PlacemarksDemo {
     
     // MARK: - Modern.PlacemarksDemo.MainView
     
+    @MainActor
     struct MainView: View {
         
         /**
@@ -21,10 +22,11 @@ extension Modern.PlacemarksDemo {
          */
         private func demoAsynchronousTransaction(coordinate: CLLocationCoordinate2D) {
             
+            let persistentID = self.$place?.persistentID()
             Modern.PlacemarksDemo.dataStack.perform(
                 asynchronous: { (transaction) in
                     
-                    let place = self.$place?.asEditable(in: transaction)
+                    let place = persistentID?.asEditable(in: transaction)
                     place?.annotation = .init(coordinate: coordinate)
                 },
                 completion: { _ in }
@@ -107,7 +109,7 @@ extension Modern.PlacemarksDemo {
                     return
                 }
                 let geocoded = await self.geocoder.geocode(place: place)
-                guard self.place?.objectID() == place.objectID() else {
+                guard self.place?.persistentID() == place.persistentID() else {
                     
                     return
                 }

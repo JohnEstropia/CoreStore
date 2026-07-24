@@ -72,32 +72,36 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
     @MainActor
-    public func addObserver<U: ObjectObserver & Sendable>(_ observer: U) where U.ObjectEntityType == O {
+    public func addObserver<U: ObjectObserver & Sendable>(_ observer: U)
+    where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
             observer,
             willChangeObject: { (observer, monitor, object) in
                 
+                nonisolated(unsafe) let sending = object
                 observer.objectMonitor(
                     monitor,
-                    willUpdateObject: object,
+                    willUpdateObject: sending,
                     sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
                 )
             },
             didDeleteObject: { (observer, monitor, object) in
                 
+                nonisolated(unsafe) let sending = object
                 observer.objectMonitor(
                     monitor,
-                    didDeleteObject: object,
+                    didDeleteObject: sending,
                     sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
                 )
             },
             didUpdateObject: { (observer, monitor, object, changedPersistentKeys) in
                 
+                nonisolated(unsafe) let sending = object
                 observer.objectMonitor(
                     monitor,
-                    didUpdateObject: object,
+                    didUpdateObject: sending,
                     changedPersistentKeys: changedPersistentKeys,
                     sourceIdentifier: monitor.context.saveMetadata?.sourceIdentifier
                 )
@@ -113,7 +117,8 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      - parameter observer: an `ObjectObserver` to unregister notifications to
      */
     @MainActor
-    public func removeObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == O {
+    public func removeObserver<U: ObjectObserver>(_ observer: U)
+    where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
     }
@@ -412,11 +417,13 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
                 object: self,
                 closure: { [weak self] (note) in
                     
-                    guard let self = self,
+                    guard
+                        let self = self,
                         let userInfo = note.userInfo,
-                        let object = userInfo[String(describing: NSManagedObject.self)] as! NSManagedObject? else {
-                            
-                            return
+                        let object = userInfo[String(describing: NSManagedObject.self)] as! NSManagedObject?
+                    else {
+                        
+                        return
                     }
                     callback(self, O.cs_fromRaw(object: object))
                 }

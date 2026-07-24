@@ -41,7 +41,7 @@ extension DataStack {
     public func perform<T: Sendable>(
         asynchronous task: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
-        ) throws(any Swift.Error) -> T,
+        ) throws(any Swift::Error) -> T,
         sourceIdentifier: (any Sendable)? = nil,
         completion: @escaping @MainActor @Sendable (AsynchronousDataTransaction.Result<T>) -> Void
     ) {
@@ -65,7 +65,7 @@ extension DataStack {
     public func perform<T>(
         asynchronous task: @escaping @Sendable (
             _ transaction: AsynchronousDataTransaction
-        ) throws(any Swift.Error) -> T,
+        ) throws(any Swift::Error) -> T,
         sourceIdentifier: (any Sendable)? = nil,
         success: @escaping @MainActor @Sendable (sending T) -> Void,
         failure: @escaping @MainActor @Sendable (CoreStoreError) -> Void
@@ -123,7 +123,7 @@ extension DataStack {
     public func perform<T>(
         synchronous task: (
             _ transaction: SynchronousDataTransaction
-        ) throws(any Swift.Error) -> T,
+        ) throws(any Swift::Error) -> T,
         waitForAllObservers: Bool = true,
         sourceIdentifier: (any Sendable)? = nil
     ) throws(CoreStoreError) -> T {

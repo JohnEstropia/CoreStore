@@ -46,7 +46,7 @@ extension Internals {
         borrowing func withLock<Result, E>(
             _ body: (inout sending Value) throws(E) -> sending Result
         ) throws(E) -> sending Result
-        where E: Error, Result: ~Copyable {
+        where E: Swift::Error, Result: ~Copyable {
             
             let storage = self.storage
             storage.lock()
@@ -60,7 +60,7 @@ extension Internals {
         borrowing func withLockUnchecked<Result, E>(
             _ body: (inout sending Value) throws(E) -> Result
         ) throws(E) -> sending Result
-        where E: Error {
+        where E: Swift::Error {
             
             let storage = self.storage
             storage.lock()

@@ -65,7 +65,10 @@ extension Modern.PokedexDemo {
 
         // MARK: ImportableObject
 
-        typealias ImportSource = Dictionary<String, Any>
+        struct ImportSource: @unchecked Sendable {
+            
+            let json: Dictionary<String, Any>
+        }
 
 
         // MARK: ImportableUniqueObject
@@ -82,14 +85,14 @@ extension Modern.PokedexDemo {
 
         static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType? {
 
-            let json = source
+            let json = source.json
             return try Modern.PokedexDemo.Service.parseJSON(json["id"])
         }
 
         func update(from source: ImportSource, in transaction: BaseDataTransaction) throws {
 
             typealias Service = Modern.PokedexDemo.Service
-            let json = source
+            let json = source.json
             
             self.name = try Service.parseJSON(json["name"])
             self.weight = try Service.parseJSON(json["weight"])

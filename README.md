@@ -2201,6 +2201,23 @@ var body: some View {
    )
 }
 ```
+The `placeholder:` overload also works with `keyPath:` projections:
+```swift
+let person: ObjectPublisher<Person>
+
+var body: some View {
+    ObjectReader(
+        self.person,
+        keyPath: \.fullName,
+        content: { fullName in
+            Text("Name: \(fullName)")
+        },
+        placeholder: {
+            Text("Record not found")
+        }
+    )
+}
+```
 
 ### SwiftUI Property Wrappers
 
@@ -2234,7 +2251,8 @@ If a `ListPublisher` instance is not available yet, the fetch can be done inline
     From<Person>()
         .sectionBy(\.age)
         .where(\.isMember == true)
-        .orderBy(.ascending(\.lastName))
+        .orderBy(.ascending(\.lastName)),
+    in: Globals.dataStack
 )
 var people: ListSnapshot<Person>
 
@@ -2509,4 +2527,3 @@ I'd love to hear about apps using CoreStore. Send me a message and I'll welcome 
 
 # License
 CoreStore is released under an MIT license. See the [LICENSE](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE) file for more information
-

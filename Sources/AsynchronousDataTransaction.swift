@@ -80,19 +80,21 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
     }
     
     /**
-     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
+     Returns an editable proxy of the object with the specified `DynamicObjectID`.
      
-     - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `DynamicObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<O: DynamicObject>(
+    public override func edit<O>(
         _ persistentID: DynamicObjectID<O>?
     ) -> O? {
 
         Internals.assert(
             !self.isCommitted,
-            "Attempted to update an entity for \(Internals.typeName(persistentID)) from an already committed \(Internals.typeName(self))."
+            "Attempted to update an entity of type \(Internals.typeName(persistentID)) from an already committed \(Internals.typeName(self))."
         )
+        
         return super.edit(persistentID)
     }
     
@@ -115,6 +117,26 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
     }
     
     /**
+     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O>(
+        _ into: Into<O>,
+        _ persistentID: DynamicObjectID<O>
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
+        )
+        
+        return super.edit(into, persistentID)
+    }
+    
+    /**
      Returns an editable proxy of the object with the specified `NSManagedObjectID`.
      
      - parameter into: an `Into` clause specifying the entity type
@@ -132,6 +154,23 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
         )
         
         return super.edit(into, objectID)
+    }
+    
+    /**
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
+     */
+    public override func delete<O: DynamicObject, S: Sequence>(
+        persistentIDs: S
+    ) where S.Iterator.Element == DynamicObjectID<O> {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
+        )
+
+        super.delete(persistentIDs: persistentIDs)
     }
 
     /**
