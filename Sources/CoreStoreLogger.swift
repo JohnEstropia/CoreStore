@@ -124,6 +124,6 @@ extension CoreStoreLogger {
         functionName: StaticString
     ) {
 
-        Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
+        Swift::fatalError(message, file: fileName, line: UInt(lineNumber))
     }
 }

@@ -28,7 +28,7 @@ import CoreData
 
 // MARK: - DynamicObjectID
 
-public struct DynamicObjectID<O: DynamicObject>: Hashable, ObjectRepresentation, Sendable {
+public struct PersistentID<O: DynamicObject>: Hashable, ObjectRepresentation, Sendable {
 
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class

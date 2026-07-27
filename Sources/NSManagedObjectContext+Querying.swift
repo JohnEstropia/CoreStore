@@ -78,7 +78,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     
     @nonobjc
     public func fetchExisting<O: DynamicObject>(
-        _ persistentID: DynamicObjectID<O>
+        _ persistentID: PersistentID<O>
     ) -> O? {
 
         return self.fetchExisting(persistentID.managedObjectID)
@@ -111,7 +111,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchExisting<O: DynamicObject, S: Sequence>(
         _ persistentIDs: S
-    ) -> [O] where S.Iterator.Element == DynamicObjectID<O> {
+    ) -> [O] where S.Iterator.Element == PersistentID<O> {
 
         return persistentIDs.compactMap({ self.fetchExisting($0.managedObjectID) })
     }

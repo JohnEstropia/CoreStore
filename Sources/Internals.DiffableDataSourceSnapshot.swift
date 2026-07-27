@@ -57,7 +57,7 @@ extension Internals {
             self.structure = .init(
                 sections: sections,
                 sectionIndexTransformer: sectionIndexTransformer,
-                fetchOffset: Swift.max(0, fetchOffset),
+                fetchOffset: Swift::max(0, fetchOffset),
                 fetchLimit: (fetchLimit > 0) ? fetchLimit : nil
             )
         }

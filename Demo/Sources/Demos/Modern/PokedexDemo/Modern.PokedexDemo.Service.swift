@@ -51,7 +51,7 @@ extension Modern.PokedexDemo {
          ⭐️ Sample 2: Importing a single JSON data into an `ImportableUniqueObject` whose `ImportSource` is a JSON `Dictionary`
          */
         private static func importSpecies(
-            for detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
+            for detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             from data: Data
         ) async throws -> ObjectSnapshot<Modern.PokedexDemo.Species> {
             
@@ -88,7 +88,7 @@ extension Modern.PokedexDemo {
          ⭐️ Sample 3: Importing a list of JSON data into `ImportableUniqueObject`s whose `ImportSource` are JSON `Dictionary`s
          */
         private static func importForms(
-            for detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
+            for detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             from dataArray: [Data]
         ) async throws {
             
@@ -289,7 +289,7 @@ extension Modern.PokedexDemo {
         
         private func fetchSpecies(
             key: String,
-            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
+            detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             speciesURL: URL
         ) async {
             
@@ -331,7 +331,7 @@ extension Modern.PokedexDemo {
         
         private func fetchFormsIfNeeded(
             key: String,
-            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
+            detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             species: ObjectSnapshot<Modern.PokedexDemo.Species>
         ) {
             
@@ -363,7 +363,7 @@ extension Modern.PokedexDemo {
         }
         
         private func fetchForms(
-            detailsPersistentID: DynamicObjectID<Modern.PokedexDemo.Details>,
+            detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             formsURLs: [URL]
         ) async {
             

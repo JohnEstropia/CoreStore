@@ -26,9 +26,6 @@
 import Foundation
 import CoreData
 
-
-// MARK: - BaseDataTransaction
-
 /**
  The `BaseDataTransaction` is an abstract interface for `NSManagedObject` creates, updates, and deletes. All `BaseDataTransaction` subclasses manage a private `NSManagedObjectContext` which are direct children of the `NSPersistentStoreCoordinator`'s root `NSManagedObjectContext`. This means that all updates are saved first to the persistent store, and then propagated up to the read-only `NSManagedObjectContext`.
  */
@@ -118,11 +115,11 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - parameter persistentID: the `PersistentID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public func edit<O>(
-        _ persistentID: DynamicObjectID<O>?
+        _ persistentID: PersistentID<O>?
     ) -> O? {
 
         Internals.assert(
@@ -158,15 +155,15 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     Returns an editable proxy of the object with the specified `PersistentID`.
      
      - parameter into: an `Into` clause specifying the entity type
-     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - parameter persistentID: the `PersistentID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public func edit<O>(
         _ into: Into<O>,
-        _ persistentID: DynamicObjectID<O>
+        _ persistentID: PersistentID<O>
     ) -> O? {
 
         Internals.assert(
@@ -206,13 +203,13 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Deletes the objects with the specified `DynamicObjectID`s.
+     Deletes the objects with the specified `PersistentID`s.
 
-     - parameter persistentIDs: the `DynamicObjectID`s of the objects to delete
+     - parameter persistentIDs: the `PersistentID`s of the objects to delete
      */
     public func delete<O: DynamicObject, S: Sequence>(
         persistentIDs: S
-    ) where S.Iterator.Element == DynamicObjectID<O> {
+    ) where S.Iterator.Element == PersistentID<O> {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),

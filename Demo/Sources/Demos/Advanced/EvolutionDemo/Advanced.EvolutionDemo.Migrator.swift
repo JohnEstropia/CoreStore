@@ -37,12 +37,18 @@ extension Advanced.EvolutionDemo {
                             modelVersion: Advanced.EvolutionDemo.V3.name,
                             entities: [
                                 Entity<Advanced.EvolutionDemo.V3.Creature>("Creature")
+                            ],
+                            versionLock: [
+                                "Creature": [0x23cc88fece8e3ee0, 0xe37ecbcbe52eab30, 0xd3cc2e5f39a37f16, 0x79feebe14f602495]
                             ]
                         ),
                         CoreStoreSchema(
                             modelVersion: Advanced.EvolutionDemo.V4.name,
                             entities: [
                                 Entity<Advanced.EvolutionDemo.V4.Creature>("Creature")
+                            ],
+                            versionLock: [
+                                "Creature": [0xe7eaceec2a84d084, 0xac104aa167d8afe8, 0x6651e5ece419d490, 0xf73ec7f3512197de]
                             ]
                         )
                     ],

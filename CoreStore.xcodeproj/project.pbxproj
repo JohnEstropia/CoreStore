@@ -19,10 +19,10 @@
 		53EB03E72A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
 		53EB03E82A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
 		53EB03E92A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
-		5F13955E2FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */; };
-		5F13955F2FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */; };
-		5F1395602FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */; };
-		5F1395612FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */; };
+		5F13955E2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F13955F2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F1395602FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F1395612FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
 		5F17507E2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
 		5F17507F2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
 		5F1750802FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
@@ -872,7 +872,7 @@
 			containerPortal = 2F03A52719C5C6DA005002A5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B52DD1731BE1F8CC00949AFE;
-			remoteInfo = "CoreStore OSX";
+			remoteInfo = "CoreStore macOS";
 		};
 		B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -891,7 +891,7 @@
 		2F03A53E19C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		53EB03E52A3AD5D400179430 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
-		5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicObjectID.swift; sourceTree = "<group>"; };
+		5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentID.swift; sourceTree = "<group>"; };
 		5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.Mutext.swift; sourceTree = "<group>"; };
 		82BA18891C4BBCBA00A0916E /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1463,7 +1463,7 @@
 				B5831B6E1F3355C300A9F647 /* Legacy Properties */,
 				B52F74391E9B8724005F3DAC /* Dynamic Schema */,
 				B5D339DC1E9489C700C880DE /* DynamicObject.swift */,
-				5F13955D2FFCDBAC001EE0A4 /* DynamicObjectID.swift */,
+				5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */,
 				B52F742E1E9B50D0005F3DAC /* SchemaHistory.swift */,
 				B5D339E61E9493A500C880DE /* Entity.swift */,
 				B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */,
@@ -1903,9 +1903,9 @@
 			productReference = B5114DC928CEEE5400EEAE78 /* CoreStoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B52DD1731BE1F8CC00949AFE /* CoreStore OSX */ = {
+		B52DD1731BE1F8CC00949AFE /* CoreStore macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore OSX" */;
+			buildConfigurationList = B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore macOS" */;
 			buildPhases = (
 				B52DD1711BE1F8CC00949AFE /* Headers */,
 				B52DD16F1BE1F8CC00949AFE /* Sources */,
@@ -1916,14 +1916,14 @@
 			);
 			dependencies = (
 			);
-			name = "CoreStore OSX";
-			productName = "CoreStore OSX";
+			name = "CoreStore macOS";
+			productName = "CoreStore macOS";
 			productReference = B52DD1741BE1F8CC00949AFE /* CoreStore.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		B52DD17C1BE1F8CC00949AFE /* CoreStoreTests OSX */ = {
+		B52DD17C1BE1F8CC00949AFE /* CoreStoreTests macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests OSX" */;
+			buildConfigurationList = B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests macOS" */;
 			buildPhases = (
 				B52DD1791BE1F8CC00949AFE /* Sources */,
 				B52DD17A1BE1F8CC00949AFE /* Frameworks */,
@@ -1934,8 +1934,8 @@
 			dependencies = (
 				B52DD1801BE1F8CD00949AFE /* PBXTargetDependency */,
 			);
-			name = "CoreStoreTests OSX";
-			productName = "CoreStore OSXTests";
+			name = "CoreStoreTests macOS";
+			productName = "CoreStore macOSTests";
 			productReference = B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -2016,8 +2016,8 @@
 				82BA18911C4BBCBA00A0916E /* CoreStoreTests tvOS */,
 				B563216E1BD65082006C9394 /* CoreStore watchOS */,
 				B5114DA328CEEE5400EEAE78 /* CoreStoreTests watchOS */,
-				B52DD1731BE1F8CC00949AFE /* CoreStore OSX */,
-				B52DD17C1BE1F8CC00949AFE /* CoreStoreTests OSX */,
+				B52DD1731BE1F8CC00949AFE /* CoreStore macOS */,
+				B52DD17C1BE1F8CC00949AFE /* CoreStoreTests macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -2143,7 +2143,7 @@
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
 				B546F9731C9C553300D5AC55 /* SetupResult.swift in Sources */,
-				5F13955F2FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */,
+				5F13955F2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B50C3EFE23D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EDF23CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5C7959925D7D8B300BDACC1 /* ListReader.swift in Sources */,
@@ -2362,7 +2362,7 @@
 				B5831F432212700400D8604C /* Where.Expression.swift in Sources */,
 				B51260941E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
-				5F1395602FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */,
+				5F1395602FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B50C3EFF23D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EE023CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5C7959A25D7D8B300BDACC1 /* ListReader.swift in Sources */,
@@ -2616,7 +2616,7 @@
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
 				B5F8496F234898240029D57B /* ListSnapshot.swift in Sources */,
 				B5831F452212700500D8604C /* Where.Expression.swift in Sources */,
-				5F13955E2FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */,
+				5F13955E2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B5B866DE25E9012F00335476 /* ListPublisher+Reactive.swift in Sources */,
 				B514EF1423A8DB1E0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B51260961E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
@@ -2835,7 +2835,7 @@
 				B5831F442212700500D8604C /* Where.Expression.swift in Sources */,
 				B50C3F0023D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EE123CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
-				5F1395612FFCDBEF001EE0A4 /* DynamicObjectID.swift in Sources */,
+				5F1395612FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B5C7959B25D7D8B300BDACC1 /* ListReader.swift in Sources */,
 				B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */,
 				B51260951E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
@@ -2973,7 +2973,7 @@
 		};
 		B52DD1801BE1F8CD00949AFE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B52DD1731BE1F8CC00949AFE /* CoreStore OSX */;
+			target = B52DD1731BE1F8CC00949AFE /* CoreStore macOS */;
 			targetProxy = B52DD17F1BE1F8CD00949AFE /* PBXContainerItemProxy */;
 		};
 		B5D372881A39CF4D00F583D9 /* PBXTargetDependency */ = {
@@ -3602,7 +3602,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore OSX" */ = {
+		B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B52DD1851BE1F8CD00949AFE /* Debug */,
@@ -3611,7 +3611,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests OSX" */ = {
+		B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B52DD1871BE1F8CD00949AFE /* Debug */,

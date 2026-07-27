@@ -38,7 +38,7 @@ public nonisolated protocol DynamicObject: AnyObject, SendableMetatype {
     /**
      The object ID for this instance
      */
-    typealias ObjectID = DynamicObjectID<Self>
+    typealias ObjectID = PersistentID<Self>
     
     
     /**

@@ -55,7 +55,7 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
      `Result<T>.success` indicates that the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated `userInfo` is the value returned from the transaction closure.
      `Result<T>.failure` indicates that the transaction either failed or was cancelled. The associated object for this value is a `CoreStoreError` enum value.
      */
-    public typealias Result<UserInfoType> = Swift.Result<UserInfoType, CoreStoreError>
+    public typealias Result<UserInfoType> = Swift::Result<UserInfoType, CoreStoreError>
     
     // MARK: -
     
@@ -80,14 +80,14 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
     }
     
     /**
-     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     Returns an editable proxy of the object with the specified `PersistentID`.
      
      - parameter into: an `Into` clause specifying the entity type
-     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - parameter persistentID: the `PersistentID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<O>(
-        _ persistentID: DynamicObjectID<O>?
+        _ persistentID: PersistentID<O>?
     ) -> O? {
 
         Internals.assert(
@@ -117,15 +117,15 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
     }
     
     /**
-     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     Returns an editable proxy of the object with the specified `PersistentID`.
      
      - parameter into: an `Into` clause specifying the entity type
-     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - parameter persistentID: the `PersistentID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<O>(
         _ into: Into<O>,
-        _ persistentID: DynamicObjectID<O>
+        _ persistentID: PersistentID<O>
     ) -> O? {
 
         Internals.assert(
@@ -163,7 +163,7 @@ public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction 
      */
     public override func delete<O: DynamicObject, S: Sequence>(
         persistentIDs: S
-    ) where S.Iterator.Element == DynamicObjectID<O> {
+    ) where S.Iterator.Element == PersistentID<O> {
 
         Internals.assert(
             !self.isCommitted,

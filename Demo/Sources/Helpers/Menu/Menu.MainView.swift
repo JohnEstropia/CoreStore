@@ -24,15 +24,18 @@ extension Menu {
 
             if self.horizontalSizeClass == .compact {
                 NavigationStack {
+                    
                     self.menuList
                 }
             }
             else {
                 NavigationSplitView(
                     sidebar: {
+                        
                         self.menuList
                     },
                     detail: {
+                        
                         Menu.PlaceholderView()
                     }
                 )
@@ -48,14 +51,16 @@ extension Menu {
 
                 ForEach(Menu.Section.allCases, id: \.self) { section in
 
-                    SwiftUI.Section(
+                    SwiftUI::Section(
                         content: {
 
                             ForEach(section.routes) { route in
 
                                 NavigationLink(
                                     destination: {
-                                        route.destination
+                                        LazyDestination {
+                                            route.destination
+                                        }
                                     },
                                     label: {
                                         Menu.ItemView(
@@ -77,6 +82,24 @@ extension Menu {
             }
             .navigationTitle("CoreStore Demos")
             .listStyle(.sidebar)
+        }
+        
+        
+        // MARK: - LazyDestination
+        
+        private struct LazyDestination<Content: View>: View {
+            
+            init(@ViewBuilder content: @escaping () -> Content) {
+                
+                self.content = content
+            }
+            
+            var body: some View {
+                
+                self.content()
+            }
+            
+            private let content: () -> Content
         }
     }
 }

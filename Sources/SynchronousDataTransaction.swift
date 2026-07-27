@@ -71,11 +71,11 @@ public nonisolated final class SynchronousDataTransaction: BaseDataTransaction {
     /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter persistentID: the `DynamicObjectID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - parameter persistentID: the `PersistentID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<O: DynamicObject>(
-        _ persistentID: DynamicObjectID<O>?
+        _ persistentID: PersistentID<O>?
     ) -> O? {
 
         Internals.assert(
@@ -104,15 +104,15 @@ public nonisolated final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of the object with the specified `DynamicObjectID`.
+     Returns an editable proxy of the object with the specified `PersistentID`.
      
      - parameter into: an `Into` clause specifying the entity type
-     - parameter persistentID: the `DynamicObjectID` for the object to be edited
+     - parameter persistentID: the `PersistentID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<O>(
         _ into: Into<O>,
-        _ persistentID: DynamicObjectID<O>
+        _ persistentID: PersistentID<O>
     ) -> O? {
 
         Internals.assert(
@@ -150,7 +150,7 @@ public nonisolated final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func delete<O: DynamicObject, S: Sequence>(
         persistentIDs: S
-    ) where S.Iterator.Element == DynamicObjectID<O> {
+    ) where S.Iterator.Element == PersistentID<O> {
 
         Internals.assert(
             !self.isCommitted,
