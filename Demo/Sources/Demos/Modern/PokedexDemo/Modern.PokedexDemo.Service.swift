@@ -27,10 +27,10 @@ extension Modern.PokedexDemo {
                 
                 try await Modern.PokedexDemo.dataStack.async.perform { transaction -> Void in
                     
-                    let json: Dictionary<String, Any> = try self.parseJSON(
+                    let json: Dictionary<String, any Sendable> = try self.parseJSON(
                         try JSONSerialization.jsonObject(with: data, options: [])
                     )
-                    let results: [Dictionary<String, Any>] = try self.parseJSON(
+                    let results: [Dictionary<String, any Sendable>] = try self.parseJSON(
                         json["results"]
                     )
                     _ = try transaction.importUniqueObjects(
@@ -57,7 +57,7 @@ extension Modern.PokedexDemo {
             
             let speciesPersistentID = try await Modern.PokedexDemo.dataStack.async.perform { transaction in
                 
-                    let json: Dictionary<String, Any> = try self.parseJSON(
+                    let json: Dictionary<String, any Sendable> = try self.parseJSON(
                         try JSONSerialization.jsonObject(with: data, options: [])
                     )
                     guard
@@ -102,7 +102,7 @@ extension Modern.PokedexDemo {
                             
                             try self.parseJSON(
                                 try JSONSerialization.jsonObject(with: data, options: [])
-                            ) as [String: Any]
+                            ) as [String: any Sendable]
                         }
                     )
                     guard !forms.isEmpty else {

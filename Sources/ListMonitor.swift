@@ -842,7 +842,8 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             _ object: O,
             _ indexPath: IndexPath?,
             _ newIndexPath: IndexPath?
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -902,7 +903,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
     }
     
     @MainActor
-    internal func registerObserver<U: AnyObject & Sendable>(
+    internal func registerObserver<U: AnyObject>(
         _ observer: U,
         willChange: @escaping @Sendable (
             _ observer: U,
@@ -919,19 +920,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
         didRefetch: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerChangeNotification(
             &self.willChangeListKey,
             name: Notification.Name.listMonitorWillChangeList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -942,9 +945,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didChangeListKey,
             name: Notification.Name.listMonitorDidChangeList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -955,9 +958,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.willRefetchListKey,
             name: Notification.Name.listMonitorWillRefetchList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -968,9 +971,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didRefetchListKey,
             name: Notification.Name.listMonitorDidRefetchList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -980,7 +983,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
     }
     
     @MainActor
-    internal func registerObserver<U: AnyObject & Sendable>(
+    internal func registerObserver<U: AnyObject>(
         _ observer: U,
         didInsertObject: @escaping @Sendable (
             _ observer: U,
@@ -1006,20 +1009,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             _ object: O,
             _ fromIndexPath: IndexPath,
             _ toIndexPath: IndexPath
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
-        
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerObjectNotification(
             &self.didInsertObjectKey,
             name: Notification.Name.listMonitorDidInsertObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1030,9 +1034,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didDeleteObjectKey,
             name: Notification.Name.listMonitorDidDeleteObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1043,9 +1047,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didUpdateObjectKey,
             name: Notification.Name.listMonitorDidUpdateObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1056,9 +1060,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didMoveObjectKey,
             name: Notification.Name.listMonitorDidMoveObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1068,7 +1072,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
     }
     
     @MainActor
-    internal func registerObserver<U: AnyObject & Sendable>(
+    internal func registerObserver<U: AnyObject>(
         _ observer: U,
         didInsertSection: @escaping @Sendable (
             _ observer: U,
@@ -1081,20 +1085,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ fromIndex: Int
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
-        
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerSectionNotification(
             &self.didInsertSectionKey,
             name: Notification.Name.listMonitorDidInsertSection,
             toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+            callback: { (monitor, sectionInfo, sectionIndex) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1105,9 +1110,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
             &self.didDeleteSectionKey,
             name: Notification.Name.listMonitorDidDeleteSection,
             toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+            callback: { (monitor, sectionInfo, sectionIndex) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }

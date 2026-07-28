@@ -39,7 +39,7 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-public protocol ListObserver: AnyObject, Sendable {
+public protocol ListObserver: AnyObject, SendableMetatype {
     
     /**
      The `NSManagedObject` type for the observed list

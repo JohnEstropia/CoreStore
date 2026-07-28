@@ -15,6 +15,7 @@ func withMainActorImmediate(
 ) {
     
     if #available(iOS 26.0, *) {
+        
         Task.immediate(operation: task)
     }
     else if Thread.isMainThread {
