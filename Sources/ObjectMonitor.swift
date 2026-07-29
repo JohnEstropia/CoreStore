@@ -72,7 +72,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
     @MainActor
-    public func addObserver<U: ObjectObserver & Sendable>(_ observer: U)
+    public func addObserver<U: ObjectObserver>(_ observer: U)
     where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
@@ -261,7 +261,7 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
     }
     
     @MainActor
-    internal func registerObserver<U: AnyObject & Sendable>(
+    internal func registerObserver<U: AnyObject>(
         _ observer: U,
         willChangeObject: @escaping @Sendable (
             _ observer: U,
@@ -285,13 +285,17 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer as AnyObject)) outside the main thread."
         )
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerChangeNotification(
             &self.willChangeObjectKey,
             name: Notification.Name.objectMonitorWillChangeObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let object = monitor.object, let observer = observer else {
+                guard
+                    let observer = weakObserver,
+                    let object = monitor.object
+                else {
                     
                     return
                 }
@@ -302,9 +306,9 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             &self.didDeleteObjectKey,
             name: Notification.Name.objectMonitorDidDeleteObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object) -> Void in
+            callback: { (monitor, object) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -315,9 +319,12 @@ public final class ObjectMonitor<O: DynamicObject>: Hashable, ObjectRepresentati
             &self.didUpdateObjectKey,
             name: Notification.Name.objectMonitorDidUpdateObject,
             toObserver: observer,
-            callback: { [weak self, weak observer] (monitor, object) -> Void in
+            callback: { [weak self] (monitor, object) -> Void in
                 
-                guard let self = self, let observer = observer else {
+                guard
+                    let self = self,
+                    let observer = weakObserver
+                else {
                     
                     return
                 }
