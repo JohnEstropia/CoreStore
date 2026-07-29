@@ -41,7 +41,7 @@ extension UnsafeDataTransaction {
         _ object: O
     ) -> ObjectMonitor<O> {
 
-        return .init(objectID: object.cs_id(), context: self.unsafeContext())
+        return .init(managedObjectID: object.cs_id(), context: self.unsafeContext())
     }
     
     /**
@@ -119,7 +119,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
     public func monitorList<O>(
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
         _ fetchClauses: FetchClause...
     ) {
@@ -135,7 +135,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
     public func monitorList<O>(
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
         _ fetchClauses: [FetchClause]
     )  {
@@ -174,7 +174,7 @@ extension UnsafeDataTransaction {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      */
     public func monitorList<B: FetchChainableBuilderType>(
-        createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<B.ObjectType>) -> Void,
         _ clauseChain: B
     ) {
 
@@ -265,7 +265,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
     public func monitorSectionedList<O>(
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
         _ sectionBy: SectionBy<O>,
         _ fetchClauses: FetchClause...
@@ -283,7 +283,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
     public func monitorSectionedList<O>(
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void,
         _ from: From<O>,
         _ sectionBy: SectionBy<O>,
         _ fetchClauses: [FetchClause]
@@ -323,7 +323,7 @@ extension UnsafeDataTransaction {
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      */
     public func monitorSectionedList<B: SectionMonitorBuilderType>(
-        createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void,
+        createAsynchronously: @escaping @Sendable (ListMonitor<B.ObjectType>) -> Void,
         _ clauseChain: B
     ) {
         

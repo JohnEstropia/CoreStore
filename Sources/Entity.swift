@@ -203,31 +203,37 @@ public /*abstract*/ class DynamicEntity: Hashable {
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let type: DynamicObject.Type
     
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let entityName: EntityName
     
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let isAbstract: Bool
     
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let versionHashModifier: String?
     
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let indexes: [[KeyPathString]]
     
     /**
      Do not use directly.
      */
+    @_spi(Internals)
     public let uniqueConstraints: [[KeyPathString]]
     
     

@@ -31,7 +31,7 @@ import Foundation
 /**
  The `MigrationType` specifies the type of migration required for a store.
  */
-public enum MigrationType: Hashable {
+public enum MigrationType: Hashable, Sendable {
     
     /**
      Indicates that the persistent store matches the latest model version and no migration is needed

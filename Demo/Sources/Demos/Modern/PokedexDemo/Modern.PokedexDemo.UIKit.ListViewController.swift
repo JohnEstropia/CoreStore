@@ -50,7 +50,7 @@ extension Modern.PokedexDemo.UIKit {
             fatalError()
         }
         
-        deinit {
+        isolated deinit {
             
             self.listPublisher.removeObserver(self)
         }
@@ -94,13 +94,25 @@ extension Modern.PokedexDemo.UIKit {
         
         private func startObservingList() {
             
-            self.listPublisher.addObserver(self) { (listPublisher) in
-                
-                self.dataSource.apply(
-                    listPublisher.snapshot,
-                    animatingDifferences: true
-                )
-            }
+            self.listPublisher.addObserver(
+                self,
+                notifyInitial: false,
+                { [weak self] (listPublisher) in
+                    
+                    let snapshot = listPublisher.snapshot
+                    withMainActorImmediate {
+                        
+                        guard let self else {
+                            
+                            return
+                        }
+                        self.dataSource.apply(
+                            snapshot,
+                            animatingDifferences: true
+                        )
+                    }
+                }
+            )
             self.dataSource.apply(
                 self.listPublisher.snapshot,
                 animatingDifferences: false

@@ -31,7 +31,7 @@ extension Internals {
 
     // MARK: - SharedNotificationObserver
 
-    internal final class SharedNotificationObserver<T> {
+    internal final class SharedNotificationObserver<T>: @unchecked Sendable {
 
         // MARK: Internal
 
@@ -39,7 +39,7 @@ extension Internals {
             notificationName: Notification.Name,
             object: Any?,
             queue: OperationQueue? = nil,
-            sharedValue: @escaping (_ note: Notification) -> T
+            sharedValue: @escaping @Sendable (_ note: Notification) -> T
         ) {
 
             self.observer = NotificationCenter.default.addObserver(
@@ -66,7 +66,7 @@ extension Internals {
 
         internal func addObserver<U: AnyObject>(
             _ observer: U,
-            closure: @escaping (T) -> Void
+            closure: @escaping @Sendable (T) -> Void
         ) {
 
             self.observers.setObject(

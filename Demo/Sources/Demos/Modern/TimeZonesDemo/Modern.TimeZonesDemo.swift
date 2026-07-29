@@ -11,8 +11,8 @@ extension Modern {
     // MARK: - Modern.TimeZonesDemo
     
     /**
-    Sample usages for creating Fetch and Query clauses for `CoreStoreObject`s
-    */
+     Sample usages for creating Fetch and Query clauses for `CoreStoreObject`s
+     */
     enum TimeZonesDemo {
         
         // MARK: Internal

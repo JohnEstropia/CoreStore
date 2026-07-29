@@ -87,7 +87,7 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func objectPublisher<O: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<O> {
+    internal func objectPublisher<O: DynamicObject>(managedObjectID: NSManagedObjectID) -> ObjectPublisher<O> {
 
         let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<O>> = self.userInfo(for: .objectPublishersCache(O.self)) {
 
@@ -95,12 +95,12 @@ extension NSManagedObjectContext {
         }
         return Internals.with {
 
-            if let objectPublisher = cache.object(forKey: objectID) {
+            if let objectPublisher = cache.object(forKey: managedObjectID) {
 
                 return objectPublisher
             }
-            let objectPublisher = ObjectPublisher<O>.createUncached(objectID: objectID, context: self)
-            cache.setObject(objectPublisher, forKey: objectID)
+            let objectPublisher = ObjectPublisher<O>.createUncached(managedObjectID: managedObjectID, context: self)
+            cache.setObject(objectPublisher, forKey: managedObjectID)
             return objectPublisher
         }
     }
@@ -192,8 +192,8 @@ extension NSManagedObjectContext {
 
     private struct PropertyKeys {
 
-        static var observerForWillSaveNotification: Void?
-        static var shouldCascadeSavesToParent: Void?
+        static nonisolated(unsafe) var observerForWillSaveNotification: Void?
+        static nonisolated(unsafe) var shouldCascadeSavesToParent: Void?
     }
 
 

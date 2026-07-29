@@ -55,35 +55,29 @@ extension Classic.ColorsDemo {
     }
 }
 
-#if DEBUG
 
-struct _Demo_Classic_ColorsDemo_ListView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        let minimumSamples = 10
-        try! Classic.ColorsDemo.dataStack.perform(
-            synchronous: { transaction in
+// MARK: - Preview
 
-                let missing = minimumSamples
-                    - (try transaction.fetchCount(From<Classic.ColorsDemo.Palette>()))
-                guard missing > 0 else {
-                    return
-                }
-                for _ in 0..<missing {
-                    
-                    let palette = transaction.create(Into<Classic.ColorsDemo.Palette>())
-                    palette.setRandomHue()
-                }
+#Preview {
+    
+    let minimumSamples = 10
+    try! Classic.ColorsDemo.dataStack.perform(
+        synchronous: { transaction in
+
+            let missing = minimumSamples
+                - (try transaction.fetchCount(From<Classic.ColorsDemo.Palette>()))
+            guard missing > 0 else {
+                return
             }
-        )
-        return Classic.ColorsDemo.ListView(
-            listMonitor: Classic.ColorsDemo.palettesMonitor,
-            onPaletteTapped: { _ in }
-        )
-    }
-}
+            for _ in 0..<missing {
 
-#endif
+                let palette = transaction.create(Into<Classic.ColorsDemo.Palette>())
+                palette.setRandomHue()
+            }
+        }
+    )
+    return Classic.ColorsDemo.ListView(
+        listMonitor: Classic.ColorsDemo.palettesMonitor,
+        onPaletteTapped: { _ in }
+    )
+}

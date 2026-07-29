@@ -33,7 +33,7 @@ extension NSPersistentStoreCoordinator {
     
     @nonobjc
     internal func performAsynchronously(
-        _ closure: @escaping () -> Void
+        _ closure: @escaping @Sendable () -> Void
     ) {
 
         self.perform(closure)
@@ -41,40 +41,28 @@ extension NSPersistentStoreCoordinator {
     
     @nonobjc
     internal func performSynchronously<T>(
-        _ closure: @escaping () -> T
+        _ closure: @Sendable () -> T
     ) -> T {
 
-        var result: T?
-        self.performAndWait {
-            
-            result = closure()
-        }
-        return result!
+        return self.performAndWait(closure)
     }
     
     @nonobjc
     internal func performSynchronously<T>(
-        _ closure: @escaping () throws(any Swift.Error) -> T
+        _ closure: @Sendable () throws(any Swift::Error) -> T
     ) throws(CoreStoreError) -> T {
-
-        var closureError: (any Swift.Error)?
-        var result: T?
-        self.performAndWait {
+        
+        do {
             
-            do {
+            return try self.performAndWait {
                 
-                result = try closure()
-            }
-            catch {
-                
-                closureError = error
+                return try closure()
             }
         }
-        if let closureError = closureError {
+        catch {
             
-            throw CoreStoreError(closureError)
+            throw CoreStoreError(error)
         }
-        return result!
     }
 
     @nonobjc
@@ -85,6 +73,7 @@ extension NSPersistentStoreCoordinator {
         options: [AnyHashable: Any]?
     ) throws(CoreStoreError) -> NSPersistentStore {
 
+        nonisolated(unsafe) let options = options
         return try self.performSynchronously {
 
             return try self.addPersistentStore(

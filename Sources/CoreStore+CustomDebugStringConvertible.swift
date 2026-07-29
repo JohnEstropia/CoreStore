@@ -652,7 +652,7 @@ extension ObjectPublisher: CustomDebugStringConvertible, CoreStoreDebugStringCon
 
         return createFormattedString(
             "(", ")",
-            ("objectID", self.objectID()),
+            ("managedObjectID", self.cs_id()),
             ("object", self.object as Any)
         )
     }
@@ -677,7 +677,7 @@ extension ObjectSnapshot: CustomDebugStringConvertible, CoreStoreDebugStringConv
 
         return createFormattedString(
             "(", ")",
-            ("objectID", self.objectID()),
+            ("managedObjectID", self.cs_id()),
             ("dictionaryForValues", self.dictionaryForValues())
         )
     }

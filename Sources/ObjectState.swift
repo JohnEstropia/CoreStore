@@ -23,9 +23,9 @@
 //  SOFTWARE.
 //
 
-#if canImport(Combine) && canImport(SwiftUI)
+#if canImport(Observation) && canImport(SwiftUI)
 
-import Combine
+import Observation
 import SwiftUI
 
 
@@ -35,7 +35,7 @@ import SwiftUI
  A property wrapper type that can read `ObjectPublisher` changes.
  */
 @propertyWrapper
-public struct ObjectState<O: DynamicObject>: DynamicProperty {
+public struct ObjectState<O: DynamicObject>: @MainActor DynamicProperty {
     
     // MARK: Public
     
@@ -62,19 +62,23 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
      
      - parameter objectPublisher: The `ObjectPublisher` that the `ObjectState` will observe changes for
      */
+    @MainActor
     public init(_ objectPublisher: ObjectPublisher<O>?) {
         
-        self.observer = .init(objectPublisher: objectPublisher)
+        self.sourceObjectPublisher = objectPublisher
+        self._observer = .init(wrappedValue: .init(objectPublisher: objectPublisher))
     }
     
     
     // MARK: @propertyWrapper
     
+    @MainActor
     public var wrappedValue: ObjectSnapshot<O>? {
         
         return self.observer.item
     }
     
+    @MainActor
     public var projectedValue: ObjectPublisher<O>? {
         
         return self.observer.objectPublisher
@@ -83,43 +87,68 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
     
     // MARK: DynamicProperty
     
+    @MainActor
     public mutating func update() {
         
         self._observer.update()
+        self.observer.rebind(to: self.sourceObjectPublisher)
     }
     
     
     // MARK: Private
     
-    @ObservedObject
+    @State
     private var observer: Observer
+    
+    private let sourceObjectPublisher: ObjectPublisher<O>?
     
     
     // MARK: - Observer
     
-    private final class Observer: ObservableObject {
+    @MainActor
+    private final class Observer: Observation.Observable {
         
-        @Published
-        var item: ObjectSnapshot<O>?
+        private(set) var objectPublisher: ObjectPublisher<O>?
         
-        let objectPublisher: ObjectPublisher<O>?
+        nonisolated var item: ObjectSnapshot<O>? {
+            
+            get {
+                
+                self.registrar.access(self, keyPath: \.item)
+                return self.current.withLock({ $0 })
+            }
+            set {
+                
+                self.registrar.withMutation(of: self, keyPath: \.item) {
+                    
+                    self.current.withLock({ $0 = newValue })
+                }
+            }
+        }
         
         init(objectPublisher: ObjectPublisher<O>?) {
-
-            guard
-                let dataStack = objectPublisher?.cs_dataStack(),
-                let objectPublisher = objectPublisher?.asPublisher(in: dataStack)
-            else {
-
-                self.objectPublisher = nil
-                self.item = nil
+            
+            self.objectPublisher = nil
+            self.current = .init(nil)
+            self.rebind(to: objectPublisher)
+        }
+        
+        isolated deinit {
+            
+            self.objectPublisher?.removeObserver(self)
+        }
+        
+        func rebind(to objectPublisher: ObjectPublisher<O>?) {
+            
+            let objectPublisher = Self.canonicalPublisher(for: objectPublisher)
+            guard self.objectPublisher != objectPublisher else {
+                
                 return
             }
-            
+            self.objectPublisher?.removeObserver(self)
             self.objectPublisher = objectPublisher
-            self.item = objectPublisher.snapshot
-            
-            objectPublisher.addObserver(self) { [weak self] (objectPublisher) in
+            self.item = objectPublisher?.snapshot
+            objectPublisher?.addObserver(self) { [weak self] objectPublisher in
                 
                 guard let self = self else {
                     
@@ -129,9 +158,24 @@ public struct ObjectState<O: DynamicObject>: DynamicProperty {
             }
         }
         
-        deinit {
+        
+        // MARK: Private
+        
+        private let registrar = ObservationRegistrar()
+        private let current: Internals.Mutex<ObjectSnapshot<O>?>
+        
+        private static func canonicalPublisher(
+            for objectPublisher: ObjectPublisher<O>?
+        ) -> ObjectPublisher<O>? {
             
-            self.objectPublisher?.removeObserver(self)
+            guard
+                let objectPublisher = objectPublisher,
+                let dataStack = objectPublisher.cs_dataStack()
+            else {
+                
+                return nil
+            }
+            return objectPublisher.asPublisher(in: dataStack)
         }
     }
 }

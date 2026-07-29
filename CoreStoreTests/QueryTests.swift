@@ -35,6 +35,7 @@ import CoreStore
 class QueryTests: BaseTestDataTestCase {
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryAttributeValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -219,6 +220,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryAverageValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -398,6 +400,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryCountValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -575,6 +578,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryMaximumValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -759,6 +763,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryMinimumValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -943,6 +948,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQuerySumValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -1121,6 +1127,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryObjectIDValue() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -1289,6 +1296,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryAttributes() {
         
         let configurations: [ModelConfiguration] = [nil]
@@ -1343,6 +1351,7 @@ class QueryTests: BaseTestDataTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatDataStacks_CanQueryAggregates() {
         
         let configurations: [ModelConfiguration] = [nil]

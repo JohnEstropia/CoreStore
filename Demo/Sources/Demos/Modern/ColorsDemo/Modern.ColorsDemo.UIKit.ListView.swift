@@ -10,7 +10,7 @@ import SwiftUI
 extension Modern.ColorsDemo.UIKit {
     
     // MARK: - Modern.ColorsDemo.UIKit.ListView
-
+    
     struct ListView: UIViewControllerRepresentable {
         
         // MARK: Internal
@@ -26,9 +26,9 @@ extension Modern.ColorsDemo.UIKit {
         
         
         // MARK: UIViewControllerRepresentable
-
+        
         typealias UIViewControllerType = Modern.ColorsDemo.UIKit.ListViewController
-
+        
         func makeUIViewController(context: Self.Context) -> UIViewControllerType {
             
             return UIViewControllerType(
@@ -36,7 +36,7 @@ extension Modern.ColorsDemo.UIKit {
                 onPaletteTapped: self.onPaletteTapped
             )
         }
-
+        
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Self.Context) {
             
             uiViewController.setEditing(
@@ -44,7 +44,7 @@ extension Modern.ColorsDemo.UIKit {
                 animated: true
             )
         }
-
+        
         static func dismantleUIViewController(_ uiViewController: UIViewControllerType, coordinator: Void) {}
         
         
@@ -55,35 +55,29 @@ extension Modern.ColorsDemo.UIKit {
     }
 }
 
-#if DEBUG
 
-struct _Demo_Modern_ColorsDemo_UIKit_ListView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        let minimumSamples = 10
-        try! Modern.ColorsDemo.dataStack.perform(
-            synchronous: { transaction in
+// MARK: - Preview
 
-                let missing = minimumSamples
-                    - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
-                guard missing > 0 else {
-                    return
-                }
-                for _ in 0..<missing {
-                    
-                    let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
-                    palette.setRandomHue()
-                }
+#Preview {
+    
+    let minimumSamples = 10
+    try! Modern.ColorsDemo.dataStack.perform(
+        synchronous: { transaction in
+            
+            let missing = minimumSamples
+            - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
+            guard missing > 0 else {
+                return
             }
-        )
-        return Modern.ColorsDemo.UIKit.ListView(
-            listPublisher: Modern.ColorsDemo.palettesPublisher,
-            onPaletteTapped: { _ in }
-        )
-    }
+            for _ in 0..<missing {
+                
+                let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
+                palette.setRandomHue()
+            }
+        }
+    )
+    return Modern.ColorsDemo.UIKit.ListView(
+        listPublisher: Modern.ColorsDemo.palettesPublisher,
+        onPaletteTapped: { _ in }
+    )
 }
-
-#endif

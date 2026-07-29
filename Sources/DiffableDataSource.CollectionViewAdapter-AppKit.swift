@@ -83,6 +83,7 @@ extension DiffableDataSource {
          - parameter itemProvider: a closure that configures and returns the `NSCollectionViewItem` for the object
          */
         @nonobjc
+        @MainActor
         public init(
             collectionView: NSCollectionView,
             dataStack: DataStack,
@@ -102,6 +103,7 @@ extension DiffableDataSource {
         // MARK: - NSCollectionViewDataSource
 
         @objc
+        @MainActor
         public dynamic func numberOfSections(
             in collectionView: NSCollectionView
         ) -> Int {
@@ -110,6 +112,7 @@ extension DiffableDataSource {
         }
 
         @objc
+        @MainActor
         public dynamic func collectionView(
             _ collectionView: NSCollectionView,
             numberOfItemsInSection section: Int
@@ -119,12 +122,13 @@ extension DiffableDataSource {
         }
 
         @objc
+        @MainActor
         open dynamic func collectionView(
             _ collectionView: NSCollectionView,
             itemForRepresentedObjectAt indexPath: IndexPath
         ) -> NSCollectionViewItem {
 
-            guard let objectID = self.itemID(for: indexPath) else {
+            guard let objectID: NSManagedObjectID = self.itemID(for: indexPath) else {
 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }
@@ -140,6 +144,7 @@ extension DiffableDataSource {
         }
 
         @objc
+        @MainActor
         open dynamic func collectionView(
             _ collectionView: NSCollectionView,
             viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind,
@@ -181,57 +186,90 @@ extension DiffableDataSource {
 
         public var shouldSuspendBatchUpdates: Bool {
 
-            return self.base?.window == nil
+            return MainActor.assumeIsolated {
+                
+                return self.base?.window == nil
+            }
         }
 
         public func deleteSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.deleteSections(indices)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.deleteSections(indices)
+            }
         }
 
         public func insertSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.insertSections(indices)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.insertSections(indices)
+            }
         }
 
         public func reloadSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.reloadSections(indices)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadSections(indices)
+            }
         }
 
         public func moveSection(at index: IndexSet.Element, to newIndex: IndexSet.Element, animated: Bool) {
-
-            self.base?.moveSection(index, toSection: newIndex)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.moveSection(index, toSection: newIndex)
+            }
         }
 
         public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.deleteItems(at: Set(indexPaths))
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.deleteItems(at: Set(indexPaths))
+            }
         }
 
         public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.insertItems(at: Set(indexPaths))
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.insertItems(at: Set(indexPaths))
+            }
         }
 
         public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.reloadItems(at: Set(indexPaths))
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadItems(at: Set(indexPaths))
+            }
         }
 
         public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath, animated: Bool) {
-
-            self.base?.moveItem(at: indexPath, to: newIndexPath)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.moveItem(at: indexPath, to: newIndexPath)
+            }
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
-
-            self.base?.animator().performBatchUpdates(updates, completionHandler: { _ in completion() })
+        public func performBatchUpdates(updates: @escaping @Sendable () -> Void, animated: Bool, completion: @escaping @Sendable () -> Void) {
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.animator().performBatchUpdates(updates, completionHandler: { _ in completion() })
+            }
         }
 
         public func reloadData() {
-
-            self.base?.reloadData()
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadData()
+            }
         }
     }
 }

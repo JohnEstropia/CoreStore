@@ -32,7 +32,7 @@ import CoreData
 /**
  The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
  */
-public struct GroupBy<O: DynamicObject>: GroupByClause, QueryClause, Hashable {
+public struct GroupBy<O: DynamicObject>: GroupByClause, QueryClause, Hashable, Sendable {
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings

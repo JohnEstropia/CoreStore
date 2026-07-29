@@ -3,7 +3,6 @@
 // Copyright © 2020 John Rommel Estropia, Inc. All rights reserved.
 
 import CoreLocation
-import Combine
 import CoreStore
 import Foundation
 import MapKit
@@ -14,7 +13,8 @@ import SwiftUI
 extension Modern.PlacemarksDemo {
     
     // MARK: - Modern.PlacemarksDemo.MainView
-
+    
+    @MainActor
     struct MainView: View {
         
         /**
@@ -22,10 +22,11 @@ extension Modern.PlacemarksDemo {
          */
         private func demoAsynchronousTransaction(coordinate: CLLocationCoordinate2D) {
             
+            let persistentID = self.$place?.persistentID()
             Modern.PlacemarksDemo.dataStack.perform(
                 asynchronous: { (transaction) in
                     
-                    let place = self.$place?.asEditable(in: transaction)
+                    let place = persistentID?.asEditable(in: transaction)
                     place?.annotation = .init(coordinate: coordinate)
                 },
                 completion: { _ in }
@@ -38,7 +39,7 @@ extension Modern.PlacemarksDemo {
          - Important: `perform(synchronous:)` was used here for illustration purposes. In practice, `perform(asynchronous:completion:)` is the preferred transaction type as synchronous transactions are very likely to cause deadlocks.
          */
         private func demoSynchronousTransaction() {
-
+            
             _ = try? Modern.PlacemarksDemo.dataStack.perform(
                 synchronous: {  (transaction) in
                     
@@ -68,40 +69,11 @@ extension Modern.PlacemarksDemo {
                 print("Commit failed: \(error as Any)")
             }
         }
-
+        
         // MARK: Internal
-
+        
         @ObjectState(Modern.PlacemarksDemo.placePublisher)
         var place: ObjectSnapshot<Modern.PlacemarksDemo.Place>?
-        
-        init() {
-            
-            self.sinkCancellable = self.$place?.reactive.snapshot().sink(
-                receiveCompletion: { _ in
-                    
-                    // Deleted, do nothing
-                },
-                receiveValue: { [self] (snapshot) in
-                    
-                    guard let snapshot = snapshot else {
-                        
-                        return
-                    }
-                    self.geocoder.geocode(place: snapshot) { (title, subtitle) in
-                        
-                        guard self.place == snapshot else {
-                            
-                            return
-                        }
-                        self.demoUnsafeTransaction(
-                            title: title,
-                            subtitle: subtitle,
-                            for: snapshot
-                        )
-                    }
-                }
-            )
-        }
         
         
         // MARK: View
@@ -130,34 +102,41 @@ extension Modern.PlacemarksDemo {
                     )
                 }
             }
-            .navigationBarTitle("Placemarks")
-            .navigationBarItems(
-                trailing: Button("Random") {
+            .task(id: self.place.map({ "\($0.$latitude),\($0.$longitude)" })) {
+                
+                guard let place = self.place else {
+                    
+                    return
+                }
+                let geocoded = await self.geocoder.geocode(place: place)
+                guard self.place?.persistentID() == place.persistentID() else {
+                    
+                    return
+                }
+                guard geocoded.title != nil || geocoded.subtitle != nil else {
+                    
+                    return
+                }
+                self.demoUnsafeTransaction(
+                    title: geocoded.title,
+                    subtitle: geocoded.subtitle,
+                    for: place
+                )
+            }
+            .navigationTitle("Placemarks")
+            .toolbar {
+                
+                Button("Random") {
                     
                     self.demoSynchronousTransaction()
                 }
-            )
+            }
         }
         
         
         // MARK: Private
         
-        private var sinkCancellable: AnyCancellable?
-        private let geocoder = Modern.PlacemarksDemo.Geocoder()
+        @State
+        private var geocoder = Modern.PlacemarksDemo.Geocoder()
     }
 }
-
-
-#if DEBUG
-
-struct _Demo_Modern_PlacemarksDemo_MainView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        Modern.PlacemarksDemo.MainView()
-    }
-}
-
-#endif

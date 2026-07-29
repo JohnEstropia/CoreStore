@@ -66,11 +66,15 @@ public final class InMemoryStore: StorageInterface {
     /**
      The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.
      */
-    public let storeOptions: [AnyHashable: Any]? = nil
+    public var storeOptions: [AnyHashable: Any]? {
+        
+        return nil
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
@@ -79,6 +83,7 @@ public final class InMemoryStore: StorageInterface {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
@@ -87,5 +92,5 @@ public final class InMemoryStore: StorageInterface {
     
     // MARK: Private
     
-    private weak var dataStack: DataStack?
+    private nonisolated(unsafe) weak var dataStack: DataStack?
 }

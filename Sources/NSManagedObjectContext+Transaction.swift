@@ -142,15 +142,14 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func saveSynchronously(
         waitForMerge: Bool,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) -> (hasChanges: Bool, error: CoreStoreError?) {
       
-        var result: (hasChanges: Bool, error: CoreStoreError?) = (false, nil)
-        self.performAndWait {
+        return self.performAndWait {
             
             guard self.hasChanges else {
                 
-                return
+                return (false, nil)
             }
             do {
                 
@@ -168,8 +167,7 @@ extension NSManagedObjectContext {
                     saveError,
                     "Failed to save \(Internals.typeName(NSManagedObjectContext.self))."
                 )
-                result = (true, saveError)
-                return
+                return (true, saveError)
             }
             if let parentContext = self.parent, self.shouldCascadeSavesToParent {
                 
@@ -177,20 +175,19 @@ extension NSManagedObjectContext {
                     waitForMerge: waitForMerge,
                     sourceIdentifier: sourceIdentifier
                 )
-                result = (true, error)
+                return (true, error)
             }
             else {
                 
-                result = (true, nil)
+                return (true, nil)
             }
         }
-        return result
     }
     
     @nonobjc
     internal func saveAsynchronously(
-        sourceIdentifier: Any?,
-        completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }
+        sourceIdentifier: (any Sendable)?,
+        completion: @escaping @MainActor @Sendable (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }
     ) {
         
         self.perform {
@@ -259,11 +256,11 @@ extension NSManagedObjectContext {
         // MARK: Internal
         
         internal let isSavingSynchronously: Bool
-        internal let sourceIdentifier: Any?
+        internal let sourceIdentifier: (any Sendable)?
         
         internal init(
             isSavingSynchronously: Bool,
-            sourceIdentifier: Any?
+            sourceIdentifier: (any Sendable)?
         ) {
             
             self.isSavingSynchronously = isSavingSynchronously
@@ -276,9 +273,9 @@ extension NSManagedObjectContext {
     
     private struct PropertyKeys {
         
-        static var parentTransaction: Void?
-        static var saveMetadata: Void?
-        static var isTransactionContext: Void?
-        static var isDataStackContext: Void?
+        static nonisolated(unsafe) var parentTransaction: Void?
+        static nonisolated(unsafe) var saveMetadata: Void?
+        static nonisolated(unsafe) var isTransactionContext: Void?
+        static nonisolated(unsafe) var isDataStackContext: Void?
     }
 }

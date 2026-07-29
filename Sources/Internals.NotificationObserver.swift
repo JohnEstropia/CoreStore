@@ -42,7 +42,7 @@ extension Internals {
             notificationName: Notification.Name,
             object: Any?,
             queue: OperationQueue? = nil,
-            closure: @escaping (_ note: Notification) -> Void
+            closure: @escaping @Sendable (_ note: Notification) -> Void
         ) {
 
             self.observer = NotificationCenter.default.addObserver(
@@ -50,6 +50,27 @@ extension Internals {
                 object: object,
                 queue: queue,
                 using: closure
+            )
+        }
+        
+        init(
+            notificationName: Notification.Name,
+            object: Any?,
+            closure: @escaping @MainActor (_ note: Notification) -> Void
+        ) {
+
+            self.observer = NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: object,
+                queue: .main,
+                using: { note in
+                    
+                    nonisolated(unsafe) let note = note
+                    MainActor.assumeIsolated {
+                        
+                        closure(note)
+                    }
+                }
             )
         }
 

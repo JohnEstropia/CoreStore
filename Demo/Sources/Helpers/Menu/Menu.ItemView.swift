@@ -10,34 +10,36 @@ extension Menu {
     
     // MARK: - Menu.ItemView
     
-    struct ItemView<Destination: View>: View {
+    struct ItemView: View {
         
         // MARK: Internal
         
         init(
             title: String,
             subtitle: String? = nil,
-            destination: @escaping () -> Destination
+            isEnabled: Bool = true
         ) {
+            
             self.title = title
             self.subtitle = subtitle
-            self.destination = destination
+            self.isEnabled = isEnabled
         }
         
         
         // MARK: View
-
+        
         var body: some View {
-            NavigationLink(destination: LazyView(self.destination)) {
-                VStack(alignment: .leading) {
-                    Text(self.title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    self.subtitle.map {
-                        Text($0)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
+            VStack(alignment: .leading) {
+                
+                Text(self.title)
+                    .font(.headline)
+                    .foregroundStyle(self.isEnabled ? .primary : .secondary)
+                
+                self.subtitle.map {
+                    
+                    Text($0)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -47,25 +49,6 @@ extension Menu {
         
         fileprivate let title: String
         fileprivate let subtitle: String?
-        fileprivate let destination: () -> Destination
+        fileprivate let isEnabled: Bool
     }
 }
-
-#if DEBUG
-
-struct _Demo_Menu_ItemView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        Menu.ItemView(
-            title: "Item Title",
-            subtitle: "A subtitle caption for this item",
-            destination: {
-                Color.blue
-            }
-        )
-    }
-}
-
-#endif

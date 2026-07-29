@@ -32,7 +32,7 @@ import CoreData
 /**
  The `Where` clause specifies the conditions for a fetch or a query.
  */
-public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause, DeleteClause, Hashable {
+public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause, DeleteClause, Hashable, Sendable {
     
     /**
      Combines two `Where` predicates together using `AND` operator
@@ -432,7 +432,7 @@ public struct Where<O: DynamicObject>: WhereClauseType, FetchClause, QueryClause
     
     // MARK: AnyWhereClause
     
-    public let predicate: NSPredicate
+    public nonisolated(unsafe) let predicate: NSPredicate
     
     public init(_ predicate: NSPredicate) {
         

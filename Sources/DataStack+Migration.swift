@@ -49,7 +49,7 @@ extension DataStack {
      */
     public func addStorage<T>(
         _ storage: T,
-        completion: @escaping (SetupResult<T>) -> Void
+        completion: @escaping @MainActor @Sendable (SetupResult<T>) -> Void
     ) {
 
         self.coordinator.performAsynchronously {
@@ -110,7 +110,7 @@ extension DataStack {
      */
     public func addStorage<T: LocalStorage>(
         _ storage: T,
-        completion: @escaping (SetupResult<T>) -> Void
+        completion: @escaping @MainActor @Sendable (SetupResult<T>) -> Void
     ) -> Progress? {
 
         let fileURL = storage.fileURL
@@ -162,7 +162,7 @@ extension DataStack {
                     attributes: nil
                 )
                 
-                let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                nonisolated(unsafe) let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
                     ofType: type(of: storage).storeType,
                     at: fileURL as URL,
                     options: storage.storeOptions
@@ -192,12 +192,18 @@ extension DataStack {
                                 }
                                 catch {
                                     
-                                    completion(.failure(CoreStoreError(error)))
+                                    DispatchQueue.main.async {
+                                        
+                                        completion(.failure(CoreStoreError(error)))
+                                    }
                                 }
                                 return
                             }
                             
-                            completion(.failure(CoreStoreError(error)))
+                            DispatchQueue.main.async {
+                                
+                                completion(.failure(CoreStoreError(error)))
+                            }
                             return
                         }
                         
@@ -212,7 +218,10 @@ extension DataStack {
                         }
                         catch {
                             
-                            completion(.failure(CoreStoreError(error)))
+                            DispatchQueue.main.async {
+                                
+                                completion(.failure(CoreStoreError(error)))
+                            }
                         }
                     }
                 )
@@ -264,7 +273,7 @@ extension DataStack {
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(
         _ storage: T,
-        completion: @escaping (MigrationResult) -> Void
+        completion: @escaping @MainActor @Sendable (MigrationResult) -> Void
     ) throws(CoreStoreError) -> Progress? {
 
         return try self.coordinator.performSynchronously {
@@ -376,7 +385,7 @@ extension DataStack {
     private func upgradeStorageIfNeeded<T: LocalStorage>(
         _ storage: T,
         metadata: [String: Any],
-        completion: @escaping (MigrationResult) -> Void
+        completion: @escaping @MainActor @Sendable (MigrationResult) -> Void
     ) -> Progress? {
 
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
@@ -423,9 +432,13 @@ extension DataStack {
         }
         
         let migrationTypes = migrationSteps.map { $0.migrationType }
-        var migrationResult: MigrationResult?
+        let migrationState: Internals.Mutex<(migrationResult: MigrationResult?, cancelled: Bool)> = .init(
+            (
+                migrationResult: nil,
+                cancelled: false
+            )
+        )
         var operations = [Operation]()
-        var cancelled = false
         
         let progress = Progress(parent: nil, userInfo: nil)
         progress.totalUnitCount = numberOfMigrations
@@ -437,15 +450,21 @@ extension DataStack {
             let childProgress = Progress(parent: progress, userInfo: nil)
             childProgress.totalUnitCount = 100
             
+            nonisolated(unsafe) let sourceModel = sourceModel
+            nonisolated(unsafe) let destinationModel = destinationModel
+            nonisolated(unsafe) let mappingModel = mappingModel
             operations.append(
                 BlockOperation { [weak self] in
                     
-                    guard let self = self, !cancelled else {
+                    guard
+                        let self = self,
+                        !migrationState.withLock({ $0.cancelled })
+                    else {
                         
                         return
                     }
                     
-                    autoreleasepool {
+                    Internals.autoreleasepool {
                         
                         do {
                             
@@ -465,8 +484,14 @@ extension DataStack {
                                 migrationError,
                                 "Failed to migrate version model \"\(migrationType.sourceVersion)\" to version \"\(migrationType.destinationVersion)\"."
                             )
-                            migrationResult = .failure(migrationError)
-                            cancelled = true
+                            migrationState.withLock { state in
+                                
+                                if !state.cancelled {
+                                    
+                                    state.migrationResult = .failure(migrationError)
+                                    state.cancelled = true
+                                }
+                            }
                         }
                     }
                     
@@ -485,6 +510,7 @@ extension DataStack {
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             
+            let migrationResult = migrationState.withLock { $0.migrationResult }
             DispatchQueue.main.async {
                 
                 progress.setProgressHandler(nil)
@@ -594,22 +620,28 @@ extension DataStack {
                 let estimatedTime: TimeInterval = 60 * 3 // 3 mins
                 let interval: TimeInterval = 1
                 let fakeTotalUnitCount: Float = 0.9 * Float(progress.totalUnitCount)
-                var fakeProgress: Float = 0
+                let fakeProgress: Internals.Mutex<Float> = .init(0)
                 
-                var recursiveCheck: () -> Void = {}
-                recursiveCheck = { [weak timerQueue] in
+                @Sendable
+                func recursiveCheck() {
                     
-                    guard let timerQueue = timerQueue, fakeProgress < 1 else {
+                    let enqueueNext = fakeProgress.withLock {
                         
-                        return
+                        guard $0 < 1.0 else {
+                            
+                            return false
+                        }
+                        progress.completedUnitCount = Int64(fakeTotalUnitCount * $0)
+                        $0 += Float(interval / estimatedTime)
+                        return true
                     }
-                    progress.completedUnitCount = Int64(fakeTotalUnitCount * fakeProgress)
-                    fakeProgress += Float(interval / estimatedTime)
-                    
-                    timerQueue.asyncAfter(
-                        deadline: .now() + interval,
-                        execute: recursiveCheck
-                    )
+                    if enqueueNext {
+                        
+                        timerQueue.asyncAfter(
+                            deadline: .now() + interval,
+                            execute: recursiveCheck
+                        )
+                    }
                 }
                 timerQueue.async(execute: recursiveCheck)
                 
@@ -624,9 +656,11 @@ extension DataStack {
                         )
                     )
                 }
-                timerQueue.sync {
-                    
-                    fakeProgress = 1
+                withoutActuallyEscaping(timerQueue.sync) { escapingClosure in
+                    escapingClosure {
+                        
+                        fakeProgress.withLock({ $0 = 1.0 })
+                    }
                 }
                 _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount

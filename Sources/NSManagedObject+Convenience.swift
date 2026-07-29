@@ -106,7 +106,7 @@ extension NSManagedObject {
     @nonobjc @inline(__always)
     public func getValue<T>(
         forKvcKey kvcKey: KeyPathString,
-        didGetValue: (Any?) throws(any Swift.Error) -> T
+        didGetValue: (Any?) throws(any Swift::Error) -> T
     ) rethrows -> T {
 
         self.willAccessValue(forKey: kvcKey)
@@ -128,8 +128,8 @@ extension NSManagedObject {
     @nonobjc @inline(__always)
     public func getValue<T>(
         forKvcKey kvcKey: KeyPathString,
-        willGetValue: () throws(any Swift.Error) -> Void,
-        didGetValue: (Any?) throws(any Swift.Error) -> T
+        willGetValue: () throws(any Swift::Error) -> Void,
+        didGetValue: (Any?) throws(any Swift::Error) -> T
     ) rethrows -> T {
 
         self.willAccessValue(forKey: kvcKey)
@@ -196,7 +196,7 @@ extension NSManagedObject {
     public func setValue<T>(
         _ value: T,
         forKvcKey KVCKey: KeyPathString,
-        willSetValue: (T) throws(any Swift.Error) -> Any?,
+        willSetValue: (T) throws(any Swift::Error) -> Any?,
         didSetValue: (Any?) -> Void = { _ in }
     ) rethrows {
 

@@ -36,7 +36,29 @@ public enum CoreStoreDefaults {
     /**
     The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
     */
-    public static var logger: CoreStoreLogger = DefaultLogger()
+    public static var logger: CoreStoreLogger {
+    
+        get {
+            
+            return self.loggerInstance.withLock {
+                
+                if let logger = $0 {
+                    
+                    return logger
+                }
+                let logger = DefaultLogger()
+                $0 = logger
+                return logger
+            }
+        }
+        set {
+            
+            self.loggerInstance.withLock {
+                
+                $0 = newValue
+            }
+        }
+    }
     
     /**
      The default `DataStack` instance to be used. If `defaultStack` is not set during the first time accessed, a default-configured `DataStack` will be created.
@@ -47,21 +69,23 @@ public enum CoreStoreDefaults {
     public static var dataStack: DataStack {
 
         get {
-
-            self.defaultStackBarrierQueue.sync(flags: .barrier) {
-
-                if self.defaultStackInstance == nil {
-
-                    self.defaultStackInstance = DataStack()
+            
+            return self.defaultStackInstance.withLock {
+                
+                if let dataStack = $0 {
+                    
+                    return dataStack
                 }
+                let dataStack = DataStack()
+                $0 = dataStack
+                return dataStack
             }
-            return self.defaultStackInstance!
         }
         set {
 
-            self.defaultStackBarrierQueue.async(flags: .barrier) {
-
-                self.defaultStackInstance = newValue
+            self.defaultStackInstance.withLock {
+                
+                $0 = newValue
             }
         }
     }
@@ -69,7 +93,6 @@ public enum CoreStoreDefaults {
 
     // MARK: Private
 
-    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue", qos: .userInteractive)
-
-    private static var defaultStackInstance: DataStack?
+    private static let defaultStackInstance: Internals.Mutex<DataStack?> = .init(nil)
+    private static let loggerInstance: Internals.Mutex<(any CoreStoreLogger)?> = .init(nil)
 }

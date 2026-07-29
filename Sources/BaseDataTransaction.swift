@@ -26,9 +26,6 @@
 import Foundation
 import CoreData
 
-
-// MARK: - BaseDataTransaction
-
 /**
  The `BaseDataTransaction` is an abstract interface for `NSManagedObject` creates, updates, and deletes. All `BaseDataTransaction` subclasses manage a private `NSManagedObjectContext` which are direct children of the `NSPersistentStoreCoordinator`'s root `NSManagedObjectContext`. This means that all updates are saved first to the persistent store, and then propagated up to the read-only `NSManagedObjectContext`.
  */
@@ -118,6 +115,27 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
+     - parameter persistentID: the `PersistentID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public func edit<O>(
+        _ persistentID: PersistentID<O>?
+    ) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to update an entity for \(Internals.typeName(persistentID)) outside its designated queue."
+        )
+        guard let persistentID = persistentID else {
+            
+            return nil
+        }
+        return self.context.fetchExisting(persistentID.managedObjectID)
+    }
+    
+    /**
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
+     
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
@@ -134,6 +152,30 @@ public /*abstract*/ class BaseDataTransaction {
             return nil
         }
         return self.context.fetchExisting(object)
+    }
+    
+    /**
+     Returns an editable proxy of the object with the specified `PersistentID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `PersistentID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public func edit<O>(
+        _ into: Into<O>,
+        _ persistentID: PersistentID<O>
+    ) -> O? {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) outside its designated queue."
+        )
+        Internals.assert(
+            into.inferStoreIfPossible
+            || (into.configuration ?? DataStack.defaultConfigurationName) == persistentID.managedObjectID.persistentStore?.configurationName,
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
+        )
+        return self.fetchExisting(persistentID)
     }
     
     /**
@@ -158,6 +200,26 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID)
+    }
+    
+    /**
+     Deletes the objects with the specified `PersistentID`s.
+
+     - parameter persistentIDs: the `PersistentID`s of the objects to delete
+     */
+    public func delete<O: DynamicObject, S: Sequence>(
+        persistentIDs: S
+    ) where S.Iterator.Element == PersistentID<O> {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete an entity outside its designated queue."
+        )
+        let context = self.context
+        persistentIDs.forEach {
+
+            context.fetchExisting($0).map({ context.delete($0.cs_toRaw()) })
+        }
     }
 
     /**
@@ -441,7 +503,7 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      An arbitrary value that identifies the source of this transaction. Callers of the transaction can provide this value through the `DataStack.perform(...)` methods.
      */
-    public let sourceIdentifier: Any?
+    public let sourceIdentifier: (any Sendable)?
     
     /**
      Allow external libraries to store custom data in the transaction. App code should rarely have a need for this.
@@ -471,7 +533,7 @@ public /*abstract*/ class BaseDataTransaction {
         queue: DispatchQueue,
         supportsUndo: Bool,
         bypassesQueueing: Bool,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
@@ -493,7 +555,10 @@ public /*abstract*/ class BaseDataTransaction {
         }
         else if context.undoManager == nil {
             
-            context.undoManager = UndoManager()
+            Internals.mainActorImmediate {
+                
+                context.undoManager = UndoManager()
+            }
         }
     }
     

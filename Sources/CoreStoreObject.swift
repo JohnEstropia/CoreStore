@@ -266,6 +266,6 @@ fileprivate enum Static {
     
     // MARK: FilePrivate
     
-    fileprivate static var metaCache: [ObjectIdentifier: Any] = [:]
-    fileprivate static var propertiesCache: [ObjectIdentifier: [PropertyProtocol]] = [:]
+    fileprivate static nonisolated(unsafe) var metaCache: [ObjectIdentifier: Any] = [:]
+    fileprivate static nonisolated(unsafe) var propertiesCache: [ObjectIdentifier: [PropertyProtocol]] = [:]
 }

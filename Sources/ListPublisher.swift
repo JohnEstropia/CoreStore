@@ -94,10 +94,11 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      - parameter notifyInitial: if `true`, the callback is executed immediately with the current publisher state. Otherwise only succeeding updates will notify the observer. Default value is `false`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
-        _ callback: @escaping (ListPublisher<O>) -> Void
+        _ callback: @escaping @Sendable (ListPublisher<O>) -> Void
     ) {
 
         Internals.assert(
@@ -128,11 +129,12 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      - parameter initialSourceIdentifier: an optional value that identifies the initial callback invocation if `notifyInitial` is `true`.
      - parameter callback: the closure to execute when changes occur
      */
+    @MainActor
     public func addObserver<T: AnyObject>(
         _ observer: T,
         notifyInitial: Bool = false,
         initialSourceIdentifier: Any? = nil,
-        _ callback: @escaping (
+        _ callback: @escaping @Sendable (
             _ listPublisher: ListPublisher<O>,
             _ sourceIdentifier: Any?
         ) -> Void
@@ -159,6 +161,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 
      - parameter observer: the object whose notifications will be unregistered
      */
+    @MainActor
     public func removeObserver<T: AnyObject>(_ observer: T) {
 
         Internals.assert(
@@ -185,8 +188,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      */
     public func refetch<B: FetchChainableBuilderType>(
         _ clauseChain: B,
-        sourceIdentifier: Any? = nil
-    ) throws(any Swift.Error) where B.ObjectType == O {
+        sourceIdentifier: (any Sendable)? = nil
+    ) throws(any Swift::Error) where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -214,8 +217,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
      */
     public func refetch<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
-        sourceIdentifier: Any? = nil
-    ) throws(any Swift.Error) where B.ObjectType == O {
+        sourceIdentifier: (any Sendable)? = nil
+    ) throws(any Swift::Error) where B.ObjectType == O {
 
         try self.refetch(
             from: clauseChain.from,
@@ -231,6 +234,7 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     public func cs_dataStack() -> DataStack? {
         
         return self.context.parentStack
@@ -342,8 +346,8 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        sourceIdentifier: Any?
-    ) throws(any Swift.Error) {
+        sourceIdentifier: (any Sendable)?
+    ) throws(any Swift::Error) {
 
         let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
             context: self.fetchedResultsController.managedObjectContext,

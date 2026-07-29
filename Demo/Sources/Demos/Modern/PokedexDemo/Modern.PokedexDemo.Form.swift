@@ -34,7 +34,7 @@ extension Modern.PokedexDemo {
         
         // MARK: ImportableObject
 
-        typealias ImportSource = Dictionary<String, Any>
+        typealias ImportSource = Dictionary<String, any Sendable>
 
 
         // MARK: ImportableUniqueObject

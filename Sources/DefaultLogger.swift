@@ -55,29 +55,29 @@ public final class DefaultLogger: CoreStoreLogger {
         functionName: StaticString
     ) {
 
-        #if DEBUG
-            let icon: String
-            let levelString: String
-            switch level {
-                
-            case .trace:
-                icon = "🔹"
-                levelString = "Trace"
-                
-            case .notice:
-                icon = "🔸"
-                levelString = "Notice"
-                
-            case .warning:
-                icon = "⚠️"
-                levelString = "Warning"
-                
-            case .fatal:
-                icon = "❗"
-                levelString = "Fatal"
-            }
-            Swift.print("\(icon) [CoreStore: \(levelString)] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
-        #endif
+#if DEBUG
+        let icon: String
+        let levelString: String
+        switch level {
+            
+        case .trace:
+            icon = "🔹"
+            levelString = "Trace"
+            
+        case .notice:
+            icon = "🔸"
+            levelString = "Notice"
+            
+        case .warning:
+            icon = "⚠️"
+            levelString = "Warning"
+            
+        case .fatal:
+            icon = "❗"
+            levelString = "Fatal"
+        }
+        Swift::print("\(icon) [CoreStore: \(levelString)] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+#endif
     }
     
     /**
@@ -97,9 +97,9 @@ public final class DefaultLogger: CoreStoreLogger {
         functionName: StaticString
     ) {
 
-        #if DEBUG
-            Swift.print("⚠️ [CoreStore: Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
-        #endif
+#if DEBUG
+        Swift::print("⚠️ [CoreStore: Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
+#endif
     }
     
     /**
@@ -119,14 +119,14 @@ public final class DefaultLogger: CoreStoreLogger {
         functionName: StaticString
     ) {
 
-        #if DEBUG
-            if condition() {
-                
-                return
-            }
-            Swift.print("❗ [CoreStore: Assertion Failure] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
-            Swift.fatalError(file: fileName, line: UInt(lineNumber))
-        #endif
+#if DEBUG
+        if condition() {
+            
+            return
+        }
+        Swift::print("❗ [CoreStore: Assertion Failure] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
+        Swift::fatalError(file: fileName, line: UInt(lineNumber))
+#endif
     }
     
     /**
@@ -145,7 +145,7 @@ public final class DefaultLogger: CoreStoreLogger {
         functionName: StaticString
     ) {
 
-        Swift.print("❗ [CoreStore: Fatal Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
-        Swift.fatalError(file: fileName, line: UInt(lineNumber))
+        Swift::print("❗ [CoreStore: Fatal Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        Swift::fatalError(file: fileName, line: UInt(lineNumber))
     }
 }

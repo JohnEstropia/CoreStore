@@ -2,7 +2,6 @@
 // Demo
 // Copyright © 2020 John Rommel Estropia, Inc. All rights reserved.
 
-import Combine
 import CoreStore
 import SwiftUI
 
@@ -12,6 +11,7 @@ extension Modern.ColorsDemo.SwiftUI {
     
     // MARK: - Modern.ColorsDemo.SwiftUI.DetailView
     
+    @MainActor
     struct DetailView: View {
         
         /**
@@ -31,9 +31,10 @@ extension Modern.ColorsDemo.SwiftUI {
         
         @Binding
         private var brightness: Float
-
+        
         init(_ palette: ObjectPublisher<Modern.ColorsDemo.Palette>) {
-
+            
+            let persistentID = palette.persistentID()
             self._palette = .init(palette)
             self._hue = Binding(
                 get: { palette.hue ?? 0 },
@@ -42,7 +43,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.hue = percentage
                         },
                         completion: { _ in }
@@ -56,7 +57,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.saturation = percentage
                         },
                         completion: { _ in }
@@ -70,7 +71,7 @@ extension Modern.ColorsDemo.SwiftUI {
                     Modern.ColorsDemo.dataStack.perform(
                         asynchronous: { (transaction) in
                             
-                            let palette = palette.asEditable(in: transaction)
+                            let palette = persistentID.asEditable(in: transaction)
                             palette?.brightness = percentage
                         },
                         completion: { _ in }
@@ -78,7 +79,7 @@ extension Modern.ColorsDemo.SwiftUI {
                 }
             )
         }
-
+        
         
         // MARK: View
         
@@ -87,12 +88,17 @@ extension Modern.ColorsDemo.SwiftUI {
             if let palette = self.palette {
                 
                 ZStack(alignment: .center) {
+                    
                     Color(palette.$color)
+                    
                     ZStack {
+                        
                         RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .fill(Color.white)
                             .shadow(color: Color(.sRGB, white: 0.5, opacity: 0.3), radius: 2, x: 1, y: 1)
+                        
                         VStack(alignment: .leading, spacing: 10) {
+                            
                             HStack {
                                 Text("H: \(Int(palette.$hue * 359))°")
                                     .frame(width: 80)
@@ -102,6 +108,7 @@ extension Modern.ColorsDemo.SwiftUI {
                                     step: 1 / 359
                                 )
                             }
+                            
                             HStack {
                                 Text("S: \(Int(palette.$saturation * 100))%")
                                     .frame(width: 80)
@@ -111,6 +118,7 @@ extension Modern.ColorsDemo.SwiftUI {
                                     step: 1 / 100
                                 )
                             }
+                            
                             HStack {
                                 Text("B: \(Int(palette.$brightness * 100))%")
                                     .frame(width: 80)
@@ -131,30 +139,3 @@ extension Modern.ColorsDemo.SwiftUI {
         }
     }
 }
-
-#if DEBUG
-
-struct _Demo_Modern_ColorsDemo_SwiftUI_DetailView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        try! Modern.ColorsDemo.dataStack.perform(
-            synchronous: { transaction in
-
-                guard (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>())) <= 0 else {
-                    return
-                }
-                let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
-                palette.setRandomHue()
-            }
-        )
-        
-        return Modern.ColorsDemo.SwiftUI.DetailView(
-            Modern.ColorsDemo.palettesPublisher.snapshot.first!
-        )
-    }
-}
-
-#endif

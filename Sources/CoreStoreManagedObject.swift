@@ -29,7 +29,8 @@ import Foundation
 
 // MARK: - CoreStoreManagedObject
 
-@objc internal class CoreStoreManagedObject: NSManagedObject {
+@objc
+internal class CoreStoreManagedObject: NSManagedObject {
     
     internal typealias CustomGetter = @convention(block) (_ rawObject: Any) -> Any?
     internal typealias CustomSetter = @convention(block) (_ rawObject: Any, _ newValue: Any?) -> Void
@@ -41,13 +42,4 @@ import Foundation
         
         return "_\(NSStringFromClass(CoreStoreManagedObject.self))__\(modelVersion)__\(NSStringFromClass(entity.type))__\(entity.entityName)"
     }
-}
-
-
-// MARK: - Private
-
-private enum Static {
-    
-    static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue", qos: .userInteractive)
-    static var cache: [ObjectIdentifier: [KeyPathString: Set<KeyPathString>]] = [:]
 }

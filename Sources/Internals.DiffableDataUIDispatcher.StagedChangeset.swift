@@ -35,7 +35,8 @@ extension Internals.DiffableDataUIDispatcher {
     // MARK: - StagedChangeset
     
     // Implementation based on https://github.com/ra1028/DifferenceKit
-    internal struct StagedChangeset<C: Collection>: ExpressibleByArrayLiteral, Equatable, RandomAccessCollection, RangeReplaceableCollection where C: Equatable {
+    internal struct StagedChangeset<C: Collection & Sendable>: ExpressibleByArrayLiteral, Equatable, RandomAccessCollection, RangeReplaceableCollection, Sendable
+    where C: Equatable {
         
         @usableFromInline
         var changesets: ContiguousArray<Changeset<C>>
@@ -117,7 +118,8 @@ extension Internals.DiffableDataUIDispatcher {
 
 // MARK: - Internals.DiffableDataUIDispatcher.StagedChangeset where C: RangeReplaceableCollection, C.Element: Differentiable
 
-extension Internals.DiffableDataUIDispatcher.StagedChangeset where C: RangeReplaceableCollection, C.Element: Differentiable {
+extension Internals.DiffableDataUIDispatcher.StagedChangeset
+where C: RangeReplaceableCollection, C.Element: Differentiable {
     
     @inlinable
     internal init(source: C, target: C) {
@@ -225,7 +227,8 @@ extension Internals.DiffableDataUIDispatcher.StagedChangeset where C: RangeRepla
 
 // MARK: - Internals.DiffableDataUIDispatcher.StagedChangeset where C: RangeReplaceableCollection, C.Element: DifferentiableSection
 
-extension Internals.DiffableDataUIDispatcher.StagedChangeset where C: RangeReplaceableCollection, C.Element: DifferentiableSection {
+extension Internals.DiffableDataUIDispatcher.StagedChangeset
+where C: RangeReplaceableCollection & Sendable, C.Element: DifferentiableSection & Sendable {
     
     @inlinable
     internal init(source: C, target: C) {

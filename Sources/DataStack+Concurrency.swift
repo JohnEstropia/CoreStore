@@ -46,7 +46,7 @@ extension DataStack {
     /**
      Swift concurrency for the `DataStack` are exposed through this namespace. Extend this type if you need to add other `async` utilities for `DataStack`.
      */
-    public struct AsyncNamespace {
+    public struct AsyncNamespace: Sendable {
 
         // MARK: Public
 
@@ -85,7 +85,7 @@ extension DataStack.AsyncNamespace {
      */
     public func addStorage<T: StorageInterface>(
         _ storage: T
-    ) async throws(any Swift.Error) -> T {
+    ) async throws(any Swift::Error) -> T {
 
         return try await Internals.withCheckedThrowingContinuation { continuation in
 
@@ -118,13 +118,13 @@ extension DataStack.AsyncNamespace {
      */
     public func addStorage<T>(
         _ storage: T
-    ) -> AsyncThrowingStream<MigrationProgress<T>, any Swift.Error> {
+    ) -> AsyncThrowingStream<MigrationProgress<T>, any Swift::Error> {
 
         return .init(
             bufferingPolicy: .unbounded,
             { continuation in
-
-                var progress: Progress? = nil
+                
+                nonisolated(unsafe) var progress: Progress? = nil
                 progress = self.base.addStorage(
                     storage,
                     completion: { result in
@@ -151,14 +151,17 @@ extension DataStack.AsyncNamespace {
                 )
                 if let progress = progress {
 
-                    progress.setProgressHandler { progress in
+                    Internals.mainActorImmediate { @MainActor in
+                        
+                        progress.setProgressHandler { progress in
 
-                        continuation.yield(
-                            .migrating(
-                                storage: storage,
-                                progressObject: progress
+                            continuation.yield(
+                                .migrating(
+                                    storage: storage,
+                                    progressObject: progress
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -181,11 +184,11 @@ extension DataStack.AsyncNamespace {
     public func importObject<O: DynamicObject & ImportableObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) async throws(any Swift.Error) -> O? {
+    ) async throws(any Swift::Error) -> O? {
 
         return try await Internals.withCheckedThrowingContinuation { continuation in
 
-            self.base.perform(
+            return self.base.perform(
                 asynchronous: { (transaction) -> O? in
 
                     return try transaction.importObject(
@@ -196,10 +199,13 @@ extension DataStack.AsyncNamespace {
                 success: {
 
                     continuation.resume(
-                        with: .success($0.flatMap(self.base.fetchExisting))
+                        returning: $0.flatMap(self.base.fetchExisting)
                     )
                 },
-                failure: continuation.resume(throwing:)
+                failure: {
+                    
+                    continuation.resume(throwing: $0)
+                }
             )
         }
     }
@@ -220,8 +226,9 @@ extension DataStack.AsyncNamespace {
     public func importObject<O: DynamicObject & ImportableObject>(
         _ object: O,
         source: O.ImportSource
-    ) async throws(any Swift.Error) -> O? {
+    ) async throws(any Swift::Error) -> O? {
 
+        nonisolated(unsafe) let object = object
         return try await Internals.withCheckedThrowingContinuation { continuation in
 
             self.base.perform(
@@ -240,10 +247,13 @@ extension DataStack.AsyncNamespace {
                 success: {
 
                     continuation.resume(
-                        with: .success($0.flatMap(self.base.fetchExisting))
+                        returning: $0.flatMap(self.base.fetchExisting)
                     )
                 },
-                failure: continuation.resume(throwing:)
+                failure: {
+                    
+                    continuation.resume(throwing: $0)
+                }
             )
         }
     }
@@ -264,7 +274,7 @@ extension DataStack.AsyncNamespace {
     public func importUniqueObject<O: DynamicObject & ImportableUniqueObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) async throws(any Swift.Error) -> O? {
+    ) async throws(any Swift::Error) -> O? {
 
         return try await Internals.withCheckedThrowingContinuation { continuation in
 
@@ -279,10 +289,13 @@ extension DataStack.AsyncNamespace {
                 success: {
 
                     continuation.resume(
-                        with: .success($0.flatMap(self.base.fetchExisting))
+                        returning: $0.flatMap(self.base.fetchExisting)
                     )
                 },
-                failure: continuation.resume(throwing:)
+                failure: {
+                    
+                    continuation.resume(throwing: $0)
+                }
             )
         }
     }
@@ -306,13 +319,13 @@ extension DataStack.AsyncNamespace {
      - returns: The imported objects correctly associated for the `DataStack`.
      - throws: A `CoreStoreError` value indicating the failure reason
      */
-    public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence>(
+    public func importUniqueObjects<O: DynamicObject & ImportableUniqueObject, S: Sequence & Sendable>(
         _ into: Into<O>,
         sourceArray: S,
         preProcess: @escaping @Sendable (
             _ mapping: [O.UniqueIDType: O.ImportSource]
-        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
-    ) async throws(any Swift.Error) -> [O]
+        ) throws(any Swift::Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
+    ) async throws(any Swift::Error) -> [O]
     where S.Iterator.Element == O.ImportSource {
 
         return try await Internals.withCheckedThrowingContinuation { continuation in
@@ -329,10 +342,13 @@ extension DataStack.AsyncNamespace {
                 success: {
 
                     continuation.resume(
-                        with: .success(self.base.fetchExisting($0))
+                        returning: self.base.fetchExisting($0)
                     )
                 },
-                failure: continuation.resume(throwing:)
+                failure: {
+                    
+                    continuation.resume(throwing: $0)
+                }
             )
         }
     }
@@ -357,9 +373,9 @@ extension DataStack.AsyncNamespace {
      - returns: The value returned from the `task` closure.
      - throws: A `CoreStoreError` value indicating the failure reason
      */
-    public func perform<Output>(
-        _ asynchronous: @escaping @Sendable (AsynchronousDataTransaction) throws(any Swift.Error) -> Output
-    ) async throws(any Swift.Error) -> Output {
+    public func perform<Output: Sendable>(
+        _ asynchronous: @escaping @Sendable (AsynchronousDataTransaction) throws(any Swift::Error) -> Output
+    ) async throws(any Swift::Error) -> Output {
 
         return try await Internals.withCheckedThrowingContinuation { continuation in
 

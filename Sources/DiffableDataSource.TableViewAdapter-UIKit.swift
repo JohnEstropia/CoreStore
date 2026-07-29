@@ -85,7 +85,7 @@ extension DiffableDataSource {
         public init(
             tableView: UITableView,
             dataStack: DataStack,
-            cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?
+            cellProvider: @escaping @MainActor @Sendable (UITableView, IndexPath, O) -> UITableViewCell?
         ) {
 
             self.cellProvider = cellProvider
@@ -97,6 +97,7 @@ extension DiffableDataSource {
         /**
          The target `UITableView`
          */
+        @MainActor
         public var tableView: UITableView? {
 
             return self.target.base
@@ -149,7 +150,7 @@ extension DiffableDataSource {
             cellForRowAt indexPath: IndexPath
         ) -> UITableViewCell {
             
-            guard let objectID = self.itemID(for: indexPath) else {
+            guard let objectID: NSManagedObjectID = self.itemID(for: indexPath) else {
                 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }
@@ -240,61 +241,94 @@ extension DiffableDataSource {
 
         public var shouldSuspendBatchUpdates: Bool {
 
-            return self.base?.window == nil
+            return MainActor.assumeIsolated {
+                
+                return self.base?.window == nil
+            }
         }
 
         public func deleteSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.deleteSections(indices, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.deleteSections(indices, with: .automatic)
+            }
         }
 
         public func insertSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.insertSections(indices, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.insertSections(indices, with: .automatic)
+            }
         }
 
         public func reloadSections(at indices: IndexSet, animated: Bool) {
-
-            self.base?.reloadSections(indices, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadSections(indices, with: .automatic)
+            }
         }
 
         public func moveSection(at index: IndexSet.Element, to newIndex: IndexSet.Element, animated: Bool) {
-
-            self.base?.moveSection(index, toSection: newIndex)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.moveSection(index, toSection: newIndex)
+            }
         }
 
         public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.deleteRows(at: indexPaths, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.deleteRows(at: indexPaths, with: .automatic)
+            }
         }
 
         public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.insertRows(at: indexPaths, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.insertRows(at: indexPaths, with: .automatic)
+            }
         }
 
         public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
-
-            self.base?.reloadRows(at: indexPaths, with: .automatic)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadRows(at: indexPaths, with: .automatic)
+            }
         }
 
         public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath, animated: Bool) {
-
-            self.base?.moveRow(at: indexPath, to: newIndexPath)
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.moveRow(at: indexPath, to: newIndexPath)
+            }
         }
 
-        public func performBatchUpdates(updates: () -> Void, animated: Bool, completion: @escaping () -> Void) {
-
-            guard let base = self.base else {
-
-                return
+        public func performBatchUpdates(updates: @escaping @Sendable () -> Void, animated: Bool, completion: @escaping @Sendable () -> Void) {
+            
+            MainActor.assumeIsolated {
+                
+                guard let base = self.base else {
+                    
+                    return
+                }
+                base.performBatchUpdates(updates, completion: { _ in completion() })
             }
-            base.performBatchUpdates(updates, completion: { _ in completion() })
         }
 
         public func reloadData() {
-
-            self.base?.reloadData()
+            
+            MainActor.assumeIsolated {
+                
+                self.base?.reloadData()
+            }
         }
     }
 }

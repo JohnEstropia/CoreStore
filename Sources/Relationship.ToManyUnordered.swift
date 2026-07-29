@@ -196,14 +196,14 @@ extension RelationshipContainer {
 
         internal var valueForSnapshot: Any? {
 
-            return Set(self.value.map({ $0.objectID() }))
+            return Set(self.value.map({ $0.cs_id() }))
         }
 
         private init(keyPath: KeyPathString, inverseKeyPath: @escaping () -> KeyPathString?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
 
             self.keyPath = keyPath
             self.entityDescriptionValues = {
-                let range = (Swift.max(0, minCount) ... maxCount)
+                let range = (Swift::max(0, minCount) ... maxCount)
                 return (
                     isToMany: true,
                     isOrdered: false,

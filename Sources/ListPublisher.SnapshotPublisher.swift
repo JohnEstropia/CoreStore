@@ -52,7 +52,7 @@ extension ListPublisher {
         public typealias Output = ListSnapshot<O>
         public typealias Failure = Never
         
-        public func receive<S: Subscriber>(
+        public func receive<S: Subscriber & SendableMetatype>(
             subscriber: S
         ) where S.Input == Output, S.Failure == Failure {
 
@@ -90,7 +90,8 @@ extension ListPublisher {
         
         // MARK: - ListSnapshotSubscription
         
-        fileprivate final class ListSnapshotSubscription<S: Subscriber>: Subscription where S.Input == Output, S.Failure == Never {
+        fileprivate final class ListSnapshotSubscription<S: Subscriber & SendableMetatype>: Subscription
+        where S.Input == Output, S.Failure == Never {
             
             // MARK: FilePrivate
             
@@ -114,21 +115,26 @@ extension ListPublisher {
                     
                     return
                 }
-                self.publisher.addObserver(
-                    self,
-                    notifyInitial: self.emitInitialValue,
-                    { [weak self] (publisher) in
-                        
-                        guard
-                            let self = self,
-                            let subscriber = self.subscriber
-                        else {
+                nonisolated(unsafe) let strongSelf = self
+                Internals.mainActorImmediate {
+                    
+                    nonisolated(unsafe) weak let weakSelf = strongSelf as Optional
+                    strongSelf.publisher.addObserver(
+                        strongSelf,
+                        notifyInitial: strongSelf.emitInitialValue,
+                        { (publisher) in
                             
-                            return
+                            guard
+                                let self = weakSelf,
+                                let subscriber = self.subscriber
+                            else {
+                                
+                                return
+                            }
+                            _ = subscriber.receive(publisher.snapshot)
                         }
-                        _ = subscriber.receive(publisher.snapshot)
-                    }
-                )
+                    )
+                }
             }
             
             
@@ -138,16 +144,10 @@ extension ListPublisher {
                 
                 self.subscriber = nil
                 
-                if Thread.isMainThread {
+                nonisolated(unsafe) let strongSelf = self
+                Internals.mainActorImmediate {
                     
-                    self.publisher.removeObserver(self)
-                }
-                else {
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.publisher.removeObserver(self)
-                    }
+                    strongSelf.publisher.removeObserver(strongSelf)
                 }
             }
             

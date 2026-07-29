@@ -49,6 +49,19 @@ extension DataStack: FetchableSource, QueryableSource {
     /**
      Fetches the `DynamicObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
      
+     - parameter persistentID: the `PersistentID` for the object
+     - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
+     */
+    public func fetchExisting<O: DynamicObject>(
+        _ persistentID: PersistentID<O>
+    ) -> O? {
+
+        return self.mainContext.fetchExisting(persistentID.managedObjectID)
+    }
+    
+    /**
+     Fetches the `DynamicObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
+     
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
@@ -70,6 +83,19 @@ extension DataStack: FetchableSource, QueryableSource {
     ) -> [O] where S.Iterator.Element == O {
 
         return self.mainContext.fetchExisting(objects)
+    }
+    
+    /**
+     Fetches the `DynamicObject` instances in the `DataStack`'s context from a list of `PersistentID`.
+     
+     - parameter objectIDs: the `PersistentID` array for the objects
+     - returns: the `DynamicObject` array for objects that exists in the `DataStack`
+     */
+    public func fetchExisting<O: DynamicObject, S: Sequence>(
+        _ objectIDs: S
+    ) -> [O] where S.Iterator.Element == PersistentID<O> {
+
+        return self.mainContext.fetchExisting(objectIDs)
     }
     
     /**

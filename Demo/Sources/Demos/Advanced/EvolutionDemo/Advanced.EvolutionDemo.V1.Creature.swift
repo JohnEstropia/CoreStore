@@ -10,7 +10,7 @@ import CoreStore
 
 @objc(Advanced_EvolutionDemo_V1_Creature)
 final class Advanced_EvolutionDemo_V1_Creature: NSManagedObject, Advanced.EvolutionDemo.CreatureType {
-
+    
     @NSManaged
     dynamic var dnaCode: Int64
     
@@ -30,9 +30,10 @@ final class Advanced_EvolutionDemo_V1_Creature: NSManagedObject, Advanced.Evolut
     
     
     // MARK: Advanced.EvolutionDemo.CreatureType
-
+    
+    @MainActor
     static func dataSource(in dataStack: DataStack) -> Advanced.EvolutionDemo.CreaturesDataSource {
-
+        
         return .init(
             listPublisher: dataStack.publishList(
                 From<Advanced.EvolutionDemo.V1.Creature>()
@@ -41,16 +42,16 @@ final class Advanced_EvolutionDemo_V1_Creature: NSManagedObject, Advanced.Evolut
             dataStack: dataStack
         )
     }
-
+    
     static func count(in transaction: BaseDataTransaction) throws -> Int {
-
+        
         return try transaction.fetchCount(
             From<Advanced.EvolutionDemo.V1.Creature>()
         )
     }
-
+    
     static func create(in transaction: BaseDataTransaction) -> Advanced.EvolutionDemo.V1.Creature {
-
+        
         return transaction.create(
             Into<Advanced.EvolutionDemo.V1.Creature>()
         )

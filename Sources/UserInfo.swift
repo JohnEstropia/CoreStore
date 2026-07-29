@@ -38,7 +38,7 @@ import Foundation
  ```
  - Important: Do not use this class to store thread-sensitive data.
  */
-public final class UserInfo {
+public final class UserInfo: Sendable {
     
     /**
      Allows external libraries to store custom data. App code should rarely have a need for this.
@@ -51,25 +51,21 @@ public final class UserInfo {
      - Important: Do not use this method to store thread-sensitive data.
      - parameter key: the key for custom data. Make sure this is a static pointer that will never be changed.
      */
-    public subscript(key: UnsafeRawPointer) -> Any? {
+    public subscript(key: UnsafeRawPointer) -> (any Sendable)? {
         
         get {
             
-            self.lock.lock()
-            defer {
+            return self.data.withLock { (info: inout _) in
                 
-                self.lock.unlock()
+                return info[key]
             }
-            return self.data[key]
         }
         set {
             
-            self.lock.lock()
-            defer {
+            return self.data.withLock { (info: inout _) in
                 
-                self.lock.unlock()
+                info[key] = newValue
             }
-            self.data[key] = newValue
         }
     }
     
@@ -86,20 +82,18 @@ public final class UserInfo {
      - parameter lazyInit: a closure to use to lazily-initialize the data
      - returns: A custom data identified by `key`
      */
-    public subscript(key: UnsafeRawPointer, lazyInit closure: () -> Any) -> Any {
+    public subscript(key: UnsafeRawPointer, lazyInit closure: () -> any Sendable) -> any Sendable {
         
-        self.lock.lock()
-        defer {
+        return self.data.withLock { (info: inout _) in
             
-            self.lock.unlock()
-        }
-        if let value = self.data[key] {
-            
+            if let value = info[key] {
+                
+                return value
+            }
+            let value = closure()
+            info[key] = value
             return value
         }
-        let value = closure()
-        self.data[key] = value
-        return value
     }
     
     
@@ -110,6 +104,5 @@ public final class UserInfo {
     
     // MARK: Private
     
-    private var data: [UnsafeRawPointer: Any] = [:]
-    private let lock = NSRecursiveLock()
+    private let data: Internals.Mutex<[UnsafeRawPointer: any Sendable]> = .init([:])
 }
