@@ -35,7 +35,7 @@ import CoreData
 public enum CoreStoreError: Error, CustomNSError, Hashable {
     
     /**
-     A failure occured because of an unknown error.
+     A failure occurred because of an unknown error.
      */
     case unknown
     
@@ -296,7 +296,7 @@ public let CoreStoreErrorDomain = "com.corestore.error"
 public enum CoreStoreErrorCode: Int {
     
     /**
-     A failure occured because of an unknown error.
+     A failure occurred because of an unknown error.
      */
     case unknownError
     

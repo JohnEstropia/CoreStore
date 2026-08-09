@@ -106,7 +106,7 @@ extension DataStack {
      ```
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
+     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occurred.
      */
     public func addStorage<T: LocalStorage>(
         _ storage: T,
