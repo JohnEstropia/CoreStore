@@ -439,7 +439,7 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
 
     // workaround for <rdar://problem/31640524> Erroneous (?) error when using bridging in the Foundation overlay
     @nonobjc
-    static var swizzler: Any? = Internals.with {
+    static let swizzler: Void? = Internals.with {
 
         let bridgeClass: AnyClass = _CoreStoreObjectKeyValueObservation.self
         let rootObserveImpl = class_getInstanceMethod(

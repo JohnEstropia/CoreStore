@@ -48,7 +48,7 @@ extension Classic.ColorsDemo {
         /**
          ⭐️ Sample 3: We can end monitoring updates anytime. `removeObserver()` was called here for illustration purposes only. `ObjectMonitor`s safely remove deallocated observers automatically.
          */
-        deinit {
+        isolated deinit {
             
             self.palette.removeObserver(self)
         }
@@ -87,13 +87,16 @@ extension Classic.ColorsDemo {
         
         // MARK: ObjectObserver
         
-        func objectMonitor(
+        nonisolated func objectMonitor(
             _ monitor: ObjectMonitor<Classic.ColorsDemo.Palette>,
-            didUpdateObject object: Classic.ColorsDemo.Palette,
+            didUpdateObject object: sending Classic.ColorsDemo.Palette,
             changedPersistentKeys: Set<KeyPathString>
         ) {
             
-            self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            withMainActorImmediate {
+                
+                self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            }
         }
         
         
@@ -248,10 +251,11 @@ extension Classic.ColorsDemo {
         private dynamic func hueSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let persistentID = self.palette.object?.persistentID()
             Classic.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { (transaction) in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(persistentID)
                     palette?.hue = value
                 },
                 completion: { _ in }
@@ -262,10 +266,11 @@ extension Classic.ColorsDemo {
         private dynamic func saturationSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let persistentID = self.palette.object?.persistentID()
             Classic.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { (transaction) in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(persistentID)
                     palette?.saturation = value
                 },
                 completion: { _ in }
@@ -276,10 +281,11 @@ extension Classic.ColorsDemo {
         private dynamic func brightnessSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let persistentID = self.palette.object?.persistentID()
             Classic.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { (transaction) in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(persistentID)
                     palette?.brightness = value
                 },
                 completion: { _ in }

@@ -148,7 +148,7 @@ extension From {
      - returns: a `FetchChainBuilder` with closure where the `NSFetchRequest` may be configured
      */
     public func tweak(
-        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+        _ fetchRequest: @escaping @Sendable (NSFetchRequest<NSFetchRequestResult>) -> Void
     ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: Tweak(fetchRequest))
@@ -273,7 +273,7 @@ extension From {
      */
     public func sectionBy(
         _ sectionKeyPath: KeyPathString,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return .init(
@@ -348,7 +348,7 @@ extension From where O: NSManagedObject {
      */
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, T>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -434,7 +434,7 @@ extension From where O: CoreStoreObject {
      */
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Stored<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionBy(
@@ -453,7 +453,7 @@ extension From where O: CoreStoreObject {
      */
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Virtual<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionBy(
@@ -472,7 +472,7 @@ extension From where O: CoreStoreObject {
      */
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, FieldContainer<O>.Coded<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionBy(
@@ -604,7 +604,7 @@ extension FetchChainBuilder {
      - returns: a new `FetchChainBuilder` containing the `Tweak` clause
      */
     public func tweak(
-        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+        _ fetchRequest: @escaping @Sendable (NSFetchRequest<NSFetchRequestResult>) -> Void
     ) -> FetchChainBuilder<O> {
 
         return self.fetchChain(appending: Tweak(fetchRequest))
@@ -795,7 +795,7 @@ extension QueryChainBuilder {
      - returns: a new `QueryChainBuilder` containing the `Tweak` clause
      */
     public func tweak(
-        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+        _ fetchRequest: @escaping @Sendable (NSFetchRequest<NSFetchRequestResult>) -> Void
     ) -> QueryChainBuilder<O, R> {
 
         return self.queryChain(appending: Tweak(fetchRequest))
@@ -1093,7 +1093,7 @@ extension SectionMonitorChainBuilder {
      - returns: a new `SectionMonitorChainBuilder` containing the `Tweak` clause
      */
     public func tweak(
-        _ fetchRequest: @escaping (NSFetchRequest<NSFetchRequestResult>) -> Void
+        _ fetchRequest: @escaping @Sendable (NSFetchRequest<NSFetchRequestResult>) -> Void
     ) -> SectionMonitorChainBuilder<O> {
 
         return self.sectionMonitorChain(appending: Tweak(fetchRequest))
@@ -1232,7 +1232,7 @@ extension From where O: CoreStoreObject {
     
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Required<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -1243,7 +1243,7 @@ extension From where O: CoreStoreObject {
     
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, ValueContainer<O>.Optional<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -1254,7 +1254,7 @@ extension From where O: CoreStoreObject {
     
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Required<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(
@@ -1265,7 +1265,7 @@ extension From where O: CoreStoreObject {
     
     public func sectionBy<T>(
         _ sectionKeyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>,
-        sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?
+        sectionIndexTransformer: @escaping @Sendable (_ sectionName: String?) -> String?
     ) -> SectionMonitorChainBuilder<O> {
         
         return self.sectionBy(

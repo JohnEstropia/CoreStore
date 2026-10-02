@@ -54,7 +54,7 @@ extension Differentiable where Self: AnyObject {
 @usableFromInline
 internal protocol DifferentiableSection: Differentiable {
     
-    associatedtype Collection: Swift.Collection where Collection.Element: Differentiable
+    associatedtype Collection: Swift::Collection where Collection.Element: Differentiable
     
     var elements: Collection { get }
 

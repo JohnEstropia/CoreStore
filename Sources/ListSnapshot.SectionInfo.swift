@@ -79,7 +79,7 @@ extension ListSnapshot {
         public subscript(position: Int) -> ObjectPublisher<O> {
             
             let itemID = self.itemIDs[position]
-            return self.context.objectPublisher(objectID: itemID)
+            return self.context.objectPublisher(managedObjectID: itemID.managedObjectID)
         }
 
         public func index(_ i: Index, offsetBy distance: Int) -> Index {
@@ -100,7 +100,7 @@ extension ListSnapshot {
         public subscript(bounds: Range<Index>) -> ArraySlice<Element> {
 
             let itemIDs = self.itemIDs[bounds]
-            return ArraySlice(itemIDs.map(self.context.objectPublisher(objectID:)))
+            return ArraySlice(itemIDs.map({ self.context.objectPublisher(managedObjectID: $0.managedObjectID) }))
         }
 
         

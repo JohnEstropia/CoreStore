@@ -64,7 +64,7 @@ extension Internals {
 
     // MARK: - FetchedResultsControllerDelegate
 
-    internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
+    internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate, @unchecked Sendable {
 
         // MARK: Internal
 

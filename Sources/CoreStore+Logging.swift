@@ -100,6 +100,6 @@ extension Internals {
             lineNumber: lineNumber,
             functionName: functionName
         )
-        Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
+        Swift::fatalError(message, file: fileName, line: UInt(lineNumber))
     }
 }

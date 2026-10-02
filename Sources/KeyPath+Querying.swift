@@ -836,7 +836,7 @@ public func == <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(
 
     return Where<O>(
         O.meta[keyPath: keyPath].keyPath,
-        isEqualTo: object?.objectID()
+        isEqualTo: object?.cs_id()
     )
 }
 
@@ -870,7 +870,7 @@ public func != <O, D: FieldRelationshipToOneType, R: ObjectRepresentation>(
 
     return !Where<O>(
         O.meta[keyPath: keyPath].keyPath,
-        isEqualTo: object?.objectID()
+        isEqualTo: object?.cs_id()
     )
 }
 

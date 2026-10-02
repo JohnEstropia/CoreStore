@@ -37,18 +37,17 @@ final class TweakTests: XCTestCase {
     @objc
     dynamic func test_ThatTweakClauses_ApplyToFetchRequestsCorrectly() {
         
-        let predicate = NSPredicate(format: "%K == %@", "key", "value")
         let tweak = Tweak {
             
             $0.fetchOffset = 100
             $0.fetchLimit = 200
-            $0.predicate = predicate
+            $0.predicate = NSPredicate(format: "%K == %@", "key", "value")
         }
         let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
         tweak.applyToFetchRequest(request)
         XCTAssertEqual(request.fetchOffset, 100)
         XCTAssertEqual(request.fetchLimit, 200)
         XCTAssertNotNil(request.predicate)
-        XCTAssertEqual(request.predicate, predicate)
+        XCTAssertEqual(request.predicate, NSPredicate(format: "%K == %@", "key", "value"))
     }
 }

@@ -90,7 +90,8 @@ extension DataStack {
         
         // MARK: - AddStorageSubscription
         
-        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription where S.Input == Output, S.Failure == CoreStoreError {
+        fileprivate final class AddStorageSubscription<S: Subscriber>: Subscription
+        where S.Input == Output, S.Failure == CoreStoreError {
             
             // MARK: FilePrivate
             
@@ -114,15 +115,16 @@ extension DataStack {
                     
                     return
                 }
-                var progress: Progress? = nil
+                nonisolated(unsafe) var progress: Progress? = nil
+                nonisolated(unsafe) weak let weakSelf = self as Optional
                 progress = self.dataStack.addStorage(
                     self.storage,
-                    completion: { [weak self] result in
+                    completion: { result in
                         
                         progress?.setProgressHandler(nil)
                         
                         guard
-                            let self = self,
+                            let self = weakSelf,
                             let subscriber = self.subscriber
                         else {
                             
@@ -150,21 +152,24 @@ extension DataStack {
                 )
                 if let progress = progress {
                     
-                    progress.setProgressHandler { [weak self] progress in
+                    Internals.mainActorImmediate { @MainActor in
                         
-                        guard
-                            let self = self,
-                            let subscriber = self.subscriber
-                        else {
+                        progress.setProgressHandler { progress in
                             
-                            return
-                        }
-                        _ = subscriber.receive(
-                            .migrating(
-                                storage: self.storage,
-                                progressObject: progress
+                            guard
+                                let self = weakSelf,
+                                let subscriber = self.subscriber
+                            else {
+                                
+                                return
+                            }
+                            _ = subscriber.receive(
+                                .migrating(
+                                    storage: self.storage,
+                                    progressObject: progress
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

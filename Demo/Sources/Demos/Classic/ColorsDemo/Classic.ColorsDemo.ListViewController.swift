@@ -26,7 +26,7 @@ extension Classic.ColorsDemo {
         /**
          ⭐️ Sample 2: We can end monitoring updates anytime. `removeObserver()` was called here for illustration purposes only. `ListMonitor`s safely remove deallocated observers automatically.
          */
-        deinit {
+        isolated deinit {
             
             self.listMonitor.removeObserver(self)
         }
@@ -40,59 +40,86 @@ extension Classic.ColorsDemo {
         
         typealias ListEntityType = Classic.ColorsDemo.Palette
         
-        func listMonitorWillChange(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
+        nonisolated func listMonitorWillChange(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
             
-            self.tableView.beginUpdates()
+            MainActor.assumeIsolated {
+                
+                self.tableView.beginUpdates()
+            }
         }
         
-        func listMonitorDidChange(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
+        nonisolated func listMonitorDidChange(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
             
-            self.tableView.endUpdates()
+            MainActor.assumeIsolated {
+                
+                self.tableView.endUpdates()
+            }
         }
         
-        func listMonitorDidRefetch(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
+        nonisolated func listMonitorDidRefetch(_ monitor: ListMonitor<Classic.ColorsDemo.Palette>) {
             
-            self.tableView.reloadData()
+            MainActor.assumeIsolated {
+                
+                self.tableView.reloadData()
+            }
         }
         
         
         // MARK: ListObjectObserver
         
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) {
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) {
             
-            self.tableView.insertRows(at: [indexPath], with: .automatic)
-        }
-        
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: IndexPath) {
-            
-            self.tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-        
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: IndexPath) {
-            
-            if case let cell as Classic.ColorsDemo.ItemCell = self.tableView.cellForRow(at: indexPath) {
-
-                cell.setPalette(object)
+            MainActor.assumeIsolated {
+                
+                self.tableView.insertRows(at: [indexPath], with: .automatic)
             }
         }
         
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: IndexPath, toIndexPath: IndexPath) {
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: IndexPath) {
             
-            self.tableView.deleteRows(at: [fromIndexPath], with: .automatic)
-            self.tableView.insertRows(at: [toIndexPath], with: .automatic)
+            MainActor.assumeIsolated {
+                
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        }
+        
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: sending ListEntityType, atIndexPath indexPath: IndexPath) {
+            
+            MainActor.assumeIsolated {
+                
+                if case let cell as Classic.ColorsDemo.ItemCell = self.tableView.cellForRow(at: indexPath) {
+                    
+                    cell.setPalette(object)
+                }
+            }
+        }
+        
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: IndexPath, toIndexPath: IndexPath) {
+            
+            MainActor.assumeIsolated {
+                
+                self.tableView.deleteRows(at: [fromIndexPath], with: .automatic)
+                self.tableView.insertRows(at: [toIndexPath], with: .automatic)
+            }
         }
         
         
         // MARK: ListSectionObserver
         
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
             
-            self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
+            MainActor.assumeIsolated {
+                
+                self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
+            }
         }
         
-        func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
+        nonisolated func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
             
-            self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
+            MainActor.assumeIsolated {
+                
+                self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
+            }
         }
         
         
@@ -131,11 +158,11 @@ extension Classic.ColorsDemo {
             switch editingStyle {
 
             case .delete:
-                let object = self.listMonitor[indexPath]
+                let persistentID = self.listMonitor[indexPath].persistentID()
                 Classic.ColorsDemo.dataStack.perform(
                     asynchronous: { (transaction) in
 
-                        transaction.delete(object)
+                        transaction.delete(persistentID)
                     },
                     completion: { _ in }
                 )

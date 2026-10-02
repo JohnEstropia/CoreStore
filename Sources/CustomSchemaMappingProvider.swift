@@ -32,7 +32,7 @@ import Foundation
 /**
  A `SchemaMappingProvider` that accepts custom mappings for some entities. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible.
  */
-public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
+public final class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     /**
      The source model version for the mapping.
@@ -78,7 +78,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     /**
      Provides the type of mapping for an entity. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible. Any conflicts or ambiguity will raise an assertion.
      */
-    public enum CustomMapping: Hashable {
+    public enum CustomMapping: Hashable, Sendable {
         
         /**
          The `sourceEntity` is meant to be removed from the source `DynamicSchema` and should not be migrated to the destination `DynamicSchema`.
@@ -105,10 +105,10 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
          - parameter sourceObject: a proxy object representing the source entity. The properties can be accessed via keyPath.
          - parameter createDestinationObject: the closure to create the object for the destination entity. The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight). The object is created lazily and executing the closure multiple times will return the same instance. The destination object's properties can be accessed and updated via keyPath.
          */
-        public typealias Transformer = (
+        public typealias Transformer = @Sendable (
             _ sourceObject: UnsafeSourceObject,
             _ createDestinationObject: () -> UnsafeDestinationObject
-        ) throws(any Swift.Error) -> Void
+        ) throws(any Swift::Error) -> Void
 
         /**
          The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight).
@@ -116,7 +116,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         public static func inferredTransformation(
             _ sourceObject: UnsafeSourceObject,
             _ createDestinationObject: () -> UnsafeDestinationObject
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let destinationObject = createDestinationObject()
             destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
@@ -556,7 +556,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             forSource sInstance: NSManagedObject,
             in mapping: NSEntityMapping,
             manager: NSMigrationManager
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let userInfo = mapping.userInfo!
             let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
@@ -588,7 +588,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             forDestination dInstance: NSManagedObject,
             in mapping: NSEntityMapping,
             manager: NSMigrationManager
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             try super.createRelationships(forDestination: dInstance, in: mapping, manager: manager)
         }
@@ -737,7 +737,10 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                         .transformEntity(
                             sourceEntity: sourceEntityName,
                             destinationEntity: destinationEntityName,
-                            transformer: CustomMapping.inferredTransformation
+                            transformer: {
+                                
+                                return try CustomMapping.inferredTransformation($0, $1)
+                            }
                         )
                     )
                 }

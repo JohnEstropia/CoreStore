@@ -42,7 +42,7 @@ extension BaseDataTransaction {
     public func importObject<O: ImportableObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) throws(any Swift.Error) -> O? {
+    ) throws(any Swift::Error) -> O? {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -73,7 +73,7 @@ extension BaseDataTransaction {
     public func importObject<O: ImportableObject>(
         _ object: O,
         source: O.ImportSource
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -102,7 +102,7 @@ extension BaseDataTransaction {
     public func importObjects<O: ImportableObject, S: Sequence>(
         _ into: Into<O>,
         sourceArray: S
-    ) throws(any Swift.Error) -> [O] where S.Iterator.Element == O.ImportSource {
+    ) throws(any Swift::Error) -> [O] where S.Iterator.Element == O.ImportSource {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -139,7 +139,7 @@ extension BaseDataTransaction {
     public func importUniqueObject<O: ImportableUniqueObject>(
         _ into: Into<O>,
         source: O.ImportSource
-    ) throws(any Swift.Error) -> O? {
+    ) throws(any Swift::Error) -> O? {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -194,8 +194,8 @@ extension BaseDataTransaction {
         sourceArray: S,
         preProcess: @escaping (
             _ mapping: [O.UniqueIDType: O.ImportSource]
-        ) throws(any Swift.Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
-    ) throws(any Swift.Error) -> [O] where S.Iterator.Element == O.ImportSource {
+        ) throws(any Swift::Error) -> [O.UniqueIDType: O.ImportSource] = { $0 }
+    ) throws(any Swift::Error) -> [O] where S.Iterator.Element == O.ImportSource {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),

@@ -32,7 +32,8 @@ import CoreData
 /**
  The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`.
  */
-public final class SynchronousDataTransaction: BaseDataTransaction {
+@_nonSendable
+public nonisolated final class SynchronousDataTransaction: BaseDataTransaction {
     
     /**
      Cancels a transaction by throwing `CoreStoreError.userCancelled`.
@@ -70,6 +71,23 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
+     - parameter persistentID: the `PersistentID` pertaining ot the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O: DynamicObject>(
+        _ persistentID: PersistentID<O>?
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity for \(Internals.typeName(persistentID)) from an already committed \(Internals.typeName(self))."
+        )
+        return super.edit(persistentID)
+    }
+    
+    /**
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
+     
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
@@ -83,6 +101,26 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
         
         return super.edit(object)
+    }
+    
+    /**
+     Returns an editable proxy of the object with the specified `PersistentID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `PersistentID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O>(
+        _ into: Into<O>,
+        _ persistentID: PersistentID<O>
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
+        )
+        
+        return super.edit(into, persistentID)
     }
     
     /**
@@ -103,6 +141,23 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
         
         return super.edit(into, objectID)
+    }
+    
+    /**
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
+     */
+    public override func delete<O: DynamicObject, S: Sequence>(
+        persistentIDs: S
+    ) where S.Iterator.Element == PersistentID<O> {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
+        )
+
+        super.delete(persistentIDs: persistentIDs)
     }
 
     /**
@@ -164,7 +219,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     internal init(
         mainContext: NSManagedObjectContext,
         queue: DispatchQueue,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         super.init(

@@ -257,20 +257,20 @@ public final class CoreStoreSchema: DynamicSchema {
     
     // MARK: Internal
     
-    internal let entitiesByConfiguration: [String: Set<DynamicEntity>]
+    internal nonisolated(unsafe) let entitiesByConfiguration: [String: Set<DynamicEntity>]
     
     
     // MARK: Private
     
     private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.coreStoreDataModelBarrierQueue", qos: .userInteractive)
     
-    private let allEntities: Set<DynamicEntity>
+    private nonisolated(unsafe) let allEntities: Set<DynamicEntity>
     
-    private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-    private var customGettersSettersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
-    private var customInitializersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer]] = [:]
-    private var fieldCodersByEntity: [DynamicEntity: [KeyPathString: Internals.AnyFieldCoder]] = [:]
-    private weak var cachedRawModel: NSManagedObjectModel?
+    private nonisolated(unsafe) var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
+    private nonisolated(unsafe) var customGettersSettersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+    private nonisolated(unsafe) var customInitializersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomInitializer]] = [:]
+    private nonisolated(unsafe) var fieldCodersByEntity: [DynamicEntity: [KeyPathString: Internals.AnyFieldCoder]] = [:]
+    private nonisolated(unsafe) weak var cachedRawModel: NSManagedObjectModel?
     
     private func entityDescription(
         for entity: DynamicEntity,

@@ -67,6 +67,7 @@ final class FromTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatFromClauses_ApplyToFetchRequestsCorrectlyForDefaultConfigurations() {
         
         self.prepareStack { (dataStack) in
@@ -106,6 +107,7 @@ final class FromTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatFromClauses_ApplyToFetchRequestsCorrectlyForSingleConfigurations() {
         
         self.prepareStack(configurations: ["Config1"]) { (dataStack) in
@@ -212,6 +214,7 @@ final class FromTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatFromClauses_ApplyToFetchRequestsCorrectlyForDefaultAndCustomConfigurations() {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (dataStack) in
@@ -316,6 +319,7 @@ final class FromTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatFromClauses_ApplyToFetchRequestsCorrectlyForMultipleConfigurations() {
         
         self.prepareStack(configurations: ["Config1", "Config2"]) { (dataStack) in

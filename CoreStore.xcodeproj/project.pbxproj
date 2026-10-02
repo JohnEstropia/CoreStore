@@ -19,6 +19,14 @@
 		53EB03E72A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
 		53EB03E82A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
 		53EB03E92A3AD5D400179430 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EB03E52A3AD5D400179430 /* Operators.swift */; };
+		5F13955E2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F13955F2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F1395602FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F1395612FFCDBEF001EE0A4 /* PersistentID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */; };
+		5F17507E2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
+		5F17507F2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
+		5F1750802FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
+		5F1750812FFE35AF00BA577F /* Internals.Mutext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */; };
 		82BA18931C4BBCBA00A0916E /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BA18891C4BBCBA00A0916E /* CoreStore.framework */; };
 		82BA18A01C4BBD1400A0916E /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		82BA18A21C4BBD1D00A0916E /* CoreStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */; };
@@ -864,7 +872,7 @@
 			containerPortal = 2F03A52719C5C6DA005002A5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B52DD1731BE1F8CC00949AFE;
-			remoteInfo = "CoreStore OSX";
+			remoteInfo = "CoreStore macOS";
 		};
 		B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -883,6 +891,8 @@
 		2F03A53E19C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		53EB03E52A3AD5D400179430 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
+		5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentID.swift; sourceTree = "<group>"; };
+		5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.Mutext.swift; sourceTree = "<group>"; };
 		82BA18891C4BBCBA00A0916E /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -1453,6 +1463,7 @@
 				B5831B6E1F3355C300A9F647 /* Legacy Properties */,
 				B52F74391E9B8724005F3DAC /* Dynamic Schema */,
 				B5D339DC1E9489C700C880DE /* DynamicObject.swift */,
+				5F13955D2FFCDBAC001EE0A4 /* PersistentID.swift */,
 				B52F742E1E9B50D0005F3DAC /* SchemaHistory.swift */,
 				B5D339E61E9493A500C880DE /* Entity.swift */,
 				B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */,
@@ -1725,6 +1736,7 @@
 				B54A6A541BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift */,
 				B5BF7FCA234D80910070E741 /* Internals.LazyNonmutating.swift */,
 				B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */,
+				5F17507D2FFE35AB00BA577F /* Internals.Mutext.swift */,
 				B5E84F2B1AFF849C0064E85B /* Internals.NotificationObserver.swift */,
 				B5277676234F265F0056BE9F /* Internals.SharedNotificationObserver.swift */,
 				B50E17602351FA66004F033C /* Internals.Closure.swift */,
@@ -1891,9 +1903,9 @@
 			productReference = B5114DC928CEEE5400EEAE78 /* CoreStoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B52DD1731BE1F8CC00949AFE /* CoreStore OSX */ = {
+		B52DD1731BE1F8CC00949AFE /* CoreStore macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore OSX" */;
+			buildConfigurationList = B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore macOS" */;
 			buildPhases = (
 				B52DD1711BE1F8CC00949AFE /* Headers */,
 				B52DD16F1BE1F8CC00949AFE /* Sources */,
@@ -1904,14 +1916,14 @@
 			);
 			dependencies = (
 			);
-			name = "CoreStore OSX";
-			productName = "CoreStore OSX";
+			name = "CoreStore macOS";
+			productName = "CoreStore macOS";
 			productReference = B52DD1741BE1F8CC00949AFE /* CoreStore.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		B52DD17C1BE1F8CC00949AFE /* CoreStoreTests OSX */ = {
+		B52DD17C1BE1F8CC00949AFE /* CoreStoreTests macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests OSX" */;
+			buildConfigurationList = B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests macOS" */;
 			buildPhases = (
 				B52DD1791BE1F8CC00949AFE /* Sources */,
 				B52DD17A1BE1F8CC00949AFE /* Frameworks */,
@@ -1922,8 +1934,8 @@
 			dependencies = (
 				B52DD1801BE1F8CD00949AFE /* PBXTargetDependency */,
 			);
-			name = "CoreStoreTests OSX";
-			productName = "CoreStore OSXTests";
+			name = "CoreStoreTests macOS";
+			productName = "CoreStore macOSTests";
 			productReference = B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -2004,8 +2016,8 @@
 				82BA18911C4BBCBA00A0916E /* CoreStoreTests tvOS */,
 				B563216E1BD65082006C9394 /* CoreStore watchOS */,
 				B5114DA328CEEE5400EEAE78 /* CoreStoreTests watchOS */,
-				B52DD1731BE1F8CC00949AFE /* CoreStore OSX */,
-				B52DD17C1BE1F8CC00949AFE /* CoreStoreTests OSX */,
+				B52DD1731BE1F8CC00949AFE /* CoreStore macOS */,
+				B52DD17C1BE1F8CC00949AFE /* CoreStoreTests macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -2131,6 +2143,7 @@
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
 				B546F9731C9C553300D5AC55 /* SetupResult.swift in Sources */,
+				5F13955F2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B50C3EFE23D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EDF23CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5C7959925D7D8B300BDACC1 /* ListReader.swift in Sources */,
@@ -2148,6 +2161,7 @@
 				B5944EF625E269F9001D1D81 /* ObjectPublisher+Reactive.swift in Sources */,
 				B50392F91C478FF3009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
+				5F1750802FFE35AF00BA577F /* Internals.Mutext.swift in Sources */,
 				B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */,
 				B5E84F2F1AFF849C0064E85B /* Internals.NotificationObserver.swift in Sources */,
 				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
@@ -2348,6 +2362,7 @@
 				B5831F432212700400D8604C /* Where.Expression.swift in Sources */,
 				B51260941E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
+				5F1395602FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B50C3EFF23D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EE023CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
 				B5C7959A25D7D8B300BDACC1 /* ListReader.swift in Sources */,
@@ -2365,6 +2380,7 @@
 				82BA18D51C4BBD7100A0916E /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5E41EC11EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
+				5F17507F2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5C7959025D7D18000BDACC1 /* ListState.swift in Sources */,
 				B56923C51EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2600,6 +2616,7 @@
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
 				B5F8496F234898240029D57B /* ListSnapshot.swift in Sources */,
 				B5831F452212700500D8604C /* Where.Expression.swift in Sources */,
+				5F13955E2FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B5B866DE25E9012F00335476 /* ListPublisher+Reactive.swift in Sources */,
 				B514EF1423A8DB1E0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B51260961E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
@@ -2617,6 +2634,7 @@
 				B5220E131D1305ED009BC71E /* SectionBy.swift in Sources */,
 				B5C7959225D7D18000BDACC1 /* ListState.swift in Sources */,
 				B5E41EC31EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
+				5F1750812FFE35AF00BA577F /* Internals.Mutext.swift in Sources */,
 				B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B5D8CA792346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
@@ -2817,6 +2835,7 @@
 				B5831F442212700500D8604C /* Where.Expression.swift in Sources */,
 				B50C3F0023D1AB1400B29880 /* FieldCoders.Plist.swift in Sources */,
 				B56E4EE123CEBCF000E1708C /* FieldOptionalType.swift in Sources */,
+				5F1395612FFCDBEF001EE0A4 /* PersistentID.swift in Sources */,
 				B5C7959B25D7D8B300BDACC1 /* ListReader.swift in Sources */,
 				B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */,
 				B51260951E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
@@ -2834,6 +2853,7 @@
 				B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5E41EC21EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5C7959125D7D18000BDACC1 /* ListState.swift in Sources */,
+				5F17507E2FFE35AF00BA577F /* Internals.Mutext.swift in Sources */,
 				B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* Internals.NotificationObserver.swift in Sources */,
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,
@@ -2953,7 +2973,7 @@
 		};
 		B52DD1801BE1F8CD00949AFE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B52DD1731BE1F8CC00949AFE /* CoreStore OSX */;
+			target = B52DD1731BE1F8CC00949AFE /* CoreStore macOS */;
 			targetProxy = B52DD17F1BE1F8CD00949AFE /* PBXContainerItemProxy */;
 		};
 		B5D372881A39CF4D00F583D9 /* PBXTargetDependency */ = {
@@ -3016,8 +3036,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
@@ -3027,12 +3047,12 @@
 				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 16.6;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 9.6;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -3083,8 +3103,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStore;
@@ -3092,13 +3112,13 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TVOS_DEPLOYMENT_TARGET = 16.6;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 9.6;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -3366,7 +3386,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 9.3.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -3401,7 +3421,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 9.3.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -3582,7 +3602,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore OSX" */ = {
+		B52DD18C1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStore macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B52DD1851BE1F8CD00949AFE /* Debug */,
@@ -3591,7 +3611,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests OSX" */ = {
+		B52DD18D1BE1F8CD00949AFE /* Build configuration list for PBXNativeTarget "CoreStoreTests macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B52DD1871BE1F8CD00949AFE /* Debug */,

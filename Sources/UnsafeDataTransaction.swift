@@ -32,7 +32,7 @@ import CoreData
 /**
  The `UnsafeDataTransaction` provides an interface for non-contiguous `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
  */
-public final class UnsafeDataTransaction: BaseDataTransaction {
+public final class UnsafeDataTransaction: BaseDataTransaction, @unchecked Sendable {
     
     // MARK: -
     
@@ -42,7 +42,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the optional `error` argument of the block.
      */
     public func commit(
-        _ completion: @escaping (_ error: CoreStoreError?) -> Void
+        _ completion: @escaping @Sendable (_ error: CoreStoreError?) -> Void
     ) {
 
         self.context.saveAsynchronously(
@@ -114,7 +114,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
     public func flush(
-        closure: () throws(any Swift.Error) -> Void
+        closure: () throws(any Swift::Error) -> Void
     ) rethrows {
 
         try closure()
@@ -142,7 +142,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func beginUnsafe(
         supportsUndo: Bool = false,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
@@ -160,7 +160,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         mainContext: NSManagedObjectContext,
         queue: DispatchQueue,
         supportsUndo: Bool,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         super.init(

@@ -36,7 +36,7 @@ extension Modern.PokedexDemo {
 
         // MARK: ImportableObject
 
-        typealias ImportSource = (index: Int, json: Dictionary<String, Any>)
+        typealias ImportSource = (index: Int, json: Dictionary<String, any Sendable>)
         
         func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
             

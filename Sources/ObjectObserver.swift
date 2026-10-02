@@ -36,7 +36,7 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-public protocol ObjectObserver: AnyObject {
+public protocol ObjectObserver: AnyObject, SendableMetatype {
     
     /**
      The `DynamicObject` type for the observed object
@@ -53,8 +53,8 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        willUpdateObject object: ObjectEntityType,
-        sourceIdentifier: Any?
+        willUpdateObject object: sending ObjectEntityType,
+        sourceIdentifier: (any Sendable)?
     )
     
     /**
@@ -66,7 +66,7 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        willUpdateObject object: ObjectEntityType
+        willUpdateObject object: sending ObjectEntityType
     )
     
     /**
@@ -80,9 +80,9 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didUpdateObject object: ObjectEntityType,
+        didUpdateObject object: sending ObjectEntityType,
         changedPersistentKeys: Set<KeyPathString>,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     )
     
     /**
@@ -95,7 +95,7 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didUpdateObject object: ObjectEntityType,
+        didUpdateObject object: sending ObjectEntityType,
         changedPersistentKeys: Set<KeyPathString>
     )
     
@@ -109,8 +109,8 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didDeleteObject object: ObjectEntityType,
-        sourceIdentifier: Any?
+        didDeleteObject object: sending ObjectEntityType,
+        sourceIdentifier: (any Sendable)?
     )
     
     /**
@@ -122,7 +122,7 @@ public protocol ObjectObserver: AnyObject {
      */
     func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didDeleteObject object: ObjectEntityType
+        didDeleteObject object: sending ObjectEntityType
     )
 }
 
@@ -133,8 +133,8 @@ extension ObjectObserver {
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        willUpdateObject object: ObjectEntityType,
-        sourceIdentifier: Any?
+        willUpdateObject object: sending ObjectEntityType,
+        sourceIdentifier: (any Sendable)?
     ) {
         
         self.objectMonitor(
@@ -145,14 +145,14 @@ extension ObjectObserver {
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        willUpdateObject object: ObjectEntityType
+        willUpdateObject object: sending ObjectEntityType
     ) {}
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didUpdateObject object: ObjectEntityType,
+        didUpdateObject object: sending ObjectEntityType,
         changedPersistentKeys: Set<KeyPathString>,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         self.objectMonitor(
@@ -164,14 +164,14 @@ extension ObjectObserver {
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didUpdateObject object: ObjectEntityType,
+        didUpdateObject object: sending ObjectEntityType,
         changedPersistentKeys: Set<KeyPathString>
     ) {}
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didDeleteObject object: ObjectEntityType,
-        sourceIdentifier: Any?
+        didDeleteObject object: sending ObjectEntityType,
+        sourceIdentifier: (any Sendable)?
     ) {
         
         self.objectMonitor(
@@ -182,6 +182,6 @@ extension ObjectObserver {
     
     public func objectMonitor(
         _ monitor: ObjectMonitor<ObjectEntityType>,
-        didDeleteObject object: ObjectEntityType
+        didDeleteObject object: sending ObjectEntityType
     ) {}
 }

@@ -32,11 +32,12 @@ import Foundation
 /**
  The `SchemaMappingProvider` provides migration mapping information between two `DynamicSchema` versions.
  */
-public protocol SchemaMappingProvider {
+public protocol SchemaMappingProvider: Sendable {
     
     /**
      Do not call directly.
      */
+    @_spi(Internals)
     func cs_createMappingModel(
         from sourceSchema: DynamicSchema,
         to destinationSchema: DynamicSchema,

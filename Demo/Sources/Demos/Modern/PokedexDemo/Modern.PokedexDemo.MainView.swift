@@ -2,18 +2,18 @@
 // Demo
 // Copyright © 2020 John Rommel Estropia, Inc. All rights reserved.
 
-import Combine
 import CoreStore
 import SwiftUI
 
 // MARK: - Modern.PokedexDemo
 
 extension Modern.PokedexDemo {
-
+    
     // MARK: - Modern.PokedexDemo.MainView
-
+    
+    @MainActor
     struct MainView<ListView: View>: View {
-
+        
         // MARK: Internal
         
         init(
@@ -22,16 +22,16 @@ extension Modern.PokedexDemo {
             
             self.listView = listView
         }
-
-
+        
+        
         // MARK: View
-
+        
         var body: some View {
             ZStack {
                 
                 self.listView()
-                .frame(minHeight: 0, maxHeight: .infinity)
-                .edgesIgnoringSafeArea(.vertical)
+                    .frame(minHeight: 0, maxHeight: .infinity)
+                    .ignoresSafeArea(.container, edges: .vertical)
                 
                 if self.pokedexEntries.isEmpty {
                     
@@ -56,10 +56,10 @@ extension Modern.PokedexDemo {
                     .padding()
                 }
             }
-            .navigationBarTitle("Pokedex")
+            .navigationTitle("Pokedex")
         }
-
-
+        
+        
         // MARK: Private
         
         @ListState(
@@ -68,28 +68,10 @@ extension Modern.PokedexDemo {
             in: Modern.PokedexDemo.dataStack
         )
         private var pokedexEntries
-
-        @ObservedObject
-        private var service: Modern.PokedexDemo.Service = .init()
+        
+        @State
+        private var service = Modern.PokedexDemo.Service()
         
         private let listView: () -> ListView
     }
 }
-
-
-#if DEBUG
-
-@available(iOS 14.0, *)
-struct _Demo_Modern_PokedexDemo_MainView_Preview: PreviewProvider {
-
-    // MARK: PreviewProvider
-
-    static var previews: some View {
-
-        Modern.PokedexDemo.MainView(
-            listView: Modern.PokedexDemo.UIKit.ListView.init
-        )
-    }
-}
-
-#endif

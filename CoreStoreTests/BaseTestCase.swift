@@ -28,6 +28,7 @@ import XCTest
 @testable
 import CoreStore
 
+
 #if !SWIFT_PACKAGE
 
 extension Bundle {
@@ -47,7 +48,11 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    func prepareStack(configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) throws -> Void) {
+    @MainActor
+    func prepareStack(
+        configurations: [ModelConfiguration] = [nil],
+        _ closure: (_ dataStack: DataStack) throws -> Void
+    ) {
         
         let stack = DataStack(
             xcodeModelName: "Model",
@@ -79,6 +84,7 @@ class BaseTestCase: XCTestCase {
     }
     
     @nonobjc
+    @MainActor
     func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () throws -> T) rethrows -> T {
         
         CoreStoreDefaults.logger = TestLogger(self.prepareLoggerExpectations(expectations))
@@ -97,6 +103,7 @@ class BaseTestCase: XCTestCase {
     }
 
     @nonobjc
+    @MainActor
     func expectError<T>(code: CoreStoreErrorCode, closure: () throws -> T) {
 
         CoreStoreDefaults.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
@@ -135,12 +142,14 @@ class BaseTestCase: XCTestCase {
     }
     
     @nonobjc
+    @MainActor
     func checkExpectationsImmediately() {
         
         self.waitForExpectations(timeout: 0, handler: { _ in })
     }
     
     @nonobjc
+    @MainActor
     func waitAndCheckExpectations() {
         
         self.waitForExpectations(timeout: 10, handler: {_ in })
@@ -174,7 +183,7 @@ class BaseTestCase: XCTestCase {
 
 // MARK: - TestLogger
 
-class TestLogger: CoreStoreLogger {
+final class TestLogger: CoreStoreLogger {
     
     enum Expectation {
         
@@ -187,13 +196,13 @@ class TestLogger: CoreStoreLogger {
     
     init(_ expectations: [Expectation: XCTestExpectation]) {
         
-        self.expectations = expectations
+        self.expectations = .init(expectations)
     }
     
     
     // MARK: CoreStoreLogger
     
-    var enableObjectConcurrencyDebugging: Bool = true
+    let enableObjectConcurrencyDebugging: Bool = true
     
     func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
@@ -227,18 +236,21 @@ class TestLogger: CoreStoreLogger {
     
     // MARK: Private
     
-    private var expectations: [Expectation: XCTestExpectation]
+    private let expectations: Internals.Mutex<[Expectation: XCTestExpectation]>
     
     private func fulfill(_ expectation: Expectation) {
         
-        if let instance = self.expectations[expectation] {
+        self.expectations.withLock {
             
-            instance.fulfill()
-            self.expectations[expectation] = nil
-        }
-        else {
-            
-            XCTFail("Unexpected Logger Action: \(expectation)")
+            if let instance = $0[expectation] {
+                
+                instance.fulfill()
+                $0[expectation] = nil
+            }
+            else {
+                
+                XCTFail("Unexpected Logger Action: \(expectation)")
+            }
         }
     }
 }

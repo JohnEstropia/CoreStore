@@ -43,4 +43,4 @@ import Foundation
  }
  ```
  */
-public typealias MigrationResult = Swift.Result<[MigrationType], CoreStoreError>
+public typealias MigrationResult = Swift::Result<[MigrationType], CoreStoreError>

@@ -23,9 +23,9 @@
 //  SOFTWARE.
 //
 
-#if canImport(Combine) && canImport(SwiftUI)
+#if canImport(Observation) && canImport(SwiftUI)
 
-import Combine
+import Observation
 import SwiftUI
 
 
@@ -35,7 +35,7 @@ import SwiftUI
  A property wrapper type that can read `ListPublisher` changes.
  */
 @propertyWrapper
-public struct ListState<Object: DynamicObject>: DynamicProperty {
+public struct ListState<O: DynamicObject>: @MainActor DynamicProperty {
     
     // MARK: Public
     
@@ -65,11 +65,13 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter listPublisher: The `ListPublisher` that the `ListState` will observe changes for
      */
+    @MainActor
     public init(
-        _ listPublisher: ListPublisher<Object>
+        _ listPublisher: ListPublisher<O>
     ) {
         
-        self.observer = .init(listPublisher: listPublisher)
+        self.sourceListPublisher = listPublisher
+        self._observer = .init(wrappedValue: .init(listPublisher: listPublisher))
     }
     
     /**
@@ -98,10 +100,11 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      */
+    @MainActor
     public init<B: FetchChainableBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
-    ) where B.ObjectType == Object {
+    ) where B.ObjectType == O {
         
         self.init(dataStack.publishList(clauseChain))
     }
@@ -139,10 +142,11 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
      */
+    @MainActor
     public init<B: SectionMonitorBuilderType>(
         _ clauseChain: B,
         in dataStack: DataStack
-    ) where B.ObjectType == Object {
+    ) where B.ObjectType == O {
         
         self.init(dataStack.publishList(clauseChain))
     }
@@ -174,8 +178,9 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
-        _ from: From<Object>,
+        _ from: From<O>,
         _ fetchClauses: FetchClause...,
         in dataStack: DataStack
     ) {
@@ -212,8 +217,9 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
-        _ from: From<Object>,
+        _ from: From<O>,
         _ fetchClauses: [FetchClause],
         in dataStack: DataStack
     ) {
@@ -256,9 +262,10 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
-        _ from: From<Object>,
-        _ sectionBy: SectionBy<Object>,
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
         _ fetchClauses: FetchClause...,
         in dataStack: DataStack
     ) {
@@ -303,9 +310,10 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
+    @MainActor
     public init(
-        _ from: From<Object>,
-        _ sectionBy: SectionBy<Object>,
+        _ from: From<O>,
+        _ sectionBy: SectionBy<O>,
         _ fetchClauses: [FetchClause],
         in dataStack: DataStack
     ) {
@@ -316,12 +324,14 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     
     // MARK: @propertyWrapper
     
-    public var wrappedValue: ListSnapshot<Object> {
+    @MainActor
+    public var wrappedValue: ListSnapshot<O> {
         
         return self.observer.items
     }
     
-    public var projectedValue: ListPublisher<Object> {
+    @MainActor
+    public var projectedValue: ListPublisher<O> {
         
         return self.observer.listPublisher
     }
@@ -329,33 +339,78 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
     
     // MARK: DynamicProperty
     
+    @MainActor
     public mutating func update() {
         
         self._observer.update()
+        self.observer.rebind(to: self.sourceListPublisher)
     }
     
     
     // MARK: Private
     
-    @ObservedObject
+    @State
     private var observer: Observer
+    
+    private let sourceListPublisher: ListPublisher<O>
     
     
     // MARK: - Observer
     
-    private final class Observer: ObservableObject {
+    @MainActor
+    private final class Observer: Observation.Observable {
         
-        @Published
-        var items: ListSnapshot<Object>
+        private(set) var listPublisher: ListPublisher<O>
         
-        let listPublisher: ListPublisher<Object>
+        nonisolated var items: ListSnapshot<O> {
+            
+            get {
+                
+                self.registrar.access(self, keyPath: \.items)
+                return self.current.withLock({ $0 })
+            }
+            set {
+                
+                self.registrar.withMutation(of: self, keyPath: \.items) {
+                    
+                    self.current.withLock({ $0 = newValue })
+                }
+            }
+        }
         
-        init(listPublisher: ListPublisher<Object>) {
+        init(listPublisher: ListPublisher<O>) {
             
             self.listPublisher = listPublisher
-            self.items = listPublisher.snapshot
+            self.current = .init(listPublisher.snapshot)
+            self.attachObserver()
+        }
+        
+        isolated deinit {
             
-            listPublisher.addObserver(self) { [weak self] (listPublisher) in
+            self.listPublisher.removeObserver(self)
+        }
+        
+        func rebind(to listPublisher: ListPublisher<O>) {
+            
+            guard self.listPublisher !== listPublisher else {
+                
+                return
+            }
+            self.listPublisher.removeObserver(self)
+            self.listPublisher = listPublisher
+            self.items = listPublisher.snapshot
+            self.attachObserver()
+        }
+        
+        
+        // MARK: Private
+        
+        private let registrar = ObservationRegistrar()
+        private let current: Internals.Mutex<ListSnapshot<O>>
+        
+        private func attachObserver() {
+            
+            self.listPublisher.addObserver(self) { [weak self] listPublisher in
                 
                 guard let self = self else {
                     
@@ -363,11 +418,6 @@ public struct ListState<Object: DynamicObject>: DynamicProperty {
                 }
                 self.items = listPublisher.snapshot
             }
-        }
-        
-        deinit {
-            
-            self.listPublisher.removeObserver(self)
         }
     }
 }

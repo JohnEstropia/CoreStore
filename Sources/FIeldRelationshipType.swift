@@ -57,6 +57,7 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_toReturnType(
         from value: NativeValueType?
     ) -> Self
@@ -64,6 +65,7 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_toPublishedType(
         from value: SnapshotValueType,
         in context: NSManagedObjectContext
@@ -72,6 +74,7 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_toNativeType(
         from value: Self
     ) -> NativeValueType?
@@ -79,6 +82,7 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_toSnapshotType(
         from value: PublishedType
     ) -> SnapshotValueType
@@ -86,8 +90,9 @@ public protocol FieldRelationshipType {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     static func cs_valueForSnapshot(
-        from objectIDs: [DestinationObjectType.ObjectID]
+        from objectIDs: [NSManagedObjectID]
     ) -> SnapshotValueType
 }
 
@@ -138,7 +143,7 @@ extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrap
         in context: NSManagedObjectContext
     ) -> PublishedType {
 
-        return value.map(context.objectPublisher(objectID:))
+        return value.map(context.objectPublisher(managedObjectID:))
     }
 
     public static func cs_toNativeType(
@@ -152,11 +157,11 @@ extension Optional: FieldRelationshipType, FieldRelationshipToOneType where Wrap
         from value: PublishedType
     ) -> SnapshotValueType {
 
-        return value?.objectID()
+        return value?.cs_id()
     }
 
     public static func cs_valueForSnapshot(
-        from objectIDs: [DestinationObjectType.ObjectID]
+        from objectIDs: [NSManagedObjectID]
     ) -> SnapshotValueType {
 
         return objectIDs.first
@@ -194,7 +199,7 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
         in context: NSManagedObjectContext
     ) -> PublishedType {
 
-        return value.map(context.objectPublisher(objectID:))
+        return value.map(context.objectPublisher(managedObjectID:))
     }
 
     public static func cs_toNativeType(
@@ -208,11 +213,11 @@ extension Array: FieldRelationshipType, FieldRelationshipToManyType, FieldRelati
         from value: PublishedType
     ) -> SnapshotValueType {
 
-        return value.map({ $0.objectID() })
+        return value.map({ $0.cs_id() })
     }
 
     public static func cs_valueForSnapshot(
-        from objectIDs: [DestinationObjectType.ObjectID]
+        from objectIDs: [NSManagedObjectID]
     ) -> SnapshotValueType {
 
         return objectIDs
@@ -250,7 +255,7 @@ extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelation
         in context: NSManagedObjectContext
     ) -> PublishedType {
 
-        return PublishedType(value.map(context.objectPublisher(objectID:)))
+        return PublishedType(value.map(context.objectPublisher(managedObjectID:)))
     }
 
     public static func cs_toNativeType(
@@ -264,11 +269,11 @@ extension Set: FieldRelationshipType, FieldRelationshipToManyType, FieldRelation
         from value: PublishedType
     ) -> SnapshotValueType {
 
-        return SnapshotValueType(value.map({ $0.objectID() }))
+        return SnapshotValueType(value.map({ $0.cs_id() }))
     }
 
     public static func cs_valueForSnapshot(
-        from objectIDs: [DestinationObjectType.ObjectID]
+        from objectIDs: [NSManagedObjectID]
     ) -> SnapshotValueType {
 
         return .init(objectIDs)

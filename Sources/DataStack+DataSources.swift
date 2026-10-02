@@ -42,8 +42,9 @@ extension DataStack {
     public func publishObject<O: DynamicObject>(
         _ object: O
     ) -> ObjectPublisher<O> {
-
-        return self.publishObject(object.cs_id())
+        
+        let context = self.unsafeContext()
+        return context.objectPublisher(managedObjectID: object.cs_id())
     }
 
     /**
@@ -57,7 +58,7 @@ extension DataStack {
     ) -> ObjectPublisher<O> {
 
         let context = self.unsafeContext()
-        return context.objectPublisher(objectID: objectID)
+        return context.objectPublisher(managedObjectID: objectID.managedObjectID)
     }
     
     /**

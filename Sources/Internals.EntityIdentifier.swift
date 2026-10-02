@@ -33,7 +33,7 @@ extension Internals {
 
     // MARK: - EntityIdentifier
 
-    internal struct EntityIdentifier: Hashable {
+    internal struct EntityIdentifier: Hashable, Sendable {
 
         // MARK: - Category
 

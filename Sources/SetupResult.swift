@@ -47,4 +47,4 @@ import CoreData
  )
  ```
  */
-public typealias SetupResult<StorageInterfaceType> = Swift.Result<StorageInterfaceType, CoreStoreError> where StorageInterfaceType: StorageInterface
+public typealias SetupResult<StorageInterfaceType> = Swift::Result<StorageInterfaceType, CoreStoreError> where StorageInterfaceType: StorageInterface

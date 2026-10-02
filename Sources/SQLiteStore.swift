@@ -165,14 +165,18 @@ public final class SQLiteStore: LocalStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [AnyHashable: Any]? = [
-        NSSQLitePragmasOption: ["journal_mode": "WAL"],
-        NSBinaryStoreInsecureDecodingCompatibilityOption: true
-    ]
+    public var storeOptions: [AnyHashable: Any]? {
+        
+        return [
+            NSSQLitePragmasOption: ["journal_mode": "WAL"],
+            NSBinaryStoreInsecureDecodingCompatibilityOption: true
+        ]
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
@@ -181,6 +185,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
+    @_spi(Internals)
     public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
@@ -202,7 +207,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Options that tell the `DataStack` how to setup the persistent store
      */
-    public var localStorageOptions: LocalStorageOptions
+    public let localStorageOptions: LocalStorageOptions
     
     /**
      The options dictionary for the specified `LocalStorageOptions`
@@ -228,9 +233,10 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
      */
+    @_spi(Internals)
     public func cs_finalizeStorageAndWait(
         soureModelHint: NSManagedObjectModel
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
             
@@ -249,15 +255,16 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
+    @_spi(Internals)
     public func cs_eraseStorageAndWait(
         metadata: [String: Any],
         soureModelHint: NSManagedObjectModel?
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         func deleteFiles(
             storeURL: URL,
             extraFiles: [String] = []
-        ) throws(any Swift.Error) {
+        ) throws(any Swift::Error) {
 
             let fileManager = FileManager.default
             let extraFiles: [String] = [
@@ -372,5 +379,5 @@ public final class SQLiteStore: LocalStorage {
     
     // MARK: Private
     
-    private weak var dataStack: DataStack?
+    private nonisolated(unsafe) weak var dataStack: DataStack?
 }

@@ -11,124 +11,95 @@ import SwiftUI
 extension Menu {
     
     // MARK: - Menu.MainView
-
+    
     struct MainView: View {
+
+        @Environment(\.horizontalSizeClass)
+        private var horizontalSizeClass
         
         // MARK: View
         
+        @ViewBuilder
         var body: some View {
-            NavigationView {
-                List {
-                    Section(header: Text("Modern (CoreStoreObject subclasses)")) {
-                        Menu.ItemView(
-                            title: "Placemarks",
-                            subtitle: "Making changes using Transactions",
-                            destination: {
-                                Modern.PlacemarksDemo.MainView()
-                            }
-                        )
-                        Menu.ItemView(
-                            title: "Time Zones",
-                            subtitle: "Fetching objects and Querying raw values",
-                            destination: {
-                                Modern.TimeZonesDemo.MainView()
-                            }
-                        )
-                        Menu.ItemView(
-                            title: "Colors (UIKit)",
-                            subtitle: "Observing list changes and single-object changes using DiffableDataSources",
-                            destination: {
-                                Modern.ColorsDemo.MainView(
-                                    listView: { listPublisher, onPaletteTapped in
-                                        Modern.ColorsDemo.UIKit.ListView(
-                                            listPublisher: listPublisher,
-                                            onPaletteTapped: onPaletteTapped
-                                        )
-                                        .edgesIgnoringSafeArea(.all)
-                                    },
-                                    detailView: { objectPublisher in
-                                        Modern.ColorsDemo.UIKit.DetailView(objectPublisher)
-                                    }
-                                )
-                            }
-                        )
-                        Menu.ItemView(
-                            title: "Colors (SwiftUI)",
-                            subtitle: "Observing list changes and single-object changes using SwiftUI bindings",
-                            destination: {
-                                Modern.ColorsDemo.MainView(
-                                    listView: { listPublisher, onPaletteTapped in
-                                        Modern.ColorsDemo.SwiftUI.ListView(
-                                            listPublisher: listPublisher,
-                                            onPaletteTapped: onPaletteTapped
-                                        )
-                                    },
-                                    detailView: { objectPublisher in
-                                        Modern.ColorsDemo.SwiftUI.DetailView(objectPublisher)
-                                    }
-                                )
-                            }
-                        )
-                        Menu.ItemView(
-                            title: "Pokedex API",
-                            subtitle: "Importing JSON data from external source",
-                            destination: {
-                                Modern.PokedexDemo.MainView(
-                                    listView: Modern.PokedexDemo.UIKit.ListView.init
-                                )
-                            }
-                        )
-                    }
-                    Section(header: Text("Classic (NSManagedObject subclasses)")) {
-                        Menu.ItemView(
-                            title: "Colors",
-                            subtitle: "Observing list changes and single-object changes using ListMonitor",
-                            destination: {
-                                Classic.ColorsDemo.MainView()
-                            }
-                        )
-                    }
-                    Section(header: Text("Advanced")) {
-                        Menu.ItemView(
-                            title: "Accounts",
-                            subtitle: "Switching between multiple persistent stores",
-                            destination: { EmptyView() }
-                        )
-                        .disabled(true)
-                        Menu.ItemView(
-                            title: "Evolution",
-                            subtitle: "Migrating and reverse-migrating stores",
-                            destination: {
-                                Advanced.EvolutionDemo.MainView()
-                            }
-                        )
-                        Menu.ItemView(
-                            title: "Logger",
-                            subtitle: "Implementing a custom logger",
-                            destination: { EmptyView() }
-                        )
-                        .disabled(true)
-                    }
+
+            if self.horizontalSizeClass == .compact {
+                NavigationStack {
+                    
+                    self.menuList
                 }
-                .listStyle(GroupedListStyle())
-                .navigationBarTitle("CoreStore Demos")
-                Menu.PlaceholderView()
             }
-            .navigationViewStyle(DoubleColumnNavigationViewStyle())
+            else {
+                NavigationSplitView(
+                    sidebar: {
+                        
+                        self.menuList
+                    },
+                    detail: {
+                        
+                        Menu.PlaceholderView()
+                    }
+                )
+            }
+        }
+
+
+        // MARK: Private
+
+        @ViewBuilder
+        private var menuList: some View {
+            List {
+
+                ForEach(Menu.Section.allCases, id: \.self) { section in
+
+                    SwiftUI::Section(
+                        content: {
+
+                            ForEach(section.routes) { route in
+
+                                NavigationLink(
+                                    destination: {
+                                        LazyDestination {
+                                            route.destination
+                                        }
+                                    },
+                                    label: {
+                                        Menu.ItemView(
+                                            title: route.title,
+                                            subtitle: route.subtitle,
+                                            isEnabled: route.isEnabled
+                                        )
+                                    }
+                                )
+                                .disabled(!route.isEnabled)
+                            }
+                        },
+                        header: {
+
+                            Text(section.rawValue)
+                        }
+                    )
+                }
+            }
+            .navigationTitle("CoreStore Demos")
+            .listStyle(.sidebar)
+        }
+        
+        
+        // MARK: - LazyDestination
+        
+        private struct LazyDestination<Content: View>: View {
+            
+            init(@ViewBuilder content: @escaping () -> Content) {
+                
+                self.content = content
+            }
+            
+            var body: some View {
+                
+                self.content()
+            }
+            
+            private let content: () -> Content
         }
     }
 }
-
-#if DEBUG
-
-struct _Demo_Menu_MainView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        Menu.MainView()
-    }
-}
-
-#endif

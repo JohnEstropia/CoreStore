@@ -164,6 +164,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
         
         self.modelVersion = modelName
         self.modelVersionFileURL = modelVersionFileURL
+        self.rootModelFileURL = modelVersionFileURL.deletingLastPathComponent()
     }
     
     
@@ -190,13 +191,9 @@ public final class XcodeDataModelSchema: DynamicSchema {
     
     internal let modelVersionFileURL: URL
     
-    private lazy var rootModelFileURL: URL = Internals.with { [unowned self] in
-     
-        return self.modelVersionFileURL.deletingLastPathComponent()
-    }
-    
     
     // MARK: Private
     
-    private weak var cachedRawModel: NSManagedObjectModel?
+    private let rootModelFileURL: URL
+    private nonisolated(unsafe) weak var cachedRawModel: NSManagedObjectModel?
 }

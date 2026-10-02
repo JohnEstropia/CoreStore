@@ -60,7 +60,7 @@ import CoreData
  - a version appears twice as a key in a dictionary literal
  - a loop is found in any of the paths
  */
-public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLiteral, ExpressibleByDictionaryLiteral, ExpressibleByArrayLiteral, Equatable {
+public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLiteral, ExpressibleByDictionaryLiteral, ExpressibleByArrayLiteral, Equatable, Sendable {
     
     /**
      Initializes the `MigrationChain` with empty values, which instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable progressive migrations.

@@ -63,6 +63,7 @@ final class GroupByTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatGroupByClauses_ApplyToFetchRequestsCorrectly() {
         
         self.prepareStack { (dataStack) in

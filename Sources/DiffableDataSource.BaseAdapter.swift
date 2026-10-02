@@ -95,7 +95,10 @@ extension DiffableDataSource {
          - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
          - parameter cellProvider: a closure that configures and returns the `UITableViewCell` for the object
          */
-        public init(target: T, dataStack: DataStack) {
+        public init(
+            target: T,
+            dataStack: DataStack
+        ) {
 
             self.target = target
             self.dataStack = dataStack
@@ -106,7 +109,10 @@ extension DiffableDataSource {
          Clears the target.
          - parameter animatingDifferences: if `true`, animations may be applied accordingly. Defaults to `true`.
          */
-        open func purge(animatingDifferences: Bool = true, completion: @escaping () -> Void = {}) {
+        open func purge(
+            animatingDifferences: Bool = true,
+            completion: @escaping @Sendable () -> Void = {}
+        ) {
 
             self.dispatcher.purge(
                 target: self.target,
@@ -136,7 +142,11 @@ extension DiffableDataSource {
          - parameter snapshot: the `ListSnapshot` used to reload the target with. This is typically from the `snapshot` property of a `ListPublisher`.
          - parameter animatingDifferences: if `true`, animations may be applied accordingly. Defaults to `true`.
          */
-        open func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true, completion: @escaping () -> Void = {}) {
+        open func apply(
+            _ snapshot: ListSnapshot<O>,
+            animatingDifferences: Bool = true,
+            completion: @escaping @Sendable () -> Void = {}
+        ) {
 
             let diffableSnapshot = snapshot.diffableSnapshot
             self.dispatcher.apply(
@@ -208,6 +218,7 @@ extension DiffableDataSource {
         public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
 
             return self.dispatcher.itemIdentifier(for: indexPath)
+                .map(O.ObjectID.init(managedObjectID:))
         }
 
         /**
@@ -218,7 +229,7 @@ extension DiffableDataSource {
          */
         public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
 
-            return self.dispatcher.indexPath(for: itemID)
+            return self.dispatcher.indexPath(for: itemID.managedObjectID)
         }
         
         /**
@@ -244,6 +255,11 @@ extension DiffableDataSource {
         // MARK: Internal
 
         internal let dispatcher: Internals.DiffableDataUIDispatcher<O>
+        
+        internal func itemID(for indexPath: IndexPath) -> NSManagedObjectID? {
+            
+            return self.dispatcher.itemIdentifier(for: indexPath)
+        }
     }
 }
 

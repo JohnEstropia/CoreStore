@@ -56,6 +56,6 @@ extension NSManagedObject {
     
     private struct PropertyKeys {
         
-        static var coreStoreObject: Void?
+        static nonisolated(unsafe) var coreStoreObject: Void?
     }
 }

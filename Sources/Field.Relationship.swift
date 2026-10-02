@@ -235,7 +235,7 @@ extension FieldContainer {
             self.keyPath = keyPath
             self.entityDescriptionValues = {
 
-                let range = (Swift.max(0, minCount) ... maxCount)
+                let range = (Swift::max(0, minCount) ... maxCount)
                 return (
                     isToMany: isToMany,
                     isOrdered: isOrdered,

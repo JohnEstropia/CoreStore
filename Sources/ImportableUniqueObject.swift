@@ -105,7 +105,7 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
     static func uniqueID(
         from source: ImportSource,
         in transaction: BaseDataTransaction
-    ) throws(any Swift.Error) -> UniqueIDType?
+    ) throws(any Swift::Error) -> UniqueIDType?
 
     /**
      Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueID(from:in:)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `update(from:in:)`.
@@ -116,7 +116,7 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
     func didInsert(
         from source: ImportSource,
         in transaction: BaseDataTransaction
-    ) throws(any Swift.Error)
+    ) throws(any Swift::Error)
 
     /**
      Implements the actual importing of data from `source`. This method is called just after the existing object is fetched using its unique ID. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
@@ -127,7 +127,7 @@ public protocol ImportableUniqueObject: ImportableObject, Hashable {
     func update(
         from source: ImportSource,
         in transaction: BaseDataTransaction
-    ) throws(any Swift.Error)
+    ) throws(any Swift::Error)
 }
 
 
@@ -180,7 +180,7 @@ extension ImportableUniqueObject {
     public func didInsert(
         from source: Self.ImportSource,
         in transaction: BaseDataTransaction
-    ) throws(any Swift.Error) {
+    ) throws(any Swift::Error) {
 
         try self.update(from: source, in: transaction)
     }

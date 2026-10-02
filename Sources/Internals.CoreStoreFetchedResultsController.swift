@@ -33,7 +33,7 @@ extension Internals {
     
     // MARK: - CoreStoreFetchedResultsController
     
-    internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject> {
+    internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject>, @unchecked Sendable {
         
         // MARK: Internal
         
@@ -77,7 +77,7 @@ extension Internals {
         }
         
         @nonobjc
-        internal func performFetchFromSpecifiedStores() throws(any Swift.Error) {
+        internal func performFetchFromSpecifiedStores() throws(any Swift::Error) {
 
             try self.reapplyAffectedStores(self.typedFetchRequest, self.managedObjectContext)
             try self.performFetch()
@@ -106,6 +106,6 @@ extension Internals {
         private let reapplyAffectedStores: (
             _ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>,
             _ context: NSManagedObjectContext
-        ) throws(any Swift.Error) -> Void
+        ) throws(any Swift::Error) -> Void
     }
 }

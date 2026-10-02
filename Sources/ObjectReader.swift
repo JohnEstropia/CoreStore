@@ -106,7 +106,7 @@ public struct ObjectReader<Object: DynamicObject, Content: View, Placeholder: Vi
         keyPath: KeyPath<ObjectSnapshot<Object>, Value>,
         @ViewBuilder content: @escaping (Value) -> Content,
         @ViewBuilder placeholder: @escaping () -> Placeholder
-    ) where Placeholder == EmptyView {
+    ) {
         
         self._object = .init(objectPublisher)
         self.content = {

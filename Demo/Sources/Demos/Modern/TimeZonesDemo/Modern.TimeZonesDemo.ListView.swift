@@ -10,7 +10,7 @@ import SwiftUI
 extension Modern.TimeZonesDemo {
     
     // MARK: - Modern.TimeZonesDemo.ListView
-
+    
     struct ListView: View {
         
         // MARK: Internal
@@ -53,15 +53,18 @@ extension Modern.TimeZonesDemo {
         // MARK: View
         
         var body: some View {
+            
             List {
+                
                 ForEach(self.values, id: \.title) { item in
+                    
                     Modern.TimeZonesDemo.ItemView(
                         title: item.title,
                         subtitle: item.subtitle
                     )
                 }
             }
-            .navigationBarTitle(self.title)
+            .navigationTitle(self.title)
         }
         
         
@@ -71,24 +74,3 @@ extension Modern.TimeZonesDemo {
         private let values: [(title: String, subtitle: String)]
     }
 }
-
-
-#if DEBUG
-
-struct _Demo_Modern_TimeZonesDemo_ListView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        Modern.TimeZonesDemo.ListView(
-            title: "Title",
-            objects: try! Modern.TimeZonesDemo.dataStack.fetchAll(
-                From<Modern.TimeZonesDemo.TimeZone>()
-                    .orderBy(.ascending(\.$name))
-            )
-        )
-    }
-}
-
-#endif

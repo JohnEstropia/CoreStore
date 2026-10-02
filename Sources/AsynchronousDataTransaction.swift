@@ -32,7 +32,8 @@ import CoreData
 /**
  The `AsynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.perform(asynchronous:...)`.
  */
-public final class AsynchronousDataTransaction: BaseDataTransaction {
+@_nonSendable
+public nonisolated final class AsynchronousDataTransaction: BaseDataTransaction {
     
     /**
      Cancels a transaction by throwing `CoreStoreError.userCancelled`.
@@ -54,7 +55,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      `Result<T>.success` indicates that the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated `userInfo` is the value returned from the transaction closure.
      `Result<T>.failure` indicates that the transaction either failed or was cancelled. The associated object for this value is a `CoreStoreError` enum value.
      */
-    public typealias Result<UserInfoType> = Swift.Result<UserInfoType, CoreStoreError>
+    public typealias Result<UserInfoType> = Swift::Result<UserInfoType, CoreStoreError>
     
     // MARK: -
     
@@ -79,6 +80,25 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
+     Returns an editable proxy of the object with the specified `PersistentID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `PersistentID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O>(
+        _ persistentID: PersistentID<O>?
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity of type \(Internals.typeName(persistentID)) from an already committed \(Internals.typeName(self))."
+        )
+        
+        return super.edit(persistentID)
+    }
+    
+    /**
      Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
@@ -94,6 +114,26 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         )
         
         return super.edit(object)
+    }
+    
+    /**
+     Returns an editable proxy of the object with the specified `PersistentID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter persistentID: the `PersistentID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
+     */
+    public override func edit<O>(
+        _ into: Into<O>,
+        _ persistentID: PersistentID<O>
+    ) -> O? {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
+        )
+        
+        return super.edit(into, persistentID)
     }
     
     /**
@@ -114,6 +154,23 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         )
         
         return super.edit(into, objectID)
+    }
+    
+    /**
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
+     */
+    public override func delete<O: DynamicObject, S: Sequence>(
+        persistentIDs: S
+    ) where S.Iterator.Element == PersistentID<O> {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
+        )
+
+        super.delete(persistentIDs: persistentIDs)
     }
 
     /**
@@ -175,7 +232,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     internal init(
         mainContext: NSManagedObjectContext,
         queue: DispatchQueue,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         super.init(
@@ -188,7 +245,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     internal func autoCommit(
-        _ completion: @escaping (
+        _ completion: @escaping @MainActor @Sendable (
             _ hasChanges: Bool,
             _ error: CoreStoreError?
         ) -> Void
@@ -197,12 +254,14 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.isCommitted = true
         let group = DispatchGroup()
         group.enter()
+        
+        nonisolated(unsafe) let transaction = self
         self.context.saveAsynchronously(
             sourceIdentifier: self.sourceIdentifier,
             completion: { (hasChanges, error) -> Void in
                 
                 completion(hasChanges, error)
-                self.result = (hasChanges, error)
+                transaction.result = (hasChanges, error)
                 group.leave()
             }
         )

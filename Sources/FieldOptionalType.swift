@@ -41,6 +41,7 @@ public protocol FieldOptionalType: ExpressibleByNilLiteral {
     /**
     Used internally by CoreStore. Do not call directly.
      */
+    @_spi(Internals)
     var cs_wrappedValue: Wrapped? { get }
 }
 

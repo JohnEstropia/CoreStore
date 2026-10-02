@@ -35,6 +35,7 @@ import CoreStore
 final class TransactionTests: BaseTestCase {
     
     @objc
+    @MainActor
     dynamic func test_ThatSynchronousTransactions_CanPerformCRUDs() {
         
         self.prepareStack { (stack) in
@@ -151,6 +152,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatSynchronousTransactions_CanPerformCRUDsInCorrectConfiguration() {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (stack) in
@@ -270,6 +272,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatSynchronousTransactions_CanDiscardUncommittedChanges() {
         
         self.prepareStack { (stack) in
@@ -385,6 +388,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatSynchronousTransactions_CanCommitWithoutWaitingForMerges() {
         
         self.prepareStack { (stack) in
@@ -398,19 +402,22 @@ final class TransactionTests: BaseTestCase {
             
             XCTAssertFalse(monitor.hasObjects())
             
-            var events = 0
+            let events: Internals.Mutex<Int> = .init(0)
             _ = self.expectation(
                 forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(events, 0)
-                    XCTAssertTrue(note.userInfo?.isEmpty != false)
-                    defer {
+                    return events.withLock { events in
                         
-                        events += 1
+                        XCTAssertEqual(events, 0)
+                        XCTAssertTrue(note.userInfo?.isEmpty != false)
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 0
                     }
-                    return events == 0
                 }
             )
             _ = self.expectation(
@@ -418,29 +425,32 @@ final class TransactionTests: BaseTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(events, 1)
-                    
-                    let userInfo = note.userInfo
-                    XCTAssertNotNil(userInfo)
-                    XCTAssertEqual(
-                        Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
-                        ["indexPath", "object"]
-                    )
-                    
-                    let indexPath = userInfo?["indexPath"] as? IndexPath
-                    XCTAssertEqual(indexPath?.section, 0)
-                    XCTAssertEqual(indexPath?.item, 0)
-                    
-                    let object = userInfo?["object"] as? TestEntity1
-                    XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
-                    XCTAssertEqual(object?.testNumber, NSNumber(value: 1))
-                    XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "1"))
-                    XCTAssertEqual(object?.testString, "nil:TestEntity1:1")
-                    defer {
+                    return events.withLock { events in
                         
-                        events += 1
+                        XCTAssertEqual(events, 1)
+                        
+                        let userInfo = note.userInfo
+                        XCTAssertNotNil(userInfo)
+                        XCTAssertEqual(
+                            Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                            ["indexPath", "object"]
+                        )
+                        
+                        let indexPath = userInfo?["indexPath"] as? IndexPath
+                        XCTAssertEqual(indexPath?.section, 0)
+                        XCTAssertEqual(indexPath?.item, 0)
+                        
+                        let object = userInfo?["object"] as? TestEntity1
+                        XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
+                        XCTAssertEqual(object?.testNumber, NSNumber(value: 1))
+                        XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "1"))
+                        XCTAssertEqual(object?.testString, "nil:TestEntity1:1")
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 1
                     }
-                    return events == 1
                 }
             )
             _ = self.expectation(
@@ -449,11 +459,14 @@ final class TransactionTests: BaseTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertTrue(note.userInfo?.isEmpty != false)
-                    defer {
-                        
-                        events += 1
+                    return events.withLock { events in
+                     
+                        defer {
+                            
+                            events += 1
+                        }
+                        return events == 2
                     }
-                    return events == 2
                 }
             )
             let saveExpectation = self.expectation(description: "save")
@@ -479,7 +492,7 @@ final class TransactionTests: BaseTestCase {
                 
                 XCTFail()
             }
-            XCTAssertEqual(events, 0)
+            XCTAssertEqual(events.withLock({ $0 }), 0)
             XCTAssertEqual(monitor.numberOfObjects(), 0)
             self.waitAndCheckExpectations()
         }
@@ -487,6 +500,7 @@ final class TransactionTests: BaseTestCase {
     
     
     @objc
+    @MainActor
     dynamic func test_ThatAsynchronousTransactions_CanPerformCRUDs() {
         
         self.prepareStack { (stack) in
@@ -626,6 +640,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatAsynchronousTransactions_CanPerformCRUDsInCorrectConfiguration() {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (stack) in
@@ -759,6 +774,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatAsynchronousTransactions_CanDiscardUncommittedChanges() {
         
         self.prepareStack { (stack) in
@@ -900,6 +916,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatUnsafeTransactions_CanPerformCRUDs() {
         
         self.prepareStack { (stack) in
@@ -995,6 +1012,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatUnsafeTransactions_CanPerformCRUDsInCorrectConfiguration() {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (stack) in
@@ -1083,6 +1101,7 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    @MainActor
     dynamic func test_ThatUnsafeTransactions_CanRollbackChanges() {
         
         self.prepareStack { (stack) in

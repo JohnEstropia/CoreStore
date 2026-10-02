@@ -49,7 +49,7 @@ extension Modern.ColorsDemo.UIKit {
             }
         }
         
-        deinit {
+        isolated deinit {
             
             self.palette.removeObserver(self)
         }
@@ -88,14 +88,17 @@ extension Modern.ColorsDemo.UIKit {
         
         // MARK: ObjectObserver
         
-        func objectMonitor(
+        nonisolated func objectMonitor(
             _ monitor: ObjectMonitor<Modern.ColorsDemo.Palette>,
-            didUpdateObject object: Modern.ColorsDemo.Palette,
+            didUpdateObject object: sending Modern.ColorsDemo.Palette,
             changedPersistentKeys: Set<KeyPathString>,
-            sourceIdentifier: Any?
+            sourceIdentifier: (any Sendable)?
         ) {
             
-            self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            MainActor.assumeIsolated {
+                
+                self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
+            }
         }
         
         
@@ -245,42 +248,48 @@ extension Modern.ColorsDemo.UIKit {
         private let saturationSlider: UISlider = .init()
         private let brightnessSlider: UISlider = .init()
         
+        @MainActor
         @objc
         private dynamic func hueSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.hue = value
                 },
                 completion: { _ in }
             )
         }
         
+        @MainActor
         @objc
         private dynamic func saturationSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.saturation = value
                 },
                 completion: { _ in }
             )
         }
         
+        @MainActor
         @objc
         private dynamic func brightnessSliderValueDidChange(_ sender: UISlider) {
             
             let value = sender.value
+            let paletteID = self.palette.object?.persistentID()
             Modern.ColorsDemo.dataStack.perform(
-                asynchronous: { [weak self] (transaction) in
+                asynchronous: { transaction in
                     
-                    let palette = transaction.edit(self?.palette.object)
+                    let palette = transaction.edit(paletteID)
                     palette?.brightness = value
                 },
                 completion: { _ in }
@@ -288,5 +297,3 @@ extension Modern.ColorsDemo.UIKit {
         }
     }
 }
-
-

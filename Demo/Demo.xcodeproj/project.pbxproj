@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F035E4F300F726700E98F8F /* WithMainActorImmediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */; };
 		B531EFE724EA762D005F247D /* Menu.PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */; };
 		B531EFE924EB5A53005F247D /* Modern.PokedexDemo.PokedexEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */; };
 		B531EFEB24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */; };
@@ -25,8 +26,7 @@
 		B5931B4825124940007DA58E /* Advanced.EvolutionDemo.V4.FromV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5931B4725124940007DA58E /* Advanced.EvolutionDemo.V4.FromV3.swift */; };
 		B5931B4A25124993007DA58E /* Advanced.EvolutionDemo.V3.FromV4.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5931B4925124993007DA58E /* Advanced.EvolutionDemo.V3.FromV4.swift */; };
 		B5931B4C251249EE007DA58E /* Advanced.EvolutionDemo.V2.FromV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5931B4B251249EE007DA58E /* Advanced.EvolutionDemo.V2.FromV3.swift */; };
-		B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911C24E5429200E7E8BD /* AppDelegate.swift */; };
-		B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */; };
+		B5A3911D24E5429200E7E8BD /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3911C24E5429200E7E8BD /* DemoApp.swift */; };
 		B5A3912124E5429200E7E8BD /* Menu.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3912024E5429200E7E8BD /* Menu.MainView.swift */; };
 		B5A3912324E5429300E7E8BD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A3912224E5429300E7E8BD /* Images.xcassets */; };
 		B5A3912624E5429300E7E8BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A3912524E5429300E7E8BD /* Preview Assets.xcassets */; };
@@ -39,12 +39,11 @@
 		B5A3916024E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3915F24E6925900E7E8BD /* Modern.PlacemarksDemo.MapView.swift */; };
 		B5A3916224E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916124E697BA00E7E8BD /* Modern.PlacemarksDemo.MainView.swift */; };
 		B5A3916524E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3916424E698C700E7E8BD /* Modern.PlacemarksDemo.Place.swift */; };
-		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; };
+		B5A3916B24E698F900E7E8BD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; platformFilter = ios; };
 		B5A3916C24E698F900E7E8BD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3916724E698F900E7E8BD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5A3917524E6990200E7E8BD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917424E6990200E7E8BD /* MapKit.framework */; };
 		B5A3917724E6990700E7E8BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917624E6990700E7E8BD /* CoreLocation.framework */; };
 		B5A3917924E6991600E7E8BD /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A3917824E6991600E7E8BD /* SwiftUI.framework */; };
-		B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917B24E6A76C00E7E8BD /* LazyView.swift */; };
 		B5A3917E24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */; };
 		B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3917F24E787D900E7E8BD /* InstructionsView.swift */; };
 		B5A3918324E7A21800E7E8BD /* Modern.TimeZonesDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */; };
@@ -117,6 +116,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithMainActorImmediate.swift; sourceTree = "<group>"; };
 		B531EFE624EA762D005F247D /* Menu.PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.PlaceholderView.swift; sourceTree = "<group>"; };
 		B531EFE824EB5A52005F247D /* Modern.PokedexDemo.PokedexEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.PokedexEntry.swift; sourceTree = "<group>"; };
 		B531EFEA24EB5ECD005F247D /* Modern.PokedexDemo.Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PokedexDemo.Service.swift; sourceTree = "<group>"; };
@@ -136,8 +136,7 @@
 		B5931B4925124993007DA58E /* Advanced.EvolutionDemo.V3.FromV4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.V3.FromV4.swift; sourceTree = "<group>"; };
 		B5931B4B251249EE007DA58E /* Advanced.EvolutionDemo.V2.FromV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advanced.EvolutionDemo.V2.FromV3.swift; sourceTree = "<group>"; };
 		B5A3911924E5429200E7E8BD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B5A3911C24E5429200E7E8BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B5A3911C24E5429200E7E8BD /* DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
 		B5A3912024E5429200E7E8BD /* Menu.MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.MainView.swift; sourceTree = "<group>"; };
 		B5A3912224E5429300E7E8BD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B5A3912524E5429300E7E8BD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -159,7 +158,6 @@
 		B5A3917424E6990200E7E8BD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/MapKit.framework; sourceTree = DEVELOPER_DIR; };
 		B5A3917624E6990700E7E8BD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
 		B5A3917824E6991600E7E8BD /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.6.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
-		B5A3917B24E6A76C00E7E8BD /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		B5A3917D24E7728400E7E8BD /* Modern.PlacemarksDemo.Geocoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.PlacemarksDemo.Geocoder.swift; sourceTree = "<group>"; };
 		B5A3917F24E787D900E7E8BD /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 		B5A3918224E7A21800E7E8BD /* Modern.TimeZonesDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modern.TimeZonesDemo.swift; sourceTree = "<group>"; };
@@ -257,8 +255,7 @@
 		B5A3911B24E5429200E7E8BD /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				B5A3911C24E5429200E7E8BD /* AppDelegate.swift */,
-				B5A3911E24E5429200E7E8BD /* SceneDelegate.swift */,
+				B5A3911C24E5429200E7E8BD /* DemoApp.swift */,
 				B5A3915524E6858A00E7E8BD /* Demos */,
 				B5A3917A24E6A75F00E7E8BD /* Helpers */,
 			);
@@ -371,7 +368,7 @@
 		B5A3917A24E6A75F00E7E8BD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B5A3917B24E6A76C00E7E8BD /* LazyView.swift */,
+				5F035E4E300F725800E98F8F /* WithMainActorImmediate.swift */,
 				B5A3917F24E787D900E7E8BD /* InstructionsView.swift */,
 				B5E32C8F24FA41F9003F46AD /* ImageDownloader.swift */,
 				B5A3915424E6857F00E7E8BD /* Menu */,
@@ -668,14 +665,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A543F624FBF13A000DC5E3 /* Advanced.swift in Sources */,
-				B5A3911D24E5429200E7E8BD /* AppDelegate.swift in Sources */,
+				B5A3911D24E5429200E7E8BD /* DemoApp.swift in Sources */,
 				B5A3915924E685EC00E7E8BD /* Classic.swift in Sources */,
 				B5E32C9024FA41F9003F46AD /* ImageDownloader.swift in Sources */,
 				B5A3918024E787D900E7E8BD /* InstructionsView.swift in Sources */,
-				B5A3917C24E6A76C00E7E8BD /* LazyView.swift in Sources */,
 				B5A3913424E6170500E7E8BD /* Menu.swift in Sources */,
 				B5A3915B24E685FE00E7E8BD /* Modern.swift in Sources */,
-				B5A3911F24E5429200E7E8BD /* SceneDelegate.swift in Sources */,
 				B5A543FB2504840E000DC5E3 /* Advanced.EvolutionDemo.swift in Sources */,
 				B5A543D724FB7478000DC5E3 /* Classic.ColorsDemo.swift in Sources */,
 				B5A543DB24FB7513000DC5E3 /* Classic.ColorsDemo.xcdatamodeld in Sources */,
@@ -693,6 +688,7 @@
 				B5A54401250487C7000DC5E3 /* Advanced.EvolutionDemo.ListView.swift in Sources */,
 				B5A543FF250487B1000DC5E3 /* Advanced.EvolutionDemo.MainView.swift in Sources */,
 				B5D6F209250E14AA00DF5D2F /* Advanced.EvolutionDemo.Migrator.swift in Sources */,
+				5F035E4F300F726700E98F8F /* WithMainActorImmediate.swift in Sources */,
 				B5C18F3325138700001BEFB3 /* Advanced.EvolutionDemo.ProgressView.swift in Sources */,
 				B5D6F1F8250E07FD00DF5D2F /* Advanced.EvolutionDemo.V1.swift in Sources */,
 				B5D6F210250E1E3200DF5D2F /* Advanced.EvolutionDemo.V1.xcdatamodeld in Sources */,
@@ -801,7 +797,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
@@ -837,7 +833,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 			};
 			name = Release;
 		};
@@ -897,6 +893,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -909,7 +906,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -964,6 +961,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -975,7 +973,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

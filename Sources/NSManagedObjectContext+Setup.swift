@@ -65,7 +65,7 @@ extension NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         context.persistentStoreCoordinator = coordinator
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.rootcontext")
         
@@ -76,16 +76,21 @@ extension NSManagedObjectContext {
             object: coordinator,
             closure: { [weak context] (note) -> Void in
                 
-                context?.perform { () -> Void in
+                guard let context = context else {
+                    
+                    return
+                }
+                nonisolated(unsafe) let note = note
+                context.perform {
                     
                     if let updatedObjectIDs = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) {
                         
                         for objectID in updatedObjectIDs {
                             
-                            context?.registeredObject(for: objectID)?.willAccessValue(forKey: nil)
+                            context.registeredObject(for: objectID)?.willAccessValue(forKey: nil)
                         }
                     }
-                    context?.mergeChanges(fromContextDidSave: note)
+                    context.mergeChanges(fromContextDidSave: note)
                 }
             }
         )
@@ -100,7 +105,7 @@ extension NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         context.parent = rootContext
-        context.mergePolicy = NSRollbackMergePolicy
+        context.mergePolicy = NSMergePolicy(merge: .rollbackMergePolicyType)
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.maincontext")
         context.observerForDidSaveNotification = Internals.NotificationObserver(
@@ -108,16 +113,19 @@ extension NSManagedObjectContext {
             object: rootContext,
             closure: { [weak context] (note) -> Void in
                 
-                guard let rootContext = note.object as? NSManagedObjectContext,
-                    let context = context else {
-                        
-                        return
+                guard
+                    let rootContext = note.object as? NSManagedObjectContext,
+                    let context = context
+                else {
+                    
+                    return
                 }
                 
                 let saveMetadata = rootContext.saveMetadata
                 context.saveMetadata = saveMetadata
                 
-                let mergeChanges = { () -> Void in
+                nonisolated(unsafe) let note = note
+                let mergeChanges = { @Sendable () -> Void in
                     
                     if let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) {
                         
@@ -147,9 +155,9 @@ extension NSManagedObjectContext {
     
     private struct PropertyKeys {
         
-        static var parentStack: Void?
-        static var observerForDidSaveNotification: Void?
-        static var observerForDidImportUbiquitousContentChangesNotification: Void?
+        static nonisolated(unsafe) var parentStack: Void?
+        static nonisolated(unsafe) var observerForDidSaveNotification: Void?
+        static nonisolated(unsafe) var observerForDidImportUbiquitousContentChangesNotification: Void?
     }
     
     @nonobjc

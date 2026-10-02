@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B52DD1731BE1F8CC00949AFE"
                BuildableName = "CoreStore.framework"
-               BlueprintName = "CoreStore OSX"
+               BlueprintName = "CoreStore macOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,7 +32,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B52DD1731BE1F8CC00949AFE"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore OSX"
+            BlueprintName = "CoreStore macOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -43,7 +43,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B52DD17C1BE1F8CC00949AFE"
                BuildableName = "CoreStoreTests.xctest"
-               BlueprintName = "CoreStoreTests OSX"
+               BlueprintName = "CoreStoreTests macOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -64,7 +64,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B52DD1731BE1F8CC00949AFE"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore OSX"
+            BlueprintName = "CoreStore macOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -80,7 +80,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B52DD1731BE1F8CC00949AFE"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore OSX"
+            BlueprintName = "CoreStore macOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

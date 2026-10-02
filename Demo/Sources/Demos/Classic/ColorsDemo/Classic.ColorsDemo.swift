@@ -38,6 +38,7 @@ extension Classic {
             return dataStack
         }()
         
+        @MainActor
         static let palettesMonitor: ListMonitor<Classic.ColorsDemo.Palette> = Classic.ColorsDemo.dataStack.monitorSectionedList(
             From<Classic.ColorsDemo.Palette>()
                 .sectionBy(\.colorGroup)
@@ -45,6 +46,7 @@ extension Classic {
                 .orderBy(.ascending(\.hue))
         )
         
+        @MainActor
         static var filter: Classic.ColorsDemo.Filter = .all {
             
             didSet {

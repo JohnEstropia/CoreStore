@@ -35,7 +35,7 @@ import Foundation
  - `UnsafeDataModelSchema`: describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
  - `CoreStoreSchema`: describes models written for `CoreStoreObject` Swift class declarations.
  */
-public protocol DynamicSchema {
+public protocol DynamicSchema: Sendable {
     
     /**
      The version string for this model schema.
@@ -45,5 +45,6 @@ public protocol DynamicSchema {
     /**
      Do not call this directly. The `NSManagedObjectModel` for this schema may be created lazily and using this method directly may affect the integrity of the model.
      */
+    @_spi(Internals)
     func rawModel() -> NSManagedObjectModel
 }

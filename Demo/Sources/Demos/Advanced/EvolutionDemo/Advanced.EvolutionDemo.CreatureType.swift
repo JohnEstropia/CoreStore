@@ -20,6 +20,7 @@ protocol Advanced_EvolutionDemo_CreatureType: DynamicObject, CustomStringConvert
 
     var dnaCode: Int64 { get set }
 
+    @MainActor
     static func dataSource(in dataStack: DataStack) -> Advanced.EvolutionDemo.CreaturesDataSource
 
     static func count(in transaction: BaseDataTransaction) throws -> Int

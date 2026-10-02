@@ -10,7 +10,8 @@ import SwiftUI
 extension Modern.ColorsDemo.SwiftUI {
     
     // MARK: - Modern.ColorsDemo.SwiftUI.ListView
-
+    
+    @MainActor
     struct ListView: View {
         
         /**
@@ -40,7 +41,7 @@ extension Modern.ColorsDemo.SwiftUI {
                 
                 ForEach(sectionIn: self.palettes) { section in
                     
-                    Section(header: Text(section.sectionID)) {
+                    Section(section.sectionID) {
                         
                         ForEach(objectIn: section) { palette in
                             
@@ -64,8 +65,7 @@ extension Modern.ColorsDemo.SwiftUI {
                 }
             }
 //            .animation(.default) // breaks layout
-            .listStyle(PlainListStyle())
-            .edgesIgnoringSafeArea([])
+            .listStyle(.plain)
         }
         
         
@@ -81,8 +81,8 @@ extension Modern.ColorsDemo.SwiftUI {
             )
             Modern.ColorsDemo.dataStack.perform(
                 asynchronous: { transaction in
-
-                    transaction.delete(objectIDs: objectIDsToDelete)
+                    
+                    transaction.delete(persistentIDs: objectIDsToDelete)
                 },
                 completion: { _ in }
             )
@@ -90,35 +90,29 @@ extension Modern.ColorsDemo.SwiftUI {
     }
 }
 
-#if DEBUG
 
-struct _Demo_Modern_ColorsDemo_SwiftUI_ListView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        let minimumSamples = 10
-        try! Modern.ColorsDemo.dataStack.perform(
-            synchronous: { transaction in
+// MARK: - Preview
 
-                let missing = minimumSamples
-                    - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
-                guard missing > 0 else {
-                    return
-                }
-                for _ in 0..<missing {
-                    
-                    let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
-                    palette.setRandomHue()
-                }
+#Preview {
+    
+    let minimumSamples = 10
+    try! Modern.ColorsDemo.dataStack.perform(
+        synchronous: { transaction in
+            
+            let missing = minimumSamples
+            - (try transaction.fetchCount(From<Modern.ColorsDemo.Palette>()))
+            guard missing > 0 else {
+                return
             }
-        )
-        return Modern.ColorsDemo.SwiftUI.ListView(
-            listPublisher: Modern.ColorsDemo.palettesPublisher,
-            onPaletteTapped: { _ in }
-        )
-    }
+            for _ in 0..<missing {
+                
+                let palette = transaction.create(Into<Modern.ColorsDemo.Palette>())
+                palette.setRandomHue()
+            }
+        }
+    )
+    return Modern.ColorsDemo.SwiftUI.ListView(
+        listPublisher: Modern.ColorsDemo.palettesPublisher,
+        onPaletteTapped: { _ in }
+    )
 }
-
-#endif

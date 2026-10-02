@@ -32,7 +32,7 @@ import CoreData
 /**
  Used only for `Where.Expression` type constraints. Currently supports `SingleTarget` and `CollectionTarget`.
  */
-public protocol WhereExpressionTrait {}
+public protocol WhereExpressionTrait: SendableMetatype {}
 
 
 // MARK: - Where
@@ -50,7 +50,7 @@ extension Where {
      )
      ```
      */
-    public struct Expression<T: WhereExpressionTrait, V>: CustomStringConvertible, KeyPathStringConvertible {
+    public struct Expression<T: WhereExpressionTrait, V>: CustomStringConvertible, KeyPathStringConvertible, Sendable {
 
         /**
          Currently supports `SingleTarget` and `CollectionTarget`.

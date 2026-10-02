@@ -162,6 +162,18 @@ class Person: CoreStoreObject {
     @Field.Relationship("_spouseInverse", inverse: \.$spouse)
     private var spouseInverse: Person?
     
+    @Field.Coded("ownerInfosJson", coder: FieldCoders.Json.self)
+    var ownerInfosJson: [OwnerInfo] = []
+    
+    @Field.Coded("ownerInfosPlist", coder: FieldCoders.Plist.self)
+    var ownerInfosPlist: [OwnerInfo] = []
+    
+    struct OwnerInfo: Codable, Equatable {
+        var id: UUID
+        var displayName: String?
+        var otherIDs: Set<UUID>
+    }
+    
     private static func getDisplayName(_ object: ObjectProxy<Person>, _ field: ObjectProxy<Person>.FieldProxy<String?>) -> String? {
 
         if let value = field.primitiveValue {
@@ -189,6 +201,7 @@ class Person: CoreStoreObject {
 
 class DynamicModelTests: BaseTestDataTestCase {
     
+    @MainActor
     @objc
     dynamic func test_ThatDynamicModels_CanBeDeclaredCorrectly() {
         
@@ -203,7 +216,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 versionLock: [
                     "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
                     "Dog": [0xad6de93adc5565d, 0x7897e51253eba5a3, 0xd12b9ce0b13600f3, 0x5a4827cd794cd15e],
-                    "Person": [0xf3e6ba6016bbedc6, 0x50dedf64f0eba490, 0xa32088a0ee83468d, 0xb72d1d0b37bd0992]
+                    "Person": [0xbaec6549a025b59f, 0x3415c71e9f46fcf3, 0xb86b33433cb335eb, 0xfe441fde120dab67]
                 ]
             )
         )
@@ -223,6 +236,14 @@ class DynamicModelTests: BaseTestDataTestCase {
             let willSetPriorObserverDone = self.expectation(description: "willSet-observe-prior-done")
             let willSetNotPriorObserverDone = self.expectation(description: "willSet-observe-notPrior-done")
             let didSetObserverDone = self.expectation(description: "didSet-observe-done")
+            
+            let ownerInfos: [Person.OwnerInfo] = (1...3).map {
+                .init(
+                    id: .init(),
+                    displayName: "ownerInfo_\($0)",
+                    otherIDs: Set((1...3).map({ _ in .init() }))
+                )
+            }
             stack.perform(
                 asynchronous: { (transaction) in
                     
@@ -373,11 +394,19 @@ class DynamicModelTests: BaseTestDataTestCase {
                     person.job = .engineer
                     XCTAssertEqual(person.job, .engineer)
                     
+                    person.ownerInfosJson = ownerInfos
+                    XCTAssertEqual(person.ownerInfosJson, ownerInfos)
+                    
+                    person.ownerInfosPlist = ownerInfos
+                    XCTAssertEqual(person.ownerInfosPlist, ownerInfos)
+                    
                     let personSnapshot2 = person.asSnapshot(in: transaction)!
                     XCTAssertEqual(person.name, personSnapshot2.$name)
                     XCTAssertEqual(person.title, personSnapshot2.$title)
                     XCTAssertEqual(person.displayName, personSnapshot2.$displayName)
                     XCTAssertEqual(person.job, personSnapshot2.$job)
+                    XCTAssertEqual(person.ownerInfosJson, personSnapshot2.$ownerInfosJson)
+                    XCTAssertEqual(person.ownerInfosPlist, personSnapshot2.$ownerInfosPlist)
 
                     var personSnapshot3 = personSnapshot2
                     personSnapshot3.$name = "James"
@@ -390,6 +419,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(personSnapshot3.$name, "James")
                     XCTAssertEqual(personSnapshot3.$displayName, "Sir John")
                     XCTAssertEqual(personSnapshot3.$job, .engineer)
+                    XCTAssertEqual(personSnapshot3.$ownerInfosJson, ownerInfos)
+                    XCTAssertEqual(personSnapshot3.$ownerInfosPlist, ownerInfos)
                     
 
                     
@@ -409,6 +440,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(personPublisher.$name, "John")
                     XCTAssertEqual(personPublisher.$displayName, "Sir John")
                     XCTAssertEqual(personPublisher.$job, .engineer)
+                    XCTAssertEqual(personPublisher.$ownerInfosJson, ownerInfos)
+                    XCTAssertEqual(personPublisher.$ownerInfosPlist, ownerInfos)
 
                     updateDone.fulfill()
                 },
@@ -444,6 +477,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person!.customField.string, "customString")
                     XCTAssertEqual(person!.job, .engineer)
                     XCTAssertEqual(person!.pets.first, dog)
+                    XCTAssertEqual(person!.ownerInfosJson, ownerInfos)
+                    XCTAssertEqual(person!.ownerInfosPlist, ownerInfos)
                     
                     let p3 = Where<Dog>({ $0.$age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))

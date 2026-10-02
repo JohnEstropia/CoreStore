@@ -36,7 +36,8 @@ extension Progress {
      - parameter closure: the closure to execute on progress change
      */
     @nonobjc
-    public func setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
+    @MainActor
+    public func setProgressHandler(_ closure: (@MainActor @Sendable (_ progress: Progress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure
     }
@@ -46,15 +47,19 @@ extension Progress {
     
     private struct PropertyKeys {
         
-        static var progressObserver: Void?
+        static nonisolated(unsafe) var progressObserver: Void?
     }
     
     @nonobjc
+    @MainActor
     private var progressObserver: ProgressObserver {
         
         get {
             
-            let object: ProgressObserver? = Internals.getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
+            let object: ProgressObserver? = Internals.getAssociatedObjectForKey(
+                &PropertyKeys.progressObserver,
+                inObject: self
+            )
             if let observer = object {
                 
                 return observer
@@ -76,11 +81,12 @@ extension Progress {
 // MARK: - ProgressObserver
 
 @objc
-private final class ProgressObserver: NSObject {
+private final class ProgressObserver: NSObject, Sendable {
     
     private unowned let progress: Progress
     
-    fileprivate var progressHandler: ((_ progress: Progress) -> Void)? {
+    @MainActor
+    fileprivate var progressHandler: (@MainActor @Sendable (_ progress: Progress) -> Void)? {
         
         didSet {
             
@@ -121,7 +127,12 @@ private final class ProgressObserver: NSObject {
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey : Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         
         guard let progress = object as? Progress,
             progress == self.progress,

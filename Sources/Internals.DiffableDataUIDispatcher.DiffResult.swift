@@ -36,7 +36,7 @@ extension Internals.DiffableDataUIDispatcher {
     
     // Implementation based on https://github.com/ra1028/DifferenceKit
     @usableFromInline
-    internal struct DiffResult<Index> {
+    internal struct DiffResult<Index: Sendable>: Sendable {
         
         @usableFromInline
         internal let deleted: [Index]
@@ -213,7 +213,7 @@ extension Internals.DiffableDataUIDispatcher {
 
         // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
-        internal struct Trace<I> {
+        internal struct Trace<I: Sendable>: Sendable {
 
             @usableFromInline
             internal var reference: I?

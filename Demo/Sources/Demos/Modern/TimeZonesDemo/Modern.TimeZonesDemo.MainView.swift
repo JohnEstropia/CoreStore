@@ -10,7 +10,7 @@ import SwiftUI
 extension Modern.TimeZonesDemo {
     
     // MARK: - Modern.TimeZonesDemo.MainView
-
+    
     struct MainView: View {
         
         /**
@@ -61,11 +61,11 @@ extension Modern.TimeZonesDemo {
             return try! Modern.TimeZonesDemo.dataStack.fetchAll(
                 From<Modern.TimeZonesDemo.TimeZone>()
                     .where((-secondsIn3Hours ... secondsIn3Hours) ~= \.$secondsFromGMT)
-                    /// equivalent to:
-                    /// ```
-                    /// .where(\.$secondsFromGMT >= -secondsIn3Hours
-                    ///     && \.$secondsFromGMT <= secondsIn3Hours)
-                    /// ```
+                /// equivalent to:
+                /// ```
+                /// .where(\.$secondsFromGMT >= -secondsIn3Hours
+                ///     && \.$secondsFromGMT <= secondsIn3Hours)
+                /// ```
                     .orderBy(.ascending(\.$secondsFromGMT))
             )
         }
@@ -137,36 +137,54 @@ extension Modern.TimeZonesDemo {
         // MARK: View
         
         var body: some View {
+            
             List {
-                Section(header: Text("Fetching objects")) {
+                
+                Section("Fetching objects") {
+                    
                     ForEach(self.fetchingItems, id: \.title) { item in
-                        Menu.ItemView(
-                            title: item.title,
+                        
+                        NavigationLink(
                             destination: {
+                                
                                 Modern.TimeZonesDemo.ListView(
                                     title: item.title,
                                     objects: item.objects()
+                                )
+                            },
+                            label: {
+                                
+                                Menu.ItemView(
+                                    title: item.title
                                 )
                             }
                         )
                     }
                 }
-                Section(header: Text("Querying raw values")) {
+                Section("Querying raw values") {
+                    
                     ForEach(self.queryingItems, id: \.title) { item in
-                        Menu.ItemView(
-                            title: item.title,
+                        
+                        NavigationLink(
                             destination: {
+                                
                                 Modern.TimeZonesDemo.ListView(
                                     title: item.title,
                                     value: item.value()
+                                )
+                            },
+                            label: {
+                                
+                                Menu.ItemView(
+                                    title: item.title
                                 )
                             }
                         )
                     }
                 }
             }
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle("Time Zones")
+            .listStyle(.grouped)
+            .navigationTitle("Time Zones")
         }
         
         
@@ -217,18 +235,3 @@ extension Modern.TimeZonesDemo {
         }
     }
 }
-
-
-#if DEBUG
-
-struct _Demo_Modern_TimeZonesDemo_MainView_Preview: PreviewProvider {
-    
-    // MARK: PreviewProvider
-    
-    static var previews: some View {
-        
-        Modern.TimeZonesDemo.MainView()
-    }
-}
-
-#endif

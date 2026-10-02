@@ -59,7 +59,7 @@ extension NSPersistentStore {
     
     private struct PropertyKeys {
         
-        static var storageInterface: Void?
+        static nonisolated(unsafe) var storageInterface: Void?
     }
 }
 

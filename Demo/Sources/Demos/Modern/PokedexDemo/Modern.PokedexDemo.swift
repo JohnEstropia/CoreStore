@@ -11,12 +11,13 @@ extension Modern {
     // MARK: - Modern.PokedexDemo
     
     /**
-    Sample usages for importing external data into `CoreStoreObject` attributes
-    */
+     Sample usages for importing external data into `CoreStoreObject` attributes
+     */
     enum PokedexDemo {
         
         // MARK: Internal
         
+        @MainActor
         static let dataStack: DataStack = {
             
             let dataStack = DataStack(
@@ -49,6 +50,7 @@ extension Modern {
             return dataStack
         }()
         
+        @MainActor
         static let pokedexEntries: ListPublisher<Modern.PokedexDemo.PokedexEntry> = Modern.PokedexDemo.dataStack.publishList(
             From<Modern.PokedexDemo.PokedexEntry>()
                 .orderBy(.ascending(\.$index))

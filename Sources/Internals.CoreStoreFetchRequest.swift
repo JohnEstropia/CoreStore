@@ -36,7 +36,7 @@ extension Internals {
 
     // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
     // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-    internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequest<NSFetchRequestResult> {
+    internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequest<NSFetchRequestResult>, @unchecked Sendable {
 
         @nonobjc
         internal func safeAffectedStores() -> [NSPersistentStore]? {

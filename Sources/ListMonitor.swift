@@ -66,7 +66,7 @@ import CoreData
  ```
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
-public final class ListMonitor<O: DynamicObject>: Hashable {
+public final class ListMonitor<O: DynamicObject>: Hashable, Sendable {
     
     // MARK: Public (Accessors)
     
@@ -386,8 +386,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObserver` to send change notifications to
      */
+    @MainActor
     public func addObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == O {
         
+        let managedObjectContext = self.managedObjectContext
         self.unregisterObserver(observer)
         self.registerObserver(
             observer,
@@ -395,28 +397,28 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 
                 observer.listMonitorWillChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didChange: { (observer, monitor) in
                 
                 observer.listMonitorDidChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             willRefetch: { (observer, monitor) in
                 
                 observer.listMonitorWillRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didRefetch: { (observer, monitor) in
                 
                 observer.listMonitorDidRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -433,8 +435,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObjectObserver` to send change notifications to
      */
+    @MainActor
     public func addObserver<U: ListObjectObserver>(_ observer: U) where U.ListEntityType == O {
         
+        let managedObjectContext = self.managedObjectContext
         self.unregisterObserver(observer)
         self.registerObserver(
             observer,
@@ -442,28 +446,28 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 
                 observer.listMonitorWillChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didChange: { (observer, monitor) in
                 
                 observer.listMonitorDidChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             willRefetch: { (observer, monitor) in
                 
                 observer.listMonitorWillRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didRefetch: { (observer, monitor) in
                 
                 observer.listMonitorDidRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -475,7 +479,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didInsertObject: object,
                     toIndexPath: toIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didDeleteObject: { (observer, monitor, object, fromIndexPath) in
@@ -484,7 +488,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didDeleteObject: object,
                     fromIndexPath: fromIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didUpdateObject: { (observer, monitor, object, atIndexPath) in
@@ -493,7 +497,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didUpdateObject: object,
                     atIndexPath: atIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
@@ -503,7 +507,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     didMoveObject: object,
                     fromIndexPath: fromIndexPath,
                     toIndexPath: toIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -520,8 +524,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      
      - parameter observer: a `ListSectionObserver` to send change notifications to
      */
+    @MainActor
     public func addObserver<U: ListSectionObserver>(_ observer: U) where U.ListEntityType == O {
         
+        let managedObjectContext = self.managedObjectContext
         self.unregisterObserver(observer)
         self.registerObserver(
             observer,
@@ -529,28 +535,28 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 
                 observer.listMonitorWillChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didChange: { (observer, monitor) in
                 
                 observer.listMonitorDidChange(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             willRefetch: { (observer, monitor) in
                 
                 observer.listMonitorWillRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didRefetch: { (observer, monitor) in
                 
                 observer.listMonitorDidRefetch(
                     monitor,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -562,7 +568,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didInsertObject: object,
                     toIndexPath: toIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didDeleteObject: { (observer, monitor, object, fromIndexPath) in
@@ -571,7 +577,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didDeleteObject: object,
                     fromIndexPath: fromIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didUpdateObject: { (observer, monitor, object, atIndexPath) in
@@ -580,7 +586,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didUpdateObject: object,
                     atIndexPath: atIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
@@ -590,7 +596,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     didMoveObject: object,
                     fromIndexPath: fromIndexPath,
                     toIndexPath: toIndexPath,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -602,7 +608,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didInsertSection: sectionInfo,
                     toSectionIndex: toIndex,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             },
             didDeleteSection: { (observer, monitor, sectionInfo, fromIndex) in
@@ -611,7 +617,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                     monitor,
                     didDeleteSection: sectionInfo,
                     fromSectionIndex: fromIndex,
-                    sourceIdentifier: monitor.fetchedResultsController.managedObjectContext.saveMetadata?.sourceIdentifier
+                    sourceIdentifier: managedObjectContext.saveMetadata?.sourceIdentifier
                 )
             }
         )
@@ -624,6 +630,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObserver` to unregister notifications to
      */
+    @MainActor
     public func removeObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == O {
         
         self.unregisterObserver(observer)
@@ -635,7 +642,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     /**
      Returns `true` if a call to `refetch(...)` was made to the `ListMonitor` and is currently waiting for the fetching to complete. Returns `false` otherwise.
      */
-    public private(set) var isPendingRefetch = false
+    public nonisolated(unsafe) private(set) var isPendingRefetch = false
     
     /**
      Asks the `ListMonitor` to refetch its objects using the specified series of `FetchClause`s. Note that this method does not execute the fetch immediately; the actual fetching will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
@@ -646,9 +653,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
+    @MainActor
     public func refetch(
         _ fetchClauses: FetchClause...,
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) {
         
         self.refetch(
@@ -666,9 +674,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
      - parameter sourceIdentifier: an optional value that identifies the source of this transaction. This identifier will be passed to the change notifications and callers can use it for custom handling that depends on the source.
      - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
+    @MainActor
     public func refetch(
         _ fetchClauses: [FetchClause],
-        sourceIdentifier: Any? = nil
+        sourceIdentifier: (any Sendable)? = nil
     ) {
         
         self.refetch(
@@ -751,7 +760,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void
     ) {
         
         self.init(
@@ -786,7 +795,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: @escaping (ListMonitor<O>) -> Void
+        createAsynchronously: @escaping @Sendable (ListMonitor<O>) -> Void
     ) {
         
         self.init(
@@ -803,7 +812,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (_ monitor: ListMonitor<O>) -> Void
+        callback: @escaping @Sendable (_ monitor: ListMonitor<O>) -> Void
     ) {
         
         Internals.setAssociatedRetainedObject(
@@ -828,12 +837,13 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (
+        callback: @escaping @Sendable (
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ indexPath: IndexPath?,
             _ newIndexPath: IndexPath?
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -864,7 +874,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         _ notificationKey: UnsafeRawPointer,
         name: Notification.Name,
         toObserver observer: AnyObject,
-        callback: @escaping (
+        callback: @escaping @Sendable (
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ sectionIndex: Int
@@ -892,36 +902,39 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
+    @MainActor
     internal func registerObserver<U: AnyObject>(
         _ observer: U,
-        willChange: @escaping (
+        willChange: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        didChange: @escaping (
+        didChange: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        willRefetch: @escaping (
+        willRefetch: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
         ) -> Void,
-        didRefetch: @escaping (
+        didRefetch: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerChangeNotification(
             &self.willChangeListKey,
             name: Notification.Name.listMonitorWillChangeList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -932,9 +945,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didChangeListKey,
             name: Notification.Name.listMonitorDidChangeList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -945,9 +958,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.willRefetchListKey,
             name: Notification.Name.listMonitorWillRefetchList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -958,9 +971,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didRefetchListKey,
             name: Notification.Name.listMonitorDidRefetchList,
             toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            callback: { (monitor) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -969,46 +982,48 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
+    @MainActor
     internal func registerObserver<U: AnyObject>(
         _ observer: U,
-        didInsertObject: @escaping (
+        didInsertObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O, 
             _ toIndexPath: IndexPath
         ) -> Void,
-        didDeleteObject: @escaping (
+        didDeleteObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ fromIndexPath: IndexPath
         ) -> Void,
-        didUpdateObject: @escaping (
+        didUpdateObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ atIndexPath: IndexPath
         ) -> Void,
-        didMoveObject: @escaping (
+        didMoveObject: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ object: O,
             _ fromIndexPath: IndexPath,
             _ toIndexPath: IndexPath
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
-        
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerObjectNotification(
             &self.didInsertObjectKey,
             name: Notification.Name.listMonitorDidInsertObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1019,9 +1034,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didDeleteObjectKey,
             name: Notification.Name.listMonitorDidDeleteObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1032,9 +1047,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didUpdateObjectKey,
             name: Notification.Name.listMonitorDidUpdateObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1045,9 +1060,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didMoveObjectKey,
             name: Notification.Name.listMonitorDidMoveObject,
             toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+            callback: { (monitor, object, indexPath, newIndexPath) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1056,33 +1071,35 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
+    @MainActor
     internal func registerObserver<U: AnyObject>(
         _ observer: U,
-        didInsertSection: @escaping (
+        didInsertSection: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ toIndex: Int
         ) -> Void,
-        didDeleteSection: @escaping (
+        didDeleteSection: @escaping @Sendable (
             _ observer: U,
             _ monitor: ListMonitor<O>,
             _ sectionInfo: NSFetchedResultsSectionInfo,
             _ fromIndex: Int
-        ) -> Void) {
+        ) -> Void
+    ) {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
-        
+        nonisolated(unsafe) weak let weakObserver = observer as Optional
         self.registerSectionNotification(
             &self.didInsertSectionKey,
             name: Notification.Name.listMonitorDidInsertSection,
             toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+            callback: { (monitor, sectionInfo, sectionIndex) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1093,9 +1110,9 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             &self.didDeleteSectionKey,
             name: Notification.Name.listMonitorDidDeleteSection,
             toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+            callback: { (monitor, sectionInfo, sectionIndex) -> Void in
                 
-                guard let observer = observer else {
+                guard let observer = weakObserver else {
                     
                     return
                 }
@@ -1104,6 +1121,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         )
     }
     
+    @MainActor
     internal func unregisterObserver(_ observer: AnyObject) {
         
         Internals.assert(
@@ -1125,9 +1143,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         Internals.setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
     }
     
+    @MainActor
     internal func refetch(
         _ applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        sourceIdentifier: Any?
+        sourceIdentifier: (any Sendable)?
     ) {
         
         Internals.assert(
@@ -1154,7 +1173,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
             }
             
             let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
-                context: self.fetchedResultsController.managedObjectContext,
+                context: self.managedObjectContext,
                 from: self.from,
                 sectionBy: self.sectionBy,
                 applyFetchClauses: self.applyFetchClauses
@@ -1216,32 +1235,34 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
     
     // MARK: Private
     
-    fileprivate var fetchedResultsController: Internals.CoreStoreFetchedResultsController
-    fileprivate let taskGroup = DispatchGroup()
-    internal let sectionByIndexTransformer: (_ sectionName: KeyPathString?) -> String?
-    
+    private let managedObjectContext: NSManagedObjectContext
+    private let taskGroup = DispatchGroup()
+    private let sectionByIndexTransformer: @Sendable (_ sectionName: KeyPathString?) -> String?
     private let isSectioned: Bool
-    
-    private var willChangeListKey: Void?
-    private var didChangeListKey: Void?
-    private var willRefetchListKey: Void?
-    private var didRefetchListKey: Void?
-    
-    private var didInsertObjectKey: Void?
-    private var didDeleteObjectKey: Void?
-    private var didUpdateObjectKey: Void?
-    private var didMoveObjectKey: Void?
-    
-    private var didInsertSectionKey: Void?
-    private var didDeleteSectionKey: Void?
-    
-    private var fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
-    private var observerForWillChangePersistentStore: Internals.NotificationObserver!
-    private var observerForDidChangePersistentStore: Internals.NotificationObserver!
     private let transactionQueue: DispatchQueue
-    private var applyFetchClauses: (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
     
-    private var isPersistentStoreChanging: Bool = false {
+    private nonisolated(unsafe) var applyFetchClauses: (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
+    
+    private nonisolated(unsafe) var willChangeListKey: Void?
+    private nonisolated(unsafe) var didChangeListKey: Void?
+    private nonisolated(unsafe) var willRefetchListKey: Void?
+    private nonisolated(unsafe) var didRefetchListKey: Void?
+    
+    private nonisolated(unsafe) var didInsertObjectKey: Void?
+    private nonisolated(unsafe) var didDeleteObjectKey: Void?
+    private nonisolated(unsafe) var didUpdateObjectKey: Void?
+    private nonisolated(unsafe) var didMoveObjectKey: Void?
+    
+    private nonisolated(unsafe) var didInsertSectionKey: Void?
+    private nonisolated(unsafe) var didDeleteSectionKey: Void?
+    
+    private nonisolated(unsafe) var observerForWillChangePersistentStore: Internals.NotificationObserver!
+    private nonisolated(unsafe) var observerForDidChangePersistentStore: Internals.NotificationObserver!
+    
+    private nonisolated(unsafe) var fetchedResultsController: Internals.CoreStoreFetchedResultsController
+    private nonisolated(unsafe) var fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
+    
+    private nonisolated(unsafe) var isPersistentStoreChanging: Bool = false {
         
         didSet {
             
@@ -1302,18 +1323,21 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         from: From<O>,
         sectionBy: SectionBy<O>?,
         applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void,
-        createAsynchronously: ((ListMonitor<O>) -> Void)?
+        createAsynchronously: (@MainActor (ListMonitor<O>) -> Void)?
     ) {
         
+        self.managedObjectContext = context
         self.isSectioned = (sectionBy != nil)
         self.from = from
         self.sectionBy = sectionBy
-        (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
+        let (fetchedResultsController, fetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
             context: context,
             from: from,
             sectionBy: sectionBy,
             applyFetchClauses: applyFetchClauses
         )
+        self.fetchedResultsController = fetchedResultsController
+        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         
         if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
             
@@ -1325,7 +1349,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         }
         self.transactionQueue = transactionQueue
         self.applyFetchClauses = applyFetchClauses
-        self.fetchedResultsControllerDelegate.handler = self
+        fetchedResultsControllerDelegate.handler = self
         
         guard let coordinator = context.parentStack?.coordinator else {
             
@@ -1335,8 +1359,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         self.observerForWillChangePersistentStore = Internals.NotificationObserver(
             notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresWillChange,
             object: coordinator,
-            queue: OperationQueue.main,
-            closure: { [weak self] (note) -> Void in
+            closure: { @MainActor [weak self] (note) -> Void in
                 
                 guard let self = self else {
                     
@@ -1357,8 +1380,7 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
         self.observerForDidChangePersistentStore = Internals.NotificationObserver(
             notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange,
             object: coordinator,
-            queue: OperationQueue.main,
-            closure: { [weak self] (note) -> Void in
+            closure: { @MainActor [weak self] (note) -> Void in
                 
                 guard let self = self else {
                     
@@ -1389,7 +1411,10 @@ public final class ListMonitor<O: DynamicObject>: Hashable {
                 try! self.fetchedResultsController.performFetchFromSpecifiedStores()
                 self.taskGroup.notify(queue: .main) {
                     
-                    createAsynchronously(self)
+                    MainActor.assumeIsolated {
+                        
+                        createAsynchronously(self)
+                    }
                 }
             }
         }
