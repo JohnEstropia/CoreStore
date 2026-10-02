@@ -195,7 +195,7 @@ extension Modern.PokedexDemo {
             if let species = details.$species?.snapshot {
                 
                 self.fetchFormsIfNeeded(
-                    key: String(species.$id),
+                    key: pokedexEntry.$id,
                     detailsPersistentID: details.persistentID(),
                     species: species
                 )
@@ -219,7 +219,6 @@ extension Modern.PokedexDemo {
                     self.detailTasks.removeValue(forKey: key)
                 }
                 await self.fetchSpecies(
-                    key: key,
                     detailsPersistentID: detailsPersistentID,
                     speciesURL: speciesURL
                 )
@@ -288,7 +287,6 @@ extension Modern.PokedexDemo {
         }
         
         private func fetchSpecies(
-            key: String,
             detailsPersistentID: PersistentID<Modern.PokedexDemo.Details>,
             speciesURL: URL
         ) async {

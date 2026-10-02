@@ -33,7 +33,42 @@ import CoreStore
 // MARK: - ConvenienceTests
 
 class ConvenienceTests: BaseTestCase {
-    
+
+    @objc
+    dynamic func test_ThatUserInfoLazyInitializer_CanReadAnotherKey() {
+
+        let keys = UnsafeMutableRawPointer.allocate(byteCount: 2, alignment: 1)
+        defer { keys.deallocate() }
+
+        let userInfo = UserInfo()
+        let value = userInfo[UnsafeRawPointer(keys), lazyInit: {
+
+            let nested = userInfo[
+                UnsafeRawPointer(keys.advanced(by: 1)),
+                lazyInit: { "nested" }
+            ] as! String
+            return "outer \(nested)"
+        }]
+        XCTAssertEqual(value as? String, "outer nested")
+    }
+
+    func test_ThatUndoManagerIsReadyWhenUnsafeTransactionStartsOffMain() async {
+
+        let hasUndoManager = await Task.detached {
+
+            let parent = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            let transaction = UnsafeDataTransaction(
+                mainContext: parent,
+                queue: DispatchQueue(label: "com.corestore.tests.unsafeTransactionQueue"),
+                supportsUndo: true,
+                sourceIdentifier: nil
+            )
+            let context = transaction.context
+            return context.performAndWait { context.undoManager != nil }
+        }.value
+        XCTAssertTrue(hasUndoManager)
+    }
+
     @objc
     @MainActor
     dynamic func test_ThatDataStacks_CanCreateFetchedResultsControllers() {

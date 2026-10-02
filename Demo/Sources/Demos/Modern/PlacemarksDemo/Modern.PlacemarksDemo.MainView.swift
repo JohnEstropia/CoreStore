@@ -109,7 +109,12 @@ extension Modern.PlacemarksDemo {
                     return
                 }
                 let geocoded = await self.geocoder.geocode(place: place)
-                guard self.place?.persistentID() == place.persistentID() else {
+                guard
+                    !Task.isCancelled,
+                    self.place?.persistentID() == place.persistentID(),
+                    self.place?.$latitude == place.$latitude,
+                    self.place?.$longitude == place.$longitude
+                else {
                     
                     return
                 }
@@ -126,7 +131,7 @@ extension Modern.PlacemarksDemo {
             .navigationTitle("Placemarks")
             .toolbar {
                 
-                Button("Random") {
+                Button("Random", systemImage: "dice") {
                     
                     self.demoSynchronousTransaction()
                 }

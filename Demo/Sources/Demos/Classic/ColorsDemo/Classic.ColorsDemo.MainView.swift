@@ -52,21 +52,22 @@ extension Classic.ColorsDemo {
             .toolbar {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     EditButton()
-                    Button("Clear") {
+                        .labelStyle(.iconOnly)
+                    Button("Clear", systemImage: "trash") {
 
                         self.clearColors()
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button(self.filter.rawValue) {
+                    Button(self.filter.rawValue, systemImage: "line.3.horizontal.decrease.circle") {
 
                         self.changeFilter()
                     }
-                    Button("Shuffle") {
+                    Button("Shuffle", systemImage: "shuffle") {
 
                         self.shuffleColors()
                     }
-                    Button("Add") {
+                    Button("Add", systemImage: "plus") {
 
                         self.addColor()
                     }

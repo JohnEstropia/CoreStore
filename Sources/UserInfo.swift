@@ -38,7 +38,7 @@ import Foundation
  ```
  - Important: Do not use this class to store thread-sensitive data.
  */
-public final class UserInfo: Sendable {
+public final class UserInfo: @unchecked Sendable {
     
     /**
      Allows external libraries to store custom data. App code should rarely have a need for this.
@@ -55,17 +55,15 @@ public final class UserInfo: Sendable {
         
         get {
             
-            return self.data.withLock { (info: inout _) in
-                
-                return info[key]
-            }
+            self.lock.lock()
+            defer { self.lock.unlock() }
+            return self.data[key]
         }
         set {
             
-            return self.data.withLock { (info: inout _) in
-                
-                info[key] = newValue
-            }
+            self.lock.lock()
+            defer { self.lock.unlock() }
+            self.data[key] = newValue
         }
     }
     
@@ -84,16 +82,15 @@ public final class UserInfo: Sendable {
      */
     public subscript(key: UnsafeRawPointer, lazyInit closure: () -> any Sendable) -> any Sendable {
         
-        return self.data.withLock { (info: inout _) in
-            
-            if let value = info[key] {
-                
-                return value
-            }
-            let value = closure()
-            info[key] = value
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        if let value = self.data[key] {
+
             return value
         }
+        let value = closure()
+        self.data[key] = value
+        return value
     }
     
     
@@ -104,5 +101,6 @@ public final class UserInfo: Sendable {
     
     // MARK: Private
     
-    private let data: Internals.Mutex<[UnsafeRawPointer: any Sendable]> = .init([:])
+    private var data: [UnsafeRawPointer: any Sendable] = [:]
+    private let lock = NSRecursiveLock()
 }

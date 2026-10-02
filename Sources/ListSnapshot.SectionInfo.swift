@@ -38,7 +38,7 @@ extension ListSnapshot {
         
         public let sectionID: SectionID
         
-        public let itemIDs: [NSManagedObjectID]
+        public let itemIDs: [ItemID]
         
         
         // MARK: RandomAccessCollection
@@ -79,7 +79,7 @@ extension ListSnapshot {
         public subscript(position: Int) -> ObjectPublisher<O> {
             
             let itemID = self.itemIDs[position]
-            return self.context.objectPublisher(managedObjectID: itemID)
+            return self.context.objectPublisher(managedObjectID: itemID.managedObjectID)
         }
 
         public func index(_ i: Index, offsetBy distance: Int) -> Index {
@@ -100,7 +100,7 @@ extension ListSnapshot {
         public subscript(bounds: Range<Index>) -> ArraySlice<Element> {
 
             let itemIDs = self.itemIDs[bounds]
-            return ArraySlice(itemIDs.map(self.context.objectPublisher(managedObjectID:)))
+            return ArraySlice(itemIDs.map({ self.context.objectPublisher(managedObjectID: $0.managedObjectID) }))
         }
 
         
@@ -126,7 +126,6 @@ extension ListSnapshot {
             }
             self.sectionID = sectionID
             self.itemIDs = listSnapshot.itemIDs(inSectionWithID: sectionID)
-                .map({ $0.managedObjectID })
             self.context = context
         }
     }

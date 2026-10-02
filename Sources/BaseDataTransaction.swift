@@ -554,11 +554,18 @@ public /*abstract*/ class BaseDataTransaction {
             context.undoManager = nil
         }
         else if context.undoManager == nil {
-            
-            Internals.mainActorImmediate {
-                
-                context.undoManager = UndoManager()
+            let undoManager: UndoManager
+            if Thread.isMainThread {
+
+                undoManager = MainActor.assumeIsolated { UndoManager() }
             }
+            else {
+
+                undoManager = DispatchQueue.main.sync {
+                    MainActor.assumeIsolated { UndoManager() }
+                }
+            }
+            context.undoManager = undoManager
         }
     }
     
